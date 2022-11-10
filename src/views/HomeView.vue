@@ -1,9 +1,9 @@
-<script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <div class="page">
+    <HomeLoggedOut />
+  </div>
 </template>
+
+<script setup lang="ts">
+import HomeLoggedOut from "@/components/Home/HomeLoggedOut.vue";
+</script>

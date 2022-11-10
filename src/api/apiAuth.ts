@@ -1,7 +1,7 @@
-import {
+import { accountInfoValidator } from "@/utils/backendTypes";
+import type {
   SignupRequest,
   AccountInfo,
-  accountInfoValidator,
   LoginRequest,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";

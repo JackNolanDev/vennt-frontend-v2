@@ -1,5 +1,5 @@
-import { AxiosResponse } from "axios";
-import { z } from "zod";
+import type { AxiosResponse } from "axios";
+import type { z } from "zod";
 
 export const parseResponse = <T extends z.ZodTypeAny>(
   response: AxiosResponse,
