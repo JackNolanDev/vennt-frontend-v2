@@ -1,8 +1,7 @@
-// Copied from backend for now :/
-
 import { z } from "zod";
 
 const NAME_MAX = 100;
+const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 2000;
 
 // GENERAL FIELDS
@@ -11,10 +10,10 @@ const idValidator = z.string().uuid();
 
 // ACCOUNT FIELDS
 
-const usernameValidator = z.string().max(NAME_MAX);
-const emailValidator = z.string().email();
-const passwordValidator = z.string().max(PASSWORD_MAX);
-const roleValidator = z.enum(["USER", "ADMIN"]);
+export const usernameValidator = z.string().min(1).max(NAME_MAX);
+export const emailValidator = z.string().email();
+export const passwordValidator = z.string().min(PASSWORD_MIN).max(PASSWORD_MAX);
+export const roleValidator = z.enum(["USER", "ADMIN"]);
 
 export const signupRequestValidator = z.object({
   username: usernameValidator,
@@ -58,3 +57,10 @@ export type ErrorResult = {
 };
 
 export type Result<T> = SuccessResult<T> | ErrorResult;
+
+export type APIResult<T> =
+  | SuccessResult<T>
+  | {
+      success: false;
+      error: string;
+    };

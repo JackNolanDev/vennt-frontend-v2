@@ -7,24 +7,26 @@ import type {
 import api from "./apiInstance";
 import { parseResponse } from "./utils";
 
-export const signup = async (request: SignupRequest): Promise<AccountInfo> => {
+export const signupApi = async (
+  request: SignupRequest
+): Promise<AccountInfo> => {
   return parseResponse(
-    await api.post("/auth/signup", JSON.stringify(request)),
+    await api.post("/auth/signup", request),
     accountInfoValidator
   );
 };
 
-export const login = async (request: LoginRequest): Promise<AccountInfo> => {
+export const loginApi = async (request: LoginRequest): Promise<AccountInfo> => {
   return parseResponse(
-    await api.post("/auth/login", JSON.stringify(request)),
+    await api.post("/auth/login", request),
     accountInfoValidator
   );
 };
 
-export const logout = async () => {
+export const logoutApi = async () => {
   api.post("/auth/logout");
 };
 
-export const getAccount = async () => {
-  return parseResponse(await api.post("/auth/account"), accountInfoValidator);
+export const getAccountApi = async () => {
+  return parseResponse(await api.get("/auth/account"), accountInfoValidator);
 };

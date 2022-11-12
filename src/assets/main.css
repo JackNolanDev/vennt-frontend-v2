@@ -167,38 +167,6 @@ body {
   color: var(--text);
 }
 
-#app {
-  /* Background Styles */
-  min-height: var(--page-height);
-  background-color: var(--background);
-}
-
-/* Page Descriptors */
-
-.page {
-  margin-top: var(--nav-height);
-  display: flex;
-  justify-content: center;
-}
-.smallPageWidth {
-  width: 100%;
-  max-width: 300px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.mediumPageWidth {
-  width: 100%;
-  max-width: 500px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-.largePageWidth {
-  width: 100%;
-  max-width: 1050px;
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
 /* Typography */
 
 h1 {
@@ -397,6 +365,9 @@ ul {
 }
 .btn.wide {
   width: 100%;
+}
+a.btn:hover, a.btn:active {
+  color: var(--text);
 }
 
 .roundedButton {
@@ -847,9 +818,11 @@ select.input {
 }
 .navButton:hover {
   background-color: var(--nav-button-hover);
+  color: var(--text-contrast);
 }
 .navButton:active {
   background-color: var(--nav-button-active);
+  color: var(--text-contrast);
 }
 
 .subNav {

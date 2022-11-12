@@ -14,15 +14,6 @@
 
 <script setup lang="ts">
 import BaseCheckBox from "./BaseCheckBox.vue";
-/*
-interface BaseCheckBoxArrayProps {
-  options: {
-    [key: string]: string;
-  };
-  checked: string[];
-  disabled?: string[];
-}
-*/
 
 interface BaseCheckBoxArrayProps {
   options: {
@@ -41,17 +32,4 @@ const toggled = (key: string): void => {
     props.checked.add(key);
   }
 };
-
-/*
-const emit = defineEmits<{ (e: "update", value: string[]): void }>();
-
-const toggled = (key: string): void => {
-  const initLen = props.checked.length;
-  const newList = props.checked.filter((item) => item !== key);
-  if (newList.length === initLen) {
-    newList.push(key);
-  }
-  emit("update", newList);
-};
-*/
 </script>

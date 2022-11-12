@@ -15,7 +15,7 @@
     <div>
       <h1>Main content</h1>
       <BaseCheckBoxArray
-        :checked="react.checked"
+        :checked="state.checked"
         :options="checkBoxOptions"
       ></BaseCheckBoxArray>
     </div>
@@ -27,10 +27,10 @@ import BaseCheckBoxArray from "@/components/Base/BaseCheckBoxArray.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import { reactive } from "vue";
 
-const react = reactive({ checked: new Set<string>() });
+const state = reactive({ checked: new Set<string>() });
 
 const showSection = (section: string) => {
-  return react.checked.has(section);
+  return state.checked.has(section);
 };
 
 const checkBoxOptions = {
