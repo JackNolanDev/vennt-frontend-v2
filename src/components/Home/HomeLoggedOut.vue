@@ -1,8 +1,13 @@
 <template>
   <div class="mediumPageWidth centeredText">
     <h1 class="logo">VENNT</h1>
-    <RouterLink to="/login" class="btn roundedButton mb-8">LOGIN</RouterLink>
-    <RouterLink to="/signup" class="btn roundedButton clear mb-8">
+    <RouterLink :to="{ name: LOGIN_ROUTE }" class="btn roundedButton mb-8">
+      LOGIN
+    </RouterLink>
+    <RouterLink
+      :to="{ name: SIGNUP_ROUTE }"
+      class="btn roundedButton clear mb-8"
+    >
       SIGNUP
     </RouterLink>
     <p>
@@ -18,6 +23,11 @@
     <p><RouterLink to="/credits" class="link">Credits</RouterLink></p>
   </div>
 </template>
+
+<script setup lang="ts">
+import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/router";
+import { RouterLink } from "vue-router";
+</script>
 
 <style scoped>
 .logo {

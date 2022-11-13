@@ -1,17 +1,28 @@
 <template>
   <nav class="nav">
     <div class="left">
-      <RouterLink to="/" class="navButton homeLink">VENNT</RouterLink>
+      <RouterLink :to="{ name: HOME_ROUTE }" class="navButton homeLink"
+        >VENNT</RouterLink
+      >
     </div>
     <div v-if="!accountInfoStore.isLoggedIn" class="right">
-      <RouterLink to="/login" class="login navButton rightItem notMobile">
+      <RouterLink
+        :to="{ name: LOGIN_ROUTE }"
+        class="login navButton rightItem notMobile"
+      >
         LOGIN
       </RouterLink>
-      <RouterLink to="/signup" class="signup navButton rightItem notMobile">
+      <RouterLink
+        :to="{ name: SIGNUP_ROUTE }"
+        class="signup navButton rightItem notMobile"
+      >
         SIGNUP
       </RouterLink>
       <!-- TODO: Update this link to be a dropdown with more items (instead of just linking to the login page) -->
-      <RouterLink to="/login" class="login navButton rightItem mobileOnly">
+      <RouterLink
+        :to="{ name: LOGIN_ROUTE }"
+        class="login navButton rightItem mobileOnly"
+      >
         <span class="material-icons dropDownLink">menu</span>
       </RouterLink>
     </div>
@@ -26,6 +37,7 @@
 </template>
 
 <script setup lang="ts">
+import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { RouterLink } from "vue-router";
 

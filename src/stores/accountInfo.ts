@@ -1,4 +1,5 @@
 import { getAccountApi, loginApi, logoutApi, signupApi } from "@/api/apiAuth";
+import router, { HOME_ROUTE } from "@/router";
 import type {
   AccountInfo,
   LoginRequest,
@@ -32,13 +33,16 @@ export const useAccountInfoStore = defineStore("accountInfo", {
     },
     async postSignup(SignupRequest: SignupRequest) {
       this.accountInfo = await signupApi(SignupRequest);
+      router.push({ name: HOME_ROUTE });
     },
     async postLogin(loginRequest: LoginRequest) {
       this.accountInfo = await loginApi(loginRequest);
+      router.push({ name: HOME_ROUTE });
     },
     async postLogOut() {
       await logoutApi();
       this.accountInfo = false;
+      router.push({ name: HOME_ROUTE });
     },
   },
 });
