@@ -116,6 +116,7 @@
   --sidebar-width: 380px;
 
   --border-radius: 5px;
+  --button-border-width: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -362,9 +363,6 @@ ul {
 }
 .btn:disabled {
   cursor: default;
-}
-.btn.wide {
-  width: 100%;
 }
 a.btn:hover, a.btn:active {
   color: var(--text);

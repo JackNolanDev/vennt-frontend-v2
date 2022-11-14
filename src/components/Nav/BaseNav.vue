@@ -16,7 +16,7 @@
         :to="{ name: SIGNUP_ROUTE }"
         class="signup navButton rightItem notMobile"
       >
-        SIGNUP
+        SIGN UP
       </RouterLink>
       <!-- TODO: Update this link to be a dropdown with more items (instead of just linking to the login page) -->
       <RouterLink

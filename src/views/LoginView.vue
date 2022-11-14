@@ -42,14 +42,13 @@
             {{ passwordInvalid }}
           </p>
         </div>
-        <button
-          type="button"
+        <BaseButton
           @click="loginButton"
           :disabled="buttonInvalid"
-          class="mt-64 btn roundedButton wide noSelect"
+          class="mt-64 primary wide center bold"
         >
           LOG IN
-        </button>
+        </BaseButton>
       </form>
     </PageLayout>
   </BaseLayout>
@@ -67,6 +66,7 @@ import {
 } from "@/utils/backendTypes";
 import { fieldValidator } from "@/utils/inputType";
 import { useAccountInfoStore } from "@/stores/accountInfo";
+import BaseButton from "@/components/Base/BaseButton.vue";
 
 const state = reactive({
   username: "",

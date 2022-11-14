@@ -1,15 +1,12 @@
 <template>
-  <div class="mediumPageWidth centeredText">
+  <div class="centeredText">
     <h1 class="logo">VENNT</h1>
-    <RouterLink :to="{ name: LOGIN_ROUTE }" class="btn roundedButton mb-8">
+    <BaseButton :to="{ name: LOGIN_ROUTE }" class="primary bold center mb-8">
       LOGIN
-    </RouterLink>
-    <RouterLink
-      :to="{ name: SIGNUP_ROUTE }"
-      class="btn roundedButton clear mb-8"
-    >
+    </BaseButton>
+    <BaseButton :to="{ name: SIGNUP_ROUTE }" class="clear bold center mb-8">
       SIGNUP
-    </RouterLink>
+    </BaseButton>
     <p>
       The wiki can be found
       <a
@@ -27,6 +24,7 @@
 <script setup lang="ts">
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/router";
 import { RouterLink } from "vue-router";
+import BaseButton from "../Base/BaseButton.vue";
 </script>
 
 <style scoped>

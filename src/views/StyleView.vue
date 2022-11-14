@@ -12,19 +12,43 @@
     <template #sidebar-right v-if="showSection('sidebar-right')">
       <div class="sidebar-right fill-parent">vennt sidebar right</div>
     </template>
-    <div>
+    <PageLayout class="medium">
       <h1>Main content</h1>
       <BaseCheckBoxArray
         :checked="state.checked"
         :options="checkBoxOptions"
       ></BaseCheckBoxArray>
-    </div>
+      <h3>Button styles</h3>
+      <BaseButton class="primary mb-8">Primary</BaseButton>
+      <BaseButton class="secondary mb-8">Secondary</BaseButton>
+      <BaseButton class="clear mb-8">Clear</BaseButton>
+      <BaseButton class="mb-8">Default</BaseButton>
+      <h4>Wide</h4>
+      <BaseButton class="primary wide mb-8">Primary</BaseButton>
+      <BaseButton class="secondary wide mb-8">Secondary</BaseButton>
+      <BaseButton class="clear wide mb-8">Clear</BaseButton>
+      <BaseButton class="wide mb-8">Default</BaseButton>
+      <h4>Centered</h4>
+      <BaseButton class="primary wide center mb-8">Primary</BaseButton>
+      <BaseButton class="secondary wide center mb-8">Secondary</BaseButton>
+      <BaseButton class="clear wide center mb-8">Clear</BaseButton>
+      <BaseButton class="wide center mb-8">Default</BaseButton>
+      <h4>Bold</h4>
+      <BaseButton class="primary wide center bold mb-8">Primary</BaseButton>
+      <BaseButton class="secondary wide center bold mb-8">
+        Secondary
+      </BaseButton>
+      <BaseButton class="clear wide center bold mb-8">Clear</BaseButton>
+      <BaseButton class="wide center bold mb-8">Default</BaseButton>
+    </PageLayout>
   </BaseLayout>
 </template>
 
 <script setup lang="ts">
+import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseCheckBoxArray from "@/components/Base/BaseCheckBoxArray.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
+import PageLayout from "@/components/Base/PageLayout.vue";
 import { reactive } from "vue";
 
 const state = reactive({ checked: new Set<string>() });

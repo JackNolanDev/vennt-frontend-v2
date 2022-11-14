@@ -29,6 +29,13 @@
   display: none;
 }
 
+.sidebar-body,
+.sidebar-right-body,
+.main-body {
+  overflow-y: scroll;
+  height: 100vh;
+}
+
 .page-layout > .nav-body:not(:empty) {
   grid-area: 1 / 1 / 2 / 4;
   display: block;
@@ -42,7 +49,7 @@
   display: block;
 }
 .page-layout > .sidebar-right-body:not(:empty) {
-  grid-area: 3 / 3 / 4 / 4;
+  grid-area: 1 / 3 / 4 / 4;
   display: block;
 }
 .page-layout > .main-body {
@@ -54,11 +61,13 @@
 .page-layout:has(.nav-body:not(:empty)) > .sidebar-body,
 .page-layout:has(.nav-body:not(:empty)) > .sidebar-right-body {
   grid-row-start: 2;
+  height: var(--page-height);
 }
 .page-layout:has(.sub-nav-body:not(:empty)) > .main-body,
 .page-layout:has(.sub-nav-body:not(:empty)) > .sidebar-body,
 .page-layout:has(.sub-nav-body:not(:empty)) > .sidebar-right-body {
   grid-row-start: 3;
+  height: var(--sub-nav-page-height);
 }
 .page-layout:has(.sidebar-body:not(:empty)) > .main-body {
   grid-column-start: 2;
