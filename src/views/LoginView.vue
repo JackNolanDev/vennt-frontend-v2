@@ -61,7 +61,7 @@ import BaseNav from "@/components/Nav/BaseNav.vue";
 import { computed, reactive } from "vue";
 import {
   passwordValidator,
-  usernameValidator,
+  nameValidator,
   loginRequestValidator,
 } from "@/utils/backendTypes";
 import { fieldValidator } from "@/utils/inputType";
@@ -76,7 +76,7 @@ const state = reactive({
 const accountInfoStore = useAccountInfoStore();
 
 const usernameInvalid = computed(() => {
-  return fieldValidator(usernameValidator, state.username, "");
+  return fieldValidator(nameValidator, state.username, "");
 });
 
 const passwordInvalid = computed(() => {

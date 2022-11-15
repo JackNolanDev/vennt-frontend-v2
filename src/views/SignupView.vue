@@ -99,7 +99,7 @@ import {
   emailValidator,
   passwordValidator,
   signupRequestValidator,
-  usernameValidator,
+  nameValidator,
 } from "@/utils/backendTypes";
 import { fieldValidator } from "@/utils/inputType";
 import { useAccountInfoStore } from "@/stores/accountInfo";
@@ -115,7 +115,7 @@ const state = reactive({
 const accountInfoStore = useAccountInfoStore();
 
 const usernameInvalid = computed(() => {
-  return fieldValidator(usernameValidator, state.username, "");
+  return fieldValidator(nameValidator, state.username, "");
 });
 
 const emailInvalid = computed(() => {

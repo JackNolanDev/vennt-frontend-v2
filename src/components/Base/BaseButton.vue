@@ -4,7 +4,7 @@
       <span v-if="props.icon" class="material-icons space">
         {{ props.icon }}
       </span>
-      <span>
+      <span class="nowrap">
         <slot></slot>
       </span>
     </div>
@@ -14,7 +14,7 @@
       <span v-if="props.icon" class="material-icons space">
         {{ props.icon }}
       </span>
-      <span>
+      <span class="nowrap">
         <slot></slot>
       </span>
     </div>
@@ -28,6 +28,9 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 </script>
 
 <style scoped>
+.basicBtnContents {
+  margin: 6px;
+}
 .selected .material-icons {
   color: var(--main-button);
 }
@@ -38,7 +41,7 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
   justify-content: center;
 }
 .bold > .basicBtnContents {
-  font-weight: 500;
+  font-weight: 700;
   font-size: 18pt;
 }
 .btn {
@@ -50,6 +53,7 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 .primary {
   background-color: var(--main-button);
   border: solid var(--button-border-width) var(--main-button);
+  font-weight: 500;
 }
 .primary:disabled {
   background-color: var(--main-button-disabled);
@@ -67,6 +71,7 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 .secondary {
   background-color: var(--secondary-button);
   border: solid var(--button-border-width) var(--secondary-button);
+  font-weight: 500;
 }
 .secondary:disabled {
   background-color: var(--secondary-button-disabled);
@@ -84,6 +89,7 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 .clear {
   border: solid var(--button-border-width) var(--main-button);
   color: var(--main-button);
+  font-weight: 500;
 }
 .clear:disabled {
   opacity: 0.65;

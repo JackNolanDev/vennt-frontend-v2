@@ -5,6 +5,7 @@ export const HOME_ROUTE = "home";
 export const SIGNUP_ROUTE = "signup";
 export const LOGIN_ROUTE = "login";
 export const CREATE_ROUTE = "create";
+export const CREATE_NEW_ROUTE = "createNew";
 export const CREDITS_ROUTE = "credits";
 
 const router = createRouter({
@@ -28,7 +29,14 @@ const router = createRouter({
     {
       path: "/create",
       name: CREATE_ROUTE,
+      meta: { loggedInOnly: true },
       component: () => import("../views/CreateView.vue"),
+    },
+    {
+      path: "/create/new",
+      name: CREATE_NEW_ROUTE,
+      meta: { loggedInOnly: true },
+      component: () => import("../views/CreateNewView.vue"),
     },
     {
       path: "/credits",
