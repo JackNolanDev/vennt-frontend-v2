@@ -76,6 +76,7 @@ export const attributeValidator = z
 export const combatStatValidator = z.number().int().min(0);
 export const giftValidator = z.enum(CHARACTER_GIFTS);
 export const entityTypeValidator = z.enum(["CHARACTER"]);
+export const baseAttributeFieldValidator = z.enum(ATTRIBUTES);
 
 // NOTE: ALL FUTURE ATTRIBUTES SHOULD BE optional()
 
@@ -90,7 +91,7 @@ export const attributesValidator = z.object({
   tek: attributeValidator,
   wis: attributeValidator,
   hp: combatStatValidator,
-  hp_max: combatStatValidator,
+  max_hp: combatStatValidator,
   mp: combatStatValidator,
   max_mp: combatStatValidator,
   vim: combatStatValidator,
@@ -106,10 +107,13 @@ export const attributesValidator = z.object({
 });
 
 export const entityValidator = z.object({
-  id: idValidator,
   name: nameValidator,
   type: entityTypeValidator,
   attributes: attributesValidator,
+});
+
+export const fullEntityValidator = entityValidator.extend({
+  id: idValidator,
   owner: idValidator,
 });
 
@@ -236,7 +240,7 @@ export const fullAttributeChangelogValidator =
     entity_id: idValidator,
   });
 
-// FULL ENTITY
+// COLLECTED ENTITY
 
 export const collectedEntityValidator = z.object({
   entity: entityValidator,
@@ -252,6 +256,9 @@ export type DangerousAccountInfo = z.infer<
   typeof dangerousAccountInfoValidator
 >;
 export type CharacterGift = z.infer<typeof giftValidator>;
+export type EntityType = z.infer<typeof entityTypeValidator>
+export type EntityAttributes = z.infer<typeof attributesValidator>;
+export type EntityAttribute = keyof EntityAttributes;
 export type Entity = z.infer<typeof entityValidator>;
 export type CollectedEntity = z.infer<typeof collectedEntityValidator>;
 

@@ -28,6 +28,18 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 </script>
 
 <style scoped>
+/*
+Button styles:
+* "selected" highlights given icon
+* "center" centers text
+* "left" moves text and icon to the left side
+* "bold" makes text larger and more bold
+* "wide" makes button wide
+* "primary" makes button primary
+* "secondary" makes button a different color
+* "clear" makes button same color as primary but with clear interior
+
+*/
 .basicBtnContents {
   margin: 6px;
 }
@@ -43,6 +55,12 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 .bold > .basicBtnContents {
   font-weight: 700;
   font-size: 18pt;
+}
+.left {
+  justify-content: flex-end;
+}
+.left > .basicBtnContents {
+  flex-direction: row-reverse;
 }
 .btn {
   border: solid var(--button-border-width) transparent;

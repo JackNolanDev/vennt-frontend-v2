@@ -1,7 +1,11 @@
 <template>
   <BaseLayout>
     <template #nav><BaseNav></BaseNav></template>
-    <template #sidebar><div>hi</div></template>
+    <template #sidebar>
+      <CombatStats
+        :entity="characterCreateStore.collectedCharacter"
+      ></CombatStats>
+    </template>
     <PageLayout>
       <h1 class="centeredText">CHARACTER CREATION</h1>
       <p class="textBlock">
@@ -9,49 +13,26 @@
         <a
           href="https://vennt.fandom.com/wiki/Character_Creation?oldid=4426"
           target="_blank"
-          class="link"
         >
           Revision as of 16:44, 15 March 2022
         </a>
       </p>
-      <!-- ----- STEP 1 ----- -->
       <h2>Step 1: Choose a name</h2>
       <p class="textBlock">
         This follows the guide on the
         <a
           href="https://vennt.fandom.com/wiki/Character_Creation"
           target="_blank"
-          class="link"
         >
           character creation wiki page</a
         >.
       </p>
-      <RandomNamesSection></RandomNamesSection>
-      <!-- ----- STEP 2 ----- -->
+      <CreateSectionName></CreateSectionName>
       <h2>Step 2: Create your backstory</h2>
-      <p class="textBlock">
-        For now, this process must be completed in a seperate document. Follow
-        <a
-          href="https://vennt.fandom.com/wiki/Backstory"
-          target="_blank"
-          class="link"
-        >
-          this wiki page
-        </a>
-        for help with coming up a character concept and describing your
-        backstory.
-      </p>
-      <!-- ----- STEP 3 ----- -->
+      <CreateSectionBackstory></CreateSectionBackstory>
       <h2>Step 3: Choose a Gift</h2>
-      <p class="textBlock">
-        <i>
-          Most legends are born gifted in some way. Mozart was gifted in music,
-          Achilles was gifted in combat, and Merlin was gifted in magic. There
-          are nine gifts available to choose from as a hero of Amnis, each one
-          providing unique boons to your character.
-        </i>
-      </p>
-      <GiftSelection></GiftSelection>
+      <CreateSectionGift></CreateSectionGift>
+      <div class="mb-128"></div>
     </PageLayout>
   </BaseLayout>
 </template>
@@ -59,7 +40,12 @@
 <script setup lang="ts">
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import GiftSelection from "@/components/Create/GiftSelection.vue";
-import RandomNamesSection from "@/components/Create/RandomNamesSection.vue";
+import CreateSectionName from "@/components/Create/CreateSectionName.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
+import CreateSectionBackstory from "@/components/Create/CreateSectionBackstory.vue";
+import CreateSectionGift from "@/components/Create/CreateSectionGift.vue";
+import CombatStats from "@/components/CombatStats/CombatStats.vue";
+import { useCharacterCreateStore } from "@/stores/characterCreate";
+
+const characterCreateStore = useCharacterCreateStore();
 </script>

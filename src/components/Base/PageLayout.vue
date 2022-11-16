@@ -16,6 +16,8 @@
   margin-left: 20px;
   margin-right: 20px;
   max-width: 1050px;
+  container-type: inline-size;
+  container-name: page;
 }
 .page-container.small > .page {
   max-width: 300px;
