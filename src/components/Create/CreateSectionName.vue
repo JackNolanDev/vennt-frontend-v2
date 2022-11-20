@@ -10,7 +10,7 @@
       type="text"
       name="charName"
       placeholder="Bilbo Baggins"
-      v-model="characterCreateStore.name"
+      v-model="characterCreateStore.options.name"
       class="input nameInput"
       id="new-name"
     />
@@ -37,7 +37,7 @@ const randomNameButton = () => {
     randomNamesStore.fetchRandomNames();
   }
   if (randomNamesStore.randomNames.length > 0) {
-    characterCreateStore.name = randomNamesStore.randomNames[0];
+    characterCreateStore.options.name = randomNamesStore.randomNames[0];
     randomNamesStore.shiftNames();
   }
 };

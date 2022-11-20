@@ -1,6 +1,5 @@
 import type { CollectedEntity } from "@/utils/backendTypes";
 import {
-  type CharacterCreateStore,
   calculateAttribute,
   calculateHP,
   calculateVim,
@@ -9,43 +8,53 @@ import {
   DEFAULT_HERO_MAX,
   calculateInit,
   calculateSpeed,
+  characterCreateOptionsValidator,
+  type CharacterCreateOptions,
 } from "@/utils/copy/createCharacterCopy";
 import { defineStore } from "pinia";
+
+export const CREATE_CHARACTER_LOCAL_STORAGE = "create_character";
+
+type CharacterCreateStore = {
+  options: CharacterCreateOptions;
+};
 
 export const useCharacterCreateStore = defineStore("characterCreate", {
   state: (): CharacterCreateStore => {
     return {
-      name: "",
-      childAttrs: [],
+      options: {
+        name: "",
+        childAttrs: [],
+      },
     };
   },
   getters: {
     per(state) {
-      return calculateAttribute(state, "per");
+      return calculateAttribute(state.options, "per");
     },
     tek(state) {
-      return calculateAttribute(state, "tek");
+      return calculateAttribute(state.options, "tek");
     },
     agi(state) {
-      return calculateAttribute(state, "agi");
+      return calculateAttribute(state.options, "agi");
     },
     dex(state) {
-      return calculateAttribute(state, "dex");
+      return calculateAttribute(state.options, "dex");
     },
     int(state) {
-      return calculateAttribute(state, "int");
+      return calculateAttribute(state.options, "int");
     },
     spi(state) {
-      return calculateAttribute(state, "spi");
+      return calculateAttribute(state.options, "spi");
     },
     str(state) {
-      return calculateAttribute(state, "str");
+      return calculateAttribute(state.options, "str");
     },
     wis(state) {
-      return calculateAttribute(state, "wis");
+      return calculateAttribute(state.options, "wis");
     },
     cha(state) {
-      return calculateAttribute(state, "cha");
+      return calculateAttribute(state.options, "cha");
     },
     hp(): number {
       return calculateHP(0, this.str);
@@ -59,7 +68,7 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     collectedCharacter(): CollectedEntity {
       return {
         entity: {
-          name: this.name,
+          name: this.options.name,
           type: "CHARACTER",
           attributes: {
             per: this.per,
@@ -83,13 +92,34 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
             speed: calculateSpeed(this.agi),
             xp: 0,
             sp: 0,
-            gift: this.gift,
+          },
+          other_fields: {
+            gift: this.options.gift,
           },
         },
         abilities: [],
         items: [],
         changelog: [],
       };
+    },
+  },
+  actions: {
+    loadFromLocalStorage() {
+      const rawOptions = localStorage.getItem(CREATE_CHARACTER_LOCAL_STORAGE);
+      if (rawOptions) {
+        try {
+          const jsonOptions = JSON.parse(rawOptions);
+          this.options = characterCreateOptionsValidator.parse(jsonOptions);
+        } catch (err) {
+          localStorage.removeItem(CREATE_CHARACTER_LOCAL_STORAGE);
+        }
+      }
+    },
+    saveToLocalStorage() {
+      localStorage.setItem(
+        CREATE_CHARACTER_LOCAL_STORAGE,
+        JSON.stringify(this.options)
+      );
     },
   },
 });

@@ -8,7 +8,7 @@
     </i>
   </p>
   <GiftSelection
-    :gift="characterCreateStore.gift"
+    :gift="characterCreateStore.options.gift"
     @gift-selected="chooseGift"
   ></GiftSelection>
 </template>
@@ -21,6 +21,7 @@ import GiftSelection from "./GiftSelection.vue";
 const characterCreateStore = useCharacterCreateStore();
 
 const chooseGift = (gift: CharacterGift) => {
-  characterCreateStore.gift = gift;
+  characterCreateStore.options.gift = gift;
+  characterCreateStore.saveToLocalStorage();
 };
 </script>

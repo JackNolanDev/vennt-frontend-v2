@@ -1,4 +1,4 @@
-import type { CharacterGift } from "../backendTypes";
+import type { CharacterGift, HTMLString } from "../backendTypes";
 
 const getGiftedPathLinkSentence = (name: string): string => {
   const linkName = name.replaceAll(" ", "_");
@@ -9,7 +9,7 @@ type GiftCopy = {
   [gift in CharacterGift]: {
     title: string;
     flavor: string;
-    benefits: string[];
+    benefits: HTMLString[];
   };
 };
 

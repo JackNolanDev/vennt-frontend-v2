@@ -4,6 +4,7 @@
     <template #sidebar>
       <CombatStats
         :entity="characterCreateStore.collectedCharacter"
+        :use-copyable-dice="false"
       ></CombatStats>
     </template>
     <PageLayout>
@@ -48,4 +49,5 @@ import CombatStats from "@/components/CombatStats/CombatStats.vue";
 import { useCharacterCreateStore } from "@/stores/characterCreate";
 
 const characterCreateStore = useCharacterCreateStore();
+characterCreateStore.loadFromLocalStorage();
 </script>

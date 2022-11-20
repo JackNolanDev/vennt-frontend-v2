@@ -4,6 +4,7 @@
   "compilerOptions": {
     "composite": true,
     "types": ["node"],
-    "lib": ["ES2021"]
+    "lib": ["ES2021", "dom"],
+    "allowJs": true
   }
 }

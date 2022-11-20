@@ -32,6 +32,7 @@ export const CHARACTER_GIFTS = [
   "Charm",
   "None",
 ] as const;
+export const ATTRIBUTES_SET = new Set<EntityAttribute>(ATTRIBUTES);
 
 // GENERAL FIELDS
 
@@ -103,6 +104,16 @@ export const attributesValidator = z.object({
   xp: z.number().int().optional(),
   sp: z.number().int().optional(),
   armor: z.number().int().optional(),
+  burden: z.number().int().optional(),
+  casting: z.number().int().optional(),
+  level: z.number().int().optional(),
+  acc: z.number().int().optional(),
+  radius: z.number().optional(),
+  reach: z.number().optional(),
+});
+
+// non-number attributes go here
+export const otherAttributesValidator = z.object({
   gift: giftValidator.optional(),
 });
 
@@ -110,6 +121,7 @@ export const entityValidator = z.object({
   name: nameValidator,
   type: entityTypeValidator,
   attributes: attributesValidator,
+  other_fields: otherAttributesValidator,
 });
 
 export const fullEntityValidator = entityValidator.extend({
@@ -186,7 +198,7 @@ export const abilityValidator = z.object({
 
 export const fullAbilityValidator = abilityValidator.extend({
   id: idValidator,
-  entity_id: idValidator,
+  entoity_id: idValidator,
 });
 
 // ITEMS
@@ -246,6 +258,13 @@ export const collectedEntityValidator = z.object({
   entity: entityValidator,
   abilities: abilityValidator.array(),
   items: itemValidator.array(),
+  changelog: fullAttributeChangelogValidator.array(),
+});
+
+export const fullCollectedEntityValidator = z.object({
+  entity: fullEntityValidator,
+  abilities: fullAbilityValidator.array(),
+  items: fullItemValidator.array(),
   changelog: attributeChangelogValidator.array(),
 });
 
@@ -256,11 +275,24 @@ export type DangerousAccountInfo = z.infer<
   typeof dangerousAccountInfoValidator
 >;
 export type CharacterGift = z.infer<typeof giftValidator>;
-export type EntityType = z.infer<typeof entityTypeValidator>
+export type EntityType = z.infer<typeof entityTypeValidator>;
 export type EntityAttributes = z.infer<typeof attributesValidator>;
 export type EntityAttribute = keyof EntityAttributes;
 export type Entity = z.infer<typeof entityValidator>;
-export type CollectedEntity = z.infer<typeof collectedEntityValidator>;
+export type FullEntity = z.infer<typeof fullEntityValidator>;
+export type NonCompleteCollectedEntity = z.infer<
+  typeof collectedEntityValidator
+>;
+export type FullCollectedEntity = z.infer<typeof fullCollectedEntityValidator>;
+export type CollectedEntity = NonCompleteCollectedEntity | FullCollectedEntity;
+
+export type UpdatedEntityAttributes = {
+  [attr in EntityAttribute]?: {
+    // TODO: add reason for values shifting
+    base?: number;
+    val: number;
+  };
+};
 
 // SERVER TYPES
 
@@ -277,3 +309,32 @@ export type ErrorResult = {
 export type Result<T> = SuccessResult<T> | ErrorResult;
 
 // TODO: can probably add regex validators to a lot of string fields
+// TODO: VERY IMPORTANT: update database to match types here
+
+// FRONTEND TYPES
+export type HTMLString = string;
+
+export type DiceToggle = {
+  attr?: EntityAttribute;
+  end?: string;
+  diceNumberAdjust?: number;
+  default?: boolean; // currently not really supported
+};
+export type DiceToggles = {
+  [key: string]: DiceToggle;
+};
+export type DiceOtherToggles = {
+  [key: string]: {
+    toggled: boolean;
+  };
+};
+export type DiceSettings = {
+  explodes?: boolean;
+  rr1s?: boolean;
+  drop?: number;
+  fatigued?: boolean;
+  end?: string;
+  flow?: boolean;
+  ebb?: boolean;
+  otherToggles?: DiceOtherToggles;
+};

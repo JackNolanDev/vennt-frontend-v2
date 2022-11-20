@@ -31,7 +31,7 @@ export const useAccountInfoStore = defineStore("accountInfo", {
         if (router.currentRoute.value.meta.loggedInOnly) {
           router.push({ name: HOME_ROUTE });
         }
-        // console.error(err);
+        // console.error("error", err);
       }
     },
     async postSignup(SignupRequest: SignupRequest) {

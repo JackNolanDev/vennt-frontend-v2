@@ -7,13 +7,13 @@ import {
   type EntityAttribute,
 } from "../backendTypes";
 
-export const characterCreateStoreValidator = z.object({
+export const characterCreateOptionsValidator = z.object({
   name: nameValidator,
   gift: giftValidator.optional(),
   childAttrs: baseAttributeFieldValidator.array(),
 });
-export type CharacterCreateStore = z.infer<
-  typeof characterCreateStoreValidator
+export type CharacterCreateOptions = z.infer<
+  typeof characterCreateOptionsValidator
 >;
 
 type GiftToAttrMap = {
@@ -44,11 +44,11 @@ export const DEFAULT_HERO = 3;
 export const DEFAULT_HERO_MAX = 9;
 
 export const calculateAttribute = (
-  state: CharacterCreateStore,
+  options: CharacterCreateOptions,
   attr: EntityAttribute
 ): number => {
   let sum = 0;
-  if (state.gift && GIFT_TO_ATTR_MAP[state.gift] === attr) {
+  if (options.gift && GIFT_TO_ATTR_MAP[options.gift] === attr) {
     sum += GIFT_ATTR_BONUS;
   }
   return sum;
