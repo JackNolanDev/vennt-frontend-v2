@@ -14,7 +14,7 @@
       <span v-if="props.icon" class="material-icons space">
         {{ props.icon }}
       </span>
-      <span class="nowrap">
+      <span class="nowrap alignRow">
         <slot></slot>
       </span>
     </div>
@@ -31,6 +31,7 @@ const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
 /*
 Button styles:
 * "selected" highlights given icon
+* "skinny" decreases the button's margin
 * "center" centers text
 * "left" moves text and icon to the left side
 * "bold" makes text larger and more bold
@@ -48,6 +49,9 @@ Button styles:
 }
 .selected.basicBtn:disabled .material-icons {
   color: var(--basic-button-disabled);
+}
+.skinny > .basicBtnContents {
+  margin: 2px;
 }
 .center {
   justify-content: center;

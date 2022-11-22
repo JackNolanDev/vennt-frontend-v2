@@ -33,6 +33,8 @@
       <CreateSectionBackstory></CreateSectionBackstory>
       <h2>Step 3: Choose a Gift</h2>
       <CreateSectionGift></CreateSectionGift>
+      <h2>Step 4: Attribute scores</h2>
+      <CreateSectionAttributes></CreateSectionAttributes>
       <div class="mb-128"></div>
     </PageLayout>
   </BaseLayout>
@@ -47,6 +49,7 @@ import CreateSectionBackstory from "@/components/Create/CreateSectionBackstory.v
 import CreateSectionGift from "@/components/Create/CreateSectionGift.vue";
 import CombatStats from "@/components/CombatStats/CombatStats.vue";
 import { useCharacterCreateStore } from "@/stores/characterCreate";
+import CreateSectionAttributes from "@/components/Create/CreateSectionAttributes.vue";
 
 const characterCreateStore = useCharacterCreateStore();
 characterCreateStore.loadFromLocalStorage();

@@ -176,8 +176,14 @@ h1 {
   line-height: 1;
 }
 
-.centeredText {
+.centeredText, .text-center {
   text-align: center;
+}
+.text-left {
+  text-align: left;
+}
+.text-right {
+  text-align: left;
 }
 
 .number {

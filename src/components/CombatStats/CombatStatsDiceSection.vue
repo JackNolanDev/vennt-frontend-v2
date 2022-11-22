@@ -16,6 +16,7 @@
     <BaseButton
       v-if="!useCopyableDice"
       @click="rollButton"
+      :title="computedDice.web"
       icon="casino"
       class="selected"
     >
@@ -78,7 +79,7 @@ const computedDice = computed(() => {
     props.attrs,
     props.attr,
     diceStore.defaultDiceSettings,
-    {} // fetch diceToggles from character store, probably
+    {} // TODO: fetch diceToggles from character store, probably
   );
 });
 

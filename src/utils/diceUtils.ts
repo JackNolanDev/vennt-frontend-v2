@@ -1,5 +1,6 @@
 import type {
   CollectedEntity,
+  DiceCommands,
   DiceSettings,
   DiceToggle,
   DiceToggles,
@@ -12,7 +13,7 @@ export function buildDice(
   sides: number,
   adjust: number | string = 0,
   settings: DiceSettings = {}
-) {
+): DiceCommands {
   let adjustStr = "";
   if (typeof adjust === "string") {
     adjustStr = adjust;

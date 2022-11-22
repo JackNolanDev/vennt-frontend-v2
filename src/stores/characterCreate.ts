@@ -24,7 +24,22 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     return {
       options: {
         name: "",
-        childAttrs: [],
+        attributeSelections: {
+          childAttrs: [],
+          adultAttrs: [],
+          additionalAttrs: [],
+          badAttrs: [],
+          grate1: [],
+          grate3: [],
+        },
+        radioSelections: {
+          additionalAttrChoice: "",
+          sideItem: "",
+          rememberItem: "",
+          outfit: "",
+          itemSet: "",
+          experience: "",
+        },
       },
     };
   },

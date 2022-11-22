@@ -278,6 +278,7 @@ export type CharacterGift = z.infer<typeof giftValidator>;
 export type EntityType = z.infer<typeof entityTypeValidator>;
 export type EntityAttributes = z.infer<typeof attributesValidator>;
 export type EntityAttribute = keyof EntityAttributes;
+export type BaseEntityAttribute = z.infer<typeof baseAttributeFieldValidator>;
 export type Entity = z.infer<typeof entityValidator>;
 export type FullEntity = z.infer<typeof fullEntityValidator>;
 export type NonCompleteCollectedEntity = z.infer<
@@ -337,4 +338,13 @@ export type DiceSettings = {
   flow?: boolean;
   ebb?: boolean;
   otherToggles?: DiceOtherToggles;
+  adjust?: number | string;
+  count?: number;
+  sides?: number;
+};
+export type DiceCommands = {
+  discord: string;
+  roll20: string;
+  web: string;
+  settings: DiceSettings;
 };
