@@ -1,30 +1,26 @@
 <template>
   <RouterLink v-if="props.to" :to="props.to" class="btn basicBtn">
-    <div class="basicBtnContents">
-      <span v-if="props.icon" class="material-icons space">
-        {{ props.icon }}
-      </span>
-      <span class="nowrap">
-        <slot></slot>
-      </span>
-    </div>
+    <BaseButtonContents :icon="icon" :bullet="bullet">
+      <slot></slot>
+    </BaseButtonContents>
   </RouterLink>
   <button v-else type="button" class="btn basicBtn">
-    <div class="basicBtnContents">
-      <span v-if="props.icon" class="material-icons space">
-        {{ props.icon }}
-      </span>
-      <span class="nowrap alignRow">
-        <slot></slot>
-      </span>
-    </div>
+    <BaseButtonContents :icon="icon" :bullet="bullet">
+      <slot></slot>
+    </BaseButtonContents>
   </button>
 </template>
 
 <script setup lang="ts">
+import type { Entity } from "@/utils/backendTypes";
 import { type RouteLocationRaw, RouterLink } from "vue-router";
+import BaseButtonContents from "./BaseButtonContents.vue";
 
-const props = defineProps<{ icon?: string; to?: RouteLocationRaw }>();
+const props = defineProps<{
+  icon?: string;
+  to?: RouteLocationRaw;
+  bullet?: Entity | true;
+}>();
 </script>
 
 <style scoped>

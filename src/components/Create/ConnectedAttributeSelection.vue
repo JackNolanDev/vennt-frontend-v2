@@ -1,6 +1,6 @@
 <template>
   <AttributeSelection
-    :selected="characterCreateStore.options.attributeSelections[details.key]"
+    :selected="characterCreateStore.options.attributeSelections[attrSel]"
     :maxChoices="maxChoices"
     :disabledChoices="disabledChoices"
     @selected-updated="selectedUpdated"
@@ -10,31 +10,33 @@
 <script setup lang="ts">
 import { useCharacterCreateStore } from "@/stores/characterCreate";
 import type { BaseEntityAttribute } from "@/utils/backendTypes";
-import type { AttributeSelectionOptionsDetails } from "@/utils/copy/createCharacterCopy";
+import {
+  ATTR_OPTIONS,
+  type AttributeSelections,
+} from "@/utils/copy/createCharacterCopy";
 import { computed } from "vue";
 import AttributeSelection from "../Attributes/AttributeSelection.vue";
 
-const props = defineProps<{ details: AttributeSelectionOptionsDetails }>();
+const props = defineProps<{ attrSel: keyof AttributeSelections }>();
 const characterCreateStore = useCharacterCreateStore();
 
 const maxChoices = computed(() => {
-  if (typeof props.details.max === "number") {
-    return props.details.max;
-  }
-  return props.details.max(characterCreateStore.options);
+  const max = ATTR_OPTIONS[props.attrSel].max;
+  return typeof max === "number" ? max : max(characterCreateStore.options);
 });
 
 const disabledChoices = computed(() => {
-  if (!props.details.disabledGenerator) {
-    return [];
-  }
-  return props.details.disabledGenerator(characterCreateStore.options);
+  const disabledGenerator = ATTR_OPTIONS[props.attrSel].disabledGenerator;
+  return disabledGenerator === undefined
+    ? []
+    : disabledGenerator(characterCreateStore.options);
 });
 
 const selectedUpdated = (list: BaseEntityAttribute[]) => {
-  characterCreateStore.options.attributeSelections[props.details.key] = list;
-  if (props.details.filterLists) {
-    props.details.filterLists.forEach((filterKey) => {
+  characterCreateStore.options.attributeSelections[props.attrSel] = list;
+  const filterLists = ATTR_OPTIONS[props.attrSel].filterLists;
+  if (filterLists) {
+    filterLists.forEach((filterKey) => {
       characterCreateStore.options.attributeSelections[filterKey] =
         characterCreateStore.options.attributeSelections[filterKey].filter(
           (attr) => !list.includes(attr)

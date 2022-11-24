@@ -7,7 +7,7 @@ import type { Entity } from "@/utils/backendTypes";
 import { entityColor } from "@/utils/entityUtils";
 import { computed } from "vue";
 
-const props = defineProps<{ entity: Entity }>();
+const props = defineProps<{ entity?: Entity }>();
 const charColor = computed(() => {
   return entityColor(props.entity);
 });

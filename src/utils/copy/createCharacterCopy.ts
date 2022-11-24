@@ -56,6 +56,10 @@ export const GIFT_TO_ATTR_MAP: GiftToAttrMap = {
   None: undefined,
 };
 
+export const ATTR_FILTERS_ON_GIFT_SELECTION: (keyof AttributeSelections)[] = [
+  "badAttrs",
+];
+
 export const giftMatchesAttr = (
   gift: CharacterGift | undefined,
   attr: BaseEntityAttribute
@@ -64,62 +68,76 @@ export const giftMatchesAttr = (
 };
 
 export type AttributeSelectionOptionsDetails = {
-  key: keyof AttributeSelections;
-  max: number | ((options: CharacterCreateOptions) => number);
-  filterLists?: (keyof AttributeSelections)[];
-  disabledGenerator?: (
-    options: CharacterCreateOptions
-  ) => BaseEntityAttribute[];
+  [key in keyof AttributeSelections]: {
+    max: number | ((options: CharacterCreateOptions) => number);
+    filterLists?: (keyof AttributeSelections)[];
+    disabledGenerator?: (
+      options: CharacterCreateOptions
+    ) => BaseEntityAttribute[];
+    diff?: number; // defaults to 1
+  };
 };
 
-export const CHILD_ATTRS_OPTIONS: AttributeSelectionOptionsDetails = {
-  key: "childAttrs",
-  max: 3,
-  filterLists: ["additionalAttrs", "badAttrs"],
-};
-
-export const ADULT_ATTRS_OPTIONS: AttributeSelectionOptionsDetails = {
-  key: "adultAttrs",
-  max: 3,
-  filterLists: ["additionalAttrs", "badAttrs"],
-};
-
-export const ADDITIONAL_ATTRS_OPTIONS: AttributeSelectionOptionsDetails = {
-  key: "additionalAttrs",
-  max: (options) => {
-    switch (options.radioSelections.additionalAttrChoice) {
-      case "any":
-        return 1;
-      case "one":
-        return 2;
-      case "zero":
-        return 3;
-    }
-    return 0;
+export const ATTR_OPTIONS: AttributeSelectionOptionsDetails = {
+  childAttrs: {
+    max: 3,
+    filterLists: ["additionalAttrs", "badAttrs"],
   },
-  filterLists: ["badAttrs"],
-  disabledGenerator: (options) => {
-    switch (options.radioSelections.additionalAttrChoice) {
-      case "one":
-        return ATTRIBUTES.filter(
-          // block if attribute has only been selected by one of the previous options
-          (attr) =>
-            giftMatchesAttr(options.gift, attr) ||
-            options.attributeSelections.childAttrs.includes(attr) ===
+  adultAttrs: {
+    max: 3,
+    filterLists: ["additionalAttrs", "badAttrs"],
+  },
+  additionalAttrs: {
+    max: (options) => {
+      switch (options.radioSelections.additionalAttrChoice) {
+        case "any":
+          return 1;
+        case "one":
+          return 2;
+        case "zero":
+          return 3;
+      }
+      return 0;
+    },
+    filterLists: ["badAttrs"],
+    disabledGenerator: (options) => {
+      switch (options.radioSelections.additionalAttrChoice) {
+        case "one":
+          return ATTRIBUTES.filter(
+            // block if attribute has only been selected by one of the previous options
+            (attr) =>
+              giftMatchesAttr(options.gift, attr) ||
+              options.attributeSelections.childAttrs.includes(attr) ===
+                options.attributeSelections.adultAttrs.includes(attr)
+          );
+        case "zero":
+          // block if any attribute modifiers have already been selected
+          return ATTRIBUTES.filter(
+            (attr) =>
+              giftMatchesAttr(options.gift, attr) ||
+              options.attributeSelections.childAttrs.includes(attr) ||
               options.attributeSelections.adultAttrs.includes(attr)
-        );
-      case "zero":
-        // block if any attribute modifiers have already been selected
-        return ATTRIBUTES.filter(
-          (attr) =>
-            giftMatchesAttr(options.gift, attr) ||
-            options.attributeSelections.childAttrs.includes(attr) ||
-            options.attributeSelections.adultAttrs.includes(attr)
-        );
-    }
-    // don't block any choices
-    return [];
+          );
+      }
+      // don't block any choices
+      return [];
+    },
   },
+  badAttrs: {
+    max: 1,
+    disabledGenerator: (options) => {
+      return ATTRIBUTES.filter(
+        (attr) =>
+          giftMatchesAttr(options.gift, attr) ||
+          options.attributeSelections.childAttrs.includes(attr) ||
+          options.attributeSelections.adultAttrs.includes(attr) ||
+          options.attributeSelections.additionalAttrs.includes(attr)
+      );
+    },
+    diff: -1,
+  },
+  grate1: { max: 1, diff: -1 },
+  grate3: { max: 1 },
 };
 
 export type RadioButtonOptionsDetails = {
@@ -140,15 +158,6 @@ export const ADDITIONAL_ATTRS_CHOICE_OPTIONS: RadioButtonOptionsDetails = {
   clearAdditionalAttrs: true,
 };
 
-export const HP_BASE_VAL = 20;
-export const MP_BASE_VAL = 6;
-export const VIM_BASE_VAL = 20;
-export const INIT_BASE_VAL = 0;
-export const SPEED_BASE_VAL = 3;
-
-export const DEFAULT_HERO = 3;
-export const DEFAULT_HERO_MAX = 9;
-
 export const calculateAttribute = (
   options: CharacterCreateOptions,
   attr: BaseEntityAttribute
@@ -157,15 +166,30 @@ export const calculateAttribute = (
   if (giftMatchesAttr(options.gift, attr)) {
     sum += GIFT_ATTR_BONUS;
   }
-  Object.values(options.attributeSelections).forEach((sel) => {
-    if (sel.includes(attr)) {
-      sum += 1;
+  Object.entries(options.attributeSelections).forEach(
+    ([attrSel, selections]) => {
+      if (selections.includes(attr)) {
+        let diff = ATTR_OPTIONS[attrSel as keyof AttributeSelections].diff;
+        if (diff === undefined) {
+          diff = 1;
+        }
+        sum += diff;
+      }
     }
-  });
+  );
   return sum;
 };
 
 // Combat stat functions
+
+export const HP_BASE_VAL = 20;
+export const MP_BASE_VAL = 6;
+export const VIM_BASE_VAL = 20;
+export const INIT_BASE_VAL = 0;
+export const SPEED_BASE_VAL = 3;
+
+export const DEFAULT_HERO = 3;
+export const DEFAULT_HERO_MAX = 9;
 
 export const hpDiffStr = (str: number): number => {
   return str * 3;

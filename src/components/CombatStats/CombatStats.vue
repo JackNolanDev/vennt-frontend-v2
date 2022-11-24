@@ -178,7 +178,7 @@ import type {
   UpdatedEntityAttributes,
 } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
-import BulletPointVue from "./BulletPoint.vue";
+import BulletPointVue from "../Base/BulletPoint.vue";
 import {
   attrShortName,
   entityAttributesMap,

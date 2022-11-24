@@ -2,7 +2,7 @@
   <BaseLayout>
     <template #nav><BaseNav></BaseNav></template>
     <PageLayout class="medium">
-      <form>
+      <form v-if="!accountInfoStore.isLoggedIn">
         <h1>LOG IN</h1>
         <div>
           <label for="login-username" class="labelText">
@@ -50,6 +50,7 @@
           LOG IN
         </BaseButton>
       </form>
+      <p v-else class="text-center">You are already signed in. Log out?</p>
     </PageLayout>
   </BaseLayout>
 </template>

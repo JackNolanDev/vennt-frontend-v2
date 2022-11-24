@@ -1,5 +1,5 @@
 import HomeView from "@/views/HomeView.vue";
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 export const HOME_ROUTE = "home";
 export const SIGNUP_ROUTE = "signup";
@@ -9,7 +9,7 @@ export const CREATE_NEW_ROUTE = "createNew";
 export const CREDITS_ROUTE = "credits";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",

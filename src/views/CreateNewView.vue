@@ -35,6 +35,12 @@
       <CreateSectionGift></CreateSectionGift>
       <h2>Step 4: Attribute scores</h2>
       <CreateSectionAttributes></CreateSectionAttributes>
+      <h2>Step 5: Decide your Quests</h2>
+      <CreateSectionQuests></CreateSectionQuests>
+      <h2>Step 6: Beginner Boons</h2>
+      <CreateSectionBoons></CreateSectionBoons>
+      <h2>Step 7: XP and Abilities</h2>
+      <h2>Step 8: Finish the character</h2>
       <div class="mb-128"></div>
     </PageLayout>
   </BaseLayout>
@@ -50,6 +56,8 @@ import CreateSectionGift from "@/components/Create/CreateSectionGift.vue";
 import CombatStats from "@/components/CombatStats/CombatStats.vue";
 import { useCharacterCreateStore } from "@/stores/characterCreate";
 import CreateSectionAttributes from "@/components/Create/CreateSectionAttributes.vue";
+import CreateSectionQuests from "@/components/Create/CreateSectionQuests.vue";
+import CreateSectionBoons from "@/components/Create/CreateSectionBoons.vue";
 
 const characterCreateStore = useCharacterCreateStore();
 characterCreateStore.loadFromLocalStorage();

@@ -16,12 +16,22 @@
 <script setup lang="ts">
 import { useCharacterCreateStore } from "@/stores/characterCreate";
 import type { CharacterGift } from "@/utils/backendTypes";
+import {
+  ATTR_FILTERS_ON_GIFT_SELECTION,
+  giftMatchesAttr,
+} from "@/utils/copy/createCharacterCopy";
 import GiftSelection from "./GiftSelection.vue";
 
 const characterCreateStore = useCharacterCreateStore();
 
 const chooseGift = (gift: CharacterGift) => {
   characterCreateStore.options.gift = gift;
+  ATTR_FILTERS_ON_GIFT_SELECTION.forEach((attrSelection) => {
+    characterCreateStore.options.attributeSelections[attrSelection] =
+      characterCreateStore.options.attributeSelections[attrSelection].filter(
+        (attr) => !giftMatchesAttr(gift, attr)
+      );
+  });
   characterCreateStore.saveToLocalStorage();
 };
 </script>

@@ -31,6 +31,9 @@ export const useAccountInfoStore = defineStore("accountInfo", {
         if (router.currentRoute.value.meta.loggedInOnly) {
           router.push({ name: HOME_ROUTE });
         }
+        // current solution seems broken because currentRoute defaults to base route :/
+        // so can just always direct to home, I guess
+        // router.push({ name: HOME_ROUTE });
         // console.error("error", err);
       }
     },
