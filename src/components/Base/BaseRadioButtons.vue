@@ -4,9 +4,9 @@
     :key="key"
     :icon="isSelected(key) ? 'radio_button_checked' : 'radio_button_unchecked'"
     @click="selectionButton(key)"
-    class="skinny"
+    class="skinny wide"
   >
-    <span v-html="html" class="pt-12"></span>
+    <span v-html="html" class="pt-12 wrap"></span>
   </BaseButton>
 </template>
 

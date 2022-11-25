@@ -204,7 +204,6 @@ export const fullAbilityValidator = abilityValidator.extend({
 // ITEMS
 
 export const itemFieldsValidator = z.object({
-  equipped: z.boolean().optional(),
   attr: z.string().max(NAME_MAX).optional(),
   category: z.string().max(NAME_MAX).optional(),
   courses: z.string().max(NAME_MAX).optional(),
@@ -214,18 +213,27 @@ export const itemFieldsValidator = z.object({
   weapon_type: z.string().max(NAME_MAX).optional(), // TODO: replace with enum?
 });
 
+export const ITEM_TYPE_EQUIPMENT = "equipment";
+export const ITEM_TYPE_CONSUMABLE = "consumable";
+export const ITEM_TYPE_CONTAINER = "container";
+export const ITEM_TYPE_ARMOR = "armor";
+export const ITEM_TYPE_SHIELD = "shield";
+export const ITEM_TYPE_WEAPON = "weapon";
+
+export const itemTypeValidator = z.enum([
+  ITEM_TYPE_EQUIPMENT,
+  ITEM_TYPE_CONSUMABLE,
+  ITEM_TYPE_CONTAINER,
+  ITEM_TYPE_ARMOR,
+  ITEM_TYPE_SHIELD,
+  ITEM_TYPE_WEAPON,
+]);
+
 export const itemValidator = z.object({
   name: nameValidator,
   bulk: z.number().int(),
   desc: z.string().max(ITEM_MAX),
-  type: z.enum([
-    "equipment",
-    "consumable",
-    "container",
-    "armor",
-    "shield",
-    "weapon",
-  ]),
+  type: itemTypeValidator,
   custom_fields: itemFieldsValidator.optional(),
   uses: usesValidator.optional(),
   comment: z.string().max(COMMENT_MAX).optional(),
@@ -281,11 +289,19 @@ export type EntityAttribute = keyof EntityAttributes;
 export type BaseEntityAttribute = z.infer<typeof baseAttributeFieldValidator>;
 export type Entity = z.infer<typeof entityValidator>;
 export type FullEntity = z.infer<typeof fullEntityValidator>;
-export type NonCompleteCollectedEntity = z.infer<
+export type UncompleteCollectedEntity = z.infer<
   typeof collectedEntityValidator
 >;
 export type FullCollectedEntity = z.infer<typeof fullCollectedEntityValidator>;
-export type CollectedEntity = NonCompleteCollectedEntity | FullCollectedEntity;
+export type CollectedEntity = UncompleteCollectedEntity | FullCollectedEntity;
+export type UsesMap = z.infer<typeof usesValidator>;
+export type EntityItemType = z.infer<typeof itemTypeValidator>;
+export type UncompleteEntityItem = z.infer<typeof itemValidator>;
+export type FullEntityItem = z.infer<typeof fullItemValidator>;
+export type EntityItem = UncompleteEntityItem | FullEntityItem;
+export type UncompleteEntityAbility = z.infer<typeof abilityValidator>;
+export type FullEntityAbility = z.infer<typeof fullAbilityValidator>;
+export type EntityAbility = UncompleteEntityAbility | FullEntityAbility;
 
 export type UpdatedEntityAttributes = {
   [attr in EntityAttribute]?: {
@@ -347,4 +363,27 @@ export type DiceCommands = {
   roll20: string;
   web: string;
   settings: DiceSettings;
+};
+
+export type ShopItem = {
+  name?: string;
+  bulk: number;
+  desc: string;
+  type: EntityItemType;
+  section?: string;
+  courses?: string;
+  category?: string;
+  weaponType?: string;
+  range?: string;
+  attr?: string;
+  dmg?: string;
+  special?: string;
+  cost: string;
+  sp?: number;
+  examples?: string;
+  uses?: UsesMap;
+};
+
+export type ConsolidatedItem = FullEntityItem & {
+  ids: string[];
 };

@@ -227,6 +227,10 @@ ul {
   white-space: nowrap;
 }
 
+.wrap {
+  white-space: normal;
+}
+
 .hideExtra {
   overflow: hidden;
 }

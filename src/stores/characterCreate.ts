@@ -10,6 +10,9 @@ import {
   calculateSpeed,
   characterCreateOptionsValidator,
   type CharacterCreateOptions,
+  calculateSP,
+  calculateXP,
+  calculateItems,
 } from "@/utils/copy/createCharacterCopy";
 import { defineStore } from "pinia";
 
@@ -71,14 +74,20 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     cha(state) {
       return calculateAttribute(state.options, "cha");
     },
+    xp(state) {
+      return calculateXP(state.options);
+    },
+    sp(state) {
+      return calculateSP(state.options);
+    },
     hp(): number {
-      return calculateHP(0, this.str);
+      return calculateHP(this.xp, this.str);
     },
     mp(): number {
       return calculateMP(this.wis);
     },
     vim(): number {
-      return calculateVim(0, this.str);
+      return calculateVim(this.xp, this.str);
     },
     collectedCharacter(): CollectedEntity {
       return {
@@ -105,15 +114,15 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
             max_hero: DEFAULT_HERO_MAX,
             init: calculateInit(this.agi, this.dex),
             speed: calculateSpeed(this.agi),
-            xp: 0,
-            sp: 0,
+            xp: this.xp,
+            sp: this.sp,
           },
           other_fields: {
             gift: this.options.gift,
           },
         },
         abilities: [],
-        items: [],
+        items: calculateItems(this.options),
         changelog: [],
       };
     },

@@ -3,8 +3,11 @@ lockfileVersion: 5.4
 specifiers:
   '@dice-roller/rpg-dice-roller': ^5.2.1
   '@rushstack/eslint-patch': ^1.1.4
+  '@types/indefinite': ^2.3.1
   '@types/math-expression-evaluator': ^1.3.0
   '@types/node': ^16.18.3
+  '@types/pluralize': ^0.0.29
+  '@types/uuid': ^8.3.4
   '@vitejs/plugin-vue': ^3.1.2
   '@vue/eslint-config-prettier': ^7.0.0
   '@vue/eslint-config-typescript': ^11.0.0
@@ -12,11 +15,14 @@ specifiers:
   axios: ^1.1.3
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
+  indefinite: ^2.4.2
   math-expression-evaluator: ^1.4.0
   npm-run-all: ^4.1.5
   pinia: ^2.0.23
+  pluralize: ^8.0.0
   prettier: ^2.7.1
   typescript: ~4.7.4
+  uuid: ^9.0.0
   vite: ^3.1.8
   vue: ^3.2.41
   vue-router: ^4.1.5
@@ -26,16 +32,22 @@ specifiers:
 dependencies:
   '@dice-roller/rpg-dice-roller': 5.2.1
   axios: 1.1.3
+  indefinite: 2.4.2
   math-expression-evaluator: 1.4.0
   pinia: 2.0.23_lrjaoqkmph6q2hmgd3qeuy6rom
+  pluralize: 8.0.0
+  uuid: 9.0.0
   vue: 3.2.41
   vue-router: 4.1.6_vue@3.2.41
   zod: 3.19.1
 
 devDependencies:
   '@rushstack/eslint-patch': 1.2.0
+  '@types/indefinite': 2.3.1
   '@types/math-expression-evaluator': 1.3.0
   '@types/node': 16.18.3
+  '@types/pluralize': 0.0.29
+  '@types/uuid': 8.3.4
   '@vitejs/plugin-vue': 3.2.0_vite@3.2.3+vue@3.2.41
   '@vue/eslint-config-prettier': 7.0.0_mbd4zptqpjbepwpyh2zbtslqey
   '@vue/eslint-config-typescript': 11.0.2_qyjznpwebazwkjejbnritmft4e
@@ -168,6 +180,10 @@ packages:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
     dev: true
 
+  /@types/indefinite/2.3.1:
+    resolution: {integrity: sha512-rRQndOl5JIImsT8iQLdMIcJ/+APtqZ9Gt2FztFiPtVHiSePDDbsWAR+2k7TEVq+a5s/trDzKtV/RmaW+/FVgTw==}
+    dev: true
+
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
     dev: true
@@ -180,8 +196,16 @@ packages:
     resolution: {integrity: sha512-jh6m0QUhIRcZpNv7Z/rpN+ZWXOicUUQbSoWks7Htkbb9IjFQj4kzcX/xFCkjstCj5flMsN8FiSvt+q+Tcs4Llg==}
     dev: true
 
+  /@types/pluralize/0.0.29:
+    resolution: {integrity: sha512-BYOID+l2Aco2nBik+iYS4SZX0Lf20KPILP5RGmM1IgzdwNdTs0eebiFriOPcej1sX9mLnSoiNte5zcFxssgpGA==}
+    dev: true
+
   /@types/semver/7.3.13:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
+    dev: true
+
+  /@types/uuid/8.3.4:
+    resolution: {integrity: sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==}
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.42.1_4ecohspxivztjywoa2p2hiswum:
@@ -1415,6 +1439,11 @@ packages:
     engines: {node: '>=0.8.19'}
     dev: true
 
+  /indefinite/2.4.2:
+    resolution: {integrity: sha512-z8fxRTYuBwocAax4kokd5QXxNLbsifh4feUr0CJjTnGtH7H3NF0XRXQYrQsTs0D1WZCqpqtqNz3ouab9oDkcpw==}
+    engines: {node: '>=6.0.0'}
+    dev: false
+
   /inflight/1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     dependencies:
@@ -1873,6 +1902,11 @@ packages:
       vue-demi: 0.13.11_vue@3.2.41
     dev: false
 
+  /pluralize/8.0.0:
+    resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
+    engines: {node: '>=4'}
+    dev: false
+
   /postcss-selector-parser/6.0.10:
     resolution: {integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==}
     engines: {node: '>=4'}
@@ -2224,6 +2258,11 @@ packages:
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
+
+  /uuid/9.0.0:
+    resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    hasBin: true
+    dev: false
 
   /validate-npm-package-license/3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}

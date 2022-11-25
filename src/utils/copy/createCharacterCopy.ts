@@ -8,7 +8,9 @@ import {
   type CharacterGift,
   type EntityAttribute,
   type HTMLString,
+  type UncompleteEntityItem,
 } from "../backendTypes";
+import { namesToItems } from "../itemUtils";
 
 export const AttributeSelectionsValidator = z.object({
   childAttrs: baseAttributeFieldValidator.array(),
@@ -141,21 +143,86 @@ export const ATTR_OPTIONS: AttributeSelectionOptionsDetails = {
 };
 
 export type RadioButtonOptionsDetails = {
-  key: keyof RadioSelections;
-  options: {
-    [key: string]: HTMLString;
+  [key in keyof RadioSelections]: {
+    options: {
+      [key: string]: HTMLString;
+    };
+    clearAdditionalAttrs?: boolean;
   };
-  clearAdditionalAttrs?: boolean;
 };
 
-export const ADDITIONAL_ATTRS_CHOICE_OPTIONS: RadioButtonOptionsDetails = {
-  key: "additionalAttrChoice",
-  options: {
-    any: "Add 1 to one Attribute of your choice",
-    one: "Add 1 to two Attributes at 1",
-    zero: "Add 1 to three Attributes at 0",
+export const RADIO_OPTIONS: RadioButtonOptionsDetails = {
+  additionalAttrChoice: {
+    options: {
+      any: "Add 1 to one Attribute of your choice",
+      one: "Add 1 to two Attributes at 1",
+      zero: "Add 1 to three Attributes at 0",
+    },
+    clearAdditionalAttrs: true,
   },
-  clearAdditionalAttrs: true,
+  sideItem: {
+    options: {
+      sharp:
+        "<b>Something sharp:</b> Gain +1 Dexterity and two more Blade weapons.",
+      remember: "<b>Something to remember:</b> Gain +1 Spirit OR +1 Charisma.",
+      useful:
+        "<b>Something useful:</b> Gain +1 Wisdom and 50 sp to spend on Equipment.",
+      eat: "<b>Something to eat:</b> Gain +1 Strength and 50 sp to spend on Consumables.",
+      read: "<b>Something to read:</b> Gain +1 Intelligence and 100 XP.",
+    },
+  },
+  rememberItem: {
+    options: {
+      spi: "<b>Spirit:</b> Gain +1 Spirit.",
+      cha: "<b>Charisma:</b> Gain +1 Charisma.",
+    },
+  },
+  outfit: {
+    options: {
+      fashionable:
+        "<b>Fashionable:</b> Gain +1 Charisma and 100sp. Your fashionable outfit has a carrying capacity of 5 Bulk.",
+      functional:
+        "<b>Functional:</b> Gain +1 Agility. Your functional outfit has a carrying capacity of 15 Bulk.",
+    },
+  },
+  itemSet: {
+    options: {
+      chef: "<b>Chef:</b> 3 Rations, 3 Tasty Waters, 1 Frying Pan, 1 Cooking Kit",
+      dungeoneer:
+        "<b>Dungeoneer:</b> 1 Flare Rocket, 1 Lockpick set, 1 Flint and Steel, 1 Rope, 1 bag of Sounding Stones, 1 Lux Ward, 1 Lantern",
+      merchant:
+        "<b>Merchant:</b> 1 Elixir of Energy, 1 Rope, 1 Writing Kit, 1 Lantern, 3 Coffee or Alcohol",
+      medic:
+        "<b>Medic:</b> 3 Bandages, 2 Healing Salves, 1 Godfire, 1 Sour Blessing, 1 Elixir of Life",
+      scientist:
+        "<b>Scientist:</b> 1 Lux Ward, 1 Elixir of Focus, 1 Compass, 1 Writing Kit, 1 Bullseye Lantern",
+      traveler: "<b>Traveler:</b> 1 Bedroll, 1 Lux Ward, 1 Spyglass, 6 Rations",
+    },
+  },
+  experience: {
+    options: {
+      starter: `<b>Yes:</b> Gain 1000 XP. When you complete a Novice Path for the first time, gain 300 XP.
+    When you complete a Journeyman Path for the first time, gain 700 XP.
+    When you complete an Adept Path for the first time, gain 1000 XP.`,
+      experienced: "<b>No:</b> Gain 2500 XP.",
+    },
+  },
+};
+
+// Combat stat functions
+
+type RadioOptionAttrsMap = { [key: string]: BaseEntityAttribute };
+const RADIO_OPTION_ATTRS_MAP: RadioOptionAttrsMap = {
+  sharp: "dex",
+  useful: "wis",
+  eat: "str",
+  read: "int",
+  fashionable: "cha",
+  Functional: "agi",
+};
+const REMEMBER_SPECIAL_RADIO_ATTRS_MAP: RadioOptionAttrsMap = {
+  spi: "spi",
+  cha: "cha",
 };
 
 export const calculateAttribute = (
@@ -177,10 +244,41 @@ export const calculateAttribute = (
       }
     }
   );
+  Object.values(options.radioSelections).forEach((selection) => {
+    if (
+      RADIO_OPTION_ATTRS_MAP[selection] === attr ||
+      (options.radioSelections.sideItem === "remember" &&
+        REMEMBER_SPECIAL_RADIO_ATTRS_MAP[selection] === attr)
+    ) {
+      sum++;
+    }
+  });
   return sum;
 };
 
-// Combat stat functions
+export const calculateXP = (options: CharacterCreateOptions) => {
+  let sum = 0;
+  if (options.radioSelections.experience === "starter") {
+    sum += 1000;
+  } else if (options.radioSelections.experience === "experienced") {
+    sum += 2500;
+  }
+  if (options.radioSelections.sideItem === "read") {
+    sum += 100;
+  }
+  return sum;
+};
+
+export const calculateSP = (options: CharacterCreateOptions) => {
+  let sum = 0;
+  if (["useful", "eat"].includes(options.radioSelections.sideItem)) {
+    sum += 50;
+  }
+  if (options.radioSelections.outfit === "fashionable") {
+    sum += 100;
+  }
+  return sum;
+};
 
 export const HP_BASE_VAL = 20;
 export const MP_BASE_VAL = 6;
@@ -214,4 +312,95 @@ export const calculateInit = (agi: number, dex: number) => {
 };
 export const calculateSpeed = (agi: number) => {
   return SPEED_BASE_VAL + agi;
+};
+
+export const calculateItems = (
+  options: CharacterCreateOptions
+): UncompleteEntityItem[] => {
+  const itemNames: string[] = [];
+  if (options.radioSelections.outfit === "fashionable") {
+    itemNames.push("Fashionable Outfit");
+  } else if (options.radioSelections.outfit === "functional") {
+    itemNames.push("Functional Outfit");
+  }
+
+  // all characters start with both of these weapons for free
+  itemNames.push("Melee Blade", "Ranged Sidearm");
+
+  if (options.radioSelections.sideItem === "sharp") {
+    itemNames.push("Melee Blade", "Melee Blade");
+  }
+
+  switch (options.radioSelections.itemSet) {
+    case "chef":
+      itemNames.push(
+        "Rations",
+        "Rations",
+        "Rations",
+        "Tasty Water",
+        "Tasty Water",
+        "Tasty Water",
+        "Frying Pan",
+        "Cooking Kit"
+      );
+      break;
+    case "dungeoneer":
+      itemNames.push(
+        "Flare Rocket",
+        "Lockpick set",
+        "Flint and Steel",
+        "Rope",
+        "Sounding Stones",
+        "Lux Ward",
+        "Lantern"
+      );
+      break;
+    case "merchant":
+      itemNames.push(
+        "Elixir of Energy*",
+        "Rope",
+        "Writing Kit",
+        "Lantern",
+        // TODO: let user choose between coffee and alcohol
+        "Coffee",
+        "Coffee",
+        "Coffee"
+      );
+      break;
+    case "medic":
+      itemNames.push(
+        "Bandages",
+        "Bandages",
+        "Bandages",
+        "Healing Salve",
+        "Healing Salve",
+        "Godfire",
+        "Sour Blessing",
+        "Elixir of Life*"
+      );
+      break;
+    case "scientist":
+      itemNames.push(
+        "Lux Ward",
+        "Elixir of Focus*",
+        "Compass",
+        "Writing Kit",
+        "Lantern, Bullseye"
+      );
+      break;
+    case "traveler":
+      itemNames.push(
+        "Bedroll",
+        "Lux Ward",
+        "Spyglass",
+        "Rations",
+        "Rations",
+        "Rations",
+        "Rations",
+        "Rations",
+        "Rations"
+      );
+      break;
+  }
+  return namesToItems(itemNames);
 };

@@ -1,6 +1,6 @@
 <template>
   <AttributeSelection
-    :selected="characterCreateStore.options.attributeSelections[attrSel]"
+    :selected="characterCreateStore.options.attributeSelections[attrKey]"
     :maxChoices="maxChoices"
     :disabledChoices="disabledChoices"
     @selected-updated="selectedUpdated"
@@ -17,24 +17,24 @@ import {
 import { computed } from "vue";
 import AttributeSelection from "../Attributes/AttributeSelection.vue";
 
-const props = defineProps<{ attrSel: keyof AttributeSelections }>();
+const props = defineProps<{ attrKey: keyof AttributeSelections }>();
 const characterCreateStore = useCharacterCreateStore();
 
 const maxChoices = computed(() => {
-  const max = ATTR_OPTIONS[props.attrSel].max;
+  const max = ATTR_OPTIONS[props.attrKey].max;
   return typeof max === "number" ? max : max(characterCreateStore.options);
 });
 
 const disabledChoices = computed(() => {
-  const disabledGenerator = ATTR_OPTIONS[props.attrSel].disabledGenerator;
+  const disabledGenerator = ATTR_OPTIONS[props.attrKey].disabledGenerator;
   return disabledGenerator === undefined
     ? []
     : disabledGenerator(characterCreateStore.options);
 });
 
 const selectedUpdated = (list: BaseEntityAttribute[]) => {
-  characterCreateStore.options.attributeSelections[props.attrSel] = list;
-  const filterLists = ATTR_OPTIONS[props.attrSel].filterLists;
+  characterCreateStore.options.attributeSelections[props.attrKey] = list;
+  const filterLists = ATTR_OPTIONS[props.attrKey].filterLists;
   if (filterLists) {
     filterLists.forEach((filterKey) => {
       characterCreateStore.options.attributeSelections[filterKey] =

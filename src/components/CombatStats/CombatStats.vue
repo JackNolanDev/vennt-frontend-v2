@@ -167,6 +167,11 @@
         </div>
       </div>
     </div>
+    <!-- ITEMS -->
+    <CombatStatsItemSection
+      v-if="showItems && entity.items.length > 0"
+      :entity="entity"
+    ></CombatStatsItemSection>
   </div>
 </template>
 
@@ -188,11 +193,13 @@ import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import GiftDescription from "../Create/GiftDescription.vue";
 import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
+import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
   entityAttrs?: UpdatedEntityAttributes;
   useCopyableDice: boolean;
+  showItems?: boolean;
 }>();
 
 interface CombatStatsState {
