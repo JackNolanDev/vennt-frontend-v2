@@ -8,9 +8,15 @@ import type {
   UncompleteCollectedEntity,
 } from "@/utils/backendTypes";
 import { defineStore } from "pinia";
+import { useCharacterCreateStore } from "./characterCreate";
 
 type EntityState = {
   entity: undefined | FullCollectedEntity;
+};
+
+type AddCollectedEntityOptions = {
+  redirectName: string;
+  clearCharacterCreation: boolean;
 };
 
 export const useEntityStore = defineStore("entity", {
@@ -22,15 +28,17 @@ export const useEntityStore = defineStore("entity", {
   actions: {
     async addCollectedEntity(
       request: UncompleteCollectedEntity,
-      redirectName?: string
+      options?: Partial<AddCollectedEntityOptions>
     ) {
       this.entity = await addCollectedEntityApi(request);
-      console.log(this.entity);
-      if (redirectName) {
+      if (options?.redirectName) {
         router.push({
-          name: redirectName,
+          name: options.redirectName,
           params: { id: this.entity.entity.id },
         });
+      }
+      if (options?.clearCharacterCreation) {
+        useCharacterCreateStore().clearCharacter();
       }
     },
     async fetchCollectedEntity(id: string) {

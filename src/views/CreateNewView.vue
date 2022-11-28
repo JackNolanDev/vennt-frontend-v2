@@ -104,10 +104,10 @@ const entityStore = useEntityStore();
 characterCreateStore.loadFromLocalStorage();
 
 const createCharacter = () => {
-  entityStore.addCollectedEntity(
-    characterCreateStore.collectedCharacter,
-    ENTITY_ROUTE
-  );
+  entityStore.addCollectedEntity(characterCreateStore.collectedCharacter, {
+    redirectName: ENTITY_ROUTE,
+    clearCharacterCreation: true,
+  });
 };
 
 const clearCharacter = () => {
