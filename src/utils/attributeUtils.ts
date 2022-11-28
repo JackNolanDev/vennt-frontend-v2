@@ -2,6 +2,7 @@ import mexp from "math-expression-evaluator";
 import {
   ATTRIBUTES_SET,
   type CollectedEntity,
+  type Entity,
   type EntityAttribute,
   type UpdatedEntityAttributes,
 } from "./backendTypes";
@@ -81,6 +82,15 @@ export function attrShortName(attr: EntityAttribute) {
     return attr.toUpperCase();
   }
   return attr.charAt(0).toUpperCase() + attr.slice(1);
+}
+
+export function entityLevel(entity: Entity) {
+  if (!entity.attributes.xp) {
+    return 0;
+  }
+  const level = Math.floor(entity.attributes.xp / 1000);
+  // if xp < 1000, still return level 1
+  return level <= 0 ? 1 : level;
 }
 
 export function entityAttributesMap(

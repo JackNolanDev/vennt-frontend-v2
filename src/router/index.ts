@@ -7,6 +7,7 @@ export const LOGIN_ROUTE = "login";
 export const CREATE_ROUTE = "create";
 export const CREATE_NEW_ROUTE = "createNew";
 export const CREDITS_ROUTE = "credits";
+export const ENTITY_ROUTE = "entity";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,12 @@ const router = createRouter({
       name: CREATE_NEW_ROUTE,
       meta: { loggedInOnly: true },
       component: () => import("../views/CreateNewView.vue"),
+    },
+    {
+      path: "/entity/:id",
+      name: ENTITY_ROUTE,
+      meta: { loggedInOnly: true },
+      component: () => import("../views/BaseEntityView.vue"),
     },
     {
       path: "/credits",

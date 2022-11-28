@@ -40,12 +40,6 @@ Button styles:
 .basicBtnContents {
   margin: 6px;
 }
-.selected .material-icons {
-  color: var(--main-button);
-}
-.selected.basicBtn:disabled .material-icons {
-  color: var(--basic-button-disabled);
-}
 .skinny > .basicBtnContents {
   margin: 2px;
 }

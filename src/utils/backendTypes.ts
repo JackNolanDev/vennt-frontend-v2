@@ -276,6 +276,8 @@ export const fullCollectedEntityValidator = z.object({
   changelog: attributeChangelogValidator.array(),
 });
 
+// Type definitions
+
 export type SignupRequest = z.infer<typeof signupRequestValidator>;
 export type LoginRequest = z.infer<typeof loginRequestValidator>;
 export type AccountInfo = z.infer<typeof accountInfoValidator>;
@@ -302,6 +304,13 @@ export type EntityItem = UncompleteEntityItem | FullEntityItem;
 export type UncompleteEntityAbility = z.infer<typeof abilityValidator>;
 export type FullEntityAbility = z.infer<typeof fullAbilityValidator>;
 export type EntityAbility = UncompleteEntityAbility | FullEntityAbility;
+export type UncompleteEntityChangelog = z.infer<
+  typeof attributeChangelogValidator
+>;
+export type FullEntityChangelog = z.infer<
+  typeof fullAttributeChangelogValidator
+>;
+export type EntityChangelog = UncompleteEntityChangelog | FullEntityChangelog;
 
 export type UpdatedEntityAttributes = {
   [attr in EntityAttribute]?: {

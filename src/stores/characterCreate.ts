@@ -1,4 +1,4 @@
-import type { CollectedEntity } from "@/utils/backendTypes";
+import type { UncompleteCollectedEntity } from "@/utils/backendTypes";
 import {
   calculateAttribute,
   calculateHP,
@@ -22,28 +22,30 @@ type CharacterCreateStore = {
   options: CharacterCreateOptions;
 };
 
+const DEFAULT_OPTIONS: CharacterCreateOptions = {
+  name: "",
+  attributeSelections: {
+    childAttrs: [],
+    adultAttrs: [],
+    additionalAttrs: [],
+    badAttrs: [],
+    grate1: [],
+    grate3: [],
+  },
+  radioSelections: {
+    additionalAttrChoice: "",
+    sideItem: "",
+    rememberItem: "",
+    outfit: "",
+    itemSet: "",
+    experience: "",
+  },
+};
+
 export const useCharacterCreateStore = defineStore("characterCreate", {
   state: (): CharacterCreateStore => {
     return {
-      options: {
-        name: "",
-        attributeSelections: {
-          childAttrs: [],
-          adultAttrs: [],
-          additionalAttrs: [],
-          badAttrs: [],
-          grate1: [],
-          grate3: [],
-        },
-        radioSelections: {
-          additionalAttrChoice: "",
-          sideItem: "",
-          rememberItem: "",
-          outfit: "",
-          itemSet: "",
-          experience: "",
-        },
-      },
+      options: DEFAULT_OPTIONS,
     };
   },
   getters: {
@@ -89,7 +91,7 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     vim(): number {
       return calculateVim(this.xp, this.str);
     },
-    collectedCharacter(): CollectedEntity {
+    collectedCharacter(): UncompleteCollectedEntity {
       return {
         entity: {
           name: this.options.name,
@@ -144,6 +146,10 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
         CREATE_CHARACTER_LOCAL_STORAGE,
         JSON.stringify(this.options)
       );
+    },
+    clearCharacter() {
+      localStorage.removeItem(CREATE_CHARACTER_LOCAL_STORAGE);
+      this.options = DEFAULT_OPTIONS;
     },
   },
 });

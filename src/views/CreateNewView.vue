@@ -43,7 +43,41 @@
       <h2>Step 7: XP and Abilities</h2>
       <CreateSectionXP></CreateSectionXP>
       <h2>Step 8: Finish the character</h2>
-      <div class="mb-128"></div>
+      <p class="textBlock">
+        Click the "Create Character" button to officially create the character.
+      </p>
+      <p class="textBlock">
+        Click the "Clear Character" button to delete this character and start
+        again.
+      </p>
+      <div class="alignRow gap wrap split mt-8 mb-128">
+        <ConfirmationModal
+          trigger-class="primary"
+          id="create-character-modal"
+          @main-button="createCharacter"
+        >
+          <template #triggerButton>Create Character</template>
+          <template #mainButton>Create Character</template>
+          <template #title>Continue with Character Creation?</template>
+          <p class="mt-0 mb-0">
+            Are you sure you are done editing this character? Most fields will
+            still be editable once you save this character to the server.
+          </p>
+        </ConfirmationModal>
+        <ConfirmationModal
+          trigger-class="clear"
+          id="clear-character-modal"
+          @main-button="clearCharacter"
+        >
+          <template #triggerButton>Clear Character</template>
+          <template #mainButton>Delete Character</template>
+          <template #title>Delete your progress on this character?</template>
+          <p class="mt-0 mb-0">
+            Are you sure you want to delete your progress on this character?
+            Your selections will not be saved or recoverable.
+          </p>
+        </ConfirmationModal>
+      </div>
     </PageLayout>
   </BaseLayout>
 </template>
@@ -61,7 +95,23 @@ import CreateSectionAttributes from "@/components/Create/CreateSectionAttributes
 import CreateSectionQuests from "@/components/Create/CreateSectionQuests.vue";
 import CreateSectionBoons from "@/components/Create/CreateSectionBoons.vue";
 import CreateSectionXP from "@/components/Create/CreateSectionXP.vue";
+import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
+import router, { CREATE_ROUTE, ENTITY_ROUTE } from "@/router";
+import { useEntityStore } from "@/stores/entity";
 
 const characterCreateStore = useCharacterCreateStore();
+const entityStore = useEntityStore();
 characterCreateStore.loadFromLocalStorage();
+
+const createCharacter = () => {
+  entityStore.addCollectedEntity(
+    characterCreateStore.collectedCharacter,
+    ENTITY_ROUTE
+  );
+};
+
+const clearCharacter = () => {
+  characterCreateStore.clearCharacter();
+  router.push({ name: CREATE_ROUTE });
+};
 </script>
