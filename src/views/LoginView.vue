@@ -42,6 +42,9 @@
             {{ passwordInvalid }}
           </p>
         </div>
+        <p v-if="accountInfoStore.loginError" class="errorText">
+          {{ accountInfoStore.loginError }}
+        </p>
         <BaseButton
           @click="loginButton"
           :disabled="buttonInvalid"

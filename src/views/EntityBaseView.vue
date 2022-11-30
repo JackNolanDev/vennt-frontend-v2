@@ -9,8 +9,7 @@
       ></CombatStats>
     </template>
     <PageLayout>
-      <h1 class="centeredText">CHARACTER</h1>
-      {{ entityStore.entity }}
+      <RouterView></RouterView>
     </PageLayout>
   </BaseLayout>
 </template>

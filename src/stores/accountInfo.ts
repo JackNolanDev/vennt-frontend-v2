@@ -5,16 +5,21 @@ import type {
   LoginRequest,
   SignupRequest,
 } from "@/utils/backendTypes";
+import { AxiosError } from "axios";
 import { defineStore } from "pinia";
 
 interface AccountInfoStore {
   accountInfo: undefined | false | AccountInfo;
+  loginError: string;
+  signupError: string;
 }
 
 export const useAccountInfoStore = defineStore("accountInfo", {
   state: (): AccountInfoStore => {
     return {
       accountInfo: undefined,
+      loginError: "",
+      signupError: "",
     };
   },
   getters: {
@@ -38,12 +43,35 @@ export const useAccountInfoStore = defineStore("accountInfo", {
       }
     },
     async postSignup(SignupRequest: SignupRequest) {
-      this.accountInfo = await signupApi(SignupRequest);
-      router.push({ name: HOME_ROUTE });
+      try {
+        this.accountInfo = await signupApi(SignupRequest);
+        router.push({ name: HOME_ROUTE });
+      } catch (err) {
+        if (
+          err instanceof AxiosError &&
+          err.response &&
+          err.response.data.error
+        ) {
+          this.signupError = err.response.data.error;
+        }
+      }
     },
     async postLogin(loginRequest: LoginRequest) {
-      this.accountInfo = await loginApi(loginRequest);
-      router.push({ name: HOME_ROUTE });
+      try {
+        this.accountInfo = await loginApi(loginRequest);
+        router.push({ name: HOME_ROUTE });
+      } catch (err) {
+        if (err instanceof Error) {
+          console.log(err);
+          if (
+            err instanceof AxiosError &&
+            err.response &&
+            err.response.data.error
+          ) {
+            this.loginError = err.response.data.error;
+          }
+        }
+      }
     },
     async postLogOut() {
       await logoutApi();

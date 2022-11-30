@@ -289,8 +289,9 @@ export type EntityType = z.infer<typeof entityTypeValidator>;
 export type EntityAttributes = z.infer<typeof attributesValidator>;
 export type EntityAttribute = keyof EntityAttributes;
 export type BaseEntityAttribute = z.infer<typeof baseAttributeFieldValidator>;
-export type Entity = z.infer<typeof entityValidator>;
+export type UncompleteEntity = z.infer<typeof entityValidator>;
 export type FullEntity = z.infer<typeof fullEntityValidator>;
+export type Entity = UncompleteEntity | FullEntity;
 export type UncompleteCollectedEntity = z.infer<
   typeof collectedEntityValidator
 >;

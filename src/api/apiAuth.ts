@@ -5,28 +5,20 @@ import type {
   LoginRequest,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
-import { parseResponse } from "./utils";
+import { wrapAPI } from "./utils";
 
-export const signupApi = async (
-  request: SignupRequest
-): Promise<AccountInfo> => {
-  return parseResponse(
-    await api.post("/auth/signup", request),
-    accountInfoValidator
-  );
+export const signupApi = (request: SignupRequest): Promise<AccountInfo> => {
+  return wrapAPI(() => api.post("/auth/signup", request), accountInfoValidator);
 };
 
-export const loginApi = async (request: LoginRequest): Promise<AccountInfo> => {
-  return parseResponse(
-    await api.post("/auth/login", request),
-    accountInfoValidator
-  );
+export const loginApi = (request: LoginRequest): Promise<AccountInfo> => {
+  return wrapAPI(() => api.post("/auth/login", request), accountInfoValidator);
 };
 
-export const logoutApi = async () => {
-  api.post("/auth/logout");
+export const logoutApi = () => {
+  wrapAPI(() => api.post("/auth/logout"));
 };
 
-export const getAccountApi = async () => {
-  return parseResponse(await api.get("/auth/account"), accountInfoValidator);
+export const getAccountApi = () => {
+  return wrapAPI(() => api.get("/auth/account"), accountInfoValidator);
 };

@@ -1,5 +1,5 @@
 import HomeView from "@/views/HomeView.vue";
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 export const HOME_ROUTE = "home";
 export const SIGNUP_ROUTE = "signup";
@@ -8,9 +8,15 @@ export const CREATE_ROUTE = "create";
 export const CREATE_NEW_ROUTE = "createNew";
 export const CREDITS_ROUTE = "credits";
 export const ENTITY_ROUTE = "entity";
+export const ENTITY_ABILITIES_ROUTE = ENTITY_ROUTE;
+export const ENTITY_COMBAT_ROUTE = "entityCombat";
+export const ENTITY_ITEM_SHOP_ROUTE = "entityItemShop";
+export const ENTITY_ITEMS_ROUTE = "entityItems";
+export const ENTITY_STATS_ROUTE = "entityStats";
+export const ENTITY_WEAPON_SHOP_ROUTE = "entityWeaponShop";
 
 const router = createRouter({
-  history: createWebHashHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
@@ -41,9 +47,41 @@ const router = createRouter({
     },
     {
       path: "/entity/:id",
-      name: ENTITY_ROUTE,
       meta: { loggedInOnly: true },
-      component: () => import("../views/BaseEntityView.vue"),
+      component: () => import("../views/EntityBaseView.vue"),
+      children: [
+        {
+          path: "abilities/:detail?",
+          alias: "",
+          name: ENTITY_ROUTE,
+          component: () => import("../views/EntityAbilitiesView.vue"),
+        },
+        {
+          path: "combat/:detail?",
+          name: ENTITY_COMBAT_ROUTE,
+          component: () => import("../views/EntityCombatView.vue"),
+        },
+        {
+          path: "shop/:detail?",
+          name: ENTITY_ITEM_SHOP_ROUTE,
+          component: () => import("../views/EntityItemShopView.vue"),
+        },
+        {
+          path: "items/:detail?",
+          name: ENTITY_ITEMS_ROUTE,
+          component: () => import("../views/EntityItemsView.vue"),
+        },
+        {
+          path: "stats",
+          name: ENTITY_STATS_ROUTE,
+          component: () => import("../views/EntityMobileStatsView.vue"),
+        },
+        {
+          path: "weaponry/:detail?",
+          name: ENTITY_WEAPON_SHOP_ROUTE,
+          component: () => import("../views/EntityWeaponShopView.vue"),
+        },
+      ],
     },
     {
       path: "/credits",

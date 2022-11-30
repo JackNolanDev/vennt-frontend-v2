@@ -78,6 +78,9 @@
             {{ password2Invalid }}
           </p>
         </div>
+        <p v-if="accountInfoStore.signupError" class="errorText">
+          {{ accountInfoStore.signupError }}
+        </p>
         <BaseButton
           @click="signupButton"
           :disabled="buttonInvalid"

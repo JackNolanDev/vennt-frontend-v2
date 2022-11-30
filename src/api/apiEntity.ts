@@ -6,29 +6,23 @@ import {
   type UncompleteCollectedEntity,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
-import { parseResponse } from "./utils";
+import { wrapAPI } from "./utils";
 
-export const addCollectedEntityApi = async (
+export const addCollectedEntityApi = (
   request: UncompleteCollectedEntity
 ): Promise<FullCollectedEntity> => {
-  return parseResponse(
-    await api.post("/entity/", request),
+  return wrapAPI(
+    () => api.post("/entity", request),
     fullCollectedEntityValidator
   );
 };
 
-export const fetchCollectedEntityApi = async (
+export const fetchCollectedEntityApi = (
   id: string
 ): Promise<FullCollectedEntity> => {
-  return parseResponse(
-    await api.get(`/entity/${id}`),
-    fullCollectedEntityValidator
-  );
+  return wrapAPI(() => api.get(`/entity/${id}`), fullCollectedEntityValidator);
 };
 
-export const listEntitiesApi = async (): Promise<FullEntity[]> => {
-  return parseResponse(
-    await api.get(`/entity/list`),
-    fullEntityValidator.array()
-  );
+export const listEntitiesApi = (): Promise<FullEntity[]> => {
+  return wrapAPI(() => api.get(`/entity/list`), fullEntityValidator.array());
 };

@@ -1,0 +1,1 @@
+<template>Weapon shop</template>
