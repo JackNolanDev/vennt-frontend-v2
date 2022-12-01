@@ -1,12 +1,12 @@
 import { z } from "zod";
 
-const NAME_MAX = 100;
-const PASSWORD_MIN = 6;
-const PASSWORD_MAX = 2000;
-const ABILITY_MAX = 2000;
-const ITEM_MAX = 2000;
-const COMMENT_MAX = 2000;
-const CHANGELOG_MAX = 200;
+export const NAME_MAX = 100;
+export const PASSWORD_MIN = 6;
+export const PASSWORD_MAX = 2000;
+export const ABILITY_MAX = 2000;
+export const ITEM_MAX = 2000;
+export const COMMENT_MAX = 2000;
+export const CHANGELOG_MAX = 200;
 export const ATTRIBUTE_MIN = -15;
 export const ATTRIBUTE_MAX = 15;
 export const ATTRIBUTES = [
@@ -250,14 +250,14 @@ export const fullItemValidator = itemValidator.extend({
 export const attributeChangelogValidator = z.object({
   attr: attributesValidator.keyof(),
   msg: z.string().max(CHANGELOG_MAX),
-  prev: z.string().max(NAME_MAX),
-  time: z.date(), // TODO: might technically actually just be a string or something like that
+  prev: z.number().optional(),
 });
 
 export const fullAttributeChangelogValidator =
   attributeChangelogValidator.extend({
     id: idValidator,
     entity_id: idValidator,
+    time: z.date(), // TODO: might technically actually just be a string or something like that
   });
 
 // COLLECTED ENTITY
@@ -274,6 +274,12 @@ export const fullCollectedEntityValidator = z.object({
   abilities: fullAbilityValidator.array(),
   items: fullItemValidator.array(),
   changelog: attributeChangelogValidator.array(),
+});
+
+export const partialAttributesValidator = attributesValidator.partial();
+export const adjustAttributesValidator = z.object({
+  message: z.string().max(CHANGELOG_MAX).optional(),
+  attributes: partialAttributesValidator,
 });
 
 // Type definitions
@@ -312,6 +318,10 @@ export type FullEntityChangelog = z.infer<
   typeof fullAttributeChangelogValidator
 >;
 export type EntityChangelog = UncompleteEntityChangelog | FullEntityChangelog;
+export type PartialEntityAttributes = z.infer<
+  typeof partialAttributesValidator
+>;
+export type UpdateEntityAttributes = z.infer<typeof adjustAttributesValidator>;
 
 export type UpdatedEntityAttributes = {
   [attr in EntityAttribute]?: {

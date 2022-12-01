@@ -14,6 +14,18 @@
   --logo-font: Copperplate, "Raleway", sans-serif;
   --number-font: "roboto", monospace;
 
+  /* HEIGHTS / WIDTHS */
+  --nav-height: 40px;
+  --sub-nav-height: 38px;
+  --total-nav-height: calc(var(--nav-height) + var(--sub-nav-height));
+  --page-height: calc(100vh - var(--nav-height));
+  --sub-nav-page-height: calc(100vh - var(--total-nav-height));
+  --sub-nav-page-fullscreen-height: calc(100vh - var(--sub-nav-height));
+  --sidebar-width: 380px;
+
+  --border-radius: 5px;
+  --button-border-width: 2px;
+
   /* COLORS */
   /* Originally came from https://coolors.co/7e8987-4b4a67-fadf63-e6af2e-ef6f6c */
   --purple-100: #8a87ba;
@@ -105,18 +117,6 @@
   --border-contrast: var(--gray-700);
 
   --table-contrast: var(--gray-200);
-
-  /* HEIGHTS / WIDTHS */
-  --nav-height: 42px;
-  --sub-nav-height: 38px;
-  --total-nav-height: calc(var(--nav-height) + var(--sub-nav-height));
-  --page-height: calc(100vh - var(--nav-height));
-  --sub-nav-page-height: calc(100vh - var(--total-nav-height));
-  --sub-nav-page-fullscreen-height: calc(100vh - var(--sub-nav-height));
-  --sidebar-width: 380px;
-
-  --border-radius: 5px;
-  --button-border-width: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -814,6 +814,15 @@ select.input {
 
 /* Nav Styles - useful for subnav styles */
 
+.nav {
+  width: 100%;
+  height: 100%;
+  background-color: var(--sub-nav-background);
+  font-size: 18pt;
+  overflow-x: scroll;
+  max-width: 100vw;
+}
+
 .navButton {
   text-decoration: none;
   padding-left: 10px;
@@ -858,6 +867,33 @@ select.input {
 }
 .subNavButton:active {
   background-color: var(--sub-nav-button-active);
+}
+
+.navLogo {
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-family: var(--logo-font);
+  font-weight: 500;
+  font-size: 30pt;
+  background-color: var(--sub-nav-background);
+}
+.navLogo:hover {
+  color: var(--home-button-hover);
+  background-color: var(--sub-nav-background);
+}
+.navLogo:active {
+  color: var(--home-button-active);
+  background-color: var(--sub-nav-background);
+}
+
+.nav-dropdown {
+  background-color: var(--sub-nav-background);
+  position: absolute;
+  right: 0;
+  width: 320px;
+  z-index: 10;
 }
 
 /* Left Sidebar Styles */

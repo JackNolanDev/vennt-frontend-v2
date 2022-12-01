@@ -1,91 +1,60 @@
 <template>
-  <nav class="nav">
-    <div class="left">
-      <RouterLink :to="{ name: HOME_ROUTE }" class="navButton homeLink"
+  <nav class="nav alignRow split">
+    <div>
+      <RouterLink :to="{ name: HOME_ROUTE }" class="navButton navLogo"
         >VENNT</RouterLink
       >
     </div>
-    <div v-if="!accountInfoStore.isLoggedIn" class="right">
-      <RouterLink
-        :to="{ name: LOGIN_ROUTE }"
-        class="login navButton rightItem notMobile"
-      >
-        LOGIN
-      </RouterLink>
-      <RouterLink
-        :to="{ name: SIGNUP_ROUTE }"
-        class="signup navButton rightItem notMobile"
-      >
+    <div v-if="!accountInfoStore.isLoggedIn" class="alignRow gap mr-8">
+      <BaseButton :to="{ name: LOGIN_ROUTE }" class="skinny bold notMobile">
+        LOG IN
+      </BaseButton>
+      <BaseButton :to="{ name: SIGNUP_ROUTE }" class="skinny bold notMobile">
         SIGN UP
-      </RouterLink>
-      <!-- TODO: Update this link to be a dropdown with more items (instead of just linking to the login page) -->
-      <RouterLink
-        :to="{ name: LOGIN_ROUTE }"
-        class="login navButton rightItem mobileOnly"
-      >
-        <span class="material-icons dropDownLink">menu</span>
-      </RouterLink>
+      </BaseButton>
+      <BaseButton
+        @click="toggleDropdown"
+        icon="menu"
+        class="skinny mobileOnly"
+      ></BaseButton>
     </div>
-    <div v-else class="right">
-      <div class="logout rightItem">
-        <button @click="accountInfoStore.postLogOut()" class="navButton btn">
+    <div v-else class="alignRow gap mr-8">
+      <div>
+        <BaseButton @click="accountInfoStore.postLogOut()" class="skinny bold">
           LOGOUT
-        </button>
+        </BaseButton>
       </div>
     </div>
   </nav>
+  <div v-if="state.dropdownOpen" class="nav-dropdown">
+    <div class="seperator"></div>
+    <nav class="mt-8 mb-8 ml-8 mr-8">
+      <BaseButton :to="{ name: LOGIN_ROUTE }" class="skinny bold">
+        LOG IN
+      </BaseButton>
+      <BaseButton :to="{ name: SIGNUP_ROUTE }" class="skinny bold">
+        SIGN UP
+      </BaseButton>
+    </nav>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
+import { reactive } from "vue";
 import { RouterLink } from "vue-router";
+import BaseButton from "../Base/BaseButton.vue";
 
+const state = reactive({ dropdownOpen: false });
 const accountInfoStore = useAccountInfoStore();
+
+const toggleDropdown = () => {
+  state.dropdownOpen = !state.dropdownOpen;
+};
 </script>
 
 <style scoped>
-.nav {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--nav-background);
-  font-size: 18pt;
-}
-
-.homeLink {
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  font-family: var(--logo-font);
-  font-weight: 500;
-  font-size: 30pt;
-}
-.homeLink:hover {
-  color: var(--home-button-hover);
-  background-color: var(--nav-background);
-}
-.homeLink:active {
-  color: var(--home-button-active);
-  background-color: var(--nav-background);
-}
-
-.right {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.rightItem {
-  margin-right: 10px;
-}
-
-.dropDownLink {
-  font-size: 36px;
-}
-
 /* Mobile Styles */
 .mobileOnly {
   display: none;
@@ -97,6 +66,10 @@ const accountInfoStore = useAccountInfoStore();
   }
   .mobileOnly {
     display: flex;
+  }
+
+  .nav-dropdown {
+    width: 100%;
   }
 }
 </style>

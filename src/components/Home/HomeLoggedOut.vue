@@ -2,10 +2,13 @@
   <PageLayout class="medium">
     <div class="centeredText">
       <h1 class="logo">VENNT</h1>
-      <BaseButton :to="{ name: LOGIN_ROUTE }" class="primary bold center mb-8">
+      <BaseButton
+        :to="{ name: LOGIN_ROUTE }"
+        class="primary bolder center mb-8"
+      >
         LOGIN
       </BaseButton>
-      <BaseButton :to="{ name: SIGNUP_ROUTE }" class="clear bold center mb-8">
+      <BaseButton :to="{ name: SIGNUP_ROUTE }" class="clear bolder center mb-8">
         SIGNUP
       </BaseButton>
       <p>

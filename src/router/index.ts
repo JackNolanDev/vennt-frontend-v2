@@ -14,6 +14,7 @@ export const ENTITY_ITEM_SHOP_ROUTE = "entityItemShop";
 export const ENTITY_ITEMS_ROUTE = "entityItems";
 export const ENTITY_STATS_ROUTE = "entityStats";
 export const ENTITY_WEAPON_SHOP_ROUTE = "entityWeaponShop";
+export const ENTITY_SETTINGS_ROUTE = "entitySettings";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,7 +49,7 @@ const router = createRouter({
     {
       path: "/entity/:id",
       meta: { loggedInOnly: true },
-      component: () => import("../views/EntityBaseView.vue"),
+      component: () => import("../views/EntityView.vue"),
       children: [
         {
           path: "abilities/:detail?",
@@ -80,6 +81,11 @@ const router = createRouter({
           path: "weaponry/:detail?",
           name: ENTITY_WEAPON_SHOP_ROUTE,
           component: () => import("../views/EntityWeaponShopView.vue"),
+        },
+        {
+          path: "settings",
+          name: ENTITY_SETTINGS_ROUTE,
+          component: () => import("../views/EntitySettingsView.vue"),
         },
       ],
     },

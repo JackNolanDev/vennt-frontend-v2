@@ -30,7 +30,8 @@ Button styles:
 * "skinny" decreases the button's margin
 * "center" centers text
 * "left" moves text and icon to the left side
-* "bold" makes text larger and more bold
+* "bold" makes text larger and bold
+* "bolder" makes text larger and more bold
 * "wide" makes button wide
 * "primary" makes button primary
 * "secondary" makes button a different color
@@ -47,6 +48,10 @@ Button styles:
   justify-content: center;
 }
 .bold > .basicBtnContents {
+  font-weight: 500;
+  font-size: 18pt;
+}
+.bolder > .basicBtnContents {
   font-weight: 700;
   font-size: 18pt;
 }
@@ -61,6 +66,12 @@ Button styles:
 }
 .btn.wide {
   width: calc(100% - 2 * var(--button-border-width));
+}
+.basicBtn:hover:not(:disabled) {
+  background-color: rgba(75, 74, 103, 0.2);
+}
+.basicBtn:active:not(:disabled) {
+  background-color: rgba(75, 74, 103, 0.4);
 }
 .primary {
   background-color: var(--main-button);

@@ -1,7 +1,7 @@
 <template>
   <BaseLayout :class="showSection('prefers-sidebar') ? 'prefers-sidebar' : ''">
     <template #nav v-if="showSection('nav')">
-      <div class="nav fill-parent">vennt nav</div>
+      <BaseNav></BaseNav>
     </template>
     <template #sub-nav v-if="showSection('sub-nav')">
       <div class="sub-nav fill-parent">vennt subnav</div>
@@ -40,6 +40,19 @@
       </BaseButton>
       <BaseButton class="clear wide center bold mb-8">Clear</BaseButton>
       <BaseButton class="wide center bold mb-8">Default</BaseButton>
+      <div class="seperator"></div>
+      <h2>Cards & Buttons</h2>
+      <BaseButton class="wide">Test</BaseButton>
+      <div class="card column padded">
+        <p>Hello world:</p>
+        <BaseButton class="wide">Test</BaseButton>
+        <BaseButton disabled class="wide">Disabled</BaseButton>
+        <div class="card column padded">
+          <p>Inner card</p>
+          <BaseButton class="wide">Test</BaseButton>
+        </div>
+      </div>
+      <div class="mb-256"></div>
     </PageLayout>
   </BaseLayout>
 </template>
@@ -49,6 +62,7 @@ import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseCheckBoxArray from "@/components/Base/BaseCheckBoxArray.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
+import BaseNav from "@/components/Nav/BaseNav.vue";
 import { reactive } from "vue";
 
 const state = reactive({ checked: new Set<string>() });
@@ -70,9 +84,6 @@ const checkBoxOptions = {
 .fill-parent {
   width: 100%;
   height: 100%;
-}
-.nav {
-  background-color: chocolate;
 }
 .sub-nav {
   background-color: orangered;

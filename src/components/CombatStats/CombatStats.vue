@@ -36,12 +36,10 @@
           >
             <div class="margin">
               <div v-if="showUpdateDropdown">
-                <div>TODO later</div>
-                <!-- <adjust-attr
+                <AdjustAttributeVal
                   :attr="attr"
-                  :character="character"
                   loc="combat-stats"
-                /> -->
+                ></AdjustAttributeVal>
                 <div class="seperator mt-8 mb-8"></div>
                 <div>TODO later</div>
                 <!-- <adjust-attr-link :attr="attr" /> -->
@@ -194,6 +192,7 @@ import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import GiftDescription from "../Create/GiftDescription.vue";
 import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
 import CombatStatsItemSection from "./CombatStatsItemSection.vue";
+import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
