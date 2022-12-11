@@ -33,9 +33,9 @@ export const useAccountInfoStore = defineStore("accountInfo", {
         this.accountInfo = await getAccountApi();
       } catch (err) {
         this.accountInfo = false;
-        if (router.currentRoute.value.meta.loggedInOnly) {
-          router.push({ name: HOME_ROUTE });
-        }
+        // if (router.currentRoute.value.meta.loggedInOnly) {
+        //   router.push({ name: HOME_ROUTE });
+        // }
         // current solution seems broken because currentRoute defaults to base route :/
         // so can just always direct to home, I guess
         // router.push({ name: HOME_ROUTE });

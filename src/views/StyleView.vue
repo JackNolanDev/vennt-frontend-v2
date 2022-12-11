@@ -52,6 +52,11 @@
           <BaseButton class="wide">Test</BaseButton>
         </div>
       </div>
+      <div class="seperator"></div>
+      <h2>Mark Down</h2>
+      <BaseMarkDownEditor v-model="state.markdown"></BaseMarkDownEditor>
+      <div class="seperator thin"></div>
+      <p v-html="configurableMarkDown(state.markdown, {})"></p>
       <div class="mb-256"></div>
     </PageLayout>
   </BaseLayout>
@@ -61,11 +66,13 @@
 import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseCheckBoxArray from "@/components/Base/BaseCheckBoxArray.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
+import BaseMarkDownEditor from "@/components/Base/BaseMarkDownEditor.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
+import { configurableMarkDown } from "@/utils/textUtils";
 import { reactive } from "vue";
 
-const state = reactive({ checked: new Set<string>() });
+const state = reactive({ checked: new Set<string>(), markdown: "" });
 
 const showSection = (section: string) => {
   return state.checked.has(section);

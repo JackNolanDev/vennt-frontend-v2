@@ -22,7 +22,10 @@ export const wrapAPI = async <T extends z.ZodTypeAny>(
     // handle generic errors first
     if (err instanceof AxiosError) {
       if (err.response && err.response.status === 401) {
-        if (router.currentRoute.value.name !== LOGIN_ROUTE) {
+        if (
+          router.currentRoute.value.meta.loggedInOnly &&
+          router.currentRoute.value.name !== LOGIN_ROUTE
+        ) {
           router.push({ name: LOGIN_ROUTE });
         }
       }
