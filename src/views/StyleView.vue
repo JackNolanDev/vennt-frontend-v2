@@ -52,11 +52,19 @@
           <BaseButton class="wide">Test</BaseButton>
         </div>
       </div>
-      <div class="seperator"></div>
-      <h2>Mark Down</h2>
-      <BaseMarkDownEditor v-model="state.markdown"></BaseMarkDownEditor>
-      <div class="seperator thin"></div>
-      <p v-html="configurableMarkDown(state.markdown, {})"></p>
+      <div class="seperator mt-16 mb-16"></div>
+      <h2>Text Editors</h2>
+      <label :for="INLINE_EDITOR_ID" @click="focusToInlineEditor">
+        Do labels works? (no)
+      </label>
+      <BaseInlineTextEditor
+        v-model="state.inlineText"
+        placeholder="Example Text"
+        :editorId="INLINE_EDITOR_ID"
+        :invalid="state.inlineText.length > 30"
+      ></BaseInlineTextEditor>
+      {{ state.inlineText }}
+      <BaseButton @click="focusToInlineEditor">Jump to editor?</BaseButton>
       <div class="mb-256"></div>
     </PageLayout>
   </BaseLayout>
@@ -65,14 +73,15 @@
 <script setup lang="ts">
 import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseCheckBoxArray from "@/components/Base/BaseCheckBoxArray.vue";
+import BaseInlineTextEditor from "@/components/Base/BaseInlineTextEditor.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
-import BaseMarkDownEditor from "@/components/Base/BaseMarkDownEditor.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
-import { configurableMarkDown } from "@/utils/textUtils";
 import { reactive } from "vue";
 
-const state = reactive({ checked: new Set<string>(), markdown: "" });
+const INLINE_EDITOR_ID = "style-inline-editor";
+
+const state = reactive({ checked: new Set<string>(), inlineText: "" });
 
 const showSection = (section: string) => {
   return state.checked.has(section);
@@ -84,6 +93,14 @@ const checkBoxOptions = {
   sidebar: "show left sidebar",
   "sidebar-right": "show right sidebar",
   "prefers-sidebar": "Prefers sidebar",
+};
+
+const focusToInlineEditor = () => {
+  const items = document.getElementsByClassName("ProseMirror");
+  if (items.length > 0) {
+    // @ts-ignore
+    items[0].focus();
+  }
 };
 </script>
 
