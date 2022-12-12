@@ -26,7 +26,6 @@
     </BubbleMenu>
     <EditorContent
       :editor="editor"
-      :id="editorId"
       class="editor-wrapper"
       :class="{ invalid }"
     ></EditorContent>
@@ -66,6 +65,11 @@ const emits = defineEmits<{ (e: "update:modelValue", state: string): void }>();
 // TODO: MAY NEED TO WATCH `modelValue` for changes
 // https://tiptap.dev/installation/vue3#5-use-v-model
 
+const editorProps: { attributes?: { [name: string]: string } } = {};
+if (props.editorId) {
+  editorProps.attributes = { id: props.editorId };
+}
+
 const editor = useEditor({
   extensions: [
     Document,
@@ -81,6 +85,7 @@ const editor = useEditor({
     Strike,
     Underline,
   ],
+  editorProps,
   content: props.modelValue,
   onUpdate: () => {
     if (editor.value) {

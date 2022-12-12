@@ -234,18 +234,11 @@ const selectAttr = (attr: string) => {
     state.selectedAttr = attr;
   }
 };
-const attrButtonClass = (attr: string) => {
-  return showDropDown(attr) ? "selected" : "";
-};
-const dropdownClass = (index: number, length: number): string => {
-  if (index === 0) {
-    return "left";
-  }
-  if (index === length - 1) {
-    return "right";
-  }
-  return "";
-};
+const attrButtonClass = (attr: string) => ({ selected: showDropDown(attr) });
+const dropdownClass = (index: number, length: number) => ({
+  left: index === 0,
+  right: index === length - 1,
+});
 
 const attrDisplayVal = (attr: EntityAttribute) => {
   const map = attrs.value[attr];

@@ -18,7 +18,7 @@
             autocapitalize="none"
             v-model="state.username"
             class="input mt-4 wide"
-            :class="usernameInvalid ? 'invalid' : ''"
+            :class="{ invalid: usernameInvalid }"
           />
           <p v-if="usernameInvalid" class="mt-8 mb-0 errorText">
             {{ usernameInvalid }}
@@ -36,7 +36,7 @@
             autocomplete="current-password"
             v-model="state.password"
             class="input mt-4 wide"
-            :class="passwordInvalid ? 'invalid' : ''"
+            :class="{ invalid: passwordInvalid }"
           />
           <p v-if="passwordInvalid" class="mt-8 mb-0 errorText">
             {{ passwordInvalid }}

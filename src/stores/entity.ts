@@ -55,11 +55,9 @@ export const useEntityStore = defineStore("entity", {
     },
     async updateEntityAttributes(id: string, request: UpdateEntityAttributes) {
       // TODO: may want to pre-apply the change
-      const newAttributesEntity = await updateEntityAttributesApi(id, request);
-      if (this.entity) {
-        this.entity.entity = newAttributesEntity;
-        // todo - need to fix this to update whole object so reactive things work
-      }
+      await updateEntityAttributesApi(id, request);
+      // this sucks - but also I was running into a weird vue error
+      await this.fetchCollectedEntity(id);
     },
   },
 });

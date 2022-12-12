@@ -1,5 +1,5 @@
 <template>
-  <BaseLayout :class="showSection('prefers-sidebar') ? 'prefers-sidebar' : ''">
+  <BaseLayout :class="{ 'prefers-sidebar': showSection('prefers-sidebar') }">
     <template #nav v-if="showSection('nav')">
       <BaseNav></BaseNav>
     </template>
@@ -95,13 +95,8 @@ const checkBoxOptions = {
   "prefers-sidebar": "Prefers sidebar",
 };
 
-const focusToInlineEditor = () => {
-  const items = document.getElementsByClassName("ProseMirror");
-  if (items.length > 0) {
-    // @ts-ignore
-    items[0].focus();
-  }
-};
+const focusToInlineEditor = () =>
+  document.getElementById(INLINE_EDITOR_ID)?.focus();
 </script>
 
 <style scoped>

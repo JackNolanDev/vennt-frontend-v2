@@ -15,7 +15,7 @@
         v-bind:key="giftItem"
         @click="chooseGift(giftItem)"
         class="btn noSelect card selectable column giftCard"
-        :class="gift === giftItem ? 'selected' : ''"
+        :class="{ selected: gift === giftItem }"
       >
         <GiftDescription :gift="giftItem" :show-title="true" />
       </button>

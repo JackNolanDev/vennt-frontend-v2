@@ -17,12 +17,13 @@ export default {
   },
   computed: {
     warningClass() {
-      return this.top &&
-        this.bottom &&
-        (this.top > this.bottom || this.top < 0) &&
-        !this.noWarning
-        ? "errorText"
-        : "";
+      return {
+        errorText:
+          this.top &&
+          this.bottom &&
+          (this.top > this.bottom || this.top < 0) &&
+          !this.noWarning,
+      };
     },
   },
 };

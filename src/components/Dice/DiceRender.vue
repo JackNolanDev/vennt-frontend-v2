@@ -110,22 +110,16 @@ export default {
   },
   methods: {
     diceRenderClass(diceElement) {
-      if (diceElement.type === "math") {
-        return "mathRender";
-      }
-      return "";
+      return {
+        mathRender: diceElement.type === "math",
+      };
     },
     diceClass(dice) {
-      let classes = "";
-      if (dice.dropped) {
-        classes += " dropped";
-      }
-      if (dice.crit === "success") {
-        classes += " crit-success";
-      } else if (dice.crit === "fail") {
-        classes += " crit-fail";
-      }
-      return classes;
+      return {
+        dropped: dice.dropped,
+        "crit-success": dice.crit === "success",
+        "crit-fail": dice.crit === "fail",
+      };
     },
   },
 };

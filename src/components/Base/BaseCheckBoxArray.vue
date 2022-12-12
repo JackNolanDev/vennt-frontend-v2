@@ -5,7 +5,7 @@
     :checked="props.checked.has(key as string)"
     :disabled="props.disabled && props.disabled.has(key as string)"
     @click="toggled(key as string)"
-    :class="props.checked.has(key as string) ? 'selected' : ''"
+    :class="{ selected: props.checked.has(key as string) }"
     class="wide"
   >
     <span v-html="html"></span>
