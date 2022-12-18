@@ -41,8 +41,10 @@
                   loc="combat-stats"
                 ></AdjustAttributeVal>
                 <div class="seperator mt-8 mb-8"></div>
-                <div>TODO later</div>
-                <!-- <adjust-attr-link :attr="attr" /> -->
+                <AdjustAttributeLink
+                  :attr="attr"
+                  class="wide"
+                ></AdjustAttributeLink>
               </div>
               <AttributeHelp v-else :attr="attr"></AttributeHelp>
             </div>
@@ -84,7 +86,10 @@
             ></CombatStatsDiceSection>
             <div v-if="showUpdateDropdown">
               <div class="seperator mt-8 mb-8"></div>
-              <!-- <adjust-attr-link :attr="attr" /> -->
+              <AdjustAttributeLink
+                :attr="attr"
+                class="wide"
+              ></AdjustAttributeLink>
             </div>
             <div v-else>
               <div class="seperator mt-8 mb-8"></div>
@@ -139,26 +144,28 @@
         <div v-if="showDropDown(attr)" class="card diceDropDown left right">
           <div class="margin">
             <div v-if="showUpdateDropdown">
-              <!-- <adjust-attr
-                v-if="showAdjust(attr)"
+              <AdjustAttributeVal
+                v-if="ADJUST_SINGLE.has(attr)"
                 :attr="attr"
-                :character="character"
                 loc="combat-stats"
-              />
-              <dice-section
-                v-else-if="showDice(attr)"
+              ></AdjustAttributeVal>
+              <CombatStatsDiceSection
+                v-else-if="SHOW_DICE_SINGLE.has(attr)"
+                :attrs="attrs"
                 :attr="attr"
-                :character="character"
-                :useCopyableDice="useCopyableDice"
-              />
-              <armor-section
+                :use-copyable-dice="useCopyableDice"
+              ></CombatStatsDiceSection>
+              <!-- <armor-section
                 v-else-if="attr === 'armor'"
                 :attrs="attrs"
                 :id="character.id"
-              />
-              <attr-help v-else :attr="attr" />
+              /> -->
+              <AttributeHelp v-else :attr="attr"></AttributeHelp>
               <div class="seperator mt-8 mb-8"></div>
-              <adjust-attr-link :attr="attr" /> -->
+              <AdjustAttributeLink
+                :attr="attr"
+                class="wide"
+              ></AdjustAttributeLink>
             </div>
             <AttributeHelp v-else :attr="attr"></AttributeHelp>
           </div>
@@ -193,6 +200,7 @@ import GiftDescription from "../Create/GiftDescription.vue";
 import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
 import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
+import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -268,6 +276,9 @@ const SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "xp",
   "sp",
 ];
+
+const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp"]);
+const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init"]);
 
 const showUpdateDropdown = computed(() => {
   return (props.entity.entity as FullEntity).id !== undefined;

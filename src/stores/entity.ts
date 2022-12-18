@@ -9,6 +9,8 @@ import type {
   UncompleteCollectedEntity,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
+import { consolidateItemList } from "@/utils/itemUtils";
+import { entityAttributesMap } from "@/utils/attributeUtils";
 import { defineStore } from "pinia";
 import { useCharacterCreateStore } from "./characterCreate";
 
@@ -30,6 +32,12 @@ export const useEntityStore = defineStore("entity", {
       showNotes: false,
       levelsToProcess: 0,
     };
+  },
+  getters: {
+    consolidatedItems: (state) =>
+      state.entity ? consolidateItemList(state.entity.items) : [],
+    entityAttributes: (state) =>
+      state.entity ? entityAttributesMap(state.entity) : {},
   },
   actions: {
     toggleNotes() {

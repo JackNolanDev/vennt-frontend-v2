@@ -36,6 +36,11 @@
       </div>
     </div>
   </div>
+  <ToggleableDiceSectionCopyable
+    v-else
+    :dice="computedDice"
+    :attr="attr"
+  ></ToggleableDiceSectionCopyable>
 </template>
 
 <script setup lang="ts">
@@ -51,6 +56,7 @@ import { defaultDice } from "@/utils/diceUtils";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import DiceRender from "../Dice/DiceRender.vue";
+import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
 
 const props = defineProps<{
   attrs: UpdatedEntityAttributes;

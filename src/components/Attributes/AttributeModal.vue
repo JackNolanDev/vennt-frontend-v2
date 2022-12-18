@@ -1,0 +1,112 @@
+<template>
+  <BaseModal
+    v-if="entityStore.entity"
+    :hideButtons="true"
+    :large="true"
+    @closeModal="closeModal"
+  >
+    <template #title>Edit {{ attrFullName(attr) }}</template>
+    <div class="alignRow split wrap mb-16">
+      <div class="alignRow labelText">
+        Current {{ shortName }}:
+        <span v-if="attr in entityStore.entity.entity.attributes" class="ml-8">
+          <BaseFraction
+            v-if="maxAttr && maxAttr in entityStore.entity.entity.attributes"
+            :top="entityStore.entity.entity.attributes[attr]"
+            :bottom="entityStore.entity.entity.attributes[maxAttr]"
+          ></BaseFraction>
+          <span v-else class="number">{{
+            entityStore.entity.entity.attributes[attr]
+          }}</span>
+          <span
+            v-if="
+              entityStore.entityAttributes[attr]?.val !==
+              entityStore.entity.entity.attributes[attr]
+            "
+            class="mutedText ml-8"
+            >(Temporary Value:
+            <span class="number">{{
+              entityStore.entityAttributes[attr]?.val
+            }}</span
+            >)</span
+          >
+        </span>
+        <span v-else class="ml-8">Not defined yet</span>
+      </div>
+      <AdjustAttributeLink v-if="maxAttr" :attr="maxAttr"></AdjustAttributeLink>
+      <AdjustAttributeLink
+        v-if="baseAttr"
+        :attr="baseAttr"
+      ></AdjustAttributeLink>
+    </div>
+    <div class="cols-2 table-split">
+      <div class="attr-history-side">
+        <AttributeHistoryTable
+          :entity="entityStore.entity"
+          :attr="attr"
+        ></AttributeHistoryTable>
+      </div>
+      <div>
+        <AdjustAttributeVal
+          :attr="attr"
+          loc="modal"
+          :submitBtn="true"
+        ></AdjustAttributeVal>
+      </div>
+    </div>
+  </BaseModal>
+</template>
+
+<script setup lang="ts">
+import router, { ENTITY_ROUTE } from "@/router";
+import { useEntityStore } from "@/stores/entity";
+import {
+  attrFullName,
+  attrShortName,
+  getBaseAttr,
+  getMaxAttr,
+} from "@/utils/attributeUtils";
+import type { EntityAttribute } from "@/utils/backendTypes";
+import { computed } from "vue";
+import BaseFraction from "../Base/BaseFraction.vue";
+import BaseModal from "../Base/BaseModal.vue";
+import AdjustAttributeLink from "./AdjustAttributeLink.vue";
+import AdjustAttributeVal from "./AdjustAttributeVal.vue";
+import AttributeHistoryTable from "./AttributeHistoryTable.vue";
+
+const props = defineProps<{ attr: EntityAttribute }>();
+const entityStore = useEntityStore();
+
+const shortName = computed(() => attrShortName(props.attr));
+const maxAttr = computed(() => getMaxAttr(props.attr));
+const baseAttr = computed(() => getBaseAttr(props.attr));
+
+const closeModal = () => {
+  const query = { ...router.currentRoute.value.query };
+  delete query.attr;
+  router.push({
+    name: router.currentRoute.value.name ?? ENTITY_ROUTE,
+    params: router.currentRoute.value.params,
+    query,
+  });
+};
+</script>
+
+<style scoped>
+.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 600px) {
+  .table-split {
+    grid-template-columns: 1fr;
+  }
+  .attr-history-side {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 8px;
+  }
+}
+</style>

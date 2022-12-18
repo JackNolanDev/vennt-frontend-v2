@@ -28,4 +28,10 @@
 .page-container.large > .page {
   max-width: 1050px;
 }
+@media screen and (max-width: 400px) {
+  .page {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
+}
 </style>

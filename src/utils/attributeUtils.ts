@@ -50,7 +50,7 @@ export function getBaseAttr(
   attr: EntityAttribute
 ): EntityAttribute | undefined {
   if (attr in attrBaseMap) {
-    return attrMaxMap[attr];
+    return attrBaseMap[attr];
   }
   return undefined;
 }
@@ -73,17 +73,21 @@ export function attrFullName(attr: EntityAttribute): string {
   }
   const baseAttr = getBaseAttr(attr);
   if (baseAttr !== undefined) {
-    return "Max " + attrFullName(baseAttr);
+    return "Maximum " + attrFullName(baseAttr);
   }
   return attrShortName(attr);
 }
 
-export function attrShortName(attr: EntityAttribute) {
+export function attrShortName(attr: EntityAttribute): string {
   if (attr === "init") {
     return "Initiative";
   }
   if (attr.length <= 2 || ATTRIBUTES_SET.has(attr)) {
     return attr.toUpperCase();
+  }
+  const baseAttr = getBaseAttr(attr);
+  if (baseAttr !== undefined) {
+    return "Max " + attrShortName(baseAttr);
   }
   return attr.charAt(0).toUpperCase() + attr.slice(1);
 }

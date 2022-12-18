@@ -14,7 +14,7 @@
       <span
         >{{ attr.toUpperCase() }}
         <span v-if="attrs && attr in attrs"
-          >(<span class="number">{{ attrs[attr] }}</span
+          >(<span class="number">{{ attrs[attr]?.val }}</span
           >)</span
         ></span
       >

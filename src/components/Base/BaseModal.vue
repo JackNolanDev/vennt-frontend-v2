@@ -1,6 +1,6 @@
 <template>
   <div v-on:click="closeClick" class="modal show" :id="MODAL_ID">
-    <div class="dialogue card column">
+    <div :class="{ lg: large }" class="dialogue card column">
       <div class="dialogue-content">
         <div class="alignRow split dialogue-title">
           <h2 class="mt-0 mb-0"><slot name="title"></slot></h2>
@@ -27,7 +27,7 @@ import BaseButton from "./BaseButton.vue";
 
 const MODAL_ID = "base-modal";
 
-defineProps<{ hideButtons?: boolean }>();
+defineProps<{ hideButtons?: boolean; large?: boolean }>();
 const emit = defineEmits<{ (e: "closeModal"): void }>();
 
 const closeModal = () => {

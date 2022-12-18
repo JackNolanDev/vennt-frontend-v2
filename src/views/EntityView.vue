@@ -11,13 +11,14 @@
       <CombatStats
         v-if="entityStore.entity"
         :entity="entityStore.entity"
-        :use-copyable-dice="false"
+        :use-copyable-dice="true"
       ></CombatStats>
     </template>
     <PageLayout>
       <RouterView></RouterView>
     </PageLayout>
   </BaseLayout>
+  <EntityModals></EntityModals>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +32,7 @@ import { idValidator } from "@/utils/backendTypes";
 import router, { HOME_ROUTE } from "@/router";
 import EntityNav from "@/components/Nav/EntityNav.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
+import EntityModals from "@/components/Entities/EntityModals.vue";
 
 const entityStore = useEntityStore();
 const route = useRoute();

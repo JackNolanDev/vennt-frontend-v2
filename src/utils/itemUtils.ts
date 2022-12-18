@@ -28,7 +28,7 @@ export const shopItemToEntityItem = (
     custom_fields: {},
     active,
   };
-  if (item.custom_fields !== undefined) {
+  if (item.custom_fields) {
     if (shopItem.attr) {
       item.custom_fields.attr = shopItem.attr;
     }
