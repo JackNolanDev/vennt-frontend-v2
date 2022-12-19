@@ -259,7 +259,7 @@ export const fullAttributeChangelogValidator =
   attributeChangelogValidator.extend({
     id: idValidator,
     entity_id: idValidator,
-    time: z.string().datetime(), // TODO: might technically actually just be a string or something like that
+    time: z.string().datetime(),
   });
 
 // COLLECTED ENTITY
@@ -278,10 +278,16 @@ export const fullCollectedEntityValidator = z.object({
   changelog: fullAttributeChangelogValidator.array(),
 });
 
+// other endpoints
+
 export const partialAttributesValidator = attributesValidator.partial();
 export const adjustAttributesValidator = z.object({
   message: z.string().max(CHANGELOG_MAX).optional(),
   attributes: partialAttributesValidator,
+});
+
+export const filterChangelogValidator = z.object({
+  attributes: attributeNameValidator.array(),
 });
 
 // Type definitions
@@ -324,6 +330,7 @@ export type PartialEntityAttributes = z.infer<
   typeof partialAttributesValidator
 >;
 export type UpdateEntityAttributes = z.infer<typeof adjustAttributesValidator>;
+export type FilterChangelogBody = z.infer<typeof filterChangelogValidator>;
 
 export type UpdatedEntityAttributes = {
   [attr in EntityAttribute]?: {

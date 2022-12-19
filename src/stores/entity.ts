@@ -1,10 +1,12 @@
 import {
   addCollectedEntityApi,
   fetchCollectedEntityApi,
+  filterEntityChangelogApi,
   updateEntityAttributesApi,
 } from "@/api/apiEntity";
 import router from "@/router";
 import type {
+  FilterChangelogBody,
   FullCollectedEntity,
   UncompleteCollectedEntity,
   UpdateEntityAttributes,
@@ -66,6 +68,14 @@ export const useEntityStore = defineStore("entity", {
       await updateEntityAttributesApi(id, request);
       // this sucks - but also I was running into a weird vue error
       await this.fetchCollectedEntity(id);
+    },
+    async filterChangelog(id: string, request: FilterChangelogBody) {
+      if (this.entity) {
+        this.entity.changelog = this.entity.changelog.filter(
+          (log) => !request.attributes.includes(log.attr)
+        );
+      }
+      await filterEntityChangelogApi(id, request);
     },
   },
 });

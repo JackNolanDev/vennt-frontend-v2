@@ -5,9 +5,11 @@ import {
   type FullEntity,
   type UncompleteCollectedEntity,
   type UpdateEntityAttributes,
+  type FilterChangelogBody,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
 import { wrapAPI } from "./utils";
+import { z } from "zod";
 
 export const addCollectedEntityApi = (
   request: UncompleteCollectedEntity
@@ -32,5 +34,18 @@ export const updateEntityAttributesApi = (
   id: string,
   request: UpdateEntityAttributes
 ): Promise<FullEntity> => {
-  return wrapAPI(() => api.patch(`/entity/${id}/attributes`, request));
+  return wrapAPI(
+    () => api.patch(`/entity/${id}/attributes`, request),
+    fullEntityValidator
+  );
+};
+
+export const filterEntityChangelogApi = (
+  id: string,
+  request: FilterChangelogBody
+): Promise<boolean> => {
+  return wrapAPI(
+    () => api.patch(`/entity/${id}/changelog`, request),
+    z.boolean()
+  );
 };

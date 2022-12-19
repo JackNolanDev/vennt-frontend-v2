@@ -45,6 +45,22 @@
           :entity="entityStore.entity"
           :attr="attr"
         ></AttributeHistoryTable>
+        <BaseButton
+          v-if="showResetButton"
+          @click="resetButton"
+          icon="restart_alt"
+          :title="`Refill your ${shortName} to full. Warning: this will clear your ${shortName} history.`"
+          class="wide"
+          >Reset {{ shortName }} to Full</BaseButton
+        >
+        <BaseButton
+          v-if="showClearHistoryButton"
+          @click="clearHistoryButton"
+          icon="delete_outline"
+          :title="`Delete your ${shortName} history.`"
+          class="wide"
+          >Clear History</BaseButton
+        >
       </div>
       <div>
         <AdjustAttributeVal
@@ -73,6 +89,7 @@ import BaseModal from "../Base/BaseModal.vue";
 import AdjustAttributeLink from "./AdjustAttributeLink.vue";
 import AdjustAttributeVal from "./AdjustAttributeVal.vue";
 import AttributeHistoryTable from "./AttributeHistoryTable.vue";
+import BaseButton from "../Base/BaseButton.vue";
 
 const props = defineProps<{ attr: EntityAttribute }>();
 const entityStore = useEntityStore();
@@ -80,6 +97,20 @@ const entityStore = useEntityStore();
 const shortName = computed(() => attrShortName(props.attr));
 const maxAttr = computed(() => getMaxAttr(props.attr));
 const baseAttr = computed(() => getBaseAttr(props.attr));
+const showResetButton = computed(
+  () =>
+    entityStore.entity &&
+    maxAttr.value !== undefined &&
+    entityStore.entity.entity.attributes[maxAttr.value] !==
+      entityStore.entity.entity.attributes[props.attr] &&
+    props.attr !== "hero"
+);
+const showClearHistoryButton = computed(
+  () =>
+    entityStore.entity &&
+    entityStore.entity.changelog.filter((log) => log.attr === props.attr)
+      .length > 0
+);
 
 const closeModal = () => {
   const query = { ...router.currentRoute.value.query };
@@ -89,6 +120,26 @@ const closeModal = () => {
     params: router.currentRoute.value.params,
     query,
   });
+};
+const resetButton = () => {
+  if (entityStore.entity && maxAttr.value) {
+    const newValue = entityStore.entity.entity.attributes[maxAttr.value];
+    if (newValue !== undefined) {
+      entityStore.updateEntityAttributes(entityStore.entity.entity.id, {
+        attributes: {
+          [props.attr]: newValue,
+        },
+      });
+      clearHistoryButton();
+    }
+  }
+};
+const clearHistoryButton = () => {
+  if (entityStore.entity) {
+    entityStore.filterChangelog(entityStore.entity.entity.id, {
+      attributes: [props.attr],
+    });
+  }
 };
 </script>
 
