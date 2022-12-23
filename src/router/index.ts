@@ -7,6 +7,7 @@ export const LOGIN_ROUTE = "login";
 export const CREATE_ROUTE = "create";
 export const CREATE_NEW_ROUTE = "createNew";
 export const CREDITS_ROUTE = "credits";
+export const ADMIN_ROUTE = "admin";
 export const ENTITY_ROUTE = "entity";
 export const ENTITY_ABILITIES_ROUTE = ENTITY_ROUTE;
 export const ENTITY_COMBAT_ROUTE = "entityCombat";
@@ -93,6 +94,11 @@ const router = createRouter({
       path: "/credits",
       name: CREDITS_ROUTE,
       component: () => import("../views/CreditsView.vue"),
+    },
+    {
+      path: "/admin",
+      name: ADMIN_ROUTE,
+      component: () => import("../views/AdminView.vue"),
     },
     {
       path: "/style",

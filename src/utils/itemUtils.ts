@@ -12,9 +12,6 @@ import {
   ITEM_TYPE_SHIELD,
   ITEM_TYPE_WEAPON,
 } from "./backendTypes";
-import importedShopItems from "./data/items.json";
-
-export const shopItems = importedShopItems as ShopItem[];
 
 export const shopItemToEntityItem = (
   shopItem: ShopItem,
@@ -47,8 +44,8 @@ export const shopItemToEntityItem = (
     if (shopItem.special) {
       item.custom_fields.special = shopItem.special;
     }
-    if (shopItem.weaponType) {
-      item.custom_fields.weapon_type = shopItem.weaponType;
+    if (shopItem.weapon_type) {
+      item.custom_fields.weapon_type = shopItem.weapon_type;
     }
   }
   if (shopItem.uses) {
@@ -57,7 +54,10 @@ export const shopItemToEntityItem = (
   return item;
 };
 
-export const namesToItems = (names: string[]): UncompleteEntityItem[] => {
+export const namesToItems = (
+  shopItems: ShopItem[],
+  names: string[]
+): UncompleteEntityItem[] => {
   return names
     .map((name) => shopItems.find((item) => item.name === name))
     .filter((shopItem) => shopItem !== undefined)

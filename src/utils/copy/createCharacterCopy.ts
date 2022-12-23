@@ -11,6 +11,7 @@ import {
   type UncompleteEntityItem,
 } from "../backendTypes";
 import { namesToItems } from "../itemUtils";
+import { useJsonStore } from "@/stores/jsonStorage";
 
 export const AttributeSelectionsValidator = z.object({
   childAttrs: baseAttributeFieldValidator.array(),
@@ -317,6 +318,10 @@ export const calculateSpeed = (agi: number) => {
 export const calculateItems = (
   options: CharacterCreateOptions
 ): UncompleteEntityItem[] => {
+  const jsonStore = useJsonStore();
+  if (jsonStore.shopItems === undefined) {
+    return [];
+  }
   const itemNames: string[] = [];
   if (options.radioSelections.outfit === "fashionable") {
     itemNames.push("Fashionable Outfit");
@@ -402,5 +407,5 @@ export const calculateItems = (
       );
       break;
   }
-  return namesToItems(itemNames);
+  return namesToItems(jsonStore.shopItems, itemNames);
 };

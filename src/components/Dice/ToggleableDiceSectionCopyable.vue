@@ -1,6 +1,7 @@
 <template>
   <DiceCopy :dice="dice"></DiceCopy>
   <BaseDropDown
+    :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
     @change="diceStore.toggleDiceDropDown()"
   >

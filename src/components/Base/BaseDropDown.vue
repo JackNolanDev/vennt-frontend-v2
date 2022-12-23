@@ -1,6 +1,6 @@
 <template>
   <BaseButton
-    v-if="givenClosed ?? state.closed"
+    v-if="(useGivenState && givenClosed) || state.closed"
     @click="toggleDropDown"
     :disabled="disabled"
     icon="keyboard_arrow_down"
@@ -28,15 +28,16 @@ import BaseButton from "./BaseButton.vue";
 
 const props = defineProps<{
   defaultOpen?: boolean;
+  useGivenState?: boolean;
   givenClosed?: boolean;
   disabled?: boolean;
 }>();
-const state = reactive({ closed: props.defaultOpen ?? true });
+const state = reactive({ closed: !props.defaultOpen });
 
 const emit = defineEmits<{ (e: "change", state: boolean): void }>();
 
 const toggleDropDown = () => {
-  if (props.givenClosed !== undefined) {
+  if (props.useGivenState) {
     emit("change", !props.givenClosed);
   } else {
     state.closed = !state.closed;

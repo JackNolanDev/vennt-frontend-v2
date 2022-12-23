@@ -110,6 +110,7 @@ export const attributesValidator = z.object({
   acc: z.number().int().optional(),
   radius: z.number().optional(),
   reach: z.number().optional(),
+  shield: z.number().optional(),
 });
 
 export const attributeNameValidator = attributesValidator.keyof();
@@ -134,12 +135,12 @@ export const fullEntityValidator = entityValidator.extend({
 // USES
 
 export const useAttrMapValidator = z.record(
-  z.string().min(1).max(NAME_MAX),
+  attributeNameValidator,
   z.union([z.number().int(), z.string().min(1).max(NAME_MAX)])
 );
 export const useRollValidator = z.object({
   dice: z.string().max(NAME_MAX),
-  attr: z.string().max(NAME_MAX),
+  attr: attributeNameValidator,
 });
 export const useHealValidator = z.object({
   attr: useAttrMapValidator,
@@ -150,7 +151,7 @@ export const useAdjustValidator = z.object({
 });
 export const useCheckValidator = z.object({
   bonus: z.string().min(1).max(NAME_MAX),
-  attr: z.string().min(1).max(NAME_MAX),
+  attr: attributeNameValidator,
 });
 export const usesValidator = z.object({
   roll: useRollValidator.optional(),
@@ -247,6 +248,17 @@ export const fullItemValidator = itemValidator.extend({
   entity_id: idValidator,
 });
 
+export const shopItemValidator = itemFieldsValidator.extend({
+  name: nameValidator.optional(),
+  bulk: z.number().int(),
+  desc: z.string().max(ITEM_MAX),
+  type: itemTypeValidator,
+  cost: z.string().max(NAME_MAX),
+  sp: z.number().int().optional(),
+  examples: z.string().max(ITEM_MAX).optional(),
+  uses: usesValidator.optional(),
+});
+
 // CHANGELOG
 
 export const attributeChangelogValidator = z.object({
@@ -290,6 +302,14 @@ export const filterChangelogValidator = z.object({
   attributes: attributeNameValidator.array(),
 });
 
+export const WEAPON_TYPES_KEY = "VENNT_WEAPON_TYPES";
+export const SHOP_ITEMS_KEY = "VENNT_SHOP_ITEMS";
+
+export const jsonStorageKeyValidator = z.enum([
+  WEAPON_TYPES_KEY,
+  SHOP_ITEMS_KEY,
+]);
+
 // Type definitions
 
 export type SignupRequest = z.infer<typeof signupRequestValidator>;
@@ -331,14 +351,8 @@ export type PartialEntityAttributes = z.infer<
 >;
 export type UpdateEntityAttributes = z.infer<typeof adjustAttributesValidator>;
 export type FilterChangelogBody = z.infer<typeof filterChangelogValidator>;
-
-export type UpdatedEntityAttributes = {
-  [attr in EntityAttribute]?: {
-    // TODO: add reason for values shifting
-    base?: number;
-    val: number;
-  };
-};
+export type JsonStorageKey = z.infer<typeof jsonStorageKeyValidator>;
+export type ShopItem = z.infer<typeof shopItemValidator>;
 
 // SERVER TYPES
 
@@ -359,6 +373,14 @@ export type Result<T> = SuccessResult<T> | ErrorResult;
 
 // FRONTEND TYPES
 export type HTMLString = string;
+
+export type UpdatedEntityAttributes = {
+  [attr in EntityAttribute]?: {
+    // TODO: add reason for values shifting
+    base?: number;
+    val: number;
+  };
+};
 
 export type DiceToggle = {
   attr?: EntityAttribute;
@@ -392,25 +414,6 @@ export type DiceCommands = {
   roll20: string;
   web: string;
   settings: DiceSettings;
-};
-
-export type ShopItem = {
-  name?: string;
-  bulk: number;
-  desc: string;
-  type: EntityItemType;
-  section?: string;
-  courses?: string;
-  category?: string;
-  weaponType?: string;
-  range?: string;
-  attr?: string;
-  dmg?: string;
-  special?: string;
-  cost: string;
-  sp?: number;
-  examples?: string;
-  uses?: UsesMap;
 };
 
 export type ConsolidatedItem = FullEntityItem & {

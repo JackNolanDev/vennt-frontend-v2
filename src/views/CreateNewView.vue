@@ -98,10 +98,14 @@ import CreateSectionXP from "@/components/Create/CreateSectionXP.vue";
 import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import router, { CREATE_ROUTE, ENTITY_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
+import { useJsonStore } from "@/stores/jsonStorage";
 
 const characterCreateStore = useCharacterCreateStore();
 const entityStore = useEntityStore();
+const jsonStore = useJsonStore();
+
 characterCreateStore.loadFromLocalStorage();
+jsonStore.fetchShopItems();
 
 const createCharacter = () => {
   entityStore.addCollectedEntity(characterCreateStore.collectedCharacter, {
