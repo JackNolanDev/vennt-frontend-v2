@@ -30,6 +30,9 @@
     <b>Count:</b> <span class="number">{{ item.ids.length }}</span>
   </p>
   <ItemDesc :item="item"></ItemDesc>
+  <p v-if="item.custom_fields?.courses" class="mt-16 mb-0">
+    <b>Courses:</b> {{ item.custom_fields.courses }}
+  </p>
 </template>
 
 <script setup lang="ts">

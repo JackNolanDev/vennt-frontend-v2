@@ -67,6 +67,29 @@ export const namesToItems = (
     .map((shopItem) => shopItemToEntityItem(shopItem as ShopItem));
 };
 
+export const findShopItem = (
+  item: EntityItem,
+  shopItems: ShopItem[],
+  weaponTypes: ShopItem[]
+): ShopItem | undefined => {
+  const found = shopItems.find(
+    (it) =>
+      it.name === item.name &&
+      it.type === item.type &&
+      it.bulk === item.bulk &&
+      it.desc === item.desc
+  );
+  if (found) {
+    return found;
+  }
+  if (item.custom_fields?.category) {
+    return undefined;
+  }
+  return weaponTypes.find(
+    (weapon) => weapon.category === item.custom_fields?.category
+  );
+};
+
 // Warning: data generated here should not be passed to back end
 export const unsafeEnsureFullEntityItem = (
   item: EntityItem

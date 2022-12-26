@@ -8,13 +8,44 @@
       class="ml-16"
     ></BaseFraction>
   </div>
-  <ItemTable :items="entityStore.consolidatedItems" class="mb-128"></ItemTable>
+  <div v-if="weapons.length > 0">
+    <h2>Weapons</h2>
+    <ItemTable :items="weapons" :hide-count="true" class="mb-24"></ItemTable>
+  </div>
+  <div v-if="otherItems.length > 0">
+    <h2>General Items</h2>
+    <ItemTable :items="otherItems" class="mb-24"></ItemTable>
+  </div>
+  <h2>Buy Items</h2>
+  <BaseButton
+    v-if="entityStore.entity?.entity.id"
+    :to="{
+      name: ENTITY_ITEM_SHOP_ROUTE,
+      params: { id: entityStore.entity.entity.id },
+    }"
+    icon="store"
+    class="wide"
+    >Item Shop</BaseButton
+  >
+  <BaseButton
+    v-if="entityStore.entity?.entity.id"
+    :to="{
+      name: ENTITY_WEAPON_SHOP_ROUTE,
+      params: { id: entityStore.entity?.entity.id },
+    }"
+    icon="sports_martial_arts"
+    class="wide"
+    >Weapon Shop</BaseButton
+  >
+  <div class="mb-128"></div>
 </template>
 
 <script setup lang="ts">
+import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseFraction from "@/components/Base/BaseFraction.vue";
 import ItemTable from "@/components/Items/ItemTable.vue";
 import { useEntityStore } from "@/stores/entity";
+import { ENTITY_ITEM_SHOP_ROUTE, ENTITY_WEAPON_SHOP_ROUTE } from "@/router";
 import { computed } from "vue";
 
 const entityStore = useEntityStore();
@@ -36,4 +67,11 @@ const bulkSum = computed(() => {
     .filter((item) => item.type !== "container" && !item.active)
     .reduce((sum, item) => sum + item.bulk, 0);
 });
+
+const weapons = computed(() =>
+  entityStore.consolidatedItems.filter((item) => item.type === "weapon")
+);
+const otherItems = computed(() =>
+  entityStore.consolidatedItems.filter((item) => item.type !== "weapon")
+);
 </script>
