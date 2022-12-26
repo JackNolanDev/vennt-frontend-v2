@@ -3,7 +3,6 @@ import pluralize from "pluralize";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import type { HTMLString } from "./backendTypes";
-import { KeepSyntaxRenderer } from "./MarkedRenderers/KeepSyntaxRenderer";
 
 export const improveTextForDisplay = (text: string): string => {
   // regex from https://leancrew.com/all-this/2010/11/smart-quotes-in-javascript/
@@ -64,35 +63,12 @@ export const pluralizeName = (givenName: string, cleanup = true): string => {
   return name;
 };
 
-type MarkDownParams = {
-  keepSyntax?: boolean;
-  inline?: boolean;
-};
-
-export const configurableMarkDown = (
-  text: string,
-  params: MarkDownParams
-): HTMLString => {
+export const renderMarkdown = (text: string): HTMLString => {
   const markedOption: marked.MarkedOptions = {
     smartypants: true,
   };
-  if (params.keepSyntax) {
-    markedOption.renderer = new KeepSyntaxRenderer();
-  }
-  let html = "";
-  if (params.inline) {
-    html = marked.parseInline(text, markedOption);
-  } else {
-    html = marked.parse(text, markedOption);
-  }
-  if (!params.inline && params.keepSyntax) {
-    html = html.replaceAll(/\n/gm, "<br>");
-  }
-  if (params.keepSyntax) {
-    html = html.replaceAll(/ (?= )/gm, "&nbsp;");
-  }
+  let html = marked.parse(text, markedOption);
   html = noBreakTrippleDigit(html);
-  // console.log(html);
   return DOMPurify.sanitize(html);
 };
 
@@ -102,3 +78,10 @@ const noBreakTrippleDigit = (text: string): string => {
     match.replaceAll(/\s/gim, "&nbsp;")
   );
 };
+
+export function stringToLinkID(str: string) {
+  str = str.replace(/[ (),'":*]/gm, "-");
+  str = str.replace(/\./gm, "_");
+  str = str.replace(/[^a-zA-Z0-9-_:.]/gm, ""); // remove any invalid characters
+  return "link-" + str;
+}

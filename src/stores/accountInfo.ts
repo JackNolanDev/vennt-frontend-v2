@@ -77,6 +77,7 @@ export const useAccountInfoStore = defineStore("accountInfo", {
       await logoutApi();
       this.accountInfo = false;
       router.push({ name: HOME_ROUTE });
+      // TODO: This should probably clear most local information (e.g. entity list store, entity store)
     },
   },
 });

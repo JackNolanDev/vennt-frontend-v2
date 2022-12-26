@@ -1,12 +1,9 @@
 <template>
   <div class="basicBtnContents">
-    <BulletPoint
-      v-if="bullet"
-      :entity="bullet === true ? undefined : bullet"
-    ></BulletPoint>
-    <span v-else-if="icon" class="material-icons space">
+    <span v-if="icon" class="material-icons space">
       {{ icon }}
     </span>
+    <slot name="customIcon"></slot>
     <span class="nowrap alignRow text-contents">
       <slot></slot>
     </span>
@@ -14,10 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Entity } from "@/utils/backendTypes";
-import BulletPoint from "./BulletPoint.vue";
-
-defineProps<{ icon?: string; bullet?: Entity | true }>();
+defineProps<{ icon?: string }>();
 </script>
 
 <style scoped>

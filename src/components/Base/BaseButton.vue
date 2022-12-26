@@ -1,25 +1,25 @@
 <template>
   <RouterLink v-if="props.to" :to="props.to" class="btn basicBtn">
-    <BaseButtonContents :icon="icon" :bullet="bullet">
-      <slot></slot>
+    <BaseButtonContents :icon="icon">
+      <template #customIcon><slot name="customIcon"></slot></template>
+      <template #default><slot></slot></template>
     </BaseButtonContents>
   </RouterLink>
   <button v-else type="button" class="btn basicBtn">
-    <BaseButtonContents :icon="icon" :bullet="bullet">
-      <slot></slot>
+    <BaseButtonContents :icon="icon">
+      <template #customIcon><slot name="customIcon"></slot></template>
+      <template #default><slot></slot></template>
     </BaseButtonContents>
   </button>
 </template>
 
 <script setup lang="ts">
-import type { Entity } from "@/utils/backendTypes";
 import { type RouteLocationRaw, RouterLink } from "vue-router";
 import BaseButtonContents from "./BaseButtonContents.vue";
 
 const props = defineProps<{
   icon?: string;
   to?: RouteLocationRaw;
-  bullet?: Entity | true;
 }>();
 </script>
 

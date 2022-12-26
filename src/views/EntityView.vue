@@ -14,6 +14,11 @@
         :use-copyable-dice="true"
       ></CombatStats>
     </template>
+    <template #sidebar-right>
+      <RouteBasedRightSideBar>
+        <EntityRightSidebar></EntityRightSidebar>
+      </RouteBasedRightSideBar>
+    </template>
     <PageLayout>
       <RouterView></RouterView>
     </PageLayout>
@@ -33,6 +38,8 @@ import router, { HOME_ROUTE } from "@/router";
 import EntityNav from "@/components/Nav/EntityNav.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
 import EntityModals from "@/components/Entities/EntityModals.vue";
+import RouteBasedRightSideBar from "@/components/Base/RouteBasedRightSideBar.vue";
+import EntityRightSidebar from "@/components/Entities/EntityRightSidebar.vue";
 
 const entityStore = useEntityStore();
 const route = useRoute();

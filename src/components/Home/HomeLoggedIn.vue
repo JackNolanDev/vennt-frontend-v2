@@ -5,11 +5,14 @@
       v-for="(character, idx) in entityListStore.characters"
       :key="idx"
       :to="{ name: ENTITY_ROUTE, params: { id: character.id } }"
-      :bullet="character"
     >
+      <template #customIcon>
+        <BulletPoint :entity="character"></BulletPoint>
+      </template>
       {{ character.name }} - Level: {{ xp2Level(character.attributes.xp) }}
     </BaseButton>
-    <BaseButton :to="{ name: CREATE_ROUTE }" :bullet="true">
+    <BaseButton :to="{ name: CREATE_ROUTE }">
+      <template #customIcon><BulletPoint></BulletPoint></template>
       Create or Import a new character
     </BaseButton>
     <h3>Your Campaigns</h3>
@@ -24,6 +27,7 @@ import BaseButton from "../Base/BaseButton.vue";
 import PageLayout from "../Base/PageLayout.vue";
 import { xp2Level } from "@/utils/attributeUtils";
 import { onBeforeMount } from "vue";
+import BulletPoint from "../Base/BulletPoint.vue";
 
 const entityListStore = useEntityListStore();
 onBeforeMount(() => {

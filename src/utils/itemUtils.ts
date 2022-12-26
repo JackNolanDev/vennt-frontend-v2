@@ -11,7 +11,10 @@ import {
   ITEM_TYPE_EQUIPMENT,
   ITEM_TYPE_SHIELD,
   ITEM_TYPE_WEAPON,
+  type EntityItemType,
 } from "./backendTypes";
+
+export const defaultWeaponCategories = ["Unarmed", "Improvised"];
 
 export const shopItemToEntityItem = (
   shopItem: ShopItem,
@@ -87,13 +90,15 @@ export const consolidateItemList = (
 ): ConsolidatedItem[] => {
   const items: ConsolidatedItem[] = [];
   given.forEach((item) => {
-    const foundItem = items.find(
-      (search) =>
-        search.name === item.name &&
-        search.bulk === item.bulk &&
-        search.desc === item.desc
-    );
-    if (foundItem === undefined) {
+    const foundItem =
+      !itemEquippable(item) &&
+      items.find(
+        (search) =>
+          search.name === item.name &&
+          search.bulk === item.bulk &&
+          search.desc === item.desc
+      );
+    if (!foundItem) {
       items.push({ ...item, ids: [item.id] });
     } else {
       foundItem.ids.push(item.id);
@@ -131,3 +136,23 @@ export function sortConsolidatedItems(items: ConsolidatedItem[]) {
     return a.name.localeCompare(b.name);
   });
 }
+
+export const isDefaultWeapon = (item: EntityItem): boolean =>
+  !!(
+    item.custom_fields?.category &&
+    defaultWeaponCategories.includes(item.custom_fields.category)
+  );
+
+const equippableItemTypes = new Set<EntityItemType>([
+  ITEM_TYPE_ARMOR,
+  ITEM_TYPE_SHIELD,
+  ITEM_TYPE_WEAPON,
+]);
+
+export const itemEquippable = (item: EntityItem): boolean => {
+  return (
+    equippableItemTypes.has(item.type) &&
+    !isDefaultWeapon(item) &&
+    item.custom_fields?.category !== "Grenade"
+  );
+};

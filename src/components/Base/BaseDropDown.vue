@@ -1,6 +1,6 @@
 <template>
   <BaseButton
-    v-if="(useGivenState && givenClosed) || state.closed"
+    v-if="useGivenState ? givenClosed : state.closed"
     @click="toggleDropDown"
     :disabled="disabled"
     icon="keyboard_arrow_down"

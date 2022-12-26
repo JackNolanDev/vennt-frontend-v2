@@ -33,7 +33,7 @@
       v-if="submitBtn"
       :disabled="adjustButtonDisabled"
       @click="adjustAttrFromAdjustField"
-      class="primary wide mt-4"
+      class="primary wide mt-4 center"
     >
       Submit Adjustment
     </BaseButton>

@@ -4,10 +4,12 @@ import {
   filterEntityChangelogApi,
   updateEntityAttributesApi,
 } from "@/api/apiEntity";
-import router from "@/router";
+import router, { ENTITY_ROUTE } from "@/router";
 import type {
+  ConsolidatedItem,
   FilterChangelogBody,
   FullCollectedEntity,
+  PartialEntityItem,
   UncompleteCollectedEntity,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
@@ -15,6 +17,7 @@ import { consolidateItemList } from "@/utils/itemUtils";
 import { entityAttributesMap } from "@/utils/attributeUtils";
 import { defineStore } from "pinia";
 import { useCharacterCreateStore } from "./characterCreate";
+import { deleteItemApi, updateItemApi } from "@/api/apiItems";
 
 type EntityState = {
   entity: undefined | FullCollectedEntity;
@@ -76,6 +79,34 @@ export const useEntityStore = defineStore("entity", {
         );
       }
       await filterEntityChangelogApi(id, request);
+    },
+    async updateItem(itemId: string, item: PartialEntityItem) {
+      if (this.entity) {
+        const currentItemIdx = this.entity.items.findIndex(
+          (search) => search.id === itemId
+        );
+        if (currentItemIdx >= 0) {
+          this.entity.items[currentItemIdx] = await updateItemApi(itemId, item);
+        }
+      }
+    },
+    async deleteItem(item: ConsolidatedItem, redirect?: boolean) {
+      const itemId = item.ids[item.ids.length - 1];
+      if (this.entity) {
+        if (redirect && router.currentRoute.value.params.detail === itemId) {
+          const routeParams = { ...router.currentRoute.value.params };
+          delete routeParams.detail;
+          router.push({
+            name: router.currentRoute.value.name ?? ENTITY_ROUTE,
+            params: routeParams,
+            query: router.currentRoute.value.query,
+          });
+        }
+        this.entity.items = this.entity.items.filter(
+          (item) => item.id !== itemId
+        );
+        await deleteItemApi(itemId);
+      }
     },
   },
 });

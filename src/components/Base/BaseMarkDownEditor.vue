@@ -5,13 +5,10 @@
       @input="$emit('update:modelValue', $event.target.value)"
       class="input textInput editor-textarea"
     ></textarea>
-    <div
-      class="editor-display"
-      v-html="configurableMarkDown(modelValue, { keepSyntax: true })"
-    ></div>
+    <div class="editor-display" v-html="renderMarkdown(modelValue)"></div>
     <!-- Probably better to keep using textarea and figure out a way to hide the content? -->
     <!-- <div
-      v-html="configurableMarkDown(modelValue, { keepSyntax: true })"
+      v-html="renderMarkdown(modelValue, { keepSyntax: true })"
       contenteditable="true"
       class="input textInput"
     ></div> -->
@@ -19,7 +16,7 @@
 </template>
 
 <script setup>
-import { configurableMarkDown } from "@/utils/textUtils";
+import { renderMarkdown } from "@/utils/textUtils";
 defineProps(["modelValue"]);
 defineEmits(["update:modelValue"]);
 </script>

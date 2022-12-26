@@ -8,6 +8,7 @@ import {
   type PartialEntityAttributes,
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
+  type UseAttrMap,
 } from "./backendTypes";
 import { hpDiffStr, vimDiffStr, mpDiffWis } from "./copy/createCharacterCopy";
 
@@ -39,23 +40,25 @@ const attrBaseMap: { [attr in EntityAttribute]?: EntityAttribute } = {
   max_hero: "hero",
 };
 
-export function getMaxAttr(attr: EntityAttribute): EntityAttribute | undefined {
+export const getMaxAttr = (
+  attr: EntityAttribute
+): EntityAttribute | undefined => {
   if (attr in attrMaxMap) {
     return attrMaxMap[attr];
   }
   return undefined;
-}
+};
 
-export function getBaseAttr(
+export const getBaseAttr = (
   attr: EntityAttribute
-): EntityAttribute | undefined {
+): EntityAttribute | undefined => {
   if (attr in attrBaseMap) {
     return attrBaseMap[attr];
   }
   return undefined;
-}
+};
 
-export function attrFullName(attr: EntityAttribute): string {
+export const attrFullName = (attr: EntityAttribute): string => {
   const nameMap = {
     per: "Perception",
     tek: "Technology",
@@ -76,9 +79,9 @@ export function attrFullName(attr: EntityAttribute): string {
     return "Maximum " + attrFullName(baseAttr);
   }
   return attrShortName(attr);
-}
+};
 
-export function attrShortName(attr: EntityAttribute): string {
+export const attrShortName = (attr: EntityAttribute): string => {
   if (attr === "init") {
     return "Initiative";
   }
@@ -90,29 +93,29 @@ export function attrShortName(attr: EntityAttribute): string {
     return "Max " + attrShortName(baseAttr);
   }
   return attr.charAt(0).toUpperCase() + attr.slice(1);
-}
+};
 
-export function xp2Level(xp?: number) {
+export const xp2Level = (xp?: number) => {
   if (xp === undefined) {
     return 0;
   }
   const level = Math.floor(xp / 1000);
   // if xp < 1000, still return level 1
   return level <= 0 ? 1 : level;
-}
+};
 
-export function calcLevelDiff(newXP: number, originalXP: number) {
+export const calcLevelDiff = (newXP: number, originalXP: number) => {
   return xp2Level(newXP) - xp2Level(originalXP);
-}
-export function calcLevelDiffEntity(newXP: number, entity: CollectedEntity) {
+};
+export const calcLevelDiffEntity = (newXP: number, entity: CollectedEntity) => {
   const originalXP = entity.entity.attributes.xp;
   return calcLevelDiff(newXP, originalXP !== undefined ? originalXP : 0);
-}
+};
 
-export function generateDefaultAdjustMsg(
+export const generateDefaultAdjustMsg = (
   attr: EntityAttribute,
   adjust: number
-) {
+) => {
   if (adjust === 0) {
     return "";
   }
@@ -144,14 +147,14 @@ export function generateDefaultAdjustMsg(
     pre = "Decreased";
   }
   return `${pre} ${attr} by ${Math.abs(adjust)}`;
-}
+};
 
-export function adjustAttrsObject(
+export const adjustAttrsObject = (
   entity: FullCollectedEntity,
   adjustAttrs: PartialEntityAttributes,
   propegateChanges = true,
   enforceMaximums = false
-): PartialEntityAttributes {
+): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
   const defaultVal = (attr: EntityAttribute): number => {
     if (entity.entity.attributes[attr] !== undefined)
@@ -234,15 +237,15 @@ export function adjustAttrsObject(
   }
 
   return attrs;
-}
+};
 
-export function adjustAttrsAPI(
+export const adjustAttrsAPI = (
   entity: FullCollectedEntity,
   adjustAttrs: PartialEntityAttributes,
   msg?: string,
   propegateChanges = true,
   enforceMaximums = false
-) {
+) => {
   const attrs = adjustAttrsObject(
     entity,
     adjustAttrs,
@@ -266,11 +269,11 @@ export function adjustAttrsAPI(
     request.message = msg;
   }
   entityStore.updateEntityAttributes(entity.entity.id, request);
-}
+};
 
-export function entityAttributesMap(
+export const entityAttributesMap = (
   entity: CollectedEntity
-): UpdatedEntityAttributes {
+): UpdatedEntityAttributes => {
   const attrs: UpdatedEntityAttributes = {};
   // 1. Directly copy over base attribute values from the character object
   Object.entries(entity.entity.attributes).forEach(([attr, val]) => {
@@ -310,21 +313,14 @@ export function entityAttributesMap(
 
   // 4. Apply pending equations
   Object.entries(equations).forEach(([attr, equation]) => {
-    Object.entries(attrs).forEach(([replaceAttr, replaceVal]) => {
-      equation = equation.replaceAll(replaceAttr, replaceVal.val.toString());
-    });
-    // ensure all variables have been removed from the equation before attempting to solve it
-    if (/^[\d+\-*/() ]+$/.test(equation)) {
-      try {
-        const parsed = parseInt(mexp.eval(equation));
-        const attrMap = attrs[attr as EntityAttribute];
-        if (attrMap) {
-          attrMap.val = parsed;
-        } else {
-          alterAttrs(attr as EntityAttribute, parsed);
-        }
-      } catch {
-        // throw out any errors
+    const parsed = solveEquation(equation, attrs);
+    if (parsed !== undefined) {
+      const attrMap = attrs[attr as EntityAttribute];
+      if (attrMap) {
+        // replace value instead of adjusting it
+        attrMap.val = parsed;
+      } else {
+        alterAttrs(attr as EntityAttribute, parsed);
       }
     }
   });
@@ -337,4 +333,39 @@ export function entityAttributesMap(
   });
 
   return attrs;
-}
+};
+
+export const solvePendingEquations = (
+  usesMap: UseAttrMap,
+  attrs: UpdatedEntityAttributes
+): PartialEntityAttributes => {
+  const cleaned: PartialEntityAttributes = {};
+  Object.entries(usesMap).forEach(([attrIn, val]) => {
+    const attr = attrIn as EntityAttribute;
+    if (typeof val === "string") {
+      cleaned[attr] = solveEquation(val, attrs);
+    } else {
+      cleaned[attr] = val;
+    }
+  });
+  return cleaned;
+};
+
+export const solveEquation = (
+  equation: string,
+  attrs: UpdatedEntityAttributes
+): number | undefined => {
+  // replace any possible variables with current values
+  Object.entries(attrs).forEach(([replaceAttr, replaceVal]) => {
+    equation = equation.replaceAll(replaceAttr, replaceVal.val.toString());
+  });
+  // ensure all variables have been removed from the equation before attempting to solve it
+  if (/^[\d+\-*/() ]+$/.test(equation)) {
+    try {
+      return parseInt(mexp.eval(equation));
+    } catch {
+      console.log(`solving equation failed: ${equation}`);
+    }
+    return undefined;
+  }
+};
