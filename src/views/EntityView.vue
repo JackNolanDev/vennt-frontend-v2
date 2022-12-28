@@ -34,7 +34,14 @@ import { useEntityStore } from "@/stores/entity";
 import { onBeforeMount, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { idValidator } from "@/utils/backendTypes";
-import router, { HOME_ROUTE } from "@/router";
+import router, {
+  ENTITY_ABILITIES_ROUTE,
+  ENTITY_COMBAT_ROUTE,
+  ENTITY_ITEMS_ROUTE,
+  ENTITY_ITEM_SHOP_ROUTE,
+  ENTITY_SETTINGS_ROUTE,
+  HOME_ROUTE,
+} from "@/router";
 import EntityNav from "@/components/Nav/EntityNav.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
 import EntityModals from "@/components/Entities/EntityModals.vue";
@@ -67,10 +74,41 @@ const keyMapper = (e: KeyboardEvent) => {
   }
   // @ts-ignore
   const src = e.target.localName;
-  if (["a", "button", "input", "textarea"].includes(src)) {
+  // @ts-ignore
+  const editable = e.target.contentEditable === "true";
+  if (["a", "button", "input", "textarea"].includes(src) || editable) {
     // do not override key inputs from regular text inputs
     return;
   }
-  console.log(src, e.key);
+  switch (e.key) {
+    case "a":
+      jumpToPage(ENTITY_ABILITIES_ROUTE);
+      break;
+    case "i":
+      jumpToPage(ENTITY_ITEMS_ROUTE);
+      break;
+    case "c":
+      jumpToPage(ENTITY_COMBAT_ROUTE);
+      break;
+    case "h":
+      jumpToPage(ENTITY_SETTINGS_ROUTE);
+      break;
+    case "s":
+      jumpToPage(ENTITY_ITEM_SHOP_ROUTE);
+      break;
+    default:
+      // unassigned
+      console.log(src, e.key);
+  }
+};
+
+const jumpToPage = (name: string) => {
+  if (router.currentRoute.value.name !== name && entityStore.entity) {
+    router.push({
+      name,
+      params: { id: entityStore.entity.entity.id },
+      query: router.currentRoute.value.query,
+    });
+  }
 };
 </script>

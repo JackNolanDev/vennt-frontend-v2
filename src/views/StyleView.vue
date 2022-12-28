@@ -14,10 +14,10 @@
     </template>
     <PageLayout class="medium">
       <h1>Main content</h1>
-      <BaseCheckBoxArray
+      <SetBaseCheckBoxArray
         :checked="state.checked"
         :options="checkBoxOptions"
-      ></BaseCheckBoxArray>
+      ></SetBaseCheckBoxArray>
       <h3>Button styles</h3>
       <BaseButton class="primary mb-8">Primary</BaseButton>
       <BaseButton class="secondary mb-8">Secondary</BaseButton>
@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import BaseButton from "@/components/Base/BaseButton.vue";
-import BaseCheckBoxArray from "@/components/Base/BaseCheckBoxArray.vue";
+import SetBaseCheckBoxArray from "@/components/Base/SetBasedCheckBoxArray.vue";
 import BaseInlineTextEditor from "@/components/Base/BaseInlineTextEditor.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";

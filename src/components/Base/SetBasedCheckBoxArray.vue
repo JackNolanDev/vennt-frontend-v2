@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import BaseCheckBox from "./BaseCheckBox.vue";
 
-interface BaseCheckBoxArrayProps {
+interface SetBaseCheckBoxArrayProps {
   options: {
     [key: string]: string;
   };
@@ -23,7 +23,7 @@ interface BaseCheckBoxArrayProps {
   disabled?: Set<string>;
 }
 
-const props = defineProps<BaseCheckBoxArrayProps>();
+const props = defineProps<SetBaseCheckBoxArrayProps>();
 
 const toggled = (key: string): void => {
   if (props.checked.has(key)) {

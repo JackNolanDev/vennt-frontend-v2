@@ -45,17 +45,33 @@ const isSpecialPlural = (name: string): boolean => {
   return plurals.some((word) => name.includes(word));
 };
 
-export const pluralizeName = (givenName: string, cleanup = true): string => {
+export const pluralizeName = (
+  givenName: string,
+  cleanup = true,
+  count = 0,
+  action = ""
+): string => {
   let name = givenName;
-  const commaPos = name.search(/,|\*| \(/gm);
-  let word = givenName;
-  let rest = "";
-  if (commaPos >= 0) {
-    word = givenName.substring(0, commaPos);
-    rest = givenName.substring(commaPos);
+  if (count !== 1) {
+    const commaPos = name.search(/,|\*| \(/gm);
+    let word = givenName;
+    let rest = "";
+    if (commaPos >= 0) {
+      word = givenName.substring(0, commaPos);
+      rest = givenName.substring(commaPos);
+    }
+    if (!(pluralize.isPlural(word) || isSpecialPlural(word))) {
+      name = `${pluralize(word)}${rest}`;
+    }
   }
-  if (!(pluralize.isPlural(word) || isSpecialPlural(word))) {
-    name = `${pluralize(word)}${rest}`;
+  if (count === 1 && action) {
+    return prefixName(givenName, action, cleanup);
+  }
+  if (count !== 0) {
+    name = `${count} ${name}`;
+  }
+  if (action) {
+    name = `${action} ${name}`;
   }
   if (cleanup) {
     name = improveTextForDisplay(name);

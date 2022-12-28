@@ -667,13 +667,7 @@ select.input {
 .tableHeader.sticky {
   position: sticky;
   z-index: 4;
-  top: var(--nav-height);
-}
-.subNavPage .tableHeader.sticky {
-  top: var(--total-nav-height);
-}
-.subNavPage:fullscreen .tableHeader.sticky {
-  top: var(--sub-nav-height);
+  top: 0;
 }
 .tableHeader .headerFont {
   font-size: 15pt !important;

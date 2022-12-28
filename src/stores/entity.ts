@@ -1,16 +1,18 @@
 import {
   addCollectedEntityApi,
+  addItemsApi,
   fetchCollectedEntityApi,
   filterEntityChangelogApi,
   updateEntityAttributesApi,
 } from "@/api/apiEntity";
-import router, { ENTITY_ROUTE } from "@/router";
+import router, { ENTITY_ITEMS_ROUTE } from "@/router";
 import type {
   ConsolidatedItem,
   FilterChangelogBody,
   FullCollectedEntity,
   PartialEntityItem,
   UncompleteCollectedEntity,
+  UncompleteEntityItem,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
 import { consolidateItemList } from "@/utils/itemUtils";
@@ -80,6 +82,25 @@ export const useEntityStore = defineStore("entity", {
       }
       await filterEntityChangelogApi(id, request);
     },
+    async addItems(
+      items: UncompleteEntityItem[],
+      redirectToInventory?: boolean
+    ) {
+      if (items.length > 0 && this.entity) {
+        const newItems = await addItemsApi(this.entity.entity.id, items);
+        this.entity.items.push(...newItems);
+        if (redirectToInventory && newItems.length > 0) {
+          router.push({
+            name: ENTITY_ITEMS_ROUTE,
+            params: {
+              ...router.currentRoute.value.params,
+              detail: newItems[0].id,
+            },
+            query: router.currentRoute.value.query,
+          });
+        }
+      }
+    },
     async updateItem(itemId: string, item: PartialEntityItem) {
       if (this.entity) {
         const currentItemIdx = this.entity.items.findIndex(
@@ -90,14 +111,17 @@ export const useEntityStore = defineStore("entity", {
         }
       }
     },
-    async deleteItem(item: ConsolidatedItem, redirect?: boolean) {
+    async deleteItem(item: ConsolidatedItem, closeSidebar?: boolean) {
       const itemId = item.ids[item.ids.length - 1];
       if (this.entity) {
-        if (redirect && router.currentRoute.value.params.detail === itemId) {
+        if (
+          closeSidebar &&
+          router.currentRoute.value.params.detail === itemId
+        ) {
           const routeParams = { ...router.currentRoute.value.params };
           delete routeParams.detail;
           router.push({
-            name: router.currentRoute.value.name ?? ENTITY_ROUTE,
+            name: router.currentRoute.value.name ?? ENTITY_ITEMS_ROUTE,
             params: routeParams,
             query: router.currentRoute.value.query,
           });

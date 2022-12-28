@@ -12,13 +12,14 @@ import {
   ITEM_TYPE_SHIELD,
   ITEM_TYPE_WEAPON,
   type EntityItemType,
+  type FullCollectedEntity,
 } from "./backendTypes";
 
 export const defaultWeaponCategories = ["Unarmed", "Improvised"];
 
 export const shopItemToEntityItem = (
   shopItem: ShopItem,
-  active = false
+  active?: boolean
 ): UncompleteEntityItem => {
   const item: UncompleteEntityItem = {
     type: shopItem.type,
@@ -26,7 +27,7 @@ export const shopItemToEntityItem = (
     bulk: shopItem.bulk,
     desc: shopItem.desc,
     custom_fields: {},
-    active,
+    active: active ?? shopItemDefaultActive(shopItem),
   };
   if (item.custom_fields) {
     if (shopItem.attr) {
@@ -82,7 +83,7 @@ export const findShopItem = (
   if (found) {
     return found;
   }
-  if (item.custom_fields?.category) {
+  if (!item.custom_fields?.category) {
     return undefined;
   }
   return weaponTypes.find(
@@ -178,4 +179,26 @@ export const itemEquippable = (item: EntityItem): boolean => {
     !isDefaultWeapon(item) &&
     item.custom_fields?.category !== "Grenade"
   );
+};
+
+export const shopItemDefaultActive = (item: ShopItem): boolean =>
+  equippableItemTypes.has(item.type) && item.category !== "Grenade";
+
+export const shopItemActive = (
+  item: ShopItem,
+  entity?: FullCollectedEntity
+): boolean => {
+  let base = shopItemDefaultActive(item);
+  if (
+    base &&
+    item.type !== "weapon" &&
+    entity &&
+    entity.items.some(
+      (existingItem) => existingItem.type === item.type && existingItem.active
+    )
+  ) {
+    // another item of the same type is already active
+    base = false;
+  }
+  return base;
 };

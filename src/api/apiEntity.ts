@@ -6,6 +6,9 @@ import {
   type UncompleteCollectedEntity,
   type UpdateEntityAttributes,
   type FilterChangelogBody,
+  type UncompleteEntityItem,
+  type FullEntityItem,
+  fullItemValidator,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
 import { wrapAPI } from "./utils";
@@ -47,5 +50,15 @@ export const filterEntityChangelogApi = (
   return wrapAPI(
     () => api.patch(`/entity/${id}/changelog`, request),
     z.boolean()
+  );
+};
+
+export const addItemsApi = (
+  id: string,
+  request: UncompleteEntityItem[]
+): Promise<FullEntityItem[]> => {
+  return wrapAPI(
+    () => api.post(`/entity/${id}/items`, request),
+    fullItemValidator.array()
   );
 };

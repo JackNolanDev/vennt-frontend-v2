@@ -37,7 +37,7 @@
 import { stringToLinkID, improveTextForDisplay } from "@/utils/textUtils";
 import type { ConsolidatedItem } from "@/utils/backendTypes";
 import BaseButton from "../Base/BaseButton.vue";
-import router, { ENTITY_ROUTE } from "@/router";
+import router, { ENTITY_ITEMS_ROUTE } from "@/router";
 import type { RouteLocationRaw } from "vue-router";
 import ItemDesc from "./ItemDesc.vue";
 
@@ -51,19 +51,19 @@ withDefaults(
 );
 
 const itemOpenned = (item: ConsolidatedItem): boolean =>
-  router.currentRoute.value.params.detail == item.id;
+  router.currentRoute.value.params.detail === item.id;
 const itemLink = (item: ConsolidatedItem): RouteLocationRaw => {
   if (itemOpenned(item)) {
     const params = { ...router.currentRoute.value.params };
     delete params.detail;
     return {
-      name: router.currentRoute.value.name ?? ENTITY_ROUTE,
+      name: router.currentRoute.value.name ?? ENTITY_ITEMS_ROUTE,
       params,
       query: router.currentRoute.value.query,
     };
   }
   return {
-    name: router.currentRoute.value.name ?? ENTITY_ROUTE,
+    name: router.currentRoute.value.name ?? ENTITY_ITEMS_ROUTE,
     params: { ...router.currentRoute.value.params, detail: item.id },
     query: router.currentRoute.value.query,
   };
