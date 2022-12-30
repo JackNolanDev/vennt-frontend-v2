@@ -15,7 +15,7 @@
       ></CombatStats>
     </template>
     <template #sidebar-right>
-      <RouteBasedRightSideBar>
+      <RouteBasedRightSideBar :query-params="['new']">
         <EntityRightSidebar></EntityRightSidebar>
       </RouteBasedRightSideBar>
     </template>

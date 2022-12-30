@@ -16,6 +16,17 @@
     <h2>General Items</h2>
     <ItemTable :items="otherItems" class="mb-24"></ItemTable>
   </div>
+  <BaseButton
+    v-if="entityStore.entity?.entity.id"
+    :to="{
+      name: ENTITY_ITEMS_ROUTE,
+      params: router.currentRoute.value.params,
+      query: { ...router.currentRoute.value.query, new: 'item' },
+    }"
+    icon="add"
+    class="wide"
+    >Add item</BaseButton
+  >
   <h2>Buy Items</h2>
   <BaseButton
     v-if="entityStore.entity?.entity.id"
@@ -45,7 +56,11 @@ import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseFraction from "@/components/Base/BaseFraction.vue";
 import ItemTable from "@/components/Items/ItemTable.vue";
 import { useEntityStore } from "@/stores/entity";
-import { ENTITY_ITEM_SHOP_ROUTE, ENTITY_WEAPON_SHOP_ROUTE } from "@/router";
+import router, {
+  ENTITY_ITEMS_ROUTE,
+  ENTITY_ITEM_SHOP_ROUTE,
+  ENTITY_WEAPON_SHOP_ROUTE,
+} from "@/router";
 import { computed } from "vue";
 
 const entityStore = useEntityStore();

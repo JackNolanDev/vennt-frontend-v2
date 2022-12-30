@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show">
+  <div v-if="params || query">
     <BaseButton icon="close" :to="exitRoute">Close</BaseButton>
     <div class="panel ml-16 mr-16 mb-64">
       <slot></slot>
@@ -14,12 +14,31 @@ import router, { ENTITY_ROUTE } from "@/router";
 
 const DEFAULT_ROUTE_KEY = "detail";
 
-const props = defineProps<{ routeKey?: string }>();
+const props = defineProps<{ routeKey?: string; queryParams?: string[] }>();
 
-const show = computed(
+const params = computed(
   () => router.currentRoute.value.params[props.routeKey ?? DEFAULT_ROUTE_KEY]
 );
+const query = computed(
+  () =>
+    props.queryParams &&
+    props.queryParams.some((key) => router.currentRoute.value.query[key])
+);
 const exitRoute = computed(() => {
+  if (query.value) {
+    const removeKey = Object.keys(router.currentRoute.value.query).find(
+      (key) => props.queryParams && props.queryParams.includes(key)
+    );
+    if (removeKey) {
+      const query = { ...router.currentRoute.value.query };
+      delete query[removeKey];
+      return {
+        name: router.currentRoute.value.name ?? ENTITY_ROUTE,
+        params: router.currentRoute.value.params,
+        query,
+      };
+    }
+  }
   const params = { ...router.currentRoute.value.params };
   delete params[props.routeKey ?? DEFAULT_ROUTE_KEY];
   return {

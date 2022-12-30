@@ -16,7 +16,9 @@
       class="alignRow tableItems"
     >
       <div class="tableData">
-        <div v-if="showDiff" class="logPrev">{{ log.diff }}</div>
+        <div v-if="showDiff" class="logPrev">
+          {{ log.diff > 0 ? `+${log.diff}` : log.diff }}
+        </div>
         <div v-else class="logPrev">
           {{ log.prev !== undefined ? log.prev : "-" }}
         </div>

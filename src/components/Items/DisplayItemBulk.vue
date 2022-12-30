@@ -11,11 +11,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { EntityItem } from "@/utils/backendTypes";
 import { itemEquippable } from "@/utils/itemUtils";
 import { computed } from "vue";
 
-const props = defineProps<{ item: ConsolidatedItem }>();
+const props = defineProps<{ item: EntityItem }>();
 const bulkLabel = computed(() =>
   props.item.type === "container" ? "Carrying Capacity" : "Bulk"
 );

@@ -1,8 +1,8 @@
-import {
-  ATTRIBUTES,
-  type CollectedEntity,
-  type EntityItem,
-  type UpdatedEntityAttributes,
+import { solveEquation } from "./attributeUtils";
+import type {
+  CollectedEntity,
+  EntityItem,
+  UpdatedEntityAttributes,
 } from "./backendTypes";
 
 const hasProficiency = (
@@ -25,21 +25,11 @@ const attributeBonus = (
   weapon: EntityItem,
   attrs: UpdatedEntityAttributes
 ): number => {
-  if (!weapon.custom_fields || !weapon.custom_fields.attr) {
+  if (!weapon.custom_fields?.attr) {
     return 0;
   }
-  let attrStr = weapon.custom_fields.attr;
-  ATTRIBUTES.forEach((attr) => {
-    const attrVal = attrs[attr];
-    if (attrVal) {
-      attrStr = attrStr.replaceAll(attr, attrVal.val.toString());
-    }
-  });
-  const numbers = [...attrStr.matchAll(/[+-]*\d+/gm)];
-  return numbers.reduce((sum, val) => {
-    const parsedVal = parseInt(val.toString());
-    return sum + (isNaN(parsedVal) ? 0 : parsedVal);
-  }, 0);
+  const solved = solveEquation(weapon.custom_fields.attr, attrs);
+  return solved ?? 0;
 };
 
 export type ResultReason<T> = {

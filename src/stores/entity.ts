@@ -90,13 +90,17 @@ export const useEntityStore = defineStore("entity", {
         const newItems = await addItemsApi(this.entity.entity.id, items);
         this.entity.items.push(...newItems);
         if (redirectToInventory && newItems.length > 0) {
+          const query = { ...router.currentRoute.value.query };
+          if (query.new === "item") {
+            delete query.new;
+          }
           router.push({
             name: ENTITY_ITEMS_ROUTE,
             params: {
               ...router.currentRoute.value.params,
               detail: newItems[0].id,
             },
-            query: router.currentRoute.value.query,
+            query,
           });
         }
       }

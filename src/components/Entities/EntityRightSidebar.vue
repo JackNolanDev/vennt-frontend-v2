@@ -1,5 +1,6 @@
 <template>
-  <ItemDetails v-if="entityItem" :item="entityItem"></ItemDetails>
+  <NewItem v-if="showNewItem"></NewItem>
+  <ItemDetails v-else-if="entityItem" :item="entityItem"></ItemDetails>
   <ShopItemDetail v-else-if="shopItem" :item="shopItem"></ShopItemDetail>
   <WeaponShopDetail
     v-else-if="weaponType"
@@ -16,10 +17,14 @@ import WeaponShopDetail from "../Items/WeaponShopDetail.vue";
 import { computed } from "vue";
 import router from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
+import NewItem from "../Items/NewItem.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
 
+const showNewItem = computed(
+  () => router.currentRoute.value.query.new === "item"
+);
 const entityItem = computed(() =>
   entityStore.consolidatedItems.find(
     (item) => item.id === router.currentRoute.value.params.detail

@@ -181,24 +181,31 @@ export const itemEquippable = (item: EntityItem): boolean => {
   );
 };
 
+export const shopItemDefaultActiveDirectFields = (
+  type: EntityItemType,
+  category?: string
+): boolean => equippableItemTypes.has(type) && category !== "Grenade";
+
+export const itemActiveDirectFields = (
+  type: EntityItemType,
+  category?: string,
+  entity?: FullCollectedEntity
+): boolean => {
+  let base = shopItemDefaultActiveDirectFields(type, category);
+  if (base && type !== "weapon" && entity && entity.items.length > 0) {
+    base = entity.items.some(
+      (existingItem) => existingItem.type === type && existingItem.active
+    );
+  }
+  return base;
+};
+
 export const shopItemDefaultActive = (item: ShopItem): boolean =>
-  equippableItemTypes.has(item.type) && item.category !== "Grenade";
+  shopItemDefaultActiveDirectFields(item.type, item.category);
 
 export const shopItemActive = (
   item: ShopItem,
   entity?: FullCollectedEntity
 ): boolean => {
-  let base = shopItemDefaultActive(item);
-  if (
-    base &&
-    item.type !== "weapon" &&
-    entity &&
-    entity.items.some(
-      (existingItem) => existingItem.type === item.type && existingItem.active
-    )
-  ) {
-    // another item of the same type is already active
-    base = false;
-  }
-  return base;
+  return itemActiveDirectFields(item.type, item.category, entity);
 };
