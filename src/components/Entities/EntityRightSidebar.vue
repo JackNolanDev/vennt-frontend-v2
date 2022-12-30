@@ -1,5 +1,5 @@
 <template>
-  <NewItem v-if="showNewItem"></NewItem>
+  <EditItem v-if="showNewItem"></EditItem>
   <ItemDetails v-else-if="entityItem" :item="entityItem"></ItemDetails>
   <ShopItemDetail v-else-if="shopItem" :item="shopItem"></ShopItemDetail>
   <WeaponShopDetail
@@ -17,7 +17,7 @@ import WeaponShopDetail from "../Items/WeaponShopDetail.vue";
 import { computed } from "vue";
 import router from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
-import NewItem from "../Items/NewItem.vue";
+import EditItem from "../Items/EditItem.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();

@@ -1,6 +1,7 @@
 <template>
   <form>
-    <h2>New Item</h2>
+    <h2 v-if="givenItem">Edit "{{ givenItem?.name }}"</h2>
+    <h2 v-else>New Item</h2>
     <label for="new-item-name" class="labelText">Name:</label>
     <input
       type="text"
@@ -188,10 +189,10 @@
       @click="addItemButton"
       class="primary center wide"
     >
-      Add item
+      {{ givenItem ? "Edit" : "Add" }} item
     </BaseButton>
     <div class="seperator mt-16 mb-16"></div>
-    <h2>Item to be added:</h2>
+    <h2>Item Preview:</h2>
     <div class="card column padded thin">
       <DisplayUncompleteItemFull :item="newItem"></DisplayUncompleteItemFull>
     </div>
@@ -208,6 +209,7 @@ import {
   ITEM_TYPE_SHIELD,
   ITEM_TYPE_WEAPON,
   type UsesMap,
+  type FullEntityItem,
 } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
@@ -218,6 +220,10 @@ import { itemActiveDirectFields } from "@/utils/itemUtils";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 import DisplayUncompleteItemFull from "./DisplayUncompleteItemFull.vue";
 import { useJsonStore } from "@/stores/jsonStorage";
+
+// TODO: support editing uses
+
+const props = defineProps<{ givenItem?: FullEntityItem }>();
 
 interface NewItemState {
   name: string;
@@ -241,27 +247,28 @@ interface NewItemState {
 }
 
 const initialState: NewItemState = {
-  name: "",
-  desc: "",
-  bulk: "0",
-  type: "equipment",
-  armorArmor: "",
-  armorBurden: "",
-  shieldShield: "",
-  shieldBurden: "",
-  weaponAttr: "",
-  weaponDmg: "",
-  weaponRange: "",
-  weaponCategory: "",
-  weaponType: "",
-  courses: "",
-  special: "",
-  comment: "",
+  name: props.givenItem?.name ?? "",
+  desc: props.givenItem?.desc ?? "",
+  bulk: props.givenItem?.bulk.toString() ?? "0",
+  type: props.givenItem?.type ?? "equipment",
+  armorArmor: props.givenItem?.uses?.adjust?.attr.armor?.toString() ?? "",
+  armorBurden: props.givenItem?.uses?.adjust?.attr.burden?.toString() ?? "",
+  shieldShield: props.givenItem?.uses?.adjust?.attr.shield?.toString() ?? "",
+  shieldBurden: props.givenItem?.uses?.adjust?.attr.burden?.toString() ?? "",
+  weaponAttr: props.givenItem?.custom_fields?.attr ?? "",
+  weaponDmg: props.givenItem?.custom_fields?.dmg ?? "",
+  weaponRange: props.givenItem?.custom_fields?.range ?? "",
+  weaponCategory: props.givenItem?.custom_fields?.category ?? "",
+  weaponType: props.givenItem?.custom_fields?.weapon_type ?? "",
+  courses: props.givenItem?.custom_fields?.courses ?? "",
+  special: props.givenItem?.custom_fields?.special ?? "",
+  comment: props.givenItem?.comment ?? "",
   defineActive: false,
-  active: false,
+  active: props.givenItem?.active ?? false,
 };
 
 const state = reactive({ ...initialState });
+const emit = defineEmits<{ (e: "submitted"): void }>();
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
 jsonStorage.fetchWeaponTypes();
@@ -358,8 +365,12 @@ const buttonDisabled = computed(
 );
 
 const addItemButton = () => {
-  console.log(newItem.value);
-  entityStore.addItems([newItem.value], true);
+  if (props.givenItem) {
+    entityStore.updateItem(props.givenItem.id, newItem.value);
+  } else {
+    entityStore.addItems([newItem.value], true);
+  }
+  emit("submitted");
   Object.entries(initialState).forEach(([key, val]) => {
     // @ts-ignore
     state[key] = val;
