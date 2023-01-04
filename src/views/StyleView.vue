@@ -65,6 +65,10 @@
       ></BaseInlineTextEditor>
       {{ state.inlineText }}
       <BaseButton @click="focusToInlineEditor">Jump to editor?</BaseButton>
+      <div class="seperator mt-16 mb-16"></div>
+      <h2>Markdown Rendering</h2>
+      <textarea v-model="state.markdownText" class="input"></textarea>
+      <div v-html="renderMarkdown(state.markdownText)"></div>
       <div class="mb-256"></div>
     </PageLayout>
   </BaseLayout>
@@ -77,11 +81,16 @@ import BaseInlineTextEditor from "@/components/Base/BaseInlineTextEditor.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Nav/BaseNav.vue";
+import { renderMarkdown } from "@/utils/textUtils";
 import { reactive } from "vue";
 
 const INLINE_EDITOR_ID = "style-inline-editor";
 
-const state = reactive({ checked: new Set<string>(), inlineText: "" });
+const state = reactive({
+  checked: new Set<string>(),
+  inlineText: "",
+  markdownText: "",
+});
 
 const showSection = (section: string) => {
   return state.checked.has(section);

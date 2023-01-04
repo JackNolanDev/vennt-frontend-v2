@@ -1,13 +1,15 @@
 <template>
-  <div class="alignRow gap">
-    <p class="mt-16 mb-0"><b>Comment:</b></p>
-    <BaseButton @click="toggleEdit" icon="chat"></BaseButton>
-    <BaseButton
-      v-if="showSaveComment"
-      @click="saveComment"
-      icon="save"
-    ></BaseButton>
-  </div>
+  <BaseButton
+    v-if="showSaveComment"
+    @click="toggleEdit"
+    icon="save"
+    class="wide mt-16"
+  >
+    Save Comment
+  </BaseButton>
+  <BaseButton v-else @click="toggleEdit" icon="chat" class="wide mt-16">
+    Comment
+  </BaseButton>
   <BaseInlineTextEditor
     v-if="state.edit"
     v-model="state.comment"
@@ -33,12 +35,10 @@ const showSaveComment = computed(
 );
 
 const toggleEdit = () => {
+  if (showSaveComment.value) {
+    const itemUpdate = { comment: state.comment };
+    entityStore.updateItem(props.item.id, itemUpdate);
+  }
   state.edit = !state.edit;
-};
-
-const saveComment = () => {
-  const itemUpdate = { comment: state.comment };
-  entityStore.updateItem(props.item.id, itemUpdate);
-  toggleEdit();
 };
 </script>

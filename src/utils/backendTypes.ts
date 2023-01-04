@@ -3,7 +3,8 @@ import { z } from "zod";
 export const NAME_MAX = 100;
 export const PASSWORD_MIN = 6;
 export const PASSWORD_MAX = 2000;
-export const ABILITY_MAX = 2000;
+export const ABILITY_MAX = 6000;
+export const ABILITY_PREREQ_MAX = 200;
 export const ITEM_MAX = 2000;
 export const COMMENT_MAX = 2000;
 export const CHANGELOG_MAX = 200;
@@ -173,8 +174,7 @@ export const abilityCostValidator = z.object({
   passive: z.boolean().optional(),
 });
 
-export const abilityFieldsValidator = z.object({
-  cost: abilityCostValidator.optional(),
+export const abilityFieldsValidatorStrings = z.object({
   activation: z.string().max(NAME_MAX).optional(),
   expedited: z.string().max(NAME_MAX).optional(),
   flavor: z.string().max(ABILITY_MAX).optional(),
@@ -182,12 +182,17 @@ export const abilityFieldsValidator = z.object({
   purchase: z.string().max(NAME_MAX).optional(),
   unlocks: z.string().max(NAME_MAX).optional(),
   partial_unlocks: z.string().max(NAME_MAX).optional(),
-  prereq: z.string().max(NAME_MAX).optional(),
-  mp_cost: z.number().int().array().length(3).optional(),
-  cast_dl: z.number().int().array().length(3).optional(),
+  prereq: z.string().max(ABILITY_PREREQ_MAX).optional(),
   build_dc: z.string().max(NAME_MAX).optional(),
   build_time: z.string().max(NAME_MAX).optional(),
   range: z.string().max(NAME_MAX).optional(),
+});
+
+export const abilityFieldsValidator = abilityFieldsValidatorStrings.extend({
+  cost: abilityCostValidator.optional(),
+  mp_cost: z.number().int().array().length(3).optional(),
+  cast_dl: z.number().int().array().length(3).optional(),
+  not_req: z.boolean().optional(),
 });
 
 export const abilityValidator = z.object({
@@ -307,11 +312,26 @@ export const filterChangelogValidator = z.object({
 
 export const WEAPON_TYPES_KEY = "VENNT_WEAPON_TYPES";
 export const SHOP_ITEMS_KEY = "VENNT_SHOP_ITEMS";
+export const ABILITIES_KEY = "VENNT_ABILITIES";
 
 export const jsonStorageKeyValidator = z.enum([
   WEAPON_TYPES_KEY,
   SHOP_ITEMS_KEY,
+  ABILITIES_KEY,
 ]);
+
+export const pathDetailsValidator = z.object({
+  name: z.string(),
+  url: z.string().url(),
+  desc: z.string(),
+  reqs: z.string().optional(),
+  completionBonus: z.string().optional(),
+});
+
+export const pathsAndAbilitiesValidator = z.object({
+  paths: pathDetailsValidator.array(),
+  abilities: abilityValidator.array(),
+});
 
 // Type definitions
 
@@ -347,6 +367,9 @@ export type PartialEntityItem = z.infer<typeof partialItemValidator>;
 export type UncompleteEntityAbility = z.infer<typeof abilityValidator>;
 export type FullEntityAbility = z.infer<typeof fullAbilityValidator>;
 export type EntityAbility = UncompleteEntityAbility | FullEntityAbility;
+export type EntityAbilityFieldsStrings = z.infer<
+  typeof abilityFieldsValidatorStrings
+>;
 export type UncompleteEntityChangelog = z.infer<
   typeof attributeChangelogValidator
 >;
@@ -362,6 +385,8 @@ export type UpdateEntityAttributes = z.infer<typeof adjustAttributesValidator>;
 export type FilterChangelogBody = z.infer<typeof filterChangelogValidator>;
 export type JsonStorageKey = z.infer<typeof jsonStorageKeyValidator>;
 export type ShopItem = z.infer<typeof shopItemValidator>;
+export type PathDetails = z.infer<typeof pathDetailsValidator>;
+export type PathsAndAbilites = z.infer<typeof pathsAndAbilitiesValidator>;
 
 // SERVER TYPES
 

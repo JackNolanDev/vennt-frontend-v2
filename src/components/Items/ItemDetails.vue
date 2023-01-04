@@ -9,7 +9,6 @@
     <DisplayItemFull :item="item"></DisplayItemFull>
     <ItemUses :item="item"></ItemUses>
     <div v-if="showInteractionSection">
-      <ItemComment :item="item"></ItemComment>
       <div class="seperator mt-24 mb-24"></div>
       <BaseButton @click="deleteItem" class="clear wide center">
         Remove Item
@@ -27,6 +26,7 @@
       <BaseButton @click="toggleEditItem" icon="edit" class="wide mt-24">
         Edit item
       </BaseButton>
+      <ItemComment :item="item"></ItemComment>
     </div>
   </div>
 </template>
