@@ -282,12 +282,10 @@ const itemTypeOptions: Record<EntityItemType, string> = {
   weapon: "Weapon",
 };
 
-const weaponCategoryOptions = computed(
-  () =>
-    jsonStorage.weaponTypes &&
-    jsonStorage.weaponTypes
-      .map((type) => type.category)
-      .filter((category) => category)
+const weaponCategoryOptions = computed(() =>
+  jsonStorage.weaponTypes
+    .map((type) => type.category)
+    .filter((category) => category)
 );
 
 const itemActive = computed(() =>

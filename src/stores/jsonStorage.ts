@@ -1,28 +1,39 @@
-import { fetchShopItemsApi, fetchWeaponTypesApi } from "@/api/apiStorage";
-import type { ShopItem } from "@/utils/backendTypes";
+import {
+  fetchAbilitiesApi,
+  fetchShopItemsApi,
+  fetchWeaponTypesApi,
+} from "@/api/apiStorage";
+import type { PathsAndAbilites, ShopItem } from "@/utils/backendTypes";
 import { defineStore } from "pinia";
 
 interface JsonStore {
-  weaponTypes: undefined | ShopItem[];
-  shopItems: undefined | ShopItem[];
+  weaponTypes: ShopItem[];
+  shopItems: ShopItem[];
+  abilities: PathsAndAbilites;
 }
 
 export const useJsonStore = defineStore("json", {
   state(): JsonStore {
     return {
-      weaponTypes: undefined,
-      shopItems: undefined,
+      weaponTypes: [],
+      shopItems: [],
+      abilities: { paths: [], abilities: [] },
     };
   },
   actions: {
     async fetchWeaponTypes() {
-      if (!this.weaponTypes) {
+      if (this.weaponTypes.length === 0) {
         this.weaponTypes = await fetchWeaponTypesApi();
       }
     },
     async fetchShopItems() {
-      if (!this.shopItems) {
+      if (this.shopItems.length === 0) {
         this.shopItems = await fetchShopItemsApi();
+      }
+    },
+    async fetchAbilities() {
+      if (this.abilities.abilities.length === 0) {
+        this.abilities = await fetchAbilitiesApi();
       }
     },
   },

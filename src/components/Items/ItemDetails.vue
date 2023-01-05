@@ -54,11 +54,8 @@ jsonStorage.fetchShopItems();
 jsonStorage.fetchWeaponTypes();
 
 const showInteractionSection = computed(() => !isDefaultWeapon(props.item));
-const shopItem = computed(
-  () =>
-    jsonStorage.shopItems &&
-    jsonStorage.weaponTypes &&
-    findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
+const shopItem = computed(() =>
+  findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
 );
 const shopValue = computed(() => shopItem.value && shopItem.value.sp);
 const sellValue = computed(

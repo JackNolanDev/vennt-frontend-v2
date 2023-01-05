@@ -37,7 +37,7 @@ const jsonStorage = useJsonStore();
 jsonStorage.fetchWeaponTypes();
 
 const purchasable = computed(() =>
-  jsonStorage.weaponTypes?.filter((weapon) => weapon.sp)
+  jsonStorage.weaponTypes.filter((weapon) => weapon.sp)
 );
 const weaponOpenned = (weapon: ShopItem): boolean =>
   router.currentRoute.value.params.detail == weapon.category;
