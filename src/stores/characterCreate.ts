@@ -1,4 +1,4 @@
-import type { UncompleteCollectedEntity } from "@/utils/backendTypes";
+import type { UncompleteCollectedEntityWithChangelog } from "@/utils/backendTypes";
 import {
   calculateAttribute,
   calculateHP,
@@ -91,7 +91,7 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     vim(): number {
       return calculateVim(this.xp, this.str);
     },
-    collectedCharacter(): UncompleteCollectedEntity {
+    collectedCharacter(): UncompleteCollectedEntityWithChangelog {
       return {
         entity: {
           name: this.options.name,

@@ -8,10 +8,13 @@
       class="ml-16"
     ></BaseFraction>
   </div>
+  <AbilityTable :abilities="entityStore.sortedAbilities"></AbilityTable>
   <AbilitySearch></AbilitySearch>
+  <div class="mb-128"></div>
 </template>
 <script setup lang="ts">
 import AbilitySearch from "@/components/Abilities/AbilitySearch.vue";
+import AbilityTable from "@/components/Abilities/AbilityTable.vue";
 import BaseFraction from "@/components/Base/BaseFraction.vue";
 import { useEntityStore } from "@/stores/entity";
 import { actualXPCost } from "@/utils/abilityUtils";

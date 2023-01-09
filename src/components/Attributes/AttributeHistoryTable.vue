@@ -10,7 +10,7 @@
       </div>
     </div>
     <div
-      v-for="(log, idx) in changelog"
+      v-for="(log, idx) in parsedChangelog"
       v-bind:key="idx"
       v-bind:title="`Updated at ${log.time}`"
       class="alignRow tableItems"
@@ -33,11 +33,16 @@
 import type {
   CollectedEntity,
   EntityAttribute,
+  EntityChangelog,
   FullEntityChangelog,
 } from "@/utils/backendTypes";
 import { computed } from "vue";
 
-const props = defineProps<{ entity: CollectedEntity; attr: EntityAttribute }>();
+const props = defineProps<{
+  entity: CollectedEntity;
+  changelog: EntityChangelog[];
+  attr: EntityAttribute;
+}>();
 
 type FullEntityChangelogWithDiff = FullEntityChangelog & {
   diff: number;
@@ -52,16 +57,14 @@ const diffAttrs = new Set<EntityAttribute>([
   "sp",
 ]);
 const showDiff = computed(() => diffAttrs.has(props.attr));
-const changelog = computed(() => {
-  const changelog = props.entity.changelog
-    .filter((log) => log.attr === props.attr)
-    .map((log) => {
-      const timeLog = log as FullEntityChangelogWithDiff;
-      if (!timeLog.time) {
-        timeLog.time = new Date().toLocaleString();
-      }
-      return timeLog;
-    });
+const parsedChangelog = computed(() => {
+  const changelog = props.changelog.map((log) => {
+    const timeLog = log as FullEntityChangelogWithDiff;
+    if (!timeLog.time) {
+      timeLog.time = new Date().toLocaleString();
+    }
+    return timeLog;
+  });
   if (showDiff.value) {
     changelog.reduceRight((prev, log) => {
       const lastPrev = prev === undefined ? 0 : prev;
@@ -72,7 +75,7 @@ const changelog = computed(() => {
   }
   return changelog;
 });
-const hasHistory = computed(() => changelog.value.length > 0);
+const hasHistory = computed(() => parsedChangelog.value.length > 0);
 </script>
 
 <style scoped>

@@ -204,9 +204,15 @@ export const abilityValidator = z.object({
   active: z.boolean(),
 });
 
+export const partialAbilityValidator = abilityValidator
+  .partial()
+  .refine((ability) => Object.keys(ability).length > 0, {
+    message: "Partial ability is empty",
+  });
+
 export const fullAbilityValidator = abilityValidator.extend({
   id: idValidator,
-  entoity_id: idValidator,
+  entity_id: idValidator,
 });
 
 // ITEMS
@@ -248,7 +254,11 @@ export const itemValidator = z.object({
   active: z.boolean(),
 });
 
-export const partialItemValidator = itemValidator.partial();
+export const partialItemValidator = itemValidator
+  .partial()
+  .refine((item) => Object.keys(item).length > 0, {
+    message: "Partial item is empty",
+  });
 
 export const fullItemValidator = itemValidator.extend({
   id: idValidator,
@@ -288,22 +298,28 @@ export const collectedEntityValidator = z.object({
   entity: entityValidator,
   abilities: abilityValidator.array(),
   items: itemValidator.array(),
-  changelog: attributeChangelogValidator.array(),
 });
 
 export const fullCollectedEntityValidator = z.object({
   entity: fullEntityValidator,
   abilities: fullAbilityValidator.array(),
   items: fullItemValidator.array(),
-  changelog: fullAttributeChangelogValidator.array(),
 });
+
+export const collectedEntityWithChangelogValidator =
+  collectedEntityValidator.extend({
+    changelog: attributeChangelogValidator.array(),
+  });
 
 // other endpoints
 
 export const partialAttributesValidator = attributesValidator.partial();
 export const adjustAttributesValidator = z.object({
   message: z.string().max(CHANGELOG_MAX).optional(),
-  attributes: partialAttributesValidator,
+  attributes: partialAttributesValidator.refine(
+    (attrs) => Object.keys(attrs).length > 0,
+    { message: "Attributes is empty" }
+  ),
 });
 
 export const filterChangelogValidator = z.object({
@@ -354,6 +370,9 @@ export type UncompleteCollectedEntity = z.infer<
 >;
 export type FullCollectedEntity = z.infer<typeof fullCollectedEntityValidator>;
 export type CollectedEntity = UncompleteCollectedEntity | FullCollectedEntity;
+export type UncompleteCollectedEntityWithChangelog = z.infer<
+  typeof collectedEntityWithChangelogValidator
+>;
 export type UsesMap = z.infer<typeof usesValidator>;
 export type UsesRoll = z.infer<typeof useRollValidator>;
 export type UsesHeal = z.infer<typeof useHealValidator>;
@@ -367,6 +386,7 @@ export type PartialEntityItem = z.infer<typeof partialItemValidator>;
 export type UncompleteEntityAbility = z.infer<typeof abilityValidator>;
 export type FullEntityAbility = z.infer<typeof fullAbilityValidator>;
 export type EntityAbility = UncompleteEntityAbility | FullEntityAbility;
+export type PartialEntityAbility = z.infer<typeof partialAbilityValidator>;
 export type EntityAbilityFieldsStrings = z.infer<
   typeof abilityFieldsValidatorStrings
 >;

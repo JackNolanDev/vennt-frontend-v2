@@ -33,18 +33,26 @@
         </span>
         <span v-else class="ml-8">Not defined yet</span>
       </div>
-      <AdjustAttributeLink v-if="maxAttr" :attr="maxAttr"></AdjustAttributeLink>
+      <AdjustAttributeLink
+        v-if="maxAttr"
+        :attr="maxAttr"
+        @click="refetchChangelog(maxAttr)"
+      ></AdjustAttributeLink>
       <AdjustAttributeLink
         v-if="baseAttr"
         :attr="baseAttr"
+        @click="refetchChangelog(baseAttr)"
       ></AdjustAttributeLink>
     </div>
     <div class="cols-2 table-split">
       <div class="attr-history-side">
         <AttributeHistoryTable
+          v-if="state.changelog"
           :entity="entityStore.entity"
           :attr="attr"
+          :changelog="state.changelog"
         ></AttributeHistoryTable>
+        <div v-else>Loading changelog</div>
         <BaseButton
           v-if="showResetButton"
           @click="resetButton"
@@ -67,6 +75,7 @@
           :attr="attr"
           loc="modal"
           :submitBtn="true"
+          @update-complete="refetchChangelog"
         ></AdjustAttributeVal>
       </div>
     </div>
@@ -82,17 +91,29 @@ import {
   getBaseAttr,
   getMaxAttr,
 } from "@/utils/attributeUtils";
-import type { EntityAttribute } from "@/utils/backendTypes";
-import { computed } from "vue";
+import type {
+  EntityAttribute,
+  FullEntityChangelog,
+} from "@/utils/backendTypes";
+import { computed, onBeforeMount, reactive } from "vue";
 import BaseFraction from "../Base/BaseFraction.vue";
 import BaseModal from "../Base/BaseModal.vue";
 import AdjustAttributeLink from "./AdjustAttributeLink.vue";
 import AdjustAttributeVal from "./AdjustAttributeVal.vue";
 import AttributeHistoryTable from "./AttributeHistoryTable.vue";
 import BaseButton from "../Base/BaseButton.vue";
+import {
+  fetchEntityChangelogApi,
+  filterEntityChangelogApi,
+} from "@/api/apiEntity";
 
 const props = defineProps<{ attr: EntityAttribute }>();
+const state = reactive<{ changelog?: FullEntityChangelog[] }>({
+  changelog: undefined,
+});
 const entityStore = useEntityStore();
+
+onBeforeMount(() => refetchChangelog());
 
 const shortName = computed(() => attrShortName(props.attr));
 const maxAttr = computed(() => getMaxAttr(props.attr));
@@ -106,10 +127,7 @@ const showResetButton = computed(
     props.attr !== "hero"
 );
 const showClearHistoryButton = computed(
-  () =>
-    entityStore.entity &&
-    entityStore.entity.changelog.filter((log) => log.attr === props.attr)
-      .length > 0
+  () => state.changelog && state.changelog.length > 0
 );
 
 const closeModal = () => {
@@ -135,10 +153,23 @@ const resetButton = () => {
   }
 };
 const clearHistoryButton = () => {
+  state.changelog = [];
   if (entityStore.entity) {
-    entityStore.filterChangelog(entityStore.entity.entity.id, {
+    filterEntityChangelogApi(entityStore.entity.entity.id, {
       attributes: [props.attr],
     });
+  }
+};
+
+const refetchChangelog = async (attr?: EntityAttribute) => {
+  state.changelog = [];
+  if (entityStore.entity) {
+    state.changelog = await fetchEntityChangelogApi(
+      entityStore.entity.entity.id,
+      attr ?? props.attr
+    );
+  } else {
+    console.log("entity missing");
   }
 };
 </script>

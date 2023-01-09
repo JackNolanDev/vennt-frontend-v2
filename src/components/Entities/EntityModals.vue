@@ -21,6 +21,8 @@ const entityStore = useEntityStore();
 
 const attrToEdit = computed(() => router.currentRoute.value.query.attr);
 const showAttrModal = computed(
-  () => attributeNameValidator.safeParse(attrToEdit.value).success
+  () =>
+    entityStore.entity &&
+    attributeNameValidator.safeParse(attrToEdit.value).success
 );
 </script>

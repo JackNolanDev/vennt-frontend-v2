@@ -4,7 +4,9 @@
   <DisplayAbilityAdditionalDetails
     :ability="ability"
   ></DisplayAbilityAdditionalDetails>
-  <BaseButton icon="add" class="primary wide mt-24">Add ability</BaseButton>
+  <BaseButton @click="addAbility" icon="add" class="primary wide mt-24">
+    Add ability
+  </BaseButton>
 </template>
 
 <script setup lang="ts">
@@ -12,6 +14,12 @@ import type { UncompleteEntityAbility } from "@/utils/backendTypes";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import DisplayAbilityAdditionalDetails from "./DisplayAbilityAdditionalDetails.vue";
 import BaseButton from "../Base/BaseButton.vue";
+import { useEntityStore } from "@/stores/entity";
 
-defineProps<{ ability: UncompleteEntityAbility }>();
+const props = defineProps<{ ability: UncompleteEntityAbility }>();
+const entityStore = useEntityStore();
+
+const addAbility = () => {
+  entityStore.addAbilities([{ ...props.ability }], true);
+};
 </script>

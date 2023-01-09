@@ -239,13 +239,13 @@ export const adjustAttrsObject = (
   return attrs;
 };
 
-export const adjustAttrsAPI = (
+export const adjustAttrsAPI = async (
   entity: FullCollectedEntity,
   adjustAttrs: PartialEntityAttributes,
   msg?: string,
   propegateChanges = true,
   enforceMaximums = false
-) => {
+): Promise<boolean> => {
   const attrs = adjustAttrsObject(
     entity,
     adjustAttrs,
@@ -254,7 +254,7 @@ export const adjustAttrsAPI = (
   );
 
   if (Object.keys(attrs).length === 0) {
-    return;
+    return false;
   }
 
   const entityStore = useEntityStore();
@@ -268,7 +268,8 @@ export const adjustAttrsAPI = (
   if (msg) {
     request.message = msg;
   }
-  entityStore.updateEntityAttributes(entity.entity.id, request);
+  await entityStore.updateEntityAttributes(entity.entity.id, request);
+  return true;
 };
 
 export const entityAttributesMap = (

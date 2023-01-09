@@ -1,17 +1,18 @@
 import {
+  addAbilitiesApi,
   addCollectedEntityApi,
   addItemsApi,
   fetchCollectedEntityApi,
-  filterEntityChangelogApi,
   updateEntityAttributesApi,
 } from "@/api/apiEntity";
-import router, { ENTITY_ITEMS_ROUTE } from "@/router";
+import router, { ENTITY_ABILITIES_ROUTE, ENTITY_ITEMS_ROUTE } from "@/router";
 import type {
   ConsolidatedItem,
-  FilterChangelogBody,
   FullCollectedEntity,
+  PartialEntityAbility,
   PartialEntityItem,
-  UncompleteCollectedEntity,
+  UncompleteCollectedEntityWithChangelog,
+  UncompleteEntityAbility,
   UncompleteEntityItem,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
@@ -20,6 +21,7 @@ import { entityAttributesMap } from "@/utils/attributeUtils";
 import { defineStore } from "pinia";
 import { useCharacterCreateStore } from "./characterCreate";
 import { deleteItemApi, updateItemApi } from "@/api/apiItems";
+import { deleteAbilityApi, updateAbilityApi } from "@/api/apiAbilities";
 
 type EntityState = {
   entity: undefined | FullCollectedEntity;
@@ -45,13 +47,14 @@ export const useEntityStore = defineStore("entity", {
       state.entity ? consolidateItemList(state.entity.items) : [],
     entityAttributes: (state) =>
       state.entity ? entityAttributesMap(state.entity) : {},
+    sortedAbilities: (state) => (state.entity ? state.entity.abilities : []),
   },
   actions: {
     toggleNotes() {
       this.showNotes = !this.showNotes;
     },
     async addCollectedEntity(
-      request: UncompleteCollectedEntity,
+      request: UncompleteCollectedEntityWithChangelog,
       options?: Partial<AddCollectedEntityOptions>
     ) {
       this.entity = await addCollectedEntityApi(request);
@@ -70,17 +73,65 @@ export const useEntityStore = defineStore("entity", {
     },
     async updateEntityAttributes(id: string, request: UpdateEntityAttributes) {
       // TODO: may want to pre-apply the change
-      await updateEntityAttributesApi(id, request);
-      // this sucks - but also I was running into a weird vue error
-      await this.fetchCollectedEntity(id);
-    },
-    async filterChangelog(id: string, request: FilterChangelogBody) {
+      const updatedBaseEntity = await updateEntityAttributesApi(id, request);
       if (this.entity) {
-        this.entity.changelog = this.entity.changelog.filter(
-          (log) => !request.attributes.includes(log.attr)
-        );
+        this.entity = { ...this.entity, entity: updatedBaseEntity };
       }
-      await filterEntityChangelogApi(id, request);
+    },
+    async addAbilities(
+      abilities: UncompleteEntityAbility[],
+      redirectToAbilities?: boolean
+    ) {
+      if (abilities.length > 0 && this.entity) {
+        const newAbilities = await addAbilitiesApi(
+          this.entity.entity.id,
+          abilities
+        );
+        this.entity.abilities.push(...newAbilities);
+        if (redirectToAbilities && newAbilities.length > 0) {
+          const query = { ...router.currentRoute.value.query };
+          if (query.new === "ability") {
+            delete query.new;
+          }
+          router.push({
+            name: ENTITY_ABILITIES_ROUTE,
+            params: {
+              ...router.currentRoute.value.params,
+              detail: newAbilities[0].id,
+            },
+            query,
+          });
+        }
+      }
+    },
+    async updateAbility(abilityId: string, ability: PartialEntityAbility) {
+      if (this.entity) {
+        const currentAbilityIdx = this.entity.abilities.findIndex(
+          (search) => search.id === abilityId
+        );
+        if (currentAbilityIdx >= 0) {
+          this.entity.abilities[currentAbilityIdx] = await updateAbilityApi(
+            abilityId,
+            ability
+          );
+        }
+      }
+    },
+    deleteAbility(abilityId: string, closeSidebar?: boolean) {
+      if (
+        closeSidebar &&
+        this.entity &&
+        router.currentRoute.value.params.detail === abilityId
+      ) {
+        const routeParams = { ...router.currentRoute.value.params };
+        delete routeParams.detail;
+        router.push({
+          name: router.currentRoute.value.name ?? ENTITY_ABILITIES_ROUTE,
+          params: routeParams,
+          query: router.currentRoute.value.query,
+        });
+      }
+      deleteAbilityApi(abilityId);
     },
     async addItems(
       items: UncompleteEntityItem[],
@@ -115,7 +166,7 @@ export const useEntityStore = defineStore("entity", {
         }
       }
     },
-    async deleteItem(item: ConsolidatedItem, closeSidebar?: boolean) {
+    deleteItem(item: ConsolidatedItem, closeSidebar?: boolean) {
       const itemId = item.ids[item.ids.length - 1];
       if (this.entity) {
         if (
@@ -133,7 +184,7 @@ export const useEntityStore = defineStore("entity", {
         this.entity.items = this.entity.items.filter(
           (item) => item.id !== itemId
         );
-        await deleteItemApi(itemId);
+        deleteItemApi(itemId);
       }
     },
   },

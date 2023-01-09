@@ -64,6 +64,10 @@ const props = defineProps<{
   loc: string;
   submitBtn?: boolean;
 }>();
+const emit = defineEmits<{
+  (e: "updateTriggered"): void;
+  (e: "updateComplete"): void;
+}>();
 const state = reactive({ reason: "", adjust: "" });
 const entityStore = useEntityStore();
 
@@ -107,7 +111,7 @@ const inputAdjustFieldClass = computed(() =>
 const jumpToAdjustField = () =>
   document.getElementById(adjustFieldID.value)?.focus();
 
-const adjustAttrFromAdjustField = () => {
+const adjustAttrFromAdjustField = async () => {
   if (adjustError.value === false && entityStore.entity) {
     const trimmedGivenReason = state.reason.trim();
     const reason =
@@ -116,10 +120,11 @@ const adjustAttrFromAdjustField = () => {
         : generateDefaultAdjustMsg(props.attr, adjustVal.value);
     const attrs: PartialEntityAttributes = {};
     attrs[props.attr] = adjustVal.value;
-    adjustAttrsAPI(entityStore.entity, attrs, reason);
-    console.log("do adjust");
+    emit("updateTriggered");
     state.adjust = "";
     state.reason = "";
+    await adjustAttrsAPI(entityStore.entity, attrs, reason);
+    emit("updateComplete");
   }
 };
 </script>
