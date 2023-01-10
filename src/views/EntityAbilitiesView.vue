@@ -3,7 +3,7 @@
   <div v-if="entityStore.entityAttributes.xp" class="alignRow labelText mb-16">
     Spent XP:
     <BaseFraction
-      :top="bulkSum"
+      :top="spentXP"
       :bottom="entityStore.entityAttributes.xp.val"
       class="ml-16"
     ></BaseFraction>
@@ -22,7 +22,7 @@ import { computed } from "vue";
 
 const entityStore = useEntityStore();
 
-const bulkSum = computed(() =>
+const spentXP = computed(() =>
   entityStore.entity
     ? entityStore.entity.abilities.reduce(
         (sum, ability) => sum + actualXPCost(ability, entityStore.entity),

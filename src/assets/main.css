@@ -674,6 +674,42 @@ select.input {
   font-size: 15pt !important;
 }
 
+table {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: var(--background-highlight);
+}
+thead {
+  border-bottom: 1px solid var(--border);
+}
+tr {
+  padding: 2px 2px 4px 4px
+}
+tr:nth-child(odd) {
+  background-color: var(--table-contrast);
+}
+th, td {
+  padding: 8px;
+}
+thead > tr:first-child > th:first-child {
+  border-top-left-radius: var(--border-radius);
+}
+thead > tr:first-child > th:last-child {
+  border-top-right-radius: var(--border-radius);
+}
+thead > tr:last-child > th {
+  border-bottom: 1px solid var(--border);
+}
+tbody > tr:last-child > td:first-child {
+  border-bottom-left-radius: var(--border-radius);
+}
+tbody > tr:last-child > td:last-child {
+  border-bottom-right-radius: var(--border-radius);
+}
+
 /* When jumping an element into view, helps move it into a good, viewable location */
 .scroll-adjust {
   scroll-margin-top: var(--nav-height);
