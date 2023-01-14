@@ -36,6 +36,11 @@
   height: 100vh;
 }
 
+.sidebar-body,
+.sidebar-right-body {
+  background-color: var(--background-sidebar);
+}
+
 .page-layout > .nav-body:not(:empty) {
   grid-area: 1 / 1 / 2 / 4;
   display: block;
@@ -78,11 +83,15 @@
 
 @media screen and (max-width: 1200px) {
   /* Collapse main, maintain right sidebar */
-  .page-layout:has(.sidebar-body:not(:empty)):has(.sidebar-right-body:not(:empty))
+  .page-layout:has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:not(:empty)
+    )
     > .main-body {
     display: none;
   }
-  .page-layout:has(.sidebar-body:not(:empty)):has(.sidebar-right-body:not(:empty))
+  .page-layout:has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:not(:empty)
+    )
     > .sidebar-right-body {
     grid-column-start: 2;
   }
@@ -90,29 +99,41 @@
 
 @media screen and (max-width: 760px) {
   /* Collapse left sidebar, maintain right sidebar */
-  .page-layout:has(.sidebar-body:not(:empty)):has(.sidebar-right-body:not(:empty))
+  .page-layout:has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:not(:empty)
+    )
     > .sidebar-body {
     display: none;
   }
-  .page-layout:has(.sidebar-body:not(:empty)):has(.sidebar-right-body:not(:empty))
+  .page-layout:has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:not(:empty)
+    )
     > .sidebar-right-body {
     grid-column-start: 1;
   }
   /* Collapse left sidebar, maintain main */
-  .page-layout:not(.prefers-sidebar):has(.sidebar-body:not(:empty)):has(.sidebar-right-body:empty)
+  .page-layout:not(.prefers-sidebar):has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:empty
+    )
     > .sidebar-body {
     display: none;
   }
-  .page-layout:not(.prefers-sidebar):has(.sidebar-body:not(:empty)):has(.sidebar-right-body:empty)
+  .page-layout:not(.prefers-sidebar):has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:empty
+    )
     > .main-body {
     grid-column-start: 1;
   }
   /* Collapse main, maintain left sidebar when .prefers-sidebar */
-  .page-layout.prefers-sidebar:has(.sidebar-body:not(:empty)):has(.sidebar-right-body:empty)
+  .page-layout.prefers-sidebar:has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:empty
+    )
     > .sidebar-body {
     grid-column-end: 4;
   }
-  .page-layout.prefers-sidebar:has(.sidebar-body:not(:empty)):has(.sidebar-right-body:empty)
+  .page-layout.prefers-sidebar:has(.sidebar-body:not(:empty)):has(
+      .sidebar-right-body:empty
+    )
     > .main-body {
     display: none;
   }

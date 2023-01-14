@@ -40,12 +40,14 @@ const isUUID = computed(
 const showNewItem = computed(
   () => router.currentRoute.value.query.new === "item"
 );
-const entityItem = computed(
-  () =>
-    isUUID.value &&
-    entityStore.consolidatedItems.find(
-      (item) => item.id === router.currentRoute.value.params.detail
-    )
+const entityItem = computed(() =>
+  isUUID.value
+    ? entityStore.consolidatedItems.find(
+        (item) => item.id === router.currentRoute.value.params.detail
+      )
+    : jsonStorage.defaultWeapons.find(
+        (weapon) => weapon.name === router.currentRoute.value.params.detail
+      )
 );
 const shopItem = computed(
   () =>

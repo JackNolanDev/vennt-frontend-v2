@@ -69,7 +69,7 @@ onUnmounted(() => {
 });
 
 const keyMapper = (e: KeyboardEvent) => {
-  if (!e.target) {
+  if (!e.target || e.metaKey || e.ctrlKey) {
     return;
   }
   // @ts-ignore
@@ -98,7 +98,7 @@ const keyMapper = (e: KeyboardEvent) => {
       break;
     default:
       // unassigned
-      console.log(src, e.key);
+      console.log(src, e);
   }
 };
 

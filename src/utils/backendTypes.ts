@@ -195,6 +195,8 @@ export const abilityFieldsValidator = abilityFieldsValidatorStrings.extend({
   not_req: z.boolean().optional(),
 });
 
+export const abilityFieldsNameValidator = abilityFieldsValidator.keyof();
+
 export const abilityValidator = z.object({
   name: nameValidator,
   effect: z.string().min(1).max(ABILITY_MAX),
@@ -390,6 +392,7 @@ export type PartialEntityAbility = z.infer<typeof partialAbilityValidator>;
 export type EntityAbilityFieldsStrings = z.infer<
   typeof abilityFieldsValidatorStrings
 >;
+export type EntityAbilityFields = z.infer<typeof abilityFieldsNameValidator>;
 export type UncompleteEntityChangelog = z.infer<
   typeof attributeChangelogValidator
 >;

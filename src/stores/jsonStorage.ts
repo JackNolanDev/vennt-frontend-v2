@@ -4,6 +4,7 @@ import {
   fetchWeaponTypesApi,
 } from "@/api/apiStorage";
 import type { PathsAndAbilites, ShopItem } from "@/utils/backendTypes";
+import { getDefaultWeapons } from "@/utils/itemUtils";
 import { defineStore } from "pinia";
 
 interface JsonStore {
@@ -19,6 +20,9 @@ export const useJsonStore = defineStore("json", {
       shopItems: [],
       abilities: { paths: [], abilities: [] },
     };
+  },
+  getters: {
+    defaultWeapons: (state) => getDefaultWeapons(state.weaponTypes),
   },
   actions: {
     async fetchWeaponTypes() {

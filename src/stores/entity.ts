@@ -16,6 +16,7 @@ import type {
   UncompleteEntityItem,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
+import { sortAbilities } from "@/utils/abilityUtils";
 import { consolidateItemList } from "@/utils/itemUtils";
 import { entityAttributesMap } from "@/utils/attributeUtils";
 import { defineStore } from "pinia";
@@ -47,7 +48,8 @@ export const useEntityStore = defineStore("entity", {
       state.entity ? consolidateItemList(state.entity.items) : [],
     entityAttributes: (state) =>
       state.entity ? entityAttributesMap(state.entity) : {},
-    sortedAbilities: (state) => (state.entity ? state.entity.abilities : []),
+    sortedAbilities: (state) =>
+      state.entity ? sortAbilities(state.entity.abilities) : [],
   },
   actions: {
     toggleNotes() {

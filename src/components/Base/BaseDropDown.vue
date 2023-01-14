@@ -7,6 +7,7 @@
     class="wide"
   >
     <slot name="closedTitle"></slot>
+    {{ title }}
   </BaseButton>
   <div v-else class="card column">
     <BaseButton
@@ -16,6 +17,7 @@
       class="wide"
     >
       <slot name="openTitle"></slot>
+      {{ title }}
     </BaseButton>
     <div class="seperator thin"></div>
     <slot></slot>
@@ -31,6 +33,7 @@ const props = defineProps<{
   useGivenState?: boolean;
   givenClosed?: boolean;
   disabled?: boolean;
+  title?: string;
 }>();
 const state = reactive({ closed: !props.defaultOpen });
 

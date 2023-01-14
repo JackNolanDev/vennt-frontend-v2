@@ -2,6 +2,7 @@
   <BaseCheckBox
     :checked="diceStore.useBuiltinDice"
     :use-toggle="true"
+    @click="diceStore.toggleUseBuiltinDice"
     class="wide"
   >
     {{ diceStore.useBuiltinDice ? "Show Copy Buttons" : "Show Built-in Dice" }}

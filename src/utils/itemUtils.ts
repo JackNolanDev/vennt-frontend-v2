@@ -96,8 +96,10 @@ export const unsafeEnsureFullEntityItem = (
   item: EntityItem
 ): FullEntityItem => {
   const converted = { ...item } as FullEntityItem;
-  if (!converted.id || !converted.entity_id) {
+  if (!converted.id) {
     converted.id = v4();
+  }
+  if (!converted.entity_id) {
     converted.entity_id = v4();
   }
   return converted;
@@ -180,6 +182,25 @@ export const itemEquippable = (item: EntityItem): boolean => {
     item.custom_fields?.category !== "Grenade"
   );
 };
+
+export const getDefaultWeapons = (weaponTypesList: ShopItem[]) =>
+  defaultWeaponCategories
+    .map((category) => {
+      const found = weaponTypesList.find(
+        (weapon) => weapon.category === category
+      );
+      if (!found) {
+        return found;
+      }
+      const name = `${category} Attack`;
+      return {
+        ...unsafeEnsureFullEntityItem(shopItemToEntityItem(found)),
+        name,
+        id: name,
+        ids: [name],
+      };
+    })
+    .filter((item) => item) as ConsolidatedItem[];
 
 export const shopItemDefaultActiveDirectFields = (
   type: EntityItemType,
