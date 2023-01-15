@@ -26,6 +26,7 @@
         class="skinny"
       ></BaseButton>
       <BaseButton
+        v-if="entityState.canEdit"
         :to="{ name: ENTITY_SETTINGS_ROUTE, params: { id: entity.id } }"
         title="Character Settings (h)"
         icon="settings"
@@ -34,6 +35,7 @@
     </div>
     <div class="alignRow gap mr-8">
       <BaseButton
+        v-if="entityState.canEdit"
         @click="entityState.toggleNotes"
         title="Show Character notes (n)"
         icon="edit_note"
@@ -56,7 +58,24 @@
       >
         Home
       </BaseButton>
+      <div v-if="!accountInfoStore.isLoggedIn">
+        <BaseButton
+          :to="{ name: LOGIN_ROUTE }"
+          icon="login"
+          class="skinny bold wide"
+        >
+          Login
+        </BaseButton>
+        <BaseButton
+          :to="{ name: SIGNUP_ROUTE }"
+          icon="person_add"
+          class="skinny bold wide"
+        >
+          Signup
+        </BaseButton>
+      </div>
       <BaseButton
+        v-else
         @click="accountInfoStore.postLogOut()"
         icon="logout"
         class="skinny bold wide"
@@ -75,6 +94,8 @@ import {
   ENTITY_STATS_ROUTE,
   ENTITY_SETTINGS_ROUTE,
   HOME_ROUTE,
+  LOGIN_ROUTE,
+  SIGNUP_ROUTE,
 } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";

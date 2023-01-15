@@ -1,5 +1,5 @@
 <template>
-  <div v-if="itemEquippable(item)">
+  <div v-if="itemEquippable(item) && entityStore.canEdit">
     <BaseButton v-if="item.active" @click="toggleActive" class="wide">
       <template #customIcon>
         <DropWeapon class="mr-8"></DropWeapon>

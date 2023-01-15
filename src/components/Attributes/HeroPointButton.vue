@@ -1,5 +1,6 @@
 <template>
   <BaseButton
+    v-if="entityStore.canEdit"
     @click="heroButton"
     :disabled="!enabled"
     title="Use a hero point"

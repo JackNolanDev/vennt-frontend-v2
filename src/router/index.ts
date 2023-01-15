@@ -49,7 +49,6 @@ const router = createRouter({
     },
     {
       path: "/entity/:id",
-      meta: { loggedInOnly: true },
       component: () => import("../views/EntityView.vue"),
       children: [
         {
@@ -98,6 +97,7 @@ const router = createRouter({
     {
       path: "/admin",
       name: ADMIN_ROUTE,
+      meta: { loggedInOnly: true },
       component: () => import("../views/AdminView.vue"),
     },
     {

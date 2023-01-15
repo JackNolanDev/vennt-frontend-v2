@@ -16,38 +16,40 @@
     <h2>General Items</h2>
     <ItemTable :items="otherItems" class="mb-24"></ItemTable>
   </div>
-  <BaseButton
-    v-if="entityStore.entity?.entity.id"
-    :to="{
-      name: ENTITY_ITEMS_ROUTE,
-      params: router.currentRoute.value.params,
-      query: { ...router.currentRoute.value.query, new: 'item' },
-    }"
-    icon="add"
-    class="wide"
-    >Add item</BaseButton
-  >
-  <h2>Buy Items</h2>
-  <BaseButton
-    v-if="entityStore.entity?.entity.id"
-    :to="{
-      name: ENTITY_ITEM_SHOP_ROUTE,
-      params: { id: entityStore.entity.entity.id },
-    }"
-    icon="store"
-    class="wide"
-    >Item Shop</BaseButton
-  >
-  <BaseButton
-    v-if="entityStore.entity?.entity.id"
-    :to="{
-      name: ENTITY_WEAPON_SHOP_ROUTE,
-      params: { id: entityStore.entity?.entity.id },
-    }"
-    icon="sports_martial_arts"
-    class="wide"
-    >Weapon Shop</BaseButton
-  >
+  <div v-if="showEditSection">
+    <BaseButton
+      v-if="entityStore.entity?.entity.id"
+      :to="{
+        name: ENTITY_ITEMS_ROUTE,
+        params: router.currentRoute.value.params,
+        query: { ...router.currentRoute.value.query, new: 'item' },
+      }"
+      icon="add"
+      class="wide"
+      >Add item</BaseButton
+    >
+    <h2>Buy Items</h2>
+    <BaseButton
+      v-if="entityStore.entity?.entity.id"
+      :to="{
+        name: ENTITY_ITEM_SHOP_ROUTE,
+        params: { id: entityStore.entity.entity.id },
+      }"
+      icon="store"
+      class="wide"
+      >Item Shop</BaseButton
+    >
+    <BaseButton
+      v-if="entityStore.entity?.entity.id"
+      :to="{
+        name: ENTITY_WEAPON_SHOP_ROUTE,
+        params: { id: entityStore.entity?.entity.id },
+      }"
+      icon="sports_martial_arts"
+      class="wide"
+      >Weapon Shop</BaseButton
+    >
+  </div>
   <div class="mb-128"></div>
 </template>
 
@@ -88,5 +90,9 @@ const weapons = computed(() =>
 );
 const otherItems = computed(() =>
   entityStore.consolidatedItems.filter((item) => item.type !== "weapon")
+);
+
+const showEditSection = computed(
+  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"
 );
 </script>

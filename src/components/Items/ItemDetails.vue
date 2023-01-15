@@ -7,7 +7,7 @@
   </div>
   <div v-else>
     <DisplayItemFull :item="item"></DisplayItemFull>
-    <ItemUses :item="item"></ItemUses>
+    <ItemUses v-if="entityStore.canEdit" :item="item"></ItemUses>
     <div v-if="showInteractionSection">
       <ItemComment :item="item"></ItemComment>
       <div class="seperator mt-24 mb-24"></div>
@@ -53,7 +53,9 @@ const jsonStorage = useJsonStore();
 jsonStorage.fetchShopItems();
 jsonStorage.fetchWeaponTypes();
 
-const showInteractionSection = computed(() => !isDefaultWeapon(props.item));
+const showInteractionSection = computed(
+  () => !isDefaultWeapon(props.item) && entityStore.canEdit
+);
 const shopItem = computed(() =>
   findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
 );

@@ -201,6 +201,7 @@ import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
 import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
 import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
+import { useAccountInfoStore } from "@/stores/accountInfo";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -213,6 +214,8 @@ interface CombatStatsState {
   selectedAttr: string | undefined;
 }
 const state: CombatStatsState = reactive({ selectedAttr: undefined });
+
+const accountInfoStore = useAccountInfoStore();
 
 const attrs = computed(() => {
   if (props.entityAttrs) {
@@ -281,7 +284,12 @@ const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp"]);
 const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init"]);
 
 const showUpdateDropdown = computed(() => {
-  return (props.entity.entity as FullEntity).id !== undefined;
+  const fullEntity = props.entity.entity as FullEntity;
+  return (
+    fullEntity.id !== undefined &&
+    accountInfoStore.accountInfo &&
+    fullEntity.owner === accountInfoStore.accountInfo.id
+  );
 });
 </script>
 

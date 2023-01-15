@@ -9,7 +9,7 @@
     ></BaseFraction>
   </div>
   <AbilityTable :abilities="entityStore.sortedAbilities"></AbilityTable>
-  <AbilitySearch></AbilitySearch>
+  <AbilitySearch v-if="showEditSection"></AbilitySearch>
   <div class="mb-128"></div>
 </template>
 <script setup lang="ts">
@@ -29,5 +29,9 @@ const spentXP = computed(() =>
         0
       )
     : 0
+);
+
+const showEditSection = computed(
+  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"
 );
 </script>

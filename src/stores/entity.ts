@@ -23,6 +23,7 @@ import { defineStore } from "pinia";
 import { useCharacterCreateStore } from "./characterCreate";
 import { deleteItemApi, updateItemApi } from "@/api/apiItems";
 import { deleteAbilityApi, updateAbilityApi } from "@/api/apiAbilities";
+import { useAccountInfoStore } from "./accountInfo";
 
 type EntityState = {
   entity: undefined | FullCollectedEntity;
@@ -50,6 +51,14 @@ export const useEntityStore = defineStore("entity", {
       state.entity ? entityAttributesMap(state.entity) : {},
     sortedAbilities: (state) =>
       state.entity ? sortAbilities(state.entity.abilities) : [],
+    canEdit: (state) => {
+      const accountInfoStore = useAccountInfoStore();
+      return (
+        state.entity &&
+        accountInfoStore.accountInfo &&
+        state.entity.entity.owner === accountInfoStore.accountInfo.id
+      );
+    },
   },
   actions: {
     toggleNotes() {

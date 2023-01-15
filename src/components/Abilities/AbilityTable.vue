@@ -1,5 +1,5 @@
 <template>
-  <div class="card column">
+  <div v-if="abilities.length > 0" class="card column">
     <div class="alignRow tableData tableHeader">
       <div class="abilityName headerFont">
         <b>Ability</b>
