@@ -9,13 +9,20 @@
 
 <script setup lang="ts">
 import type { FullEntityAbility } from "@/utils/backendTypes";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import BaseStealthTextEditor from "../Base/BaseStealthTextEditor.vue";
 import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{ ability: FullEntityAbility }>();
 const state = reactive({ comment: props.ability.comment ?? "" });
 const entityStore = useEntityStore();
+
+watch(
+  () => props.ability.id,
+  () => {
+    state.comment = props.ability.comment ?? "";
+  }
+);
 
 const save = () => {
   entityStore.updateAbility(props.ability.id, { comment: state.comment });
