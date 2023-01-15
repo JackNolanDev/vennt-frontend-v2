@@ -4,8 +4,9 @@
 
 /* 300 is light, 400 is standard, 700 is bold */
 /* Might want to pull in `family=Red+Rose:wght@500` as backup for Copperplate */
-/* Roboto Mono is for dice etc */
-@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Roboto:wght@300;400;500&display=swap");
+/* Roboto is for dice / numbers etc */
+/* Roboto Mono is for code in markdown */
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Roboto:wght@300;400;500&family=Roboto+Mono:wght@400&display=swap");
 
 /* ---------------------------------- STYLES  ----------------------------------*/
 
@@ -13,6 +14,7 @@
   --app-font: "Raleway", sans-serif;
   --logo-font: Copperplate, "Raleway", sans-serif;
   --number-font: "roboto", monospace;
+  --code-font: "Roboto Mono", monospace;
 
   /* HEIGHTS / WIDTHS */
   --nav-height: 40px;
@@ -218,7 +220,8 @@ i,
 b,
 a,
 label,
-li {
+li,
+pre {
   line-height: 1.35;
 }
 
@@ -597,6 +600,32 @@ select.input {
 }
 .seperator.thin {
   height: 1px;
+}
+
+hr {
+  border: 1px solid var(--border);
+}
+
+blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--border);
+  margin-inline-start: 16px;
+}
+
+code {
+  font-family: var(--code-font);
+  background-color: var(--gray-800);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+
+pre > code {
+  display: block;
+  white-space: pre;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll;
+  max-width: 100%;
+  min-width: 100px;
 }
 
 /* AlignRow utility class for putting items into a row */
@@ -990,4 +1019,55 @@ tbody > tr:last-child > td:last-child {
 }
 .subNavPage:fullscreen .page {
   margin-top: var(--sub-nav-height);
+}
+
+/* Text editor! */
+.editor-wrapper {
+  font-family: var(--app-font);
+  width: 100%;
+  border-radius: var(--border-radius);
+  color: var(--text);
+  background-color: var(--background-highlight);
+  border: 1px solid var(--border);
+}
+.editor-wrapper:hover {
+  border: solid 1px var(--border-hover);
+}
+.editor-wrapper:focus-within {
+  border: solid 1px var(--border-focus);
+}
+.editor-wrapper.invalid {
+  border: solid 1px var(--border-error);
+}
+.editor-wrapper.invalid:hover {
+  border: solid 1px var(--border-error-hover);
+}
+.editor-wrapper.invalid:focus-within {
+  border: solid 1px var(--border-error-focus);
+}
+.ProseMirror:focus {
+  outline: none;
+}
+.editor-wrapper > div > * {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.editor-wrapper > div > ul, ol {
+  margin-inline-start: calc(10px + 1em);
+}
+.editor-wrapper > div > *:first-child {
+  margin-top: 0;
+  padding-top: 12px;
+}
+.editor-wrapper > div > *:last-child {
+  margin-bottom: 0;
+  padding-bottom: 12px;
+}
+/* placeholder text */
+.editor-wrapper p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--text-muted);
+  pointer-events: none;
+  height: 0;
 }

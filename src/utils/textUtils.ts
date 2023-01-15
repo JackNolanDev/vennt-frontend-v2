@@ -89,7 +89,7 @@ export const renderMarkdown = (text: string): HTMLString => {
 };
 
 const noBreakTrippleDigit = (text: string): string => {
-  const tripleDigitRegex = /\[\s\+?-?\d+\s\/\s\+?-?\d+\s\/\s\+?-?\d+\s\]/gm;
+  const tripleDigitRegex = /\[\s\+?-?\w+\s\/\s\+?-?\w+\s\/\s\+?-?\w+\s\]/gm;
   return text.replaceAll(tripleDigitRegex, (match) =>
     match.replaceAll(/\s/gim, "&nbsp;")
   );

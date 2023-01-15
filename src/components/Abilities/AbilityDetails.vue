@@ -5,8 +5,8 @@
     :ability="ability"
     class="mt-16"
   ></AbilityAdditionalDetailDropdown>
-  <div class="seperator mt-16 mb-16"></div>
   <AbilityComment :ability="ability"></AbilityComment>
+  <div class="seperator mt-16 mb-16"></div>
 </template>
 
 <script setup lang="ts">
