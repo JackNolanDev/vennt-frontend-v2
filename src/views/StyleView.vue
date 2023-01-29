@@ -40,7 +40,7 @@
       </BaseButton>
       <BaseButton class="clear wide center bold mb-8">Clear</BaseButton>
       <BaseButton class="wide center bold mb-8">Default</BaseButton>
-      <div class="seperator"></div>
+      <div class="separator"></div>
       <h2>Cards & Buttons</h2>
       <BaseButton class="wide">Test</BaseButton>
       <div class="card column padded">
@@ -52,7 +52,7 @@
           <BaseButton class="wide">Test</BaseButton>
         </div>
       </div>
-      <div class="seperator mt-16 mb-16"></div>
+      <div class="separator mt-16 mb-16"></div>
       <h2>Text Editors</h2>
       <label :for="INLINE_EDITOR_ID" @click="focusToInlineEditor">
         Do labels works? (no)
@@ -65,7 +65,7 @@
       ></BaseInlineTextEditor>
       {{ state.inlineText }}
       <BaseButton @click="focusToInlineEditor">Jump to editor?</BaseButton>
-      <div class="seperator mt-16 mb-16"></div>
+      <div class="separator mt-16 mb-16"></div>
       <h2>Markdown Rendering</h2>
       <textarea v-model="state.markdownText" class="input"></textarea>
       <div v-html="renderMarkdown(state.markdownText)"></div>

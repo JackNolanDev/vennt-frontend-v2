@@ -1,5 +1,5 @@
 <template>
-  <div class="card column" :class="{ hideCount }">
+  <div v-if="items.length > 0" class="card column" :class="{ hideCount }">
     <div class="alignRow tableData tableHeader">
       <div class="itemName headerFont">
         <b>{{ itemLabel }}</b>
@@ -15,7 +15,7 @@
       v-for="item in items"
       :key="item.id"
       :id="stringToLinkID(item.id)"
-      :class="{ selected: itemOpenned(item) }"
+      :class="{ selected: itemOpened(item) }"
       class="alignRow tableItems"
     >
       <div class="tableData">
@@ -25,7 +25,7 @@
       </div>
       <BaseButton
         :icon="
-          itemOpenned(item) ? 'keyboard_arrow_left' : 'keyboard_arrow_right'
+          itemOpened(item) ? 'keyboard_arrow_left' : 'keyboard_arrow_right'
         "
         :to="itemLink(item)"
       ></BaseButton>
@@ -50,10 +50,10 @@ withDefaults(
   { itemLabel: "Item", hideCount: false }
 );
 
-const itemOpenned = (item: ConsolidatedItem): boolean =>
+const itemOpened = (item: ConsolidatedItem): boolean =>
   router.currentRoute.value.params.detail === item.id;
 const itemLink = (item: ConsolidatedItem): RouteLocationRaw => {
-  if (itemOpenned(item)) {
+  if (itemOpened(item)) {
     const params = { ...router.currentRoute.value.params };
     delete params.detail;
     return {

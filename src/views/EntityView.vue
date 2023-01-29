@@ -8,11 +8,7 @@
       <BaseNav v-else></BaseNav>
     </template>
     <template #sidebar>
-      <CombatStats
-        v-if="entityStore.entity"
-        :entity="entityStore.entity"
-        :use-copyable-dice="true"
-      ></CombatStats>
+      <EntityLeftSidebar></EntityLeftSidebar>
     </template>
     <template #sidebar-right>
       <RouteBasedRightSideBar :query-params="['new']">
@@ -29,7 +25,6 @@
 <script setup lang="ts">
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import CombatStats from "@/components/CombatStats/CombatStats.vue";
 import { useEntityStore } from "@/stores/entity";
 import { onBeforeMount, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
@@ -47,6 +42,7 @@ import BaseNav from "@/components/Nav/BaseNav.vue";
 import EntityModals from "@/components/Entities/EntityModals.vue";
 import RouteBasedRightSideBar from "@/components/Base/RouteBasedRightSideBar.vue";
 import EntityRightSidebar from "@/components/Entities/EntityRightSidebar.vue";
+import EntityLeftSidebar from "@/components/Entities/EntityLeftSidebar.vue";
 
 const entityStore = useEntityStore();
 const route = useRoute();
@@ -95,6 +91,9 @@ const keyMapper = (e: KeyboardEvent) => {
       break;
     case "s":
       jumpToPage(ENTITY_ITEM_SHOP_ROUTE);
+      break;
+    case "n":
+      entityStore.toggleNotes();
       break;
     default:
       // unassigned

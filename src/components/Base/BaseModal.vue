@@ -10,12 +10,12 @@
             id="modal-first-interactive"
           ></BaseButton>
         </div>
-        <div class="seperator thin"></div>
+        <div class="separator thin"></div>
         <div class="dialogue-details">
           <slot></slot>
         </div>
         <div v-if="!hideButtons">
-          <div class="seperator thin"></div>
+          <div class="separator thin"></div>
           <div class="alignRow end gap wrap dialogue-details">
             <slot name="buttons"></slot>
             <BaseButton @click="closeModal" class="clear">Cancel</BaseButton>

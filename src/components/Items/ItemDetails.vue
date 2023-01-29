@@ -10,7 +10,7 @@
     <ItemUses v-if="entityStore.canEdit" :item="item"></ItemUses>
     <div v-if="showInteractionSection">
       <ItemComment :item="item"></ItemComment>
-      <div class="seperator mt-24 mb-24"></div>
+      <div class="separator mt-24 mb-24"></div>
       <BaseButton @click="deleteItem" class="clear wide center">
         Remove Item
       </BaseButton>

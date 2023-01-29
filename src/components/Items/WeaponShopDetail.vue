@@ -1,7 +1,7 @@
 <template>
   <h2 v-if="item.category">{{ prefixName(item.category, "Buy") }} Weapon</h2>
   <DisplayShopItem :item="item"></DisplayShopItem>
-  <div class="seperator thin mt-8 mb-8"></div>
+  <div class="separator thin mt-8 mb-8"></div>
   <form>
     <div class="alignRow gap mb-4">
       <label for="weapon-shop-detail-name" class="labelText">Weapon:</label>

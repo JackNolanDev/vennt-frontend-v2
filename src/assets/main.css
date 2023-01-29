@@ -591,14 +591,14 @@ select.input {
   background-color: var(--table-contrast);
 }
 
-/* Seperator */
+/* separator */
 
-.seperator {
+.separator {
   height: 2px;
   width: 100%;
   background-color: var(--border);
 }
-.seperator.thin {
+.separator.thin {
   height: 1px;
 }
 

@@ -1,13 +1,16 @@
 import {
   addAbilitiesApi,
   addCollectedEntityApi,
+  addEntityTextApi,
   addItemsApi,
   fetchCollectedEntityApi,
   updateEntityAttributesApi,
+  updateEntityTextApi,
 } from "@/api/apiEntity";
 import router, { ENTITY_ABILITIES_ROUTE, ENTITY_ITEMS_ROUTE } from "@/router";
 import type {
   ConsolidatedItem,
+  EntityTextKey,
   FullCollectedEntity,
   PartialEntityAbility,
   PartialEntityItem,
@@ -24,11 +27,16 @@ import { useCharacterCreateStore } from "./characterCreate";
 import { deleteItemApi, updateItemApi } from "@/api/apiItems";
 import { deleteAbilityApi, updateAbilityApi } from "@/api/apiAbilities";
 import { useAccountInfoStore } from "./accountInfo";
+import {
+  defaultEntityTextPermission,
+  getEntityText,
+} from "@/utils/entityUtils";
 
 type EntityState = {
   entity: undefined | FullCollectedEntity;
   showNotes: boolean;
   levelsToProcess: number;
+  apisInFlight: Record<string, boolean>;
 };
 
 type AddCollectedEntityOptions = {
@@ -42,6 +50,7 @@ export const useEntityStore = defineStore("entity", {
       entity: undefined,
       showNotes: false,
       levelsToProcess: 0,
+      apisInFlight: {},
     };
   },
   getters: {
@@ -51,6 +60,8 @@ export const useEntityStore = defineStore("entity", {
       state.entity ? entityAttributesMap(state.entity) : {},
     sortedAbilities: (state) =>
       state.entity ? sortAbilities(state.entity.abilities) : [],
+    abilityNames: (state) =>
+      state.entity ? state.entity.abilities.map((ability) => ability.name) : [],
     canEdit: (state) => {
       const accountInfoStore = useAccountInfoStore();
       return (
@@ -59,6 +70,9 @@ export const useEntityStore = defineStore("entity", {
         state.entity.entity.owner === accountInfoStore.accountInfo.id
       );
     },
+    backstory: (state) => getEntityText("BACKSTORY", state.entity),
+    description: (state) => getEntityText("DESC", state.entity),
+    notes: (state) => getEntityText("NOTES", state.entity),
   },
   actions: {
     toggleNotes() {
@@ -196,6 +210,31 @@ export const useEntityStore = defineStore("entity", {
           (item) => item.id !== itemId
         );
         deleteItemApi(itemId);
+      }
+    },
+    async saveText(key: EntityTextKey, text: string) {
+      if (this.entity) {
+        const foundIdx = this.entity.text.findIndex(
+          (search) => search.key === key
+        );
+        if (foundIdx < 0) {
+          this.apisInFlight[key] = true;
+          this.entity.text.push(
+            await addEntityTextApi(this.entity.entity.id, {
+              key,
+              text,
+              public: defaultEntityTextPermission(key),
+            })
+          );
+          this.apisInFlight[key] = false;
+        } else {
+          if (this.entity.text[foundIdx].text !== text) {
+            this.entity.text[foundIdx].text = text;
+            this.apisInFlight[key] = true;
+            await updateEntityTextApi(this.entity.entity.id, key, text);
+            this.apisInFlight[key] = false;
+          }
+        }
       }
     },
   },

@@ -3,7 +3,7 @@
     <div class="centeredText">
       <h2>{{ entity.entity.name }}</h2>
     </div>
-    <div class="seperator"></div>
+    <div class="separator"></div>
     <!-- COMBAT STATS -->
     <div class="alignRow">
       <BulletPointVue :entity="entity.entity"></BulletPointVue>
@@ -40,7 +40,7 @@
                   :attr="attr"
                   loc="combat-stats"
                 ></AdjustAttributeVal>
-                <div class="seperator mt-8 mb-8"></div>
+                <div class="separator mt-8 mb-8"></div>
                 <AdjustAttributeLink
                   :attr="attr"
                   class="wide"
@@ -85,14 +85,14 @@
               :use-copyable-dice="useCopyableDice"
             ></CombatStatsDiceSection>
             <div v-if="showUpdateDropdown">
-              <div class="seperator mt-8 mb-8"></div>
+              <div class="separator mt-8 mb-8"></div>
               <AdjustAttributeLink
                 :attr="attr"
                 class="wide"
               ></AdjustAttributeLink>
             </div>
             <div v-else>
-              <div class="seperator mt-8 mb-8"></div>
+              <div class="separator mt-8 mb-8"></div>
               <AttributeHelp :attr="attr" class="mutedText"></AttributeHelp>
             </div>
           </div>
@@ -161,7 +161,7 @@
                 :id="character.id"
               /> -->
               <AttributeHelp v-else :attr="attr"></AttributeHelp>
-              <div class="seperator mt-8 mb-8"></div>
+              <div class="separator mt-8 mb-8"></div>
               <AdjustAttributeLink
                 :attr="attr"
                 class="wide"

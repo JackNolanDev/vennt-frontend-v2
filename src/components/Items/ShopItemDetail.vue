@@ -1,7 +1,7 @@
 <template>
   <h2>{{ prefixName(newItem.name, "Buy") }}</h2>
   <DisplayShopItem :item="item"></DisplayShopItem>
-  <div class="seperator thin mt-8 mb-8"></div>
+  <div class="separator thin mt-8 mb-8"></div>
   <form class="mb-64">
     <p v-if="countOwned > 0">
       You already have {{ pluralizeName(newItem.name, true, countOwned) }}

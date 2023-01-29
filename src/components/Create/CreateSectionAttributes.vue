@@ -21,7 +21,7 @@
     <ConnectedRadioButtons
       radioKey="additionalAttrChoice"
     ></ConnectedRadioButtons>
-    <div class="seperator mt-16 mb-16"></div>
+    <div class="separator mt-16 mb-16"></div>
     <ConnectedAttributeSelection
       attrKey="additionalAttrs"
     ></ConnectedAttributeSelection>
@@ -59,7 +59,7 @@
       >)
     </p>
     <ConnectedAttributeSelection attrKey="grate1"></ConnectedAttributeSelection>
-    <div class="seperator mt-16 mb-16"></div>
+    <div class="separator mt-16 mb-16"></div>
     <p class="textBlock mt-0">
       Select an attribute that corresponds to your third grate. This will add 1
       to the selected attribute. (Optional, requires the

@@ -23,10 +23,11 @@ export const actualXPCost = (
   entity?: CollectedEntity
 ): number => {
   let cost = defaultXPCost(ability);
+  const gift = entity?.entity.other_fields.gift;
   if (
-    entity?.entity.other_fields.gift &&
-    entity.entity.other_fields.gift !== "None" &&
-    ability.custom_fields?.expedited?.includes(entity.entity.other_fields.gift)
+    gift &&
+    gift !== "None" &&
+    ability.custom_fields?.expedited?.includes(gift)
   ) {
     cost = cost / 2;
   }
@@ -36,6 +37,7 @@ export const actualXPCost = (
 export const canUseAbility = (ability: EntityAbility): boolean => {
   if (
     ability.active ||
+    ability.custom_fields?.cost?.passive ||
     ability.custom_fields?.activation?.toLowerCase().includes("passive")
   ) {
     return false;

@@ -7,7 +7,7 @@
   >
     {{ diceStore.useBuiltinDice ? "Show Copy Buttons" : "Show Built-in Dice" }}
   </BaseCheckBox>
-  <div class="seperator thin"></div>
+  <div class="separator thin"></div>
   <ToggleableDiceSectionRollable
     v-if="diceStore.useBuiltinDice"
     :dice="dice"

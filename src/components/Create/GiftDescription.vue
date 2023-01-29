@@ -2,7 +2,7 @@
   <div class="wide">
     <div v-if="showTitle">
       <h3 class="centeredText">{{ giftCopy[gift].title }}</h3>
-      <div class="seperator thin"></div>
+      <div class="separator thin"></div>
     </div>
     <div class="textMargin">
       <i>{{ giftCopy[gift].flavor }}</i>

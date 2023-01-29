@@ -1,4 +1,4 @@
-import type { Entity } from "./backendTypes";
+import type { CollectedEntity, Entity, EntityTextKey } from "./backendTypes";
 
 export const entityColor = (entity?: Entity): string => {
   if (!entity) {
@@ -33,4 +33,24 @@ const hexColorComponent = (component: number, sum: number): string => {
     return "ff";
   }
   return numStr;
+};
+
+export const getEntityText = (
+  key: EntityTextKey,
+  entity?: CollectedEntity
+): string | undefined => {
+  if (!entity) {
+    return undefined;
+  }
+  const found = entity.text.find((text) => text.key === key);
+  return found ? found.text : "";
+};
+
+export const defaultEntityTextPermission = (key: EntityTextKey): boolean => {
+  const map: Record<EntityTextKey, boolean> = {
+    NOTES: false,
+    DESC: true,
+    BACKSTORY: false,
+  };
+  return map[key] ?? false;
 };

@@ -5,12 +5,12 @@
         <h2 class="mt-16 mb-16"><slot name="title"></slot></h2>
         <BaseButton @click="closeModal" icon="close"></BaseButton>
       </div>
-      <div class="seperator thin"></div>
+      <div class="separator thin"></div>
       <div class="dialogue-details">
         <slot></slot>
       </div>
 
-      <div class="seperator thin"></div>
+      <div class="separator thin"></div>
       <div class="alignRow end gap wrap dialogue-details">
         <slot name="buttons"></slot>
         <BaseButton @click="closeModal" class="clear">Cancel</BaseButton>

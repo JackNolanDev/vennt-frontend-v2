@@ -122,10 +122,13 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
           other_fields: {
             gift: this.options.gift,
           },
+          public: false,
         },
         abilities: [],
         items: calculateItems(this.options),
         changelog: [],
+        text: [],
+        flux: [],
       };
     },
   },

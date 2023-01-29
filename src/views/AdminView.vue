@@ -16,7 +16,7 @@
           <BaseButton @click="scrapeAbilities" class="wide"
             >Scrape Abilities</BaseButton
           >
-          <div class="seperator mt-16 mb-16"></div>
+          <div class="separator mt-16 mb-16"></div>
           <BaseButton @click="testFetchWeapons" class="wide"
             >Fetch Weapon Types</BaseButton
           >
@@ -26,7 +26,7 @@
           <BaseButton @click="testFetchAbilities" class="wide"
             >Fetch Abilities</BaseButton
           >
-          <div class="seperator mt-16 mb-16"></div>
+          <div class="separator mt-16 mb-16"></div>
           <BaseButton @click="configureStorageBucket" class="wide"
             >Configure Storage CORS</BaseButton
           >

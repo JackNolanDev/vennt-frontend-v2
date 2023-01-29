@@ -18,7 +18,7 @@
         >{{ improveTextForDisplay(result.name) }}</BaseButton
       >
     </div>
-    <div v-else>(No Results Found)</div>
+    <div v-else class="mt-8 errorText">(No Results Found)</div>
   </div>
 </template>
 
@@ -30,8 +30,10 @@ import BaseButton from "../Base/BaseButton.vue";
 import type { EntityAbility } from "@/utils/backendTypes";
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
 import type { RouteLocationRaw } from "vue-router";
+import { useEntityStore } from "@/stores/entity";
 
 const state = reactive({ search: "" });
+const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
 jsonStorage.fetchAbilities();
 
@@ -42,8 +44,10 @@ const searchResults = computed(() => {
     return [];
   }
   return jsonStorage.abilities.abilities
-    .filter((ability) =>
-      ability.name.toLowerCase().includes(lowercaseSearch.value)
+    .filter(
+      (ability) =>
+        ability.name.toLowerCase().includes(lowercaseSearch.value) &&
+        !entityStore.abilityNames.includes(ability.name)
     )
     .slice(0, 15);
 });

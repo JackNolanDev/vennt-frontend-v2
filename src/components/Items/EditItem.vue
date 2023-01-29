@@ -191,7 +191,7 @@
     >
       {{ givenItem ? "Edit" : "Add" }} item
     </BaseButton>
-    <div class="seperator mt-16 mb-16"></div>
+    <div class="separator mt-16 mb-16"></div>
     <h2>Item Preview:</h2>
     <div class="card column padded thin">
       <DisplayUncompleteItemFull :item="newItem"></DisplayUncompleteItemFull>

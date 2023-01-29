@@ -19,7 +19,7 @@
       <slot name="openTitle"></slot>
       {{ title }}
     </BaseButton>
-    <div class="seperator thin"></div>
+    <div class="separator thin"></div>
     <slot></slot>
   </div>
 </template>

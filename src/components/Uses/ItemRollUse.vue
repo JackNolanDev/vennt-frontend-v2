@@ -4,7 +4,7 @@
       :dice="dice"
       @roll-value="rollValue"
     ></ToggleableDiceSection>
-    <div class="seperator thin mt-8"></div>
+    <div class="separator thin mt-8"></div>
     <div class="mt-8 mb-8 ml-8 mr-8">
       <div class="alignRow gap">
         <label for="item-roll-value" class="labelText nowrap">
