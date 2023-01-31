@@ -80,7 +80,7 @@ import SetBaseCheckBoxArray from "@/components/Base/SetBasedCheckBoxArray.vue";
 import BaseInlineTextEditor from "@/components/Base/BaseInlineTextEditor.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import BaseNav from "@/components/Nav/BaseNav.vue";
+import BaseNav from "@/components/Base/BaseNav.vue";
 import { renderMarkdown } from "@/utils/textUtils";
 import { reactive } from "vue";
 

@@ -130,13 +130,13 @@ const saveNotes = () => {
   cursor: row-resize;
   border-bottom: 1px solid var(--border);
 }
-.notesCard >>> .editor-wrapper {
+.notesCard :deep(.editor-wrapper) {
   background-color: unset;
   border: none;
   height: 100%;
   overflow-y: auto;
 }
-.notesCard >>> .ProseMirror {
+.notesCard :deep(.ProseMirror) {
   height: 100%;
 }
 </style>

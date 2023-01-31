@@ -155,12 +155,12 @@ const itemLink = (item: ShopItem): RouteLocationRaw => {
 }
 
 /* Deep selector effects children */
-.itemDesc >>> p:first-child {
+.itemDesc :deep(p:first-child) {
   margin-top: 0px;
   margin-bottom: 0px;
 }
-.itemDesc >>> p,
-.itemDesc >>> ul {
+.itemDesc :deep(p),
+.itemDesc :deep(ul) {
   /* reduce margin so we can condense text a bit more */
   margin-top: 5px;
   margin-bottom: 0px;

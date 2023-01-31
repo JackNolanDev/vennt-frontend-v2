@@ -27,13 +27,12 @@
         :invalid="invalid"
         @update:model-value="(e) => emits('update:modelValue', e)"
       ></BaseFullFeaturedTextEditor>
-      <BaseButton
-        v-if="saveButton"
-        @click="saveButton"
-        icon="save"
-        class="primary wide"
-        >Save</BaseButton
-      >
+      <div v-if="saveButton" class="alignRow gap end mt-4">
+        <BaseButton @click="cancel" icon="close" class="clear"
+          >Cancel</BaseButton
+        >
+        <BaseButton @click="save" icon="save" class="primary">Save</BaseButton>
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +64,7 @@ const state = reactive({ editorOpen: false });
 const emits = defineEmits<{
   (e: "update:modelValue", state: string): void;
   (e: "save"): void;
+  (e: "cancel"): void;
 }>();
 
 const renderPreview = computed(
@@ -75,8 +75,12 @@ const toggleEditor = () => {
   state.editorOpen = !state.editorOpen;
 };
 
-const saveButton = () => {
+const save = () => {
   emits("save");
+  toggleEditor();
+};
+const cancel = () => {
+  emits("cancel");
   toggleEditor();
 };
 </script>

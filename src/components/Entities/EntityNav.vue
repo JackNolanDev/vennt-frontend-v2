@@ -8,6 +8,12 @@
         class="skinny stats-link"
       ></BaseButton>
       <BaseButton
+        :to="{ name: ENTITY_DESCRIPTION_ROUTE, params: { id: entity.id } }"
+        title="Main & Flux (m)"
+        icon="person"
+        class="skinny"
+      ></BaseButton>
+      <BaseButton
         :to="{ name: ENTITY_ABILITIES_ROUTE, params: { id: entity.id } }"
         title="Abilities (a)"
         icon="hiking"
@@ -96,6 +102,7 @@ import {
   HOME_ROUTE,
   LOGIN_ROUTE,
   SIGNUP_ROUTE,
+  ENTITY_DESCRIPTION_ROUTE,
 } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";

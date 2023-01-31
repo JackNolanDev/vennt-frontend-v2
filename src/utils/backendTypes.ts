@@ -342,6 +342,7 @@ export const fullEntityTextValidator = entityTextValidator.extend({
 // ENTITY_FLUX
 
 export const fluxTypeValidator = z.enum([
+  "QUEST",
   "TIDE",
   "GRATE",
   "DAM",

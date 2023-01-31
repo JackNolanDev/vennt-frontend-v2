@@ -44,7 +44,7 @@ import { HOME_ROUTE, LOGIN_ROUTE, SIGNUP_ROUTE } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { reactive } from "vue";
 import { RouterLink } from "vue-router";
-import BaseButton from "../Base/BaseButton.vue";
+import BaseButton from "./BaseButton.vue";
 
 const state = reactive({ dropdownOpen: false });
 const accountInfoStore = useAccountInfoStore();

@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import BaseNav from "@/components/Nav/BaseNav.vue";
+import BaseNav from "@/components/Base/BaseNav.vue";
 import { computed, reactive } from "vue";
 import {
   passwordValidator,

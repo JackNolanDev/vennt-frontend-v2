@@ -50,7 +50,7 @@ import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseDropDown from "@/components/Base/BaseDropDown.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import BaseNav from "@/components/Nav/BaseNav.vue";
+import BaseNav from "@/components/Base/BaseNav.vue";
 import {
   ABILITIES_KEY,
   SHOP_ITEMS_KEY,

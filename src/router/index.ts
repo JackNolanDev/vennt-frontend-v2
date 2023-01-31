@@ -9,8 +9,9 @@ export const CREATE_NEW_ROUTE = "createNew";
 export const CREDITS_ROUTE = "credits";
 export const ADMIN_ROUTE = "admin";
 export const ENTITY_ROUTE = "entity";
-export const ENTITY_ABILITIES_ROUTE = ENTITY_ROUTE;
+export const ENTITY_ABILITIES_ROUTE = "entityAbilities";
 export const ENTITY_COMBAT_ROUTE = "entityCombat";
+export const ENTITY_DESCRIPTION_ROUTE = ENTITY_ROUTE;
 export const ENTITY_ITEM_SHOP_ROUTE = "entityItemShop";
 export const ENTITY_ITEMS_ROUTE = "entityItems";
 export const ENTITY_STATS_ROUTE = "entityStats";
@@ -52,9 +53,13 @@ const router = createRouter({
       component: () => import("../views/EntityView.vue"),
       children: [
         {
-          path: "abilities/:detail?",
-          alias: "",
+          path: "",
           name: ENTITY_ROUTE,
+          component: () => import("../views/EntityDescriptionView.vue"),
+        },
+        {
+          path: "abilities/:detail?",
+          name: ENTITY_ABILITIES_ROUTE,
           component: () => import("../views/EntityAbilitiesView.vue"),
         },
         {

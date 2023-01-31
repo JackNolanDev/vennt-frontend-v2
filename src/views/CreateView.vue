@@ -21,6 +21,6 @@
 import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import BaseNav from "@/components/Nav/BaseNav.vue";
+import BaseNav from "@/components/Base/BaseNav.vue";
 import { CREATE_NEW_ROUTE } from "@/router";
 </script>

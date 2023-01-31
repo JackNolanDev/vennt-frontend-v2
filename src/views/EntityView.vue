@@ -37,8 +37,8 @@ import router, {
   ENTITY_SETTINGS_ROUTE,
   HOME_ROUTE,
 } from "@/router";
-import EntityNav from "@/components/Nav/EntityNav.vue";
-import BaseNav from "@/components/Nav/BaseNav.vue";
+import EntityNav from "@/components/Entities/EntityNav.vue";
+import BaseNav from "@/components/Base/BaseNav.vue";
 import EntityModals from "@/components/Entities/EntityModals.vue";
 import RouteBasedRightSideBar from "@/components/Base/RouteBasedRightSideBar.vue";
 import EntityRightSidebar from "@/components/Entities/EntityRightSidebar.vue";

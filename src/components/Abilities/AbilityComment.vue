@@ -4,6 +4,7 @@
     placeholder="Comment"
     :save-button="true"
     @save="save"
+    @cancel="cancel"
   ></BaseStealthTextEditor>
 </template>
 
@@ -26,5 +27,8 @@ watch(
 
 const save = () => {
   entityStore.updateAbility(props.ability.id, { comment: state.comment });
+};
+const cancel = () => {
+  state.comment = props.ability.comment ?? "";
 };
 </script>
