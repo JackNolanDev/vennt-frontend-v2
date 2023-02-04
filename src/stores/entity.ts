@@ -83,6 +83,11 @@ export const useEntityStore = defineStore("entity", {
     toggleNotes() {
       this.showNotes = !this.showNotes;
     },
+    clearLocalEntity() {
+      this.entity = undefined;
+      this.showNotes = false;
+      this.levelsToProcess = 0;
+    },
     async addCollectedEntity(
       request: UncompleteCollectedEntityWithChangelog,
       options?: Partial<AddCollectedEntityOptions>

@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import { pluralizeName } from "@/utils/textUtils";
+import { editorEmpty, pluralizeName } from "@/utils/textUtils";
 import BaseStealthTextEditor from "../Base/BaseStealthTextEditor.vue";
 import type { EntityFluxType, FullEntityFlux } from "@/utils/backendTypes";
 import { computed, onBeforeMount, reactive, watch } from "vue";
@@ -104,9 +104,7 @@ const typeLabel = computed(() => {
   return lowercased[0].toUpperCase() + lowercased.substring(1);
 });
 
-const saveFluxDisabled = computed(
-  () => !state.newFluxText || state.newFluxText === "<p></p>"
-);
+const saveFluxDisabled = computed(() => editorEmpty(state.newFluxText));
 
 const cancelEditFlux = (flux: FullEntityFlux, idx: number) => {
   const currentFlux = entityStore.entity?.flux.find(

@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import BaseButton from "./BaseButton.vue";
 import { computed, reactive } from "vue";
-import { renderMarkdown } from "@/utils/textUtils";
+import { editorEmpty, renderMarkdown } from "@/utils/textUtils";
 import BaseFullFeaturedTextEditor from "./BaseFullFeaturedTextEditor.vue";
 import ConfirmationModal from "./ConfirmationModal.vue";
 
@@ -87,9 +87,7 @@ const emits = defineEmits<{
   (e: "delete"): void;
 }>();
 
-const renderPreview = computed(
-  () => props.modelValue && props.modelValue !== "<p></p>"
-);
+const renderPreview = computed(() => !editorEmpty(props.modelValue));
 
 const openEditor = () => {
   state.editorOpen = true;

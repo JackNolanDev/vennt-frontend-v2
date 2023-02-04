@@ -191,10 +191,12 @@
     >
       {{ givenItem ? "Edit" : "Add" }} item
     </BaseButton>
-    <div class="separator mt-16 mb-16"></div>
-    <h2>Item Preview:</h2>
-    <div class="card column padded thin">
-      <DisplayUncompleteItemFull :item="newItem"></DisplayUncompleteItemFull>
+    <div v-if="showPreview">
+      <div class="separator mt-16 mb-16"></div>
+      <h2>Item Preview:</h2>
+      <div class="card column padded thin">
+        <DisplayUncompleteItemFull :item="newItem"></DisplayUncompleteItemFull>
+      </div>
     </div>
   </form>
 </template>
@@ -220,6 +222,7 @@ import { itemActiveDirectFields } from "@/utils/itemUtils";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 import DisplayUncompleteItemFull from "./DisplayUncompleteItemFull.vue";
 import { useJsonStore } from "@/stores/jsonStorage";
+import { editorEmpty } from "@/utils/textUtils";
 
 // TODO: support editing uses
 
@@ -361,6 +364,7 @@ const newItem = computed((): UncompleteEntityItem => {
 const buttonDisabled = computed(
   () => !itemValidator.safeParse(newItem.value).success
 );
+const showPreview = computed(() => !editorEmpty(state.name));
 
 const addItemButton = () => {
   if (props.givenItem) {

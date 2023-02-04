@@ -101,3 +101,6 @@ export function stringToLinkID(str: string) {
   str = str.replace(/[^a-zA-Z0-9-_:.]/gm, ""); // remove any invalid characters
   return "link-" + str;
 }
+
+export const editorEmpty = (text: string): boolean =>
+  !text || text === "<p></p>";

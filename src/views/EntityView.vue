@@ -54,6 +54,7 @@ onBeforeMount(() => {
     return;
   }
   if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
+    entityStore.clearLocalEntity();
     entityStore.fetchCollectedEntity(id.data);
   }
 
