@@ -268,6 +268,7 @@ ul {
 
 .labelText {
   font-size: 16pt;
+  display: inline-block;
 }
 
 .stronger {
@@ -557,6 +558,14 @@ select.input {
   background-position: right 0.75rem center;
   background-size: 16px 12px;
   cursor: pointer;
+}
+
+.card .input {
+  background-color: var(--table-contrast);
+}
+
+.card .card .input {
+  background-color: var(--background-highlight);
 }
 
 /* Component Styles */
@@ -888,7 +897,7 @@ tbody > tr:last-child > td:last-child {
   height: 100%;
   background-color: var(--sub-nav-background);
   font-size: 18pt;
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
   max-width: 100vw;
 }
 
@@ -1070,4 +1079,12 @@ tbody > tr:last-child > td:last-child {
   color: var(--text-muted);
   pointer-events: none;
   height: 0;
+}
+
+.card .editor-wrapper {
+  background-color: var(--table-contrast);
+}
+
+.card .card .editor-wrapper {
+  background-color: var(--background-highlight);
 }

@@ -351,13 +351,13 @@ export const fluxTypeValidator = z.enum([
 ]);
 
 export const fluxMetadataValidator = z.object({
-  effect: z.string().max(ENTITY_FLUX_MAX),
+  effect: z.string().max(ENTITY_FLUX_MAX).optional(),
 });
 
 export const entityFluxValidator = z.object({
   type: fluxTypeValidator,
   text: z.string().max(ENTITY_FLUX_MAX),
-  metadata: fluxMetadataValidator,
+  metadata: fluxMetadataValidator.optional().nullable(),
 });
 
 export const fullEntityFluxValidator = entityFluxValidator.extend({

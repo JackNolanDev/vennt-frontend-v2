@@ -7,7 +7,7 @@
       <div v-if="renderPreview" v-html="renderMarkdown(modelValue)"></div>
     </div>
     <button
-      @click="toggleEditor"
+      @click="openEditor"
       v-else-if="!state.editorOpen"
       class="wide markdown-display"
     >
@@ -20,6 +20,9 @@
       </p>
     </button>
     <div v-else>
+      <p v-if="placeholder">
+        <b>{{ placeholder }}:</b>
+      </p>
       <BaseFullFeaturedTextEditor
         :model-value="modelValue"
         :placeholder="placeholder"
@@ -28,6 +31,20 @@
         @update:model-value="(e) => emits('update:modelValue', e)"
       ></BaseFullFeaturedTextEditor>
       <div v-if="saveButton" class="alignRow gap end mt-4">
+        <ConfirmationModal
+          v-if="deleteButton"
+          :id="`${editorId}-delete-modal`"
+          trigger-icon="delete"
+          @main-button="deleteEditor"
+        >
+          <template #triggerButton>Delete</template>
+          <template #title>Delete this {{ deleteSubject }}</template>
+          <template #mainButton>Delete {{ deleteSubject }}</template>
+          <p class="mt-0 mb-8">
+            Are you sure you want to delete this {{ deleteSubject }}?
+          </p>
+          <div class="card" v-html="renderMarkdown(modelValue)"></div>
+        </ConfirmationModal>
         <BaseButton @click="cancel" icon="close" class="clear"
           >Cancel</BaseButton
         >
@@ -42,6 +59,7 @@ import BaseButton from "./BaseButton.vue";
 import { computed, reactive } from "vue";
 import { renderMarkdown } from "@/utils/textUtils";
 import BaseFullFeaturedTextEditor from "./BaseFullFeaturedTextEditor.vue";
+import ConfirmationModal from "./ConfirmationModal.vue";
 
 const props = withDefaults(
   defineProps<{
@@ -51,37 +69,50 @@ const props = withDefaults(
     invalid?: boolean;
     saveButton?: boolean;
     displayOnly?: boolean;
+    deleteButton?: boolean;
+    deleteSubject?: string;
   }>(),
   {
     modelValue: "",
     placeholder: "",
-    invalid: false,
-    saveButton: false,
-    displayOnly: false,
   }
 );
 const state = reactive({ editorOpen: false });
 const emits = defineEmits<{
   (e: "update:modelValue", state: string): void;
+  (e: "opened"): void;
+  (e: "closed"): void;
   (e: "save"): void;
   (e: "cancel"): void;
+  (e: "delete"): void;
 }>();
 
 const renderPreview = computed(
   () => props.modelValue && props.modelValue !== "<p></p>"
 );
 
-const toggleEditor = () => {
-  state.editorOpen = !state.editorOpen;
+const openEditor = () => {
+  state.editorOpen = true;
+  emits("opened");
+};
+
+const closeEditor = () => {
+  state.editorOpen = false;
+  emits("closed");
 };
 
 const save = () => {
   emits("save");
-  toggleEditor();
+  closeEditor();
 };
 const cancel = () => {
   emits("cancel");
-  toggleEditor();
+  closeEditor();
+};
+
+const deleteEditor = () => {
+  emits("delete");
+  closeEditor();
 };
 </script>
 

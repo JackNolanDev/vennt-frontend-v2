@@ -2,10 +2,13 @@ import {
   addAbilitiesApi,
   addCollectedEntityApi,
   addEntityTextApi,
+  addFluxApi,
   addItemsApi,
+  deleteFluxApi,
   fetchCollectedEntityApi,
   updateEntityAttributesApi,
   updateEntityTextApi,
+  updateFluxApi,
 } from "@/api/apiEntity";
 import router, { ENTITY_ABILITIES_ROUTE, ENTITY_ITEMS_ROUTE } from "@/router";
 import type {
@@ -13,9 +16,11 @@ import type {
   EntityTextKey,
   FullCollectedEntity,
   PartialEntityAbility,
+  PartialEntityFlux,
   PartialEntityItem,
   UncompleteCollectedEntityWithChangelog,
   UncompleteEntityAbility,
+  UncompleteEntityFlux,
   UncompleteEntityItem,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
@@ -107,26 +112,25 @@ export const useEntityStore = defineStore("entity", {
       abilities: UncompleteEntityAbility[],
       redirectToAbilities?: boolean
     ) {
-      if (abilities.length > 0 && this.entity) {
-        const newAbilities = await addAbilitiesApi(
-          this.entity.entity.id,
-          abilities
-        );
-        this.entity.abilities.push(...newAbilities);
-        if (redirectToAbilities && newAbilities.length > 0) {
-          const query = { ...router.currentRoute.value.query };
-          if (query.new === "ability") {
-            delete query.new;
-          }
-          router.push({
-            name: ENTITY_ABILITIES_ROUTE,
-            params: {
-              ...router.currentRoute.value.params,
-              detail: newAbilities[0].id,
-            },
-            query,
-          });
+      if (!this.entity || abilities.length <= 0) return;
+      const newAbilities = await addAbilitiesApi(
+        this.entity.entity.id,
+        abilities
+      );
+      this.entity.abilities.push(...newAbilities);
+      if (redirectToAbilities && newAbilities.length > 0) {
+        const query = { ...router.currentRoute.value.query };
+        if (query.new === "ability") {
+          delete query.new;
         }
+        router.push({
+          name: ENTITY_ABILITIES_ROUTE,
+          params: {
+            ...router.currentRoute.value.params,
+            detail: newAbilities[0].id,
+          },
+          query,
+        });
       }
     },
     async updateAbility(abilityId: string, ability: PartialEntityAbility) {
@@ -162,80 +166,94 @@ export const useEntityStore = defineStore("entity", {
       items: UncompleteEntityItem[],
       redirectToInventory?: boolean
     ) {
-      if (items.length > 0 && this.entity) {
-        const newItems = await addItemsApi(this.entity.entity.id, items);
-        this.entity.items.push(...newItems);
-        if (redirectToInventory && newItems.length > 0) {
-          const query = { ...router.currentRoute.value.query };
-          if (query.new === "item") {
-            delete query.new;
-          }
-          router.push({
-            name: ENTITY_ITEMS_ROUTE,
-            params: {
-              ...router.currentRoute.value.params,
-              detail: newItems[0].id,
-            },
-            query,
-          });
+      if (!this.entity || items.length <= 0) return;
+      const newItems = await addItemsApi(this.entity.entity.id, items);
+      this.entity.items.push(...newItems);
+      if (redirectToInventory && newItems.length > 0) {
+        const query = { ...router.currentRoute.value.query };
+        if (query.new === "item") {
+          delete query.new;
         }
+        router.push({
+          name: ENTITY_ITEMS_ROUTE,
+          params: {
+            ...router.currentRoute.value.params,
+            detail: newItems[0].id,
+          },
+          query,
+        });
       }
     },
     async updateItem(itemId: string, item: PartialEntityItem) {
-      if (this.entity) {
-        const currentItemIdx = this.entity.items.findIndex(
-          (search) => search.id === itemId
-        );
-        if (currentItemIdx >= 0) {
-          this.entity.items[currentItemIdx] = await updateItemApi(itemId, item);
-        }
+      if (!this.entity) return;
+      const currentItemIdx = this.entity.items.findIndex(
+        (search) => search.id === itemId
+      );
+      if (currentItemIdx >= 0) {
+        this.entity.items[currentItemIdx] = await updateItemApi(itemId, item);
       }
     },
     deleteItem(item: ConsolidatedItem, closeSidebar?: boolean) {
+      if (!this.entity) return;
       const itemId = item.ids[item.ids.length - 1];
-      if (this.entity) {
-        if (
-          closeSidebar &&
-          router.currentRoute.value.params.detail === itemId
-        ) {
-          const routeParams = { ...router.currentRoute.value.params };
-          delete routeParams.detail;
-          router.push({
-            name: router.currentRoute.value.name ?? ENTITY_ITEMS_ROUTE,
-            params: routeParams,
-            query: router.currentRoute.value.query,
-          });
-        }
-        this.entity.items = this.entity.items.filter(
-          (item) => item.id !== itemId
-        );
-        deleteItemApi(itemId);
+      if (closeSidebar && router.currentRoute.value.params.detail === itemId) {
+        const routeParams = { ...router.currentRoute.value.params };
+        delete routeParams.detail;
+        router.push({
+          name: router.currentRoute.value.name ?? ENTITY_ITEMS_ROUTE,
+          params: routeParams,
+          query: router.currentRoute.value.query,
+        });
       }
+      this.entity.items = this.entity.items.filter(
+        (item) => item.id !== itemId
+      );
+      deleteItemApi(itemId);
     },
     async saveText(key: EntityTextKey, text: string) {
-      if (this.entity) {
-        const foundIdx = this.entity.text.findIndex(
-          (search) => search.key === key
+      if (!this.entity) return;
+      const foundIdx = this.entity.text.findIndex(
+        (search) => search.key === key
+      );
+      if (foundIdx < 0) {
+        this.apisInFlight[key] = true;
+        this.entity.text.push(
+          await addEntityTextApi(this.entity.entity.id, {
+            key,
+            text,
+            public: defaultEntityTextPermission(key),
+          })
         );
-        if (foundIdx < 0) {
+        this.apisInFlight[key] = false;
+      } else {
+        if (this.entity.text[foundIdx].text !== text) {
+          this.entity.text[foundIdx].text = text;
           this.apisInFlight[key] = true;
-          this.entity.text.push(
-            await addEntityTextApi(this.entity.entity.id, {
-              key,
-              text,
-              public: defaultEntityTextPermission(key),
-            })
-          );
+          await updateEntityTextApi(this.entity.entity.id, key, text);
           this.apisInFlight[key] = false;
-        } else {
-          if (this.entity.text[foundIdx].text !== text) {
-            this.entity.text[foundIdx].text = text;
-            this.apisInFlight[key] = true;
-            await updateEntityTextApi(this.entity.entity.id, key, text);
-            this.apisInFlight[key] = false;
-          }
         }
       }
+    },
+    async saveFlux(request: UncompleteEntityFlux) {
+      if (!this.entity) return;
+      const newFlux = await addFluxApi(this.entity.entity.id, request);
+      this.entity.flux.push(newFlux);
+    },
+    updateFlux(fluxId: string, request: PartialEntityFlux) {
+      if (!this.entity) return;
+      const foundIdx = this.entity.flux.findIndex((flux) => flux.id === fluxId);
+      if (foundIdx >= 0) {
+        this.entity.flux[foundIdx] = {
+          ...this.entity.flux[foundIdx],
+          ...request,
+        };
+      }
+      updateFluxApi(this.entity.entity.id, fluxId, request);
+    },
+    deleteFlux(fluxId: string) {
+      if (!this.entity) return;
+      this.entity.flux = this.entity.flux.filter((flux) => flux.id !== fluxId);
+      deleteFluxApi(this.entity.entity.id, fluxId);
     },
   },
 });

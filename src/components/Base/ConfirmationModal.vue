@@ -1,5 +1,5 @@
 <template>
-  <BaseButton @click="openDialog" :class="triggerClass">
+  <BaseButton @click="openDialog" :icon="triggerIcon" :class="triggerClass">
     <slot name="triggerButton"></slot>
   </BaseButton>
   <BasicDialogModal :id="id">
@@ -21,7 +21,11 @@
 import BaseButton from "./BaseButton.vue";
 import BasicDialogModal from "./BasicDialogModal.vue";
 
-const props = defineProps<{ id: string; triggerClass?: string }>();
+const props = defineProps<{
+  id: string;
+  triggerClass?: string;
+  triggerIcon?: string;
+}>();
 const emit = defineEmits<{ (e: "mainButton"): void }>();
 
 const openDialog = () => {

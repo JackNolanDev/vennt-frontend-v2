@@ -176,7 +176,7 @@ export const updateFluxApi = (
   request: PartialEntityFlux
 ): Promise<FullEntityFlux> => {
   return wrapAPI(
-    () => api.put(`/entity/${entityId}/flux/${fluxId}`, request),
+    () => api.patch(`/entity/${entityId}/flux/${fluxId}`, request),
     fullEntityFluxValidator
   );
 };
