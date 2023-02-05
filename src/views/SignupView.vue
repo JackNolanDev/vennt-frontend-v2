@@ -98,7 +98,7 @@
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
-import { computed, reactive } from "vue";
+import { computed, onMounted, reactive } from "vue";
 import {
   emailValidator,
   passwordValidator,
@@ -108,6 +108,19 @@ import {
 import { fieldValidator } from "@/utils/inputType";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import BaseButton from "@/components/Base/BaseButton.vue";
+
+onMounted(() => {
+  if (document.requestStorageAccess) {
+    document.requestStorageAccess().then(
+      () => {
+        console.log("access granted");
+      },
+      () => {
+        console.log("access denied");
+      }
+    );
+  }
+});
 
 const state = reactive({
   username: "",
