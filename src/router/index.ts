@@ -110,6 +110,11 @@ const router = createRouter({
       name: "style",
       component: () => import("../views/StyleView.vue"),
     },
+    {
+      path: "/:pathMatch(.*)",
+      name: "notFound",
+      component: () => import("../views/NotFoundView.vue"),
+    },
   ],
 });
 
