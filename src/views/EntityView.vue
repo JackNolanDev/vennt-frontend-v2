@@ -27,11 +27,12 @@ import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import { useEntityStore } from "@/stores/entity";
 import { onBeforeMount, onUnmounted } from "vue";
-import { useRoute } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
 import { idValidator } from "@/utils/backendTypes";
 import router, {
   ENTITY_ABILITIES_ROUTE,
   ENTITY_COMBAT_ROUTE,
+  ENTITY_DESCRIPTION_ROUTE,
   ENTITY_ITEMS_ROUTE,
   ENTITY_ITEM_SHOP_ROUTE,
   ENTITY_SETTINGS_ROUTE,
@@ -69,15 +70,25 @@ const keyMapper = (e: KeyboardEvent) => {
   if (!e.target || e.metaKey || e.ctrlKey) {
     return;
   }
+  const target = e.target;
   // @ts-ignore
-  const src = e.target.localName;
+  const src = target.localName;
   // @ts-ignore
   const editable = e.target.contentEditable === "true";
-  if (["a", "button", "input", "textarea"].includes(src) || editable) {
+  // @ts-ignore
+  const tabIndexIs0 = e.target.tabIndex === 0;
+  if (
+    ["a", "button", "input", "textarea"].includes(src) ||
+    editable ||
+    tabIndexIs0
+  ) {
     // do not override key inputs from regular text inputs
     return;
   }
   switch (e.key) {
+    case "f":
+      jumpToPage(ENTITY_DESCRIPTION_ROUTE);
+      break;
     case "a":
       jumpToPage(ENTITY_ABILITIES_ROUTE);
       break;

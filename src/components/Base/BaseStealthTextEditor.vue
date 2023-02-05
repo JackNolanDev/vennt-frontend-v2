@@ -6,9 +6,12 @@
       </p>
       <div v-if="renderPreview" v-html="renderMarkdown(modelValue)"></div>
     </div>
-    <button
-      @click="openEditor"
+    <div
       v-else-if="!state.editorOpen"
+      tabindex="0"
+      @dblclick="openEditor"
+      @keypress.enter="openEditor"
+      @keypress.space="openEditor"
       class="wide markdown-display"
     >
       <p v-if="placeholder">
@@ -18,7 +21,7 @@
       <p v-else-if="!placeholder && !renderPreview">
         <b>Click to edit</b>
       </p>
-    </button>
+    </div>
     <div v-else>
       <p v-if="placeholder">
         <b>{{ placeholder }}:</b>
@@ -116,15 +119,6 @@ const deleteEditor = () => {
 
 <style scoped>
 .markdown-display {
-  background-color: inherit;
-  font: inherit;
-  color: inherit;
-  text-align: inherit;
-  cursor: text;
-  display: block;
-  border: 0;
-  padding: 0;
-  margin: 0;
   border-radius: 3px;
 }
 .markdown-display:hover {

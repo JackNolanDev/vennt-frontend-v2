@@ -9,7 +9,7 @@
       ></BaseButton>
       <BaseButton
         :to="{ name: ENTITY_DESCRIPTION_ROUTE, params: { id: entity.id } }"
-        title="Main & Flux (m)"
+        title="Main & Flux (f)"
         icon="person"
         class="skinny"
       ></BaseButton>

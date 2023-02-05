@@ -3,7 +3,7 @@ import axios from "axios";
 const url =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000" // local server
-    : "https://quiet-eyrie-60149.herokuapp.com"; // heroku deployment of backend
+    : "vennt.up.railway.app"; // railway deployment of backend
 
 const instance = axios.create({
   baseURL: url,
