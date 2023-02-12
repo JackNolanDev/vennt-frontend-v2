@@ -37,6 +37,7 @@
     "axios": "^1.2.1",
     "dompurify": "^2.4.1",
     "indefinite": "^2.4.2",
+    "jwt-decode": "^3.1.2",
     "marked": "^4.2.4",
     "math-expression-evaluator": "^1.4.0",
     "pinia": "^2.0.28",

@@ -1,12 +1,15 @@
-import { getAccountApi, loginApi, logoutApi, signupApi } from "@/api/apiAuth";
+import { loginApi, signupApi } from "@/api/apiAuth";
 import router, { HOME_ROUTE } from "@/router";
-import type {
-  AccountInfo,
-  LoginRequest,
-  SignupRequest,
+import {
+  accountInfoValidator,
+  type AccountInfo,
+  type LoginRequest,
+  type SignupRequest,
 } from "@/utils/backendTypes";
+import { TOKEN_LOCAL_STORAGE } from "@/utils/constants";
 import { AxiosError } from "axios";
 import { defineStore } from "pinia";
+import jwt_decode from "jwt-decode";
 
 interface AccountInfoStore {
   accountInfo: undefined | false | AccountInfo;
@@ -17,7 +20,7 @@ interface AccountInfoStore {
 export const useAccountInfoStore = defineStore("accountInfo", {
   state: (): AccountInfoStore => {
     return {
-      accountInfo: undefined,
+      accountInfo: false,
       loginError: "",
       signupError: "",
     };
@@ -28,23 +31,29 @@ export const useAccountInfoStore = defineStore("accountInfo", {
     },
   },
   actions: {
-    async fetchCurrentAccount() {
+    tryUseToken(token: string, save = false) {
       try {
-        this.accountInfo = await getAccountApi();
+        const parsed = accountInfoValidator.safeParse(jwt_decode(token));
+        if (parsed.success) {
+          this.accountInfo = parsed.data;
+          if (save) {
+            localStorage.setItem(TOKEN_LOCAL_STORAGE, token);
+          }
+        }
       } catch (err) {
-        this.accountInfo = false;
-        // if (router.currentRoute.value.meta.loggedInOnly) {
-        //   router.push({ name: HOME_ROUTE });
-        // }
-        // current solution seems broken because currentRoute defaults to base route :/
-        // so can just always direct to home, I guess
-        // router.push({ name: HOME_ROUTE });
-        // console.error("error", err);
+        localStorage.removeItem(TOKEN_LOCAL_STORAGE);
+      }
+    },
+    loadAccountInfo() {
+      const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
+      if (token) {
+        this.tryUseToken(token);
       }
     },
     async postSignup(SignupRequest: SignupRequest) {
       try {
-        this.accountInfo = await signupApi(SignupRequest);
+        const tokenResponse = await signupApi(SignupRequest);
+        this.tryUseToken(tokenResponse.token, true);
         router.push({ name: HOME_ROUTE });
       } catch (err) {
         if (
@@ -58,7 +67,8 @@ export const useAccountInfoStore = defineStore("accountInfo", {
     },
     async postLogin(loginRequest: LoginRequest) {
       try {
-        this.accountInfo = await loginApi(loginRequest);
+        const tokenResponse = await loginApi(loginRequest);
+        this.tryUseToken(tokenResponse.token, true);
         router.push({ name: HOME_ROUTE });
       } catch (err) {
         if (err instanceof Error) {
@@ -74,7 +84,7 @@ export const useAccountInfoStore = defineStore("accountInfo", {
       }
     },
     async postLogOut() {
-      await logoutApi();
+      localStorage.removeItem(TOKEN_LOCAL_STORAGE);
       this.accountInfo = false;
       router.push({ name: HOME_ROUTE });
       // TODO: This should probably clear most local information (e.g. entity list store, entity store)

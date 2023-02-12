@@ -1,6 +1,19 @@
 import router, { LOGIN_ROUTE } from "@/router";
-import { AxiosError, type AxiosResponse } from "axios";
+import { TOKEN_LOCAL_STORAGE } from "@/utils/constants";
+import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { z } from "zod";
+
+export const authConfig = (): AxiosRequestConfig => {
+  const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
+  if (token) {
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  }
+  return {};
+};
 
 export const wrapAPI = async <T extends z.ZodTypeAny>(
   api: () => Promise<AxiosResponse>,

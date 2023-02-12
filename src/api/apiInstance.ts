@@ -10,6 +10,5 @@ const instance = axios.create({
 });
 
 instance.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-instance.defaults.withCredentials = true; // send session cookie
 
 export default instance;

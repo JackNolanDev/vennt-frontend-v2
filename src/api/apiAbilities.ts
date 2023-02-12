@@ -4,18 +4,18 @@ import {
   type PartialEntityAbility,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
-import { wrapAPI } from "./utils";
+import { authConfig, wrapAPI } from "./utils";
 
 export const updateAbilityApi = (
   abilityId: string,
   ability: PartialEntityAbility
 ): Promise<FullEntityAbility> => {
   return wrapAPI(
-    () => api.patch(`/ability/${abilityId}`, ability),
+    () => api.patch(`/ability/${abilityId}`, ability, authConfig()),
     fullAbilityValidator
   );
 };
 
 export const deleteAbilityApi = (abilityId: string) => {
-  wrapAPI(() => api.delete(`/ability/${abilityId}`));
+  wrapAPI(() => api.delete(`/ability/${abilityId}`, authConfig()));
 };

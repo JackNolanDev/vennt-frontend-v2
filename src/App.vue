@@ -7,7 +7,7 @@ import { RouterView } from "vue-router";
 import { useAccountInfoStore } from "./stores/accountInfo";
 
 const accountInfoStore = useAccountInfoStore();
-accountInfoStore.fetchCurrentAccount();
+accountInfoStore.loadAccountInfo();
 
 /*
 MODAL example

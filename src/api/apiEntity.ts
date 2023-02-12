@@ -26,27 +26,30 @@ import {
   fullEntityFluxValidator,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
-import { wrapAPI } from "./utils";
+import { authConfig, wrapAPI } from "./utils";
 import { z } from "zod";
 
 export const addCollectedEntityApi = (
   request: UncompleteCollectedEntityWithChangelog
 ): Promise<FullCollectedEntity> => {
   return wrapAPI(
-    () => api.post("/entity", request),
+    () => api.post("/entity", request, authConfig()),
     fullCollectedEntityValidator
   );
 };
 
 export const listEntitiesApi = (): Promise<FullEntity[]> => {
-  return wrapAPI(() => api.get(`/entity`), fullEntityValidator.array());
+  return wrapAPI(
+    () => api.get(`/entity`, authConfig()),
+    fullEntityValidator.array()
+  );
 };
 
 export const fetchCollectedEntityApi = (
   entityId: string
 ): Promise<FullCollectedEntity> => {
   return wrapAPI(
-    () => api.get(`/entity/${entityId}`),
+    () => api.get(`/entity/${entityId}`, authConfig()),
     fullCollectedEntityValidator
   );
 };
@@ -56,13 +59,16 @@ export const updateEntity = (
   request: PartialEntity[]
 ): Promise<FullEntity> => {
   return wrapAPI(
-    () => api.patch(`/entity/${entityId}`, request),
+    () => api.patch(`/entity/${entityId}`, request, authConfig()),
     fullEntityValidator
   );
 };
 
 export const deleteEntity = (entityId: string): Promise<boolean> => {
-  return wrapAPI(() => api.delete(`/entity/${entityId}`), z.boolean());
+  return wrapAPI(
+    () => api.delete(`/entity/${entityId}`, authConfig()),
+    z.boolean()
+  );
 };
 
 export const updateEntityAttributesApi = (
@@ -70,7 +76,7 @@ export const updateEntityAttributesApi = (
   request: UpdateEntityAttributes
 ): Promise<FullEntity> => {
   return wrapAPI(
-    () => api.patch(`/entity/${entityId}/attributes`, request),
+    () => api.patch(`/entity/${entityId}/attributes`, request, authConfig()),
     fullEntityValidator
   );
 };
@@ -80,7 +86,7 @@ export const filterEntityChangelogApi = (
   request: FilterChangelogBody
 ): Promise<boolean> => {
   return wrapAPI(
-    () => api.patch(`/entity/${entityId}/changelog`, request),
+    () => api.patch(`/entity/${entityId}/changelog`, request, authConfig()),
     z.boolean()
   );
 };
@@ -90,7 +96,7 @@ export const fetchEntityChangelogApi = (
   attr: EntityAttribute
 ): Promise<FullEntityChangelog[]> => {
   return wrapAPI(
-    () => api.get(`/entity/${entityId}/changelog/${attr}`),
+    () => api.get(`/entity/${entityId}/changelog/${attr}`, authConfig()),
     fullAttributeChangelogValidator.array()
   );
 };
@@ -100,7 +106,7 @@ export const addAbilitiesApi = (
   request: UncompleteEntityAbility[]
 ): Promise<FullEntityAbility[]> => {
   return wrapAPI(
-    () => api.post(`/entity/${entityId}/abilities`, request),
+    () => api.post(`/entity/${entityId}/abilities`, request, authConfig()),
     fullAbilityValidator.array()
   );
 };
@@ -110,7 +116,7 @@ export const addItemsApi = (
   request: UncompleteEntityItem[]
 ): Promise<FullEntityItem[]> => {
   return wrapAPI(
-    () => api.post(`/entity/${entityId}/items`, request),
+    () => api.post(`/entity/${entityId}/items`, request, authConfig()),
     fullItemValidator.array()
   );
 };
@@ -120,7 +126,7 @@ export const addEntityTextApi = (
   request: UncompleteEntityText
 ): Promise<FullEntityText> => {
   return wrapAPI(
-    () => api.post(`/entity/${entityId}/text`, request),
+    () => api.post(`/entity/${entityId}/text`, request, authConfig()),
     fullEntityTextValidator
   );
 };
@@ -131,7 +137,7 @@ export const updateEntityTextApi = (
   text: string
 ): Promise<boolean> => {
   return wrapAPI(
-    () => api.put(`/entity/${entityId}/text/${key}`, { text }),
+    () => api.put(`/entity/${entityId}/text/${key}`, { text }, authConfig()),
     z.boolean()
   );
 };
@@ -143,9 +149,13 @@ export const updateEntityTextPermissionApi = (
 ): Promise<boolean> => {
   return wrapAPI(
     () =>
-      api.put(`/entity/${entityId}/text/${key}/permission`, {
-        public: newPermission,
-      }),
+      api.put(
+        `/entity/${entityId}/text/${key}/permission`,
+        {
+          public: newPermission,
+        },
+        authConfig()
+      ),
     z.boolean()
   );
 };
@@ -155,7 +165,7 @@ export const deleteEntityTextApi = (
   key: EntityTextKey
 ): Promise<boolean> => {
   return wrapAPI(
-    () => api.delete(`/entity/${entityId}/text/${key}`),
+    () => api.delete(`/entity/${entityId}/text/${key}`, authConfig()),
     z.boolean()
   );
 };
@@ -165,7 +175,7 @@ export const addFluxApi = (
   request: UncompleteEntityFlux
 ): Promise<FullEntityFlux> => {
   return wrapAPI(
-    () => api.post(`/entity/${entityId}/flux`, request),
+    () => api.post(`/entity/${entityId}/flux`, request, authConfig()),
     fullEntityFluxValidator
   );
 };
@@ -176,7 +186,8 @@ export const updateFluxApi = (
   request: PartialEntityFlux
 ): Promise<FullEntityFlux> => {
   return wrapAPI(
-    () => api.patch(`/entity/${entityId}/flux/${fluxId}`, request),
+    () =>
+      api.patch(`/entity/${entityId}/flux/${fluxId}`, request, authConfig()),
     fullEntityFluxValidator
   );
 };
@@ -186,7 +197,7 @@ export const deleteFluxApi = (
   fluxId: string
 ): Promise<boolean> => {
   return wrapAPI(
-    () => api.delete(`/entity/${entityId}/flux/${fluxId}`),
+    () => api.delete(`/entity/${entityId}/flux/${fluxId}`, authConfig()),
     z.boolean()
   );
 };

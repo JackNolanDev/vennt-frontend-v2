@@ -1,11 +1,13 @@
-import { wrapAPI } from "./utils";
+import { authConfig, wrapAPI } from "./utils";
 import api from "./apiInstance";
 import type { JsonStorageKey } from "@/utils/backendTypes";
 
 export const triggerWebscraperApi = (key: JsonStorageKey) => {
-  wrapAPI(() => api.post(`/admin/storage/${key}`));
+  wrapAPI(() => api.post(`/admin/storage/${key}`, undefined, authConfig()));
 };
 
 export const configureStorageBucketApi = () => {
-  wrapAPI(() => api.post(`admin/bucket/configure/storage`));
+  wrapAPI(() =>
+    api.post(`admin/bucket/configure/storage`, undefined, authConfig())
+  );
 };
