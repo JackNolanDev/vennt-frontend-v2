@@ -44,8 +44,10 @@ import EntityModals from "@/components/Entities/EntityModals.vue";
 import RouteBasedRightSideBar from "@/components/Base/RouteBasedRightSideBar.vue";
 import EntityRightSidebar from "@/components/Entities/EntityRightSidebar.vue";
 import EntityLeftSidebar from "@/components/Entities/EntityLeftSidebar.vue";
+import { useEntityNotesStore } from "@/stores/entityNotes";
 
 const entityStore = useEntityStore();
+const entityNotesStore = useEntityNotesStore();
 const route = useRoute();
 
 onBeforeMount(() => {
@@ -105,7 +107,7 @@ const keyMapper = (e: KeyboardEvent) => {
       jumpToPage(ENTITY_ITEM_SHOP_ROUTE);
       break;
     case "n":
-      entityStore.toggleNotes();
+      entityNotesStore.toggleNotes();
       break;
     default:
       // unassigned
