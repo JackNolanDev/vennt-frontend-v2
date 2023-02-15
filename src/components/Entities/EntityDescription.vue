@@ -3,6 +3,7 @@
     v-model="state.desc"
     :displayOnly="!entityStore.canEdit"
     placeholder="Character Description"
+    editorId="entity-description-editor"
     :saveButton="true"
     @save="save"
     @cancel="cancel"

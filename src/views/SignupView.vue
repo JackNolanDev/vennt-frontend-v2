@@ -17,7 +17,7 @@
             autocorrect="off"
             autocapitalize="none"
             v-model="state.username"
-            class="input mt-4 wide"
+            class="input mt-4 wide large"
             :class="{ invalid: usernameInvalid }"
           />
           <p v-if="usernameInvalid" class="mt-8 mb-0 errorText">
@@ -35,7 +35,7 @@
             autocorrect="off"
             autocapitalize="none"
             v-model="state.email"
-            class="input mt-4 wide"
+            class="input mt-4 wide large"
             :class="{ invalid: emailInvalid }"
           />
           <p v-if="emailInvalid" class="mt-8 mb-0 errorText">
@@ -53,7 +53,7 @@
             placeholder="Password"
             autocomplete="new-password"
             v-model="state.password1"
-            class="input mt-4 wide"
+            class="input mt-4 wide large"
             :class="{ invalid: password1Invalid }"
           />
           <p v-if="password1Invalid" class="mt-8 mb-0 errorText">
@@ -71,7 +71,7 @@
             placeholder="Verify Password"
             autocomplete="new-password"
             v-model="state.password2"
-            class="input mt-4 wide"
+            class="input mt-4 wide large"
             :class="{ invalid: password2Invalid }"
           />
           <p v-if="password2Invalid" class="mt-8 mb-0 errorText">
@@ -98,7 +98,7 @@
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
-import { computed, onMounted, reactive } from "vue";
+import { computed, reactive } from "vue";
 import {
   emailValidator,
   passwordValidator,
@@ -108,19 +108,6 @@ import {
 import { fieldValidator } from "@/utils/inputType";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import BaseButton from "@/components/Base/BaseButton.vue";
-
-onMounted(() => {
-  if (document.requestStorageAccess) {
-    document.requestStorageAccess().then(
-      () => {
-        console.log("access granted");
-      },
-      () => {
-        console.log("access denied");
-      }
-    );
-  }
-});
 
 const state = reactive({
   username: "",

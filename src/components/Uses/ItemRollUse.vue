@@ -12,6 +12,7 @@
         </label>
         <input
           type="number"
+          inputmode="numeric"
           placeholder="Roll Result"
           v-model="state.rollValue"
           id="item-roll-value"

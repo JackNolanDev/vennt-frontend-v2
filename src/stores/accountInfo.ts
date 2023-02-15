@@ -10,6 +10,9 @@ import { TOKEN_LOCAL_STORAGE } from "@/utils/constants";
 import { AxiosError } from "axios";
 import { defineStore } from "pinia";
 import jwt_decode from "jwt-decode";
+import { useEntityStore } from "./entity";
+import { useEntityListStore } from "./entityList";
+import { useEntityNotesStore } from "./entityNotes";
 
 interface AccountInfoStore {
   accountInfo: undefined | false | AccountInfo;
@@ -87,6 +90,9 @@ export const useAccountInfoStore = defineStore("accountInfo", {
       localStorage.removeItem(TOKEN_LOCAL_STORAGE);
       this.accountInfo = false;
       router.push({ name: HOME_ROUTE });
+      useEntityStore().clearLocalEntity();
+      useEntityListStore().reset();
+      useEntityNotesStore().reset();
       // TODO: This should probably clear most local information (e.g. entity list store, entity store)
     },
   },

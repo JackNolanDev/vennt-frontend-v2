@@ -541,7 +541,7 @@ a.basicBtn {
 .input.wide {
   width: 100%;
 }
-.input.shortenned {
+.input.shortened {
   max-width: 400px;
 }
 .input.tiny {
@@ -558,6 +558,9 @@ select.input {
   background-position: right 0.75rem center;
   background-size: 16px 12px;
   cursor: pointer;
+}
+.input.large {
+  font-size: 16px;
 }
 
 .card .input {

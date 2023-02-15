@@ -15,6 +15,7 @@ export const ENTITY_DESCRIPTION_ROUTE = ENTITY_ROUTE;
 export const ENTITY_ITEM_SHOP_ROUTE = "entityItemShop";
 export const ENTITY_ITEMS_ROUTE = "entityItems";
 export const ENTITY_STATS_ROUTE = "entityStats";
+export const ENTITY_NOTES_ROUTE = "entityNotes";
 export const ENTITY_WEAPON_SHOP_ROUTE = "entityWeaponShop";
 export const ENTITY_SETTINGS_ROUTE = "entitySettings";
 
@@ -81,6 +82,11 @@ const router = createRouter({
           path: "stats",
           name: ENTITY_STATS_ROUTE,
           component: () => import("../views/EntityMobileStatsView.vue"),
+        },
+        {
+          path: "notes",
+          name: ENTITY_NOTES_ROUTE,
+          component: () => import("../views/EntityNotesView.vue"),
         },
         {
           path: "weaponry/:detail?",

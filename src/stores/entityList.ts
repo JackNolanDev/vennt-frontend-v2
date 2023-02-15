@@ -18,6 +18,9 @@ export const useEntityListStore = defineStore("entityList", {
     },
   },
   actions: {
+    reset() {
+      this.entities = [];
+    },
     async fetchEntities() {
       this.entities = await listEntitiesApi();
     },

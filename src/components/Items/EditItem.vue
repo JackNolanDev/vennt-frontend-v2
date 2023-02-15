@@ -16,6 +16,7 @@
     </label>
     <input
       type="number"
+      inputmode="numeric"
       v-model="state.bulk"
       placeholder="0"
       title="Enter the bulk of your item"
@@ -46,6 +47,7 @@
       <label for="new-item-armor-armor" class="labelText">Armor:</label>
       <input
         type="number"
+        inputmode="numeric"
         v-model="state.armorArmor"
         placeholder="1"
         title="Armor this item grants when used"
@@ -55,6 +57,7 @@
       <label for="new-item-armor-burden" class="labelText">Burden:</label>
       <input
         type="number"
+        inputmode="numeric"
         v-model="state.armorBurden"
         placeholder="1"
         title="Burden caused by using this item"
@@ -70,6 +73,7 @@
       <label for="new-item-shield-shield" class="labelText">Shield:</label>
       <input
         type="number"
+        inputmode="numeric"
         v-model="state.shieldShield"
         placeholder="1"
         title="Shield this item grants when used"
@@ -79,6 +83,7 @@
       <label for="new-item-shield-burden" class="labelText">Burden:</label>
       <input
         type="number"
+        inputmode="numeric"
         v-model="state.shieldBurden"
         placeholder="1"
         title="Burden caused by using this item"

@@ -18,7 +18,7 @@
     </div>
     <BaseButton
       v-if="!state.newFlux"
-      @click="toggleNewFlux"
+      @click="showNewFlux"
       icon="add"
       class="primary mt-8"
     >
@@ -29,7 +29,9 @@
       <label class="labelText mb-4">New {{ typeLabel }}</label>
       <BaseFullFeaturedTextEditor
         v-model="state.newFluxText"
+        :focus-on-change="state.focusOnNewFlux"
         :placeholder="`New ${typeLabel}`"
+        :editor-id="`${type}-new-editor`"
       ></BaseFullFeaturedTextEditor>
       <div class="alignRow gap end mt-4">
         <BaseButton @click="cancelNewFlux" icon="close" class="clear"
@@ -63,12 +65,14 @@ interface EntityFluxState {
   newFlux: boolean;
   newFluxText: string;
   flux: FullEntityFlux[];
+  focusOnNewFlux: number;
 }
 
 const state = reactive<EntityFluxState>({
   newFlux: false,
   newFluxText: "",
   flux: [],
+  focusOnNewFlux: 0,
 });
 
 onBeforeMount(() => {
@@ -123,18 +127,25 @@ const deleteFlux = (flux: FullEntityFlux) => {
   entityStore.deleteFlux(flux.id);
 };
 
-const toggleNewFlux = () => {
-  state.newFlux = !state.newFlux;
+const showNewFlux = () => {
+  state.newFlux = true;
+  setTimeout(() => {
+    state.focusOnNewFlux++;
+  }, 0);
+};
+
+const hideNewFlux = () => {
+  state.newFlux = false;
 };
 
 const cancelNewFlux = () => {
   state.newFluxText = "";
-  toggleNewFlux();
+  hideNewFlux();
 };
 
 const saveNewFlux = () => {
   entityStore.saveFlux({ type: props.type, text: state.newFluxText });
   state.newFluxText = "";
-  toggleNewFlux();
+  hideNewFlux();
 };
 </script>

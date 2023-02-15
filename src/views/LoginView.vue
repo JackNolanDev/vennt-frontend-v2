@@ -17,7 +17,7 @@
             autocorrect="off"
             autocapitalize="none"
             v-model="state.username"
-            class="input mt-4 wide"
+            class="input mt-4 wide large"
             :class="{ invalid: usernameInvalid }"
           />
           <p v-if="usernameInvalid" class="mt-8 mb-0 errorText">
@@ -35,7 +35,7 @@
             placeholder="Password"
             autocomplete="current-password"
             v-model="state.password"
-            class="input mt-4 wide"
+            class="input mt-4 wide large"
             :class="{ invalid: passwordInvalid }"
           />
           <p v-if="passwordInvalid" class="mt-8 mb-0 errorText">
@@ -62,7 +62,7 @@
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
-import { computed, onMounted, reactive } from "vue";
+import { computed, reactive } from "vue";
 import {
   passwordValidator,
   nameValidator,
@@ -71,19 +71,6 @@ import {
 import { fieldValidator } from "@/utils/inputType";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import BaseButton from "@/components/Base/BaseButton.vue";
-
-onMounted(() => {
-  if (document.requestStorageAccess) {
-    document.requestStorageAccess().then(
-      () => {
-        console.log("access granted");
-      },
-      () => {
-        console.log("access denied");
-      }
-    );
-  }
-});
 
 const state = reactive({
   username: "",

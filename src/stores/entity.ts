@@ -36,10 +36,17 @@ import {
   defaultEntityTextPermission,
   getEntityText,
 } from "@/utils/entityUtils";
+import { useEntityNotesStore } from "./entityNotes";
+
+const setInitialNotes = (entity: FullCollectedEntity) => {
+  const foundNotes = getEntityText("NOTES", entity);
+  if (foundNotes) {
+    useEntityNotesStore().setInitialNotes(foundNotes);
+  }
+};
 
 type EntityState = {
   entity: undefined | FullCollectedEntity;
-  showNotes: boolean;
   levelsToProcess: number;
   apisInFlight: Record<string, boolean>;
 };
@@ -53,7 +60,6 @@ export const useEntityStore = defineStore("entity", {
   state: (): EntityState => {
     return {
       entity: undefined,
-      showNotes: false,
       levelsToProcess: 0,
       apisInFlight: {},
     };
@@ -77,16 +83,12 @@ export const useEntityStore = defineStore("entity", {
     },
     backstory: (state) => getEntityText("BACKSTORY", state.entity),
     description: (state) => getEntityText("DESC", state.entity),
-    notes: (state) => getEntityText("NOTES", state.entity),
   },
   actions: {
-    toggleNotes() {
-      this.showNotes = !this.showNotes;
-    },
     clearLocalEntity() {
       this.entity = undefined;
-      this.showNotes = false;
       this.levelsToProcess = 0;
+      this.apisInFlight = {};
     },
     async addCollectedEntity(
       request: UncompleteCollectedEntityWithChangelog,
@@ -102,9 +104,11 @@ export const useEntityStore = defineStore("entity", {
       if (options?.clearCharacterCreation) {
         useCharacterCreateStore().clearCharacter();
       }
+      setInitialNotes(this.entity);
     },
     async fetchCollectedEntity(id: string) {
       this.entity = await fetchCollectedEntityApi(id);
+      setInitialNotes(this.entity);
     },
     async updateEntityAttributes(id: string, request: UpdateEntityAttributes) {
       // TODO: may want to pre-apply the change

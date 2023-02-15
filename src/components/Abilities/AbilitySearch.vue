@@ -1,9 +1,11 @@
 <template>
-  <label for="abiltiy-search"><h2>Add New Abilities</h2></label>
+  <label for="ability-search"><h2>Add New Abilities</h2></label>
   <input
     placeholder="Search Ability"
     v-model="state.search"
-    id="abiltiy-search"
+    type="text"
+    inputmode="search"
+    id="ability-search"
     class="input abilityInput"
   />
   <div v-if="state.search.length > 0" class="card border padded column">

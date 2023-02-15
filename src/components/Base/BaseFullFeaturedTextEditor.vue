@@ -53,6 +53,7 @@ import Heading from "@tiptap/extension-heading";
 import Gapcursor from "@tiptap/extension-gapcursor";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import BaseButton from "./BaseButton.vue";
+import { watch } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -60,6 +61,7 @@ const props = withDefaults(
     placeholder?: string;
     editorId?: string;
     invalid?: boolean;
+    focusOnChange?: number;
   }>(),
   {
     modelValue: "",
@@ -112,4 +114,21 @@ const editor = useEditor({
     }
   },
 });
+
+watch(
+  () => props.modelValue,
+  () => {
+    if (editor.value?.getHTML() === props.modelValue) {
+      return;
+    }
+    editor.value?.commands.setContent(props.modelValue, false);
+  }
+);
+
+watch(
+  () => props.focusOnChange,
+  () => {
+    editor.value?.commands.focus("end");
+  }
+);
 </script>

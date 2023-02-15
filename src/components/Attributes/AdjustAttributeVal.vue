@@ -5,7 +5,7 @@
     </label>
     <input
       type="text"
-      v-on:keyup.enter="jumpToAdjustField"
+      @keyup.enter="jumpToAdjustField"
       v-model="state.reason"
       placeholder="Reason for update (not required)"
       title="Press Enter to jump to the next field"
@@ -19,7 +19,8 @@
       </label>
       <input
         type="number"
-        v-on:keyup.enter="adjustAttrFromAdjustField"
+        inputmode="numeric"
+        @keyup.enter="adjustAttrFromAdjustField"
         v-model="state.adjust"
         placeholder="0"
         title="Press Enter to Submit"

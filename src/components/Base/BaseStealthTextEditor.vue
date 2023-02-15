@@ -10,8 +10,8 @@
       v-else-if="!state.editorOpen"
       tabindex="0"
       @dblclick="openEditor"
-      @keypress.enter="openEditor"
-      @keypress.space="openEditor"
+      @keyup.enter="openEditor"
+      @keyup.space="openEditor"
       class="wide markdown-display"
     >
       <p v-if="placeholder">
@@ -31,6 +31,7 @@
         :placeholder="placeholder"
         :editor-id="editorId"
         :invalid="invalid"
+        :focus-on-change="state.editorFocus"
         @update:model-value="(e) => emits('update:modelValue', e)"
       ></BaseFullFeaturedTextEditor>
       <div v-if="saveButton" class="alignRow gap end mt-4">
@@ -80,7 +81,7 @@ const props = withDefaults(
     placeholder: "",
   }
 );
-const state = reactive({ editorOpen: false });
+const state = reactive({ editorOpen: false, editorFocus: 0 });
 const emits = defineEmits<{
   (e: "update:modelValue", state: string): void;
   (e: "opened"): void;
@@ -95,6 +96,10 @@ const renderPreview = computed(() => !editorEmpty(props.modelValue));
 const openEditor = () => {
   state.editorOpen = true;
   emits("opened");
+  // use setTimeout so this code executes after the page is updated
+  setTimeout(() => {
+    state.editorFocus++;
+  }, 0);
 };
 
 const closeEditor = () => {
@@ -120,6 +125,7 @@ const deleteEditor = () => {
 <style scoped>
 .markdown-display {
   border-radius: 3px;
+  display: inline-block;
 }
 .markdown-display:hover {
   background-color: rgba(75, 74, 103, 0.2);

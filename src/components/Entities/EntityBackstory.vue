@@ -3,6 +3,7 @@
     v-model="state.backstory"
     :displayOnly="!entityStore.canEdit"
     placeholder="Backstory"
+    editorId="entity-backstory-editor"
     :saveButton="true"
     @save="save"
     @cancel="cancel"

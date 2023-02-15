@@ -4,6 +4,8 @@
     <input
       placeholder="Item Search"
       v-model="state.itemSearchField"
+      type="text"
+      inputmode="search"
       id="item-search"
       class="input itemSearchInput"
     />
@@ -36,7 +38,7 @@
         v-for="item in items"
         :key="item.name"
         :id="stringToLinkID(item.name ?? item.type)"
-        :class="{ selected: itemOpenned(item) }"
+        :class="{ selected: itemOpened(item) }"
         class="alignRow tableItems"
       >
         <div class="tableData">
@@ -50,7 +52,7 @@
         </div>
         <BaseButton
           :icon="
-            itemOpenned(item) ? 'keyboard_arrow_left' : 'keyboard_arrow_right'
+            itemOpened(item) ? 'keyboard_arrow_left' : 'keyboard_arrow_right'
           "
           :to="itemLink(item)"
         ></BaseButton>
@@ -117,10 +119,10 @@ const toggleShowSearchSettings = () => {
   state.showSearchSettings = !state.showSearchSettings;
 };
 
-const itemOpenned = (item: ShopItem): boolean =>
+const itemOpened = (item: ShopItem): boolean =>
   router.currentRoute.value.params.detail == item.name;
 const itemLink = (item: ShopItem): RouteLocationRaw => {
-  if (itemOpenned(item)) {
+  if (itemOpened(item)) {
     const params = { ...router.currentRoute.value.params };
     delete params.detail;
     return {

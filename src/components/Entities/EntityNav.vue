@@ -1,12 +1,6 @@
 <template>
-  <nav class="nav alignRow split">
-    <div class="alignRow gap ml-8">
-      <BaseButton
-        :to="{ name: ENTITY_STATS_ROUTE, params: { id: entity.id } }"
-        title="Character stats"
-        icon="bar_chart"
-        class="skinny stats-link"
-      ></BaseButton>
+  <nav class="nav alignRow split main-entity-nav">
+    <div class="alignRow gap ml-8 desktop-only">
       <BaseButton
         :to="{ name: ENTITY_DESCRIPTION_ROUTE, params: { id: entity.id } }"
         title="Main & Flux (f)"
@@ -42,10 +36,10 @@
     <div class="alignRow gap mr-8">
       <BaseButton
         v-if="entityState.canEdit"
-        @click="entityState.toggleNotes"
+        @click="entityNotesStore.toggleNotes"
         title="Show Character notes (n)"
         icon="edit_note"
-        class="skinny"
+        class="skinny desktop-only"
       ></BaseButton>
       <BaseButton
         @click="toggleDropdown"
@@ -54,9 +48,59 @@
       ></BaseButton>
     </div>
   </nav>
-  <div v-if="state.dropdownOpen" class="nav-dropdown">
+  <div v-if="state.dropdownOpen" class="nav-dropdown" @click="toggleDropdown">
     <div class="separator"></div>
     <nav class="mt-8 mb-8 ml-8 mr-8">
+      <div v-if="accountInfoStore.isLoggedIn">
+        <BaseButton
+          :to="{ name: ENTITY_STATS_ROUTE, params: { id: entity.id } }"
+          title="Character stats"
+          icon="bar_chart"
+          class="skinny bold wide mobile-only"
+          >Entity Stats</BaseButton
+        >
+        <BaseButton
+          :to="{ name: ENTITY_DESCRIPTION_ROUTE, params: { id: entity.id } }"
+          icon="person"
+          class="skinny bold wide mobile-only"
+          >Description</BaseButton
+        >
+        <BaseButton
+          :to="{ name: ENTITY_ABILITIES_ROUTE, params: { id: entity.id } }"
+          icon="hiking"
+          class="skinny bold wide mobile-only"
+          >Abilities</BaseButton
+        >
+        <BaseButton
+          :to="{ name: ENTITY_ITEMS_ROUTE, params: { id: entity.id } }"
+          icon="backpack"
+          class="skinny bold wide mobile-only"
+          >Inventory</BaseButton
+        >
+        <BaseButton
+          :to="{ name: ENTITY_COMBAT_ROUTE, params: { id: entity.id } }"
+          title="Combat (c)"
+          icon="sports_kabaddi"
+          class="skinny bold wide mobile-only"
+          >Combat</BaseButton
+        >
+        <BaseButton
+          :to="{ name: ENTITY_NOTES_ROUTE, params: { id: entity.id } }"
+          title="Combat (c)"
+          icon="edit_note"
+          class="skinny bold wide mobile-only"
+          >Notes</BaseButton
+        >
+        <BaseButton
+          v-if="entityState.canEdit"
+          :to="{ name: ENTITY_SETTINGS_ROUTE, params: { id: entity.id } }"
+          title="Character Settings (h)"
+          icon="settings"
+          class="skinny bold wide mobile-only"
+          >Settings</BaseButton
+        >
+        <div class="separator mt-8 mb-8 mobile-only"></div>
+      </div>
       <BaseButton
         :to="{ name: HOME_ROUTE }"
         icon="home"
@@ -103,9 +147,11 @@ import {
   LOGIN_ROUTE,
   SIGNUP_ROUTE,
   ENTITY_DESCRIPTION_ROUTE,
+  ENTITY_NOTES_ROUTE,
 } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";
+import { useEntityNotesStore } from "@/stores/entityNotes";
 import type { FullEntity } from "@/utils/backendTypes";
 import { reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
@@ -114,6 +160,7 @@ const state = reactive({ dropdownOpen: false });
 defineProps<{ entity: FullEntity }>();
 const accountInfoStore = useAccountInfoStore();
 const entityState = useEntityStore();
+const entityNotesStore = useEntityNotesStore();
 
 const toggleDropdown = () => {
   state.dropdownOpen = !state.dropdownOpen;
@@ -121,12 +168,18 @@ const toggleDropdown = () => {
 </script>
 
 <style scoped>
-.stats-link {
+.mobile-only {
   display: none;
 }
 @media screen and (max-width: 760px) {
-  .stats-link {
+  .mobile-only {
     display: flex;
+  }
+  .desktop-only {
+    display: none;
+  }
+  .main-entity-nav {
+    flex-direction: row-reverse;
   }
   .nav-dropdown {
     width: 100%;

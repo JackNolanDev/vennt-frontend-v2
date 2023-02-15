@@ -9,7 +9,7 @@
         :show-items="showItems"
       ></CombatStats>
     </div>
-    <div class="bottom" v-if="showNotes">
+    <div class="bottom" v-if="entityNotesStore.showNotes">
       <EntityNotes></EntityNotes>
     </div>
   </div>
@@ -22,14 +22,13 @@ import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
 import EntityNotes from "./EntityNotes.vue";
+import { useEntityNotesStore } from "@/stores/entityNotes";
 
 const entityStore = useEntityStore();
+const entityNotesStore = useEntityNotesStore();
 const route = useRoute();
 
 const showItems = computed(() => route.name === ENTITY_ITEM_SHOP_ROUTE);
-const showNotes = computed(
-  () => entityStore.showNotes && typeof entityStore.notes === "string"
-);
 </script>
 
 <style scoped>

@@ -11,6 +11,7 @@
       <label for="item-count" class="labelText nowrap">Number to buy:</label>
       <input
         type="number"
+        inputmode="numeric"
         placeholder="1"
         v-model="state.count"
         id="item-count"
