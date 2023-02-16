@@ -1,5 +1,5 @@
 <template>
-  <div v-if="params || query">
+  <div>
     <BaseButton icon="close" :to="exitRoute">Close</BaseButton>
     <div class="panel ml-16 mr-16 mb-64">
       <slot></slot>
@@ -16,9 +16,6 @@ const DEFAULT_ROUTE_KEY = "detail";
 
 const props = defineProps<{ routeKey?: string; queryParams?: string[] }>();
 
-const params = computed(
-  () => router.currentRoute.value.params[props.routeKey ?? DEFAULT_ROUTE_KEY]
-);
 const query = computed(
   () =>
     props.queryParams &&

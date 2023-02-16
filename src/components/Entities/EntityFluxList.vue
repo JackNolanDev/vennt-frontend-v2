@@ -16,34 +16,36 @@
         class="wide"
       ></BaseStealthTextEditor>
     </div>
-    <BaseButton
-      v-if="!state.newFlux"
-      @click="showNewFlux"
-      icon="add"
-      class="primary mt-8"
-    >
-      Add New {{ typeLabel }}
-    </BaseButton>
-    <div v-else>
-      <div class="separator mt-8 mb-8"></div>
-      <label class="labelText mb-4">New {{ typeLabel }}</label>
-      <BaseFullFeaturedTextEditor
-        v-model="state.newFluxText"
-        :focus-on-change="state.focusOnNewFlux"
-        :placeholder="`New ${typeLabel}`"
-        :editor-id="`${type}-new-editor`"
-      ></BaseFullFeaturedTextEditor>
-      <div class="alignRow gap end mt-4">
-        <BaseButton @click="cancelNewFlux" icon="close" class="clear"
-          >Cancel</BaseButton
-        >
-        <BaseButton
-          @click="saveNewFlux"
-          :disabled="saveFluxDisabled"
-          icon="save"
-          class="primary"
-          >Save</BaseButton
-        >
+    <div v-if="entityStore.canEdit">
+      <BaseButton
+        v-if="!state.newFlux"
+        @click="showNewFlux"
+        icon="add"
+        class="primary wide mt-8"
+      >
+        Add New {{ typeLabel }}
+      </BaseButton>
+      <div v-else>
+        <div class="separator mt-8 mb-8"></div>
+        <label class="labelText mb-4">New {{ typeLabel }}</label>
+        <BaseFullFeaturedTextEditor
+          v-model="state.newFluxText"
+          :focus-on-change="state.focusOnNewFlux"
+          :placeholder="`New ${typeLabel}`"
+          :editor-id="`${type}-new-editor`"
+        ></BaseFullFeaturedTextEditor>
+        <div class="alignRow gap end mt-4">
+          <BaseButton @click="cancelNewFlux" icon="close" class="clear"
+            >Cancel</BaseButton
+          >
+          <BaseButton
+            @click="saveNewFlux"
+            :disabled="saveFluxDisabled"
+            icon="save"
+            class="primary"
+            >Save</BaseButton
+          >
+        </div>
       </div>
     </div>
   </div>

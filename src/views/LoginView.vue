@@ -1,5 +1,5 @@
 <template>
-  <BaseLayout>
+  <BaseLayout class="nav">
     <template #nav><BaseNav></BaseNav></template>
     <PageLayout class="medium">
       <form v-if="!accountInfoStore.isLoggedIn">
@@ -17,7 +17,7 @@
             autocorrect="off"
             autocapitalize="none"
             v-model="state.username"
-            class="input mt-4 wide large"
+            class="input mt-4 wide"
             :class="{ invalid: usernameInvalid }"
           />
           <p v-if="usernameInvalid" class="mt-8 mb-0 errorText">
@@ -35,7 +35,7 @@
             placeholder="Password"
             autocomplete="current-password"
             v-model="state.password"
-            class="input mt-4 wide large"
+            class="input mt-4 wide"
             :class="{ invalid: passwordInvalid }"
           />
           <p v-if="passwordInvalid" class="mt-8 mb-0 errorText">

@@ -19,7 +19,6 @@
       </label>
       <input
         type="number"
-        inputmode="numeric"
         @keyup.enter="adjustAttrFromAdjustField"
         v-model="state.adjust"
         placeholder="0"

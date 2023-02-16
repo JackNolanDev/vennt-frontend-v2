@@ -1,5 +1,8 @@
 <template>
-  <BaseLayout>
+  <BaseLayout
+    :class="{ 'sidebar-right': showRightSidebar }"
+    class="nav sidebar"
+  >
     <template #nav>
       <EntityNav
         v-if="entityStore.entity"
@@ -26,7 +29,7 @@
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import { useEntityStore } from "@/stores/entity";
-import { onBeforeMount, onUnmounted } from "vue";
+import { computed, onBeforeMount, onUnmounted } from "vue";
 import { RouterView, useRoute } from "vue-router";
 import { idValidator } from "@/utils/backendTypes";
 import router, {
@@ -114,6 +117,15 @@ const keyMapper = (e: KeyboardEvent) => {
       console.log(src, e);
   }
 };
+
+const showRightSidebar = computed(() => {
+  const params = router.currentRoute.value.params.detail;
+  if (params) {
+    return true;
+  }
+  const queryParams = ["new"];
+  return queryParams.some((key) => router.currentRoute.value.query[key]);
+});
 
 const jumpToPage = (name: string) => {
   if (router.currentRoute.value.name !== name && entityStore.entity) {

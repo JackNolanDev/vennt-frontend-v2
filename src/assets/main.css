@@ -17,12 +17,14 @@
   --code-font: "Roboto Mono", monospace;
 
   /* HEIGHTS / WIDTHS */
+  --full-page-height: 100vh;
+  --full-page-height: 100dvh;
   --nav-height: 40px;
   --sub-nav-height: 38px;
   --total-nav-height: calc(var(--nav-height) + var(--sub-nav-height));
-  --page-height: calc(100vh - var(--nav-height));
-  --sub-nav-page-height: calc(100vh - var(--total-nav-height));
-  --sub-nav-page-fullscreen-height: calc(100vh - var(--sub-nav-height));
+  --page-height: calc(var(--full-page-height) - var(--nav-height));
+  --sub-nav-page-height: calc(var(--full-page-height) - var(--total-nav-height));
+  --sub-nav-page-fullscreen-height: calc(var(--full-page-height) - var(--sub-nav-height));
   --sidebar-width: 380px;
 
   --border-radius: 5px;
@@ -509,7 +511,7 @@ a.basicBtn {
 .input {
   resize: vertical;
   font-family: var(--app-font);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 16px;
   height: 40px;
   width: 100%;
@@ -558,9 +560,6 @@ select.input {
   background-position: right 0.75rem center;
   background-size: 16px 12px;
   cursor: pointer;
-}
-.input.large {
-  font-size: 16px;
 }
 
 .card .input {
@@ -895,7 +894,7 @@ tbody > tr:last-child > td:last-child {
 
 /* Nav Styles - useful for subnav styles */
 
-.nav {
+nav.nav {
   width: 100%;
   height: 100%;
   background-color: var(--sub-nav-background);

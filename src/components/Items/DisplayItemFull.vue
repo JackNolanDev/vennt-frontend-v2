@@ -16,7 +16,7 @@
   <p v-if="damageString" class="mt-16 mb-0">
     <b>Damage:</b> {{ damageString }}
   </p>
-  <div v-if="damageDice" class="card mt-8 padded thin column">
+  <div v-if="damageDice && item.active" class="card mt-8 padded thin column">
     <ToggleableDiceSectionCopyable
       :dice="damageDice"
     ></ToggleableDiceSectionCopyable>

@@ -1,5 +1,5 @@
 <template>
-  <BaseLayout>
+  <BaseLayout class="nav">
     <template #nav><BaseNav></BaseNav></template>
     <PageLayout class="medium">
       <h1 class="centeredText">CHARACTER CREATION</h1>

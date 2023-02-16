@@ -22,7 +22,10 @@
       class="mb-16"
     ></BaseInlineTextEditor>
     <BaseButton
-      v-if="entityStore.entity?.entity.attributes.sp && item.sp !== undefined"
+      v-if="
+        typeof entityStore.entity?.entity.attributes.sp === 'number' &&
+        typeof item.sp === 'number'
+      "
       :disabled="
         buttonsDisabled || entityStore.entity.entity.attributes.sp < item.sp
       "

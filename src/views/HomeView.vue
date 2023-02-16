@@ -1,5 +1,5 @@
 <template>
-  <BaseLayout>
+  <BaseLayout class="nav">
     <template #nav><BaseNav></BaseNav></template>
     <HomeLoggedIn v-if="accountInfoStore.isLoggedIn"></HomeLoggedIn>
     <HomeLoggedOut v-else></HomeLoggedOut>

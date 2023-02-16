@@ -1,16 +1,16 @@
 <template>
-  <BaseLayout :class="{ 'prefers-sidebar': showSection('prefers-sidebar') }">
+  <BaseLayout :class="layoutClass">
     <template #nav v-if="showSection('nav')">
       <BaseNav></BaseNav>
     </template>
     <template #sub-nav v-if="showSection('sub-nav')">
-      <div class="sub-nav fill-parent">vennt subnav</div>
+      <div class="sub-nav-style fill-parent">vennt subnav</div>
     </template>
     <template #sidebar v-if="showSection('sidebar')">
-      <div class="sidebar fill-parent">vennt sidebar</div>
+      <div class="sidebar-style fill-parent">vennt sidebar</div>
     </template>
     <template #sidebar-right v-if="showSection('sidebar-right')">
-      <div class="sidebar-right fill-parent">vennt sidebar right</div>
+      <div class="sidebar-right-style fill-parent">vennt sidebar right</div>
     </template>
     <PageLayout class="medium">
       <h1>Main content</h1>
@@ -82,7 +82,7 @@ import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
 import { renderMarkdown } from "@/utils/textUtils";
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 
 const INLINE_EDITOR_ID = "style-inline-editor";
 
@@ -95,6 +95,14 @@ const state = reactive({
 const showSection = (section: string) => {
   return state.checked.has(section);
 };
+
+const layoutClass = computed(() => ({
+  nav: showSection("nav"),
+  "sub-nav": showSection("sub-nav"),
+  sidebar: showSection("sidebar"),
+  "sidebar-right": showSection("sidebar-right"),
+  "prefers-sidebar": showSection("prefers-sidebar"),
+}));
 
 const checkBoxOptions = {
   nav: "Show nav",
@@ -113,13 +121,13 @@ const focusToInlineEditor = () =>
   width: 100%;
   height: 100%;
 }
-.sub-nav {
+.sub-nav-style {
   background-color: orangered;
 }
-.sidebar {
+.sidebar-style {
   background-color: green;
 }
-.sidebar-right {
+.sidebar-right-style {
   background-color: darkviolet;
 }
 </style>

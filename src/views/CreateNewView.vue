@@ -1,5 +1,5 @@
 <template>
-  <BaseLayout>
+  <BaseLayout class="nav sidebar">
     <template #nav><BaseNav></BaseNav></template>
     <template #sidebar>
       <CombatStats

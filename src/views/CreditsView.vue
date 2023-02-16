@@ -1,5 +1,5 @@
 <template>
-  <BaseLayout>
+  <BaseLayout class="nav">
     <template #nav><BaseNav></BaseNav></template>
     <PageLayout class="small">
       <h1>Credits</h1>
