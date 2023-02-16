@@ -1,8 +1,10 @@
 <template>
-  <ToggleableDiceSectionCopyable
-    :attr="use.attr"
-    :dice="dice"
-  ></ToggleableDiceSectionCopyable>
+  <div class="card column padded thin mt-16">
+    <ToggleableDiceSectionCopyable
+      :attr="use.attr"
+      :dice="dice"
+    ></ToggleableDiceSectionCopyable>
+  </div>
 </template>
 
 <script setup lang="ts">

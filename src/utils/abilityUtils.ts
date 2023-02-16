@@ -1,4 +1,5 @@
 import type {
+  CharacterGift,
   CollectedEntity,
   EntityAbility,
   FullEntityAbility,
@@ -18,16 +19,23 @@ export const defaultXPCost = (ability: EntityAbility): number => {
   return isNaN(cost) ? 0 : cost;
 };
 
+const giftInAbilityExpedited = (
+  ability: EntityAbility,
+  gift?: CharacterGift
+): boolean => {
+  return Boolean(
+    gift && gift !== "None" && ability.custom_fields?.expedited?.includes(gift)
+  );
+};
+
 export const actualXPCost = (
   ability: EntityAbility,
   entity?: CollectedEntity
 ): number => {
   let cost = defaultXPCost(ability);
-  const gift = entity?.entity.other_fields.gift;
   if (
-    gift &&
-    gift !== "None" &&
-    ability.custom_fields?.expedited?.includes(gift)
+    giftInAbilityExpedited(ability, entity?.entity.other_fields.gift) ||
+    giftInAbilityExpedited(ability, entity?.entity.other_fields.second_gift)
   ) {
     cost = cost / 2;
   }

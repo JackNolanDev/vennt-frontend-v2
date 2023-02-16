@@ -7,7 +7,7 @@
   </div>
   <div v-else>
     <DisplayItemFull :item="item"></DisplayItemFull>
-    <ItemUses v-if="entityStore.canEdit" :item="item"></ItemUses>
+    <ItemUses v-if="showItemUses" :item="item"></ItemUses>
     <div v-if="showInteractionSection">
       <ItemComment :item="item"></ItemComment>
       <div class="separator mt-24 mb-24"></div>
@@ -27,6 +27,10 @@
       <BaseButton @click="toggleEditItem" icon="edit" class="wide mt-24">
         Edit item
       </BaseButton>
+      <DisplayItemStorageToggle
+        :item="item"
+        class="mt-8"
+      ></DisplayItemStorageToggle>
     </div>
   </div>
 </template>
@@ -44,6 +48,7 @@ import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import { prefixName } from "@/utils/textUtils";
 import EditItem from "./EditItem.vue";
 import ItemComment from "./ItemComment.vue";
+import DisplayItemStorageToggle from "./DisplayItemStorageToggle.vue";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
 const state = reactive({ editItem: false });
@@ -56,6 +61,11 @@ jsonStorage.fetchWeaponTypes();
 const showInteractionSection = computed(
   () => !isDefaultWeapon(props.item) && entityStore.canEdit
 );
+
+const showItemUses = computed(
+  () => entityStore.canEdit && !props.item.custom_fields?.in_storage
+);
+
 const shopItem = computed(() =>
   findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
 );

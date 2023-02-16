@@ -122,7 +122,9 @@ export const consolidateItemList = (
         (search) =>
           search.name === item.name &&
           search.bulk === item.bulk &&
-          search.desc === item.desc
+          search.desc === item.desc &&
+          Boolean(search.custom_fields?.in_storage) ===
+            Boolean(item.custom_fields?.in_storage)
       );
     if (!foundItem) {
       items.push({ ...item, ids: [item.id] });
@@ -179,7 +181,8 @@ export const itemEquippable = (item: EntityItem): boolean => {
   return (
     equippableItemTypes.has(item.type) &&
     !isDefaultWeapon(item) &&
-    item.custom_fields?.category !== "Grenade"
+    item.custom_fields?.category !== "Grenade" &&
+    !item.custom_fields?.in_storage
   );
 };
 

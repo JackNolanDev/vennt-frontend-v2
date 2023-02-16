@@ -16,6 +16,10 @@
     <h2>General Items</h2>
     <ItemTable :items="otherItems" class="mb-24"></ItemTable>
   </div>
+  <div v-if="storedItems.length > 0">
+    <h2>Items in storage</h2>
+    <ItemTable :items="storedItems" class="mb-24"></ItemTable>
+  </div>
   <div v-if="showEditSection">
     <BaseButton
       v-if="entityStore.entity?.entity.id"
@@ -64,6 +68,7 @@ import router, {
   ENTITY_WEAPON_SHOP_ROUTE,
 } from "@/router";
 import { computed } from "vue";
+import type { ConsolidatedItem } from "@/utils/backendTypes";
 
 const entityStore = useEntityStore();
 
@@ -81,16 +86,34 @@ const bulkSum = computed(() => {
     return 0;
   }
   return entityStore.entity.items
-    .filter((item) => item.type !== "container" && !item.active)
+    .filter(
+      (item) =>
+        item.type !== "container" &&
+        !item.active &&
+        !item.custom_fields?.in_storage
+    )
     .reduce((sum, item) => sum + item.bulk, 0);
 });
 
-const weapons = computed(() =>
-  entityStore.consolidatedItems.filter((item) => item.type === "weapon")
-);
-const otherItems = computed(() =>
-  entityStore.consolidatedItems.filter((item) => item.type !== "weapon")
-);
+const itemLists = computed(() => {
+  const stored: ConsolidatedItem[] = [];
+  const weapons: ConsolidatedItem[] = [];
+  const others: ConsolidatedItem[] = [];
+  entityStore.consolidatedItems.forEach((item) => {
+    if (item.custom_fields?.in_storage) {
+      stored.push(item);
+    } else if (item.type === "weapon") {
+      weapons.push(item);
+    } else {
+      others.push(item);
+    }
+  });
+  return { weapons, stored, others };
+});
+
+const weapons = computed(() => itemLists.value.weapons);
+const otherItems = computed(() => itemLists.value.others);
+const storedItems = computed(() => itemLists.value.stored);
 
 const showEditSection = computed(
   () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"

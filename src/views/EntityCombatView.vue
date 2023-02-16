@@ -29,6 +29,7 @@ const useableWeapons = computed(() =>
   entityStore.consolidatedItems
     .filter(
       (item) =>
+        !item.custom_fields?.in_storage &&
         item.type === "weapon" &&
         (item.active || item.custom_fields?.category === "Grenade")
     )
