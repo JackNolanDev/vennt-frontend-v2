@@ -98,8 +98,12 @@ const sectionsMap = computed(() => {
   jsonStorage.shopItems
     .filter(
       (item) =>
-        (item.name?.toLowerCase().includes(state.itemSearchField) ||
-          item.desc.toLowerCase().includes(state.itemSearchField)) &&
+        (item.name
+          ?.toLowerCase()
+          .includes(state.itemSearchField.toLowerCase()) ||
+          item.desc
+            .toLowerCase()
+            .includes(state.itemSearchField.toLowerCase())) &&
         (state.checked.size === 0 || state.checked.has(item.type))
     )
     .forEach((item) => {

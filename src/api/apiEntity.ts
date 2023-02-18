@@ -54,9 +54,9 @@ export const fetchCollectedEntityApi = (
   );
 };
 
-export const updateEntity = (
+export const updateEntityApi = (
   entityId: string,
-  request: PartialEntity[]
+  request: PartialEntity
 ): Promise<FullEntity> => {
   return wrapAPI(
     () => api.patch(`/entity/${entityId}`, request, authConfig()),
@@ -64,7 +64,7 @@ export const updateEntity = (
   );
 };
 
-export const deleteEntity = (entityId: string): Promise<boolean> => {
+export const deleteEntityApi = (entityId: string): Promise<boolean> => {
   return wrapAPI(
     () => api.delete(`/entity/${entityId}`, authConfig()),
     z.boolean()

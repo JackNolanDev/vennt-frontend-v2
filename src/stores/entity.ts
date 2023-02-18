@@ -9,12 +9,19 @@ import {
   updateEntityAttributesApi,
   updateEntityTextApi,
   updateFluxApi,
+  deleteEntityApi,
+  updateEntityApi,
 } from "@/api/apiEntity";
-import router, { ENTITY_ABILITIES_ROUTE, ENTITY_ITEMS_ROUTE } from "@/router";
+import router, {
+  ENTITY_ABILITIES_ROUTE,
+  ENTITY_ITEMS_ROUTE,
+  HOME_ROUTE,
+} from "@/router";
 import type {
   ConsolidatedItem,
   EntityTextKey,
   FullCollectedEntity,
+  PartialEntity,
   PartialEntityAbility,
   PartialEntityFlux,
   PartialEntityItem,
@@ -109,6 +116,21 @@ export const useEntityStore = defineStore("entity", {
     async fetchCollectedEntity(id: string) {
       this.entity = await fetchCollectedEntityApi(id);
       setInitialNotes(this.entity);
+    },
+    async updateEntity(request: PartialEntity) {
+      if (this.entity) {
+        this.entity.entity = await updateEntityApi(
+          this.entity.entity.id,
+          request
+        );
+      }
+    },
+    async deleteEntity() {
+      if (this.entity) {
+        deleteEntityApi(this.entity.entity.id);
+        this.clearLocalEntity();
+        router.push({ name: HOME_ROUTE });
+      }
     },
     async updateEntityAttributes(id: string, request: UpdateEntityAttributes) {
       // TODO: may want to pre-apply the change

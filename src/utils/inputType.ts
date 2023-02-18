@@ -12,5 +12,7 @@ export const fieldValidator = <T extends z.ZodTypeAny>(
   if (valid.success) {
     return false;
   }
-  return valid.error.issues[0].message;
+  return valid.error.issues.length === 0
+    ? valid.error.message
+    : valid.error.issues[0].message;
 };

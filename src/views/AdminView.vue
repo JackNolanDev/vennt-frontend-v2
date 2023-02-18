@@ -3,9 +3,7 @@
     <template #nav><BaseNav></BaseNav></template>
     <PageLayout>
       <h1>Admin controls</h1>
-      <BaseDropDown>
-        <template #closedTitle>web scraper settings</template>
-        <template #openTitle>web scraper settings</template>
+      <BaseDropDown title="Web scraper settings">
         <div>
           <BaseButton @click="scrapeWeaponTypes" class="wide"
             >Scrape Weapon Types</BaseButton
@@ -15,6 +13,13 @@
           >
           <BaseButton @click="scrapeAbilities" class="wide"
             >Scrape Abilities</BaseButton
+          >
+          <div class="separator mt-16 mb-16"></div>
+          <BaseButton @click="updateItemShopUses" class="wide"
+            >Update Item Shop Uses</BaseButton
+          >
+          <BaseButton @click="updateAbilityUses" class="wide"
+            >Update Ability Uses</BaseButton
           >
           <div class="separator mt-16 mb-16"></div>
           <BaseButton @click="testFetchWeapons" class="wide"
@@ -39,6 +44,7 @@
 <script setup lang="ts">
 import {
   configureStorageBucketApi,
+  triggerUpdateUses,
   triggerWebscraperApi,
 } from "@/api/apiAdmin";
 import {
@@ -60,6 +66,8 @@ import {
 const scrapeWeaponTypes = () => triggerWebscraperApi(WEAPON_TYPES_KEY);
 const scrapeItemShop = () => triggerWebscraperApi(SHOP_ITEMS_KEY);
 const scrapeAbilities = () => triggerWebscraperApi(ABILITIES_KEY);
+const updateItemShopUses = () => triggerUpdateUses(SHOP_ITEMS_KEY);
+const updateAbilityUses = () => triggerUpdateUses(ABILITIES_KEY);
 const configureStorageBucket = () => configureStorageBucketApi();
 const testFetchWeapons = () => fetchWeaponTypesApi();
 const testFetchItems = () => fetchShopItemsApi();

@@ -5,7 +5,7 @@ import {
   SHOP_ITEMS_KEY,
   pathsAndAbilitiesValidator,
   ABILITIES_KEY,
-  type PathsAndAbilites,
+  type PathsAndAbilities,
 } from "@/utils/backendTypes";
 import axios from "axios";
 
@@ -29,7 +29,7 @@ export const fetchShopItemsApi = async (): Promise<ShopItem[]> => {
     );
 };
 
-export const fetchAbilitiesApi = async (): Promise<PathsAndAbilites> => {
+export const fetchAbilitiesApi = async (): Promise<PathsAndAbilities> => {
   return pathsAndAbilitiesValidator.parseAsync(
     (await axios.get(`${JSON_STORAGE_PUBLIC_URL}/${ABILITIES_KEY}`)).data
   );
