@@ -21,7 +21,9 @@
       <div class="tableData">
         <div class="itemName">{{ improveTextForDisplay(item.name) }}</div>
         <div class="itemCount number">{{ item.ids.length }}</div>
-        <div class="itemDesc"><ItemDesc :item="item"></ItemDesc></div>
+        <div class="itemDesc condense-child-text">
+          <ItemDesc :item="item"></ItemDesc>
+        </div>
       </div>
       <BaseButton
         :icon="
@@ -88,18 +90,6 @@ const itemLink = (item: ConsolidatedItem): RouteLocationRaw => {
 }
 .hideCount .itemDesc {
   width: 80%;
-}
-
-/* Deep selector effects children */
-.itemDesc :deep(p:first-child) {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.itemDesc :deep(p),
-.itemDesc :deep(ul) {
-  /* reduce margin so we can condense text a bit more */
-  margin-top: 5px;
-  margin-bottom: 0px;
 }
 
 @container page (max-width: 750px) {

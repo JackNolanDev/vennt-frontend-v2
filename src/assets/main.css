@@ -645,9 +645,6 @@ pre > code {
   display: flex;
   align-items: center;
 }
-.alignRow.gap {
-  gap: 8px;
-}
 .alignRow.split {
   justify-content: space-between;
 }
@@ -660,6 +657,32 @@ pre > code {
 }
 .alignRow.top {
   align-items: flex-start;
+}
+
+.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.gap {
+  gap: 8px;
+}
+
+.gap-16 {
+  gap: 16px;
+}
+
+.condense-child-text p:first-child {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.condense-child-text p,
+.condense-child-text ol,
+.condense-child-text ul,
+.condense-child-text table {
+  /* reduce margin so we can condense text a bit more */
+  margin-top: 5px;
+  margin-bottom: 0px;
 }
 
 /* Custom tables */

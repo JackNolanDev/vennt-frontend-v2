@@ -93,7 +93,6 @@ export const useAccountInfoStore = defineStore("accountInfo", {
       useEntityStore().clearLocalEntity();
       useEntityListStore().reset();
       useEntityNotesStore().reset();
-      // TODO: This should probably clear most local information (e.g. entity list store, entity store)
     },
   },
 });

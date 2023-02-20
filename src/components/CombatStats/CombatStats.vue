@@ -126,19 +126,23 @@
           class="btn basicBtn attrButton noSelect"
           v-bind:class="attrButtonClass(attr)"
         >
-          <div class="basicBtnContents attrButtonContents alignRow">
+          <div class="basicBtnContents attrButtonContents cols-2 wide">
             <div class="alignRow">
               <div class="attrLabelWide">{{ attrShortName(attr) }}:</div>
               <div class="number">{{ attrDisplayVal(attr) }}</div>
             </div>
-            <!-- <div v-if="secondaryStatMap[attr]" class="alignRow ml-48">
+            <div v-if="singleSecondaryMap[attr]" class="alignRow">
               <div class="attrLabelWide">
-                {{ attrDisplayName(secondaryStatMap[attr]) }}:
+                {{
+                  attrShortName(singleSecondaryMap[attr] as EntityAttribute)
+                }}:
               </div>
               <div class="number">
-                {{ attrDisplayVal(secondaryStatMap[attr]) }}
+                {{
+                  attrDisplayVal(singleSecondaryMap[attr] as EntityAttribute)
+                }}
               </div>
-            </div> -->
+            </div>
           </div>
         </button>
         <div v-if="showDropDown(attr)" class="card diceDropDown left right">
@@ -155,11 +159,10 @@
                 :attr="attr"
                 :use-copyable-dice="useCopyableDice"
               ></CombatStatsDiceSection>
-              <!-- <armor-section
+              <CombatStatsArmorSection
                 v-else-if="attr === 'armor'"
                 :attrs="attrs"
-                :id="character.id"
-              /> -->
+              ></CombatStatsArmorSection>
               <AttributeHelp v-else :attr="attr"></AttributeHelp>
               <div class="separator mt-8 mb-8"></div>
               <AdjustAttributeLink
@@ -202,6 +205,7 @@ import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
 import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
 import { useAccountInfoStore } from "@/stores/accountInfo";
+import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -282,6 +286,14 @@ const SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
 
 const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp"]);
 const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init"]);
+
+const singleSecondaryMap = computed(() => {
+  const map: Partial<Record<EntityAttribute, EntityAttribute>> = {};
+  if (attrs.value.burden) {
+    map.armor = "burden";
+  }
+  return map;
+});
 
 const showUpdateDropdown = computed(() => {
   const fullEntity = props.entity.entity as FullEntity;

@@ -4,8 +4,10 @@ import {
   ATTRIBUTES_SET,
   type CollectedEntity,
   type EntityAttribute,
+  type EntityItem,
   type FullCollectedEntity,
   type PartialEntityAttributes,
+  type UpdatedEntityAttribute,
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
   type UseAttrMap,
@@ -152,7 +154,7 @@ export const generateDefaultAdjustMsg = (
 export const adjustAttrsObject = (
   entity: FullCollectedEntity,
   adjustAttrs: PartialEntityAttributes,
-  propegateChanges = true,
+  propagateChanges = true,
   enforceMaximums = false
 ): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
@@ -171,7 +173,7 @@ export const adjustAttrsObject = (
     const attr = attrIn as EntityAttribute;
     const newVal = currentVal(attr) + adjustment;
     attrs[attr] = newVal;
-    if (propegateChanges) {
+    if (propagateChanges) {
       // HP & VIM
       if (attr === "str") {
         attrs.max_hp = currentVal("max_hp") + hpDiffStr(adjustment);
@@ -243,13 +245,13 @@ export const adjustAttrsAPI = async (
   entity: FullCollectedEntity,
   adjustAttrs: PartialEntityAttributes,
   msg?: string,
-  propegateChanges = true,
+  propagateChanges = true,
   enforceMaximums = false
 ): Promise<boolean> => {
   const attrs = adjustAttrsObject(
     entity,
     adjustAttrs,
-    propegateChanges,
+    propagateChanges,
     enforceMaximums
   );
 
@@ -258,7 +260,7 @@ export const adjustAttrsAPI = async (
   }
 
   const entityStore = useEntityStore();
-  if (propegateChanges && attrs.xp) {
+  if (propagateChanges && attrs.xp) {
     const levelDiff = calcLevelDiffEntity(attrs.xp, entity);
     if (levelDiff > 0) {
       entityStore.levelsToProcess = levelDiff;
@@ -290,17 +292,37 @@ export const entityAttributesMap = (
     }
   };
 
+  const appendAdjustItem = (attr: EntityAttribute, item: EntityItem) => {
+    const attrCheck = attrs[attr];
+    if (attrCheck === undefined) {
+      attrs[attr] = { val: 0 };
+    }
+    const attrMap = attrs[attr] as UpdatedEntityAttribute;
+    if (!attrMap.items) {
+      attrMap.items = [item];
+    } else {
+      attrMap.items.push(item);
+    }
+  };
+
   const equations: { [attr in EntityAttribute]?: string } = {};
 
   // 2. Fetch effects from items
   entity.items.forEach((item) => {
-    if (item.uses && item.uses.adjust && item.active) {
-      Object.entries(item.uses.adjust.attr).forEach(([attr, val]) => {
+    if (
+      item.uses &&
+      item.uses.adjust &&
+      item.active &&
+      !item.custom_fields?.in_storage
+    ) {
+      Object.entries(item.uses.adjust.attr).forEach(([attrIn, val]) => {
+        const attr = attrIn as EntityAttribute;
         if (typeof val === "string") {
-          equations[attr as EntityAttribute] = val;
+          equations[attr] = val;
         } else {
-          alterAttrs(attr as EntityAttribute, val);
+          alterAttrs(attr, val);
         }
+        appendAdjustItem(attr, item);
       });
     }
   });

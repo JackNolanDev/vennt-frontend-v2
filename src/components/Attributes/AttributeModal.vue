@@ -8,7 +8,7 @@
     <template #title>Edit {{ attrFullName(attr) }}</template>
     <div class="alignRow split wrap mb-16">
       <div class="alignRow labelText">
-        Current {{ shortName }}:
+        Base {{ shortName }}:
         <span v-if="attr in entityStore.entity.entity.attributes" class="ml-8">
           <BaseFraction
             v-if="maxAttr && maxAttr in entityStore.entity.entity.attributes"
@@ -18,20 +18,20 @@
           <span v-else class="number">{{
             entityStore.entity.entity.attributes[attr]
           }}</span>
-          <span
-            v-if="
-              entityStore.entityAttributes[attr]?.val !==
-              entityStore.entity.entity.attributes[attr]
-            "
-            class="mutedText ml-8"
-            >(Temporary Value:
-            <span class="number">{{
-              entityStore.entityAttributes[attr]?.val
-            }}</span
-            >)</span
-          >
         </span>
         <span v-else class="ml-8">Not defined yet</span>
+        <span
+          v-if="
+            entityStore.entityAttributes[attr]?.val !==
+            entityStore.entity.entity.attributes[attr]
+          "
+          class="mutedText ml-8"
+          >(Current Value:
+          <span class="number">{{
+            entityStore.entityAttributes[attr]?.val
+          }}</span
+          >)</span
+        >
       </div>
       <AdjustAttributeLink
         v-if="maxAttr"
@@ -43,8 +43,13 @@
         :attr="baseAttr"
         @click="refetchChangelog(baseAttr)"
       ></AdjustAttributeLink>
+      <AdjustAttributeLink
+        v-if="relatedAttr"
+        :attr="relatedAttr"
+        @click="refetchChangelog(relatedAttr)"
+      ></AdjustAttributeLink>
     </div>
-    <div class="cols-2 table-split">
+    <div class="cols-2 gap-16 table-split">
       <div class="attr-history-side">
         <AttributeHistoryTable
           v-if="state.changelog"
@@ -118,6 +123,14 @@ onBeforeMount(() => refetchChangelog());
 const shortName = computed(() => attrShortName(props.attr));
 const maxAttr = computed(() => getMaxAttr(props.attr));
 const baseAttr = computed(() => getBaseAttr(props.attr));
+
+const relatedAttrs: Partial<Record<EntityAttribute, EntityAttribute>> = {
+  armor: "burden",
+  burden: "armor",
+  shield: "burden",
+};
+
+const relatedAttr = computed(() => relatedAttrs[props.attr]);
 const showResetButton = computed(
   () =>
     entityStore.entity &&
@@ -175,12 +188,6 @@ const refetchChangelog = async (attr?: EntityAttribute) => {
 </script>
 
 <style scoped>
-.cols-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
 /* Mobile Styles */
 @media screen and (max-width: 600px) {
   .table-split {

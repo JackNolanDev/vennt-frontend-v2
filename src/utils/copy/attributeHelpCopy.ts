@@ -36,6 +36,12 @@ const BASE_HELP_MAP: HelpMap = {
   reach: `Reach is the distance from which a creature can make melee attacks and manipulate objects.
   This defaults to 1 hex/meter for human-sized creatures.
   <a href="https://vennt.fandom.com/wiki/Reach" target="_blank" class="link">Wiki entry</a>.`,
+  burden: `Certain pieces of heavy Armor are cumbersome. This is represented by Burden, which is subtracted from your casting rolls and Speed.
+  <a href="https://vennt.fandom.com/wiki/Burden" target="_blank" class="link">Wiki entry</a>.`,
+  shield: `Shields are like armor except you must have the ability "Shield Block" to use them.
+  <a href="https://vennt.fandom.com/wiki/Armor#Shields" target="_blank" class="link">Wiki entry</a>.`,
+  casting: `Used as the adjustment when doing spell casting roll. Note: this field acts as an adjustment on top of your spirit / burden.
+  <a href="https://vennt.fandom.com/wiki/Casting_roll" target="_blank" class="link">Wiki entry</a>.`,
   // name: "This character's name.",
   // gift: `<i>Most legends are born gifted in some way. Mozart was gifted in music, Achilles was gifted in combat,
   // and Merlin was gifted in magic. There are nine gifts available to choose from as a hero of Amnis, each one

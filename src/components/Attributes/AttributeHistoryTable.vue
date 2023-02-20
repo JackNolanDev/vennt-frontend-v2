@@ -20,7 +20,7 @@
           {{ log.diff > 0 ? `+${log.diff}` : log.diff }}
         </div>
         <div v-else class="logPrev">
-          {{ log.prev !== undefined ? log.prev : "-" }}
+          {{ typeof log.prev === "number" ? log.prev : "-" }}
         </div>
         <div class="logMsg">{{ log.msg }}</div>
       </div>
@@ -67,8 +67,8 @@ const parsedChangelog = computed(() => {
   });
   if (showDiff.value) {
     changelog.reduceRight((prev, log) => {
-      const lastPrev = prev === undefined ? 0 : prev;
-      const newPrev = log.prev === undefined ? 0 : log.prev;
+      const lastPrev = typeof prev !== "number" ? 0 : prev;
+      const newPrev = typeof log.prev !== "number" ? 0 : log.prev;
       log.diff = lastPrev - newPrev;
       return newPrev;
     }, props.entity.entity.attributes[props.attr]);

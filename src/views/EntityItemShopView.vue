@@ -46,7 +46,7 @@
             {{ improveTextForDisplay(item.name ?? item.type) }}
           </div>
           <div class="itemCost">{{ item.cost }}</div>
-          <div class="itemDesc">
+          <div class="itemDesc condense-child-text">
             <DisplayShopItemDesc :item="item"></DisplayShopItemDesc>
           </div>
         </div>
@@ -158,18 +158,6 @@ const itemLink = (item: ShopItem): RouteLocationRaw => {
 }
 .itemDesc {
   width: 70%;
-}
-
-/* Deep selector effects children */
-.itemDesc :deep(p:first-child) {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.itemDesc :deep(p),
-.itemDesc :deep(ul) {
-  /* reduce margin so we can condense text a bit more */
-  margin-top: 5px;
-  margin-bottom: 0px;
 }
 
 .main.bp750 .itemName {

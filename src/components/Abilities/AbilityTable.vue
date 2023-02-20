@@ -23,7 +23,7 @@
         <div class="abilityActivation">
           {{ ability.custom_fields?.activation }}
         </div>
-        <div class="abilityEffect">
+        <div class="abilityEffect condense-child-text">
           <DisplayAbilityEffect :ability="ability"></DisplayAbilityEffect>
         </div>
       </div>
@@ -79,18 +79,6 @@ const abilityLink = (ability: FullEntityAbility): RouteLocationRaw => {
 }
 .abilityEffect {
   width: 65%;
-}
-
-/* Deep selector effects children */
-.abilityEffect :deep(p:first-child) {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.abilityEffect :deep(p),
-.abilityEffect :deep(ul) {
-  /* reduce margin so we can condense text a bit more */
-  margin-top: 5px;
-  margin-bottom: 0px;
 }
 
 @container page (max-width: 750px) {
