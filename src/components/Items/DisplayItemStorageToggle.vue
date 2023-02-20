@@ -1,5 +1,5 @@
 <template>
-  <div v-if="toggleVisible">
+  <div>
     <BaseButton
       v-if="!item.custom_fields?.in_storage"
       title="Items in storage do not add to your bulk, but cannot be accessed easily"
@@ -25,14 +25,9 @@
 import type { ConsolidatedItem } from "@/utils/backendTypes";
 import BaseButton from "../Base/BaseButton.vue";
 import { useEntityStore } from "@/stores/entity";
-import { computed } from "vue";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
 const entityStore = useEntityStore();
-
-const toggleVisible = computed(
-  () => props.item.bulk !== 0 && entityStore.canEdit
-);
 
 const toggleInStorage = () => {
   if (!props.item.custom_fields) {

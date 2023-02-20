@@ -252,6 +252,7 @@ interface NewItemState {
   comment: string;
   defineActive: boolean;
   active: boolean;
+  inStorage: boolean;
 }
 
 const initialState: NewItemState = {
@@ -273,6 +274,7 @@ const initialState: NewItemState = {
   comment: props.givenItem?.comment ?? "",
   defineActive: false,
   active: props.givenItem?.active ?? false,
+  inStorage: props.givenItem?.custom_fields?.in_storage ?? false,
 };
 
 const state = reactive({ ...initialState });
@@ -351,12 +353,18 @@ const newItem = computed((): UncompleteEntityItem => {
     type: state.type,
     active: itemActive.value,
     comment: state.comment,
-    custom_fields: {
-      courses: state.courses,
-      special: state.special,
-    },
+    custom_fields: {},
     uses: baseUses.value,
   };
+  if (item.custom_fields && state.courses) {
+    item.custom_fields.courses = state.courses;
+  }
+  if (item.custom_fields && state.special) {
+    item.custom_fields.special = state.special;
+  }
+  if (item.custom_fields && state.inStorage) {
+    item.custom_fields.in_storage = state.inStorage;
+  }
   if (item.custom_fields && state.type === ITEM_TYPE_WEAPON) {
     item.custom_fields.attr = state.weaponAttr;
     item.custom_fields.dmg = state.weaponDmg;

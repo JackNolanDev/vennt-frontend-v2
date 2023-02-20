@@ -14,6 +14,8 @@ import {
   type EntityItemType,
   type FullCollectedEntity,
 } from "./backendTypes";
+import isEmpty from "lodash.isempty";
+import isEqual from "lodash.isequal";
 
 export const defaultWeaponCategories = ["Unarmed", "Improvised"];
 
@@ -89,6 +91,47 @@ export const findShopItem = (
   return weaponTypes.find(
     (weapon) => weapon.category === item.custom_fields?.category
   );
+};
+
+export const findNewItemVersion = (
+  item: EntityItem,
+  shopItems: ShopItem[]
+): EntityItem | undefined => {
+  const found = shopItems.find(
+    (it) => it.name === item.name && it.type === item.type
+  );
+  if (found) {
+    if (
+      found.bulk !== item.bulk ||
+      found.desc !== item.desc ||
+      ((found.courses || item.custom_fields?.courses) &&
+        found.courses !== item.custom_fields?.courses) ||
+      ((found.special || item.custom_fields?.special) &&
+        found.special !== item.custom_fields?.special) ||
+      ((found.dmg || item.custom_fields?.dmg) &&
+        found.dmg !== item.custom_fields?.dmg) ||
+      ((found.attr || item.custom_fields?.attr) &&
+        found.attr !== item.custom_fields?.attr) ||
+      ((found.weapon_type || item.custom_fields?.weapon_type) &&
+        found.weapon_type !== item.custom_fields?.weapon_type) ||
+      (((found.uses && !isEmpty(found.uses)) ||
+        (item.uses && !isEmpty(item.uses))) &&
+        !isEqual(found.uses, item.uses))
+    ) {
+      const convertedFound = shopItemToEntityItem(found);
+      return {
+        ...item,
+        bulk: convertedFound.bulk,
+        desc: convertedFound.desc,
+        custom_fields: {
+          ...item.custom_fields,
+          ...convertedFound.custom_fields,
+        },
+        uses: convertedFound.uses,
+      };
+    }
+  }
+  return undefined;
 };
 
 // Warning: data generated here should not be passed to back end

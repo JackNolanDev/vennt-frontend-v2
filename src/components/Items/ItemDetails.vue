@@ -31,6 +31,7 @@
         :item="item"
         class="mt-8"
       ></DisplayItemStorageToggle>
+      <DisplayUseLatestItem :item="item"></DisplayUseLatestItem>
     </div>
   </div>
 </template>
@@ -49,6 +50,7 @@ import { prefixName } from "@/utils/textUtils";
 import EditItem from "./EditItem.vue";
 import ItemComment from "./ItemComment.vue";
 import DisplayItemStorageToggle from "./DisplayItemStorageToggle.vue";
+import DisplayUseLatestItem from "./DisplayUseLatestItem.vue";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
 const state = reactive({ editItem: false });
