@@ -1,4 +1,8 @@
-import type { UncompleteCollectedEntityWithChangelog } from "@/utils/backendTypes";
+import type {
+  UncompleteCollectedEntityWithChangelog,
+  UncompleteEntityFlux,
+  UncompleteEntityText,
+} from "@/utils/backendTypes";
 import {
   calculateAttribute,
   calculateHP,
@@ -14,6 +18,7 @@ import {
   calculateXP,
   calculateItems,
 } from "@/utils/copy/createCharacterCopy";
+import { editorEmpty } from "@/utils/textUtils";
 import { defineStore } from "pinia";
 
 export const CREATE_CHARACTER_LOCAL_STORAGE = "create_character";
@@ -40,6 +45,9 @@ const DEFAULT_OPTIONS: CharacterCreateOptions = {
     itemSet: "",
     experience: "",
   },
+  desc: "",
+  backstory: "",
+  quests: ["", "", ""],
 };
 
 export const useCharacterCreateStore = defineStore("characterCreate", {
@@ -92,6 +100,24 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
       return calculateVim(this.xp, this.str);
     },
     collectedCharacter(): UncompleteCollectedEntityWithChangelog {
+      const text: UncompleteEntityText[] = [];
+      if (!editorEmpty(this.options.desc)) {
+        text.push({
+          public: true,
+          text: this.options.desc,
+          key: "DESC",
+        });
+      }
+      if (!editorEmpty(this.options.backstory)) {
+        text.push({
+          public: false,
+          text: this.options.backstory,
+          key: "BACKSTORY",
+        });
+      }
+      const flux = this.options.quests
+        .filter((quest) => !editorEmpty(quest))
+        .map((quest): UncompleteEntityFlux => ({ type: "QUEST", text: quest }));
       return {
         entity: {
           name: this.options.name,
@@ -127,8 +153,8 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
         abilities: [],
         items: calculateItems(this.options),
         changelog: [],
-        text: [],
-        flux: [],
+        text,
+        flux,
       };
     },
   },

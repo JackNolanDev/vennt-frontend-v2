@@ -34,6 +34,9 @@ export const characterCreateOptionsValidator = z.object({
   gift: giftValidator.optional(),
   attributeSelections: AttributeSelectionsValidator,
   radioSelections: RadioSelectionsValidator,
+  desc: z.string(),
+  backstory: z.string(),
+  quests: z.string().array().length(3),
 });
 export type AttributeSelections = z.infer<typeof AttributeSelectionsValidator>;
 export type RadioSelections = z.infer<typeof RadioSelectionsValidator>;
@@ -219,7 +222,7 @@ const RADIO_OPTION_ATTRS_MAP: RadioOptionAttrsMap = {
   eat: "str",
   read: "int",
   fashionable: "cha",
-  Functional: "agi",
+  functional: "agi",
 };
 const REMEMBER_SPECIAL_RADIO_ATTRS_MAP: RadioOptionAttrsMap = {
   spi: "spi",

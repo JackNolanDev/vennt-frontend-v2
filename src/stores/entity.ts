@@ -191,6 +191,11 @@ export const useEntityStore = defineStore("entity", {
           query: router.currentRoute.value.query,
         });
       }
+      if (this.entity) {
+        this.entity.abilities = this.entity.abilities.filter(
+          (ability) => ability.id !== abilityId
+        );
+      }
       deleteAbilityApi(abilityId);
     },
     async addItems(

@@ -11,6 +11,7 @@
       name="charName"
       placeholder="Bilbo Baggins"
       v-model="characterCreateStore.options.name"
+      @blur="characterCreateStore.saveToLocalStorage()"
       class="input nameInput"
       id="new-name"
     />

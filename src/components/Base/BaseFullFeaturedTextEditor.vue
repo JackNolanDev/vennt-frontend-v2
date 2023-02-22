@@ -1,33 +1,35 @@
 <template>
-  <BubbleMenu :editor="editor" v-if="editor">
-    <div class="alignRow card border">
-      <BaseButton
-        icon="format_bold"
-        @click="editor?.chain().focus().toggleBold().run()"
-        :class="{ selected: editor.isActive('bold') }"
-      ></BaseButton>
-      <BaseButton
-        icon="format_italic"
-        @click="editor?.chain().focus().toggleItalic().run()"
-        :class="{ selected: editor.isActive('italic') }"
-      ></BaseButton>
-      <BaseButton
-        icon="strikethrough_s"
-        @click="editor?.chain().focus().toggleStrike().run()"
-        :class="{ selected: editor.isActive('strike') }"
-      ></BaseButton>
-      <BaseButton
-        icon="format_underlined"
-        @click="editor?.chain().focus().toggleUnderline().run()"
-        :class="{ selected: editor.isActive('underline') }"
-      ></BaseButton>
-    </div>
-  </BubbleMenu>
-  <EditorContent
-    :editor="editor"
-    class="editor-wrapper"
-    :class="{ invalid }"
-  ></EditorContent>
+  <div>
+    <BubbleMenu :editor="editor" v-if="editor">
+      <div class="alignRow card border">
+        <BaseButton
+          icon="format_bold"
+          @click="editor?.chain().focus().toggleBold().run()"
+          :class="{ selected: editor.isActive('bold') }"
+        ></BaseButton>
+        <BaseButton
+          icon="format_italic"
+          @click="editor?.chain().focus().toggleItalic().run()"
+          :class="{ selected: editor.isActive('italic') }"
+        ></BaseButton>
+        <BaseButton
+          icon="strikethrough_s"
+          @click="editor?.chain().focus().toggleStrike().run()"
+          :class="{ selected: editor.isActive('strike') }"
+        ></BaseButton>
+        <BaseButton
+          icon="format_underlined"
+          @click="editor?.chain().focus().toggleUnderline().run()"
+          :class="{ selected: editor.isActive('underline') }"
+        ></BaseButton>
+      </div>
+    </BubbleMenu>
+    <EditorContent
+      :editor="editor"
+      class="editor-wrapper"
+      :class="{ invalid }"
+    ></EditorContent>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -19,7 +19,7 @@
           Revision as of 16:44, 15 March 2022
         </a>
       </p>
-      <h2>Step 1: Choose a name</h2>
+      <h2 class="step">Choose a name</h2>
       <p class="textBlock">
         This follows the guide on the
         <a
@@ -30,19 +30,19 @@
         >.
       </p>
       <CreateSectionName></CreateSectionName>
-      <h2>Step 2: Create your backstory</h2>
+      <h2 class="step">Create your backstory</h2>
       <CreateSectionBackstory></CreateSectionBackstory>
-      <h2>Step 3: Choose a Gift</h2>
+      <h2 class="step">Choose a Gift</h2>
       <CreateSectionGift></CreateSectionGift>
-      <h2>Step 4: Attribute scores</h2>
+      <h2 class="step">Attribute scores</h2>
       <CreateSectionAttributes></CreateSectionAttributes>
-      <h2>Step 5: Decide your Quests</h2>
+      <h2 class="step">Decide your Quests</h2>
       <CreateSectionQuests></CreateSectionQuests>
-      <h2>Step 6: Beginner Boons</h2>
+      <h2 class="step">Beginner Boons</h2>
       <CreateSectionBoons></CreateSectionBoons>
-      <h2>Step 7: XP and Abilities</h2>
+      <h2 class="step">XP and Abilities</h2>
       <CreateSectionXP></CreateSectionXP>
-      <h2>Step 8: Finish the character</h2>
+      <h2 class="step">Finish the character</h2>
       <p class="textBlock">
         Click the "Create Character" button to officially create the character.
       </p>
@@ -119,3 +119,12 @@ const clearCharacter = () => {
   router.push({ name: CREATE_ROUTE });
 };
 </script>
+
+<style scoped>
+h2.step {
+  counter-increment: step-counter;
+}
+.step::before {
+  content: "Step " counter(step-counter) ": ";
+}
+</style>

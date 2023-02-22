@@ -274,6 +274,18 @@ export const adjustAttrsAPI = async (
   return true;
 };
 
+interface adjustCommand {
+  attr: EntityAttribute;
+  multiplier?: number;
+}
+const relatedAttrsAdjustMap: { [attr in EntityAttribute]?: adjustCommand[] } = {
+  spi: [{ attr: "casting" }],
+  burden: [
+    { attr: "speed", multiplier: -1 },
+    { attr: "casting", multiplier: -1 },
+  ],
+};
+
 export const entityAttributesMap = (
   entity: CollectedEntity
 ): UpdatedEntityAttributes => {
@@ -327,12 +339,18 @@ export const entityAttributesMap = (
     }
   });
 
-  // 3. Apply burden effects:
-  const burden = attrs.burden;
-  if (burden !== undefined) {
-    alterAttrs("speed", -burden.val);
-    alterAttrs("casting", -burden.val);
-  }
+  // 3. Apply interdependent attr adjustments
+  Object.entries(relatedAttrsAdjustMap).forEach(([attr, commands]) => {
+    const found = attrs[attr as EntityAttribute];
+    if (found) {
+      commands.forEach((command) => {
+        const adjustVal =
+          found.val *
+          (command.multiplier !== undefined ? command.multiplier : 1);
+        alterAttrs(command.attr, adjustVal);
+      });
+    }
+  });
 
   // 4. Apply pending equations
   Object.entries(equations).forEach(([attr, equation]) => {
@@ -391,4 +409,16 @@ export const solveEquation = (
     }
     return undefined;
   }
+};
+
+export const additionalCombatStatsAttrs = (
+  entity: CollectedEntity
+): EntityAttribute[] => {
+  const attrs = new Set<EntityAttribute>();
+  entity.abilities.forEach((ability) => {
+    if (ability.uses?.exposeCombatStats) {
+      ability.uses.exposeCombatStats.forEach((attr) => attrs.add(attr));
+    }
+  });
+  return Array.from(attrs);
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="alignRow split">
+  <div class="alignRow split mb-8">
     <div class="labelText stronger">
       <a
         v-if="isBaseAttribute"
@@ -23,7 +23,7 @@
       Roll {{ attr.toUpperCase() }}
     </BaseButton>
   </div>
-  <div v-if="!useCopyableDice" class="diceSection mt-8">
+  <div v-if="!useCopyableDice" class="diceSection">
     <div v-if="latestRoll">
       <DiceRender :roll="latestRoll"></DiceRender>
       <div>

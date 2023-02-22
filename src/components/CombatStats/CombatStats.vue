@@ -119,7 +119,7 @@
       ></GiftDescription>
     </div>
     <!-- SINGLE LINE STATS -->
-    <div v-for="attr in SINGLE_ROW_ATTRIBUTES" v-bind:key="attr">
+    <div v-for="attr in singleRowAttrs" v-bind:key="attr">
       <div v-if="attr in attrs">
         <button
           v-on:click="selectAttr(attr)"
@@ -196,6 +196,7 @@ import {
   attrShortName,
   entityAttributesMap,
   getMaxAttr,
+  additionalCombatStatsAttrs,
 } from "@/utils/attributeUtils";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
@@ -274,7 +275,7 @@ const ATTRIBUTE_ROWS: EntityAttribute[][] = [
   ["str", "wis", "cha"],
 ];
 
-const SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
+const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "acc",
   "init",
   "speed",
@@ -284,8 +285,12 @@ const SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "sp",
 ];
 
+const singleRowAttrs = computed(() =>
+  BASE_SINGLE_ROW_ATTRIBUTES.concat(additionalCombatStatsAttrs(props.entity))
+);
+
 const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp"]);
-const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init"]);
+const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init", "casting"]);
 
 const singleSecondaryMap = computed(() => {
   const map: Partial<Record<EntityAttribute, EntityAttribute>> = {};

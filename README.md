@@ -44,3 +44,9 @@ npm run build
 ```sh
 npm run lint
 ```
+
+Add ability use for showing new fields in combatStats - specifically casting after gaining that ability from magician
+Add cast roll logic
+Add dmg roll for abilities
+Add all custom logic required to make Kyle work as a character
+etc.

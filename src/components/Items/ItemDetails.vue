@@ -7,90 +7,34 @@
   </div>
   <div v-else>
     <DisplayItemFull :item="item"></DisplayItemFull>
-    <ItemUses v-if="showItemUses" :item="item"></ItemUses>
-    <div v-if="showInteractionSection">
-      <ItemComment :item="item"></ItemComment>
-      <div class="separator mt-24 mb-24"></div>
-      <BaseButton @click="deleteItem" class="clear wide center">
-        Remove Item
-      </BaseButton>
-      <div v-if="sellValue" class="mt-8">
-        <BaseButton @click="sellItem" class="primary wide center">
-          Sell Item for {{ sellValue }} SP
-        </BaseButton>
-        <div class="pt-10 mutedText mt-4">
-          Note: This does not currently take into account any benefits your
-          character may have to get a better (or worse) price. The shop value of
-          this item is {{ shopValue }} SP.
-        </div>
-      </div>
-      <BaseButton @click="toggleEditItem" icon="edit" class="wide mt-24">
-        Edit item
-      </BaseButton>
-      <DisplayItemStorageToggle
-        :item="item"
-        class="mt-8"
-      ></DisplayItemStorageToggle>
-      <DisplayUseLatestItem :item="item"></DisplayUseLatestItem>
-    </div>
+    <ItemDetailsInteraction
+      v-if="showInteractionSection"
+      :item="item"
+      @edit-button="toggleEditItem"
+    ></ItemDetailsInteraction>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { ConsolidatedItem } from "@/utils/backendTypes";
 import DisplayItemFull from "./DisplayItemFull.vue";
-import ItemUses from "../Uses/ItemUses.vue";
 import { computed, reactive } from "vue";
-import { findShopItem, isDefaultWeapon } from "@/utils/itemUtils";
 import BaseButton from "../Base/BaseButton.vue";
-import { useEntityStore } from "@/stores/entity";
-import { useJsonStore } from "@/stores/jsonStorage";
-import { adjustAttrsAPI } from "@/utils/attributeUtils";
-import { prefixName } from "@/utils/textUtils";
 import EditItem from "./EditItem.vue";
-import ItemComment from "./ItemComment.vue";
-import DisplayItemStorageToggle from "./DisplayItemStorageToggle.vue";
-import DisplayUseLatestItem from "./DisplayUseLatestItem.vue";
+import ItemDetailsInteraction from "./ItemDetailsInteraction.vue";
+import { isDefaultWeapon } from "@/utils/itemUtils";
+import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
 const state = reactive({ editItem: false });
-const entityStore = useEntityStore();
-const jsonStorage = useJsonStore();
 
-jsonStorage.fetchShopItems();
-jsonStorage.fetchWeaponTypes();
+const entityStore = useEntityStore();
 
 const showInteractionSection = computed(
   () => !isDefaultWeapon(props.item) && entityStore.canEdit
 );
 
-const showItemUses = computed(
-  () => entityStore.canEdit && !props.item.custom_fields?.in_storage
-);
-
-const shopItem = computed(() =>
-  findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
-);
-const shopValue = computed(() => shopItem.value && shopItem.value.sp);
-const sellValue = computed(
-  () => shopValue.value && Math.floor(shopValue.value / 2)
-);
-
 const toggleEditItem = () => {
   state.editItem = !state.editItem;
-};
-const deleteItem = () => {
-  entityStore.deleteItem(props.item, true);
-};
-const sellItem = () => {
-  if (!sellValue.value || !entityStore.entity) {
-    return;
-  }
-  adjustAttrsAPI(
-    entityStore.entity,
-    { sp: sellValue.value },
-    prefixName(props.item.name, "Sold", false)
-  );
-  entityStore.deleteItem(props.item, true);
 };
 </script>
