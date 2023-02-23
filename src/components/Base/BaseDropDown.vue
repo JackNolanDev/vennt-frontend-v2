@@ -3,7 +3,7 @@
     v-if="useGivenState ? givenClosed : state.closed"
     @click="toggleDropDown"
     :disabled="disabled"
-    icon="keyboard_arrow_down"
+    icon="keyboard_arrow_right"
     class="wide"
   >
     <slot name="closedTitle"></slot>
@@ -13,7 +13,7 @@
     <BaseButton
       @click="toggleDropDown"
       :disabled="disabled"
-      icon="keyboard_arrow_up"
+      icon="keyboard_arrow_down"
       class="wide"
     >
       <slot name="openTitle"></slot>

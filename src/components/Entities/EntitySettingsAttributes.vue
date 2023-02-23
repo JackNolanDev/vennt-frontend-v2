@@ -1,5 +1,5 @@
 <template>
-  <div class="card column padded mb-16">
+  <div class="card column padded">
     <div class="alignRow gap">
       <label for="settings-attr" class="labelText nowrap"
         >Edit attribute value:</label

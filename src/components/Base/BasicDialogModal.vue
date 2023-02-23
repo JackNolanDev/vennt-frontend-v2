@@ -9,7 +9,6 @@
       <div class="dialogue-details">
         <slot></slot>
       </div>
-
       <div class="separator thin"></div>
       <div class="alignRow end gap wrap dialogue-details">
         <slot name="buttons"></slot>
@@ -23,11 +22,12 @@
 import BaseButton from "./BaseButton.vue";
 
 const props = defineProps<{ id: string }>();
-// const emit = defineEmits<{ (e: "closeModal"): void }>();
+const emit = defineEmits<{ (e: "closeModal"): void }>();
 
 const closeModal = () => {
   const dialog = document.getElementById(props.id) as HTMLDialogElement;
   dialog.close();
+  emit("closeModal");
 };
 
 const modalClick = (event: Event) => {

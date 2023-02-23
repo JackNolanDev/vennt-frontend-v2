@@ -108,15 +108,28 @@
       v-bind:class="attrButtonClass('gift')"
     >
       <div class="basicBtnContents attrButtonContents">
-        Gift: {{ entity.entity.other_fields.gift }}
+        Gift: {{ entity.entity.other_fields.gift
+        }}<span v-if="entity.entity.other_fields.second_gift" class="ml-8">
+          / {{ entity.entity.other_fields.second_gift }}</span
+        >
       </div>
     </button>
-    <div v-if="showDropDown('gift')" class="card diceDropDown left right">
+    <div
+      v-if="showDropDown('gift')"
+      class="card column diceDropDown left right"
+    >
       <GiftDescription
         v-if="entity.entity.other_fields.gift"
         :gift="entity.entity.other_fields.gift"
         :showTitle="false"
       ></GiftDescription>
+      <div v-if="entity.entity.other_fields.second_gift">
+        <div class="separator thin"></div>
+        <GiftDescription
+          :gift="entity.entity.other_fields.second_gift"
+          :showTitle="false"
+        ></GiftDescription>
+      </div>
     </div>
     <!-- SINGLE LINE STATS -->
     <div v-for="attr in singleRowAttrs" v-bind:key="attr">
