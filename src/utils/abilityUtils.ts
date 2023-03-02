@@ -1,8 +1,10 @@
 import type {
+  AbilityCostMapNumber,
   CharacterGift,
   CollectedEntity,
   EntityAbility,
   FullEntityAbility,
+  UpdatedEntityAttributes,
 } from "./backendTypes";
 
 const freeAbilities = new Set(["Alchemist's Training"]); // Alchemist's Training is free with Tinker's Training
@@ -42,15 +44,39 @@ export const actualXPCost = (
   return cost;
 };
 
-export const canUseAbility = (ability: EntityAbility): boolean => {
+export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;
+
+export const canUseAbility = (
+  ability: EntityAbility,
+  attrs: UpdatedEntityAttributes,
+  additionalCost?: Partial<AbilityCostMapNumber>
+): boolean => {
+  const costMap = { ...ability.custom_fields?.cost };
+  if (additionalCost) {
+    Object.entries(additionalCost).forEach(([attrIn, cost]) => {
+      const attr = attrIn as keyof AbilityCostMapNumber;
+      const currentCost = costMap[attr];
+      if (currentCost) {
+        costMap[attr] = cost + currentCost;
+      } else {
+        costMap[attr] = cost;
+      }
+    });
+  }
   if (
     ability.active ||
-    ability.custom_fields?.cost?.passive ||
+    costMap.passive ||
     ability.custom_fields?.activation?.toLowerCase().includes("passive")
   ) {
     return false;
   }
-  return true;
+  return abilityUsedStats.every((attr) => {
+    const statCurrent = attrs[attr];
+    if (statCurrent) {
+      const statCost = costMap[attr];
+      return !statCost || statCost <= statCurrent.val;
+    }
+  });
 };
 
 export function sortAbilities(
@@ -62,25 +88,32 @@ export function sortAbilities(
   );
   return abilitiesCopy.sort((a1, a2) => {
     // 1. put Passive abilities at the end of the list
-    /*
-    const a1Passive = a1.cost && "Passive" in a1.cost && a1.cost.Passive;
-    const a2Passive = a2.cost && "Passive" in a2.cost && a2.cost.Passive;
+    const a1Passive =
+      a1.custom_fields?.cost?.passive ||
+      a1.custom_fields?.activation?.toLowerCase() === "passive";
+    const a2Passive =
+      a2.custom_fields?.cost?.passive ||
+      a2.custom_fields?.activation?.toLowerCase() === "passive";
     if (!a1Passive && a2Passive) {
       return -1;
     } else if (a1Passive && !a2Passive) {
       return 1;
     }
     // 2. put abilities which use SP instead of XP at the end of the list when passive
-    if (a1Passive && a1.purchase && a2Passive && a2.purchase) {
-      const a1SP = a1.purchase.includes("sp");
-      const a2SP = a2.purchase.includes("sp");
+    if (
+      a1Passive &&
+      a1.custom_fields?.purchase &&
+      a2Passive &&
+      a2.custom_fields?.purchase
+    ) {
+      const a1SP = a1.custom_fields.purchase.includes("sp");
+      const a2SP = a2.custom_fields.purchase.includes("sp");
       if (!a1SP && a2SP) {
         return -1;
       } else if (a1SP && !a2SP) {
         return 1;
       }
     }
-    */
     // 3. sort by path gathering
     if (
       a1.custom_fields?.path &&

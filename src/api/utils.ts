@@ -1,4 +1,5 @@
 import router, { LOGIN_ROUTE } from "@/router";
+import { useAccountInfoStore } from "@/stores/accountInfo";
 import { TOKEN_LOCAL_STORAGE } from "@/utils/constants";
 import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { z } from "zod";
@@ -35,6 +36,7 @@ export const wrapAPI = async <T extends z.ZodTypeAny>(
     // handle generic errors first
     if (err instanceof AxiosError) {
       if (err.response && err.response.status === 401) {
+        useAccountInfoStore().postLogOut();
         if (
           router.currentRoute.value.meta.loggedInOnly &&
           router.currentRoute.value.name !== LOGIN_ROUTE

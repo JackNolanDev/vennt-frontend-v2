@@ -15,7 +15,7 @@
       v-for="(ability, index) in abilities"
       v-bind:key="index"
       v-bind:id="stringToLinkID(ability.id)"
-      v-bind:class="abilityOpenned(ability) ? 'selected' : ''"
+      v-bind:class="abilityOpened(ability) ? 'selected' : ''"
       class="alignRow tableItems"
     >
       <div class="tableData">
@@ -30,7 +30,7 @@
       <router-link :to="abilityLink(ability)" class="btn basicBtn link">
         <div class="basicBtnContents">
           <span class="material-icons">{{
-            abilityOpenned(ability)
+            abilityOpened(ability)
               ? "keyboard_arrow_left"
               : "keyboard_arrow_right"
           }}</span>
@@ -49,10 +49,10 @@ import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 
 defineProps<{ abilities: FullEntityAbility[] }>();
 
-const abilityOpenned = (ability: FullEntityAbility): boolean =>
+const abilityOpened = (ability: FullEntityAbility): boolean =>
   router.currentRoute.value.params.detail === ability.id;
 const abilityLink = (ability: FullEntityAbility): RouteLocationRaw => {
-  if (abilityOpenned(ability)) {
+  if (abilityOpened(ability)) {
     const params = { ...router.currentRoute.value.params };
     delete params.detail;
     return {
@@ -79,6 +79,11 @@ const abilityLink = (ability: FullEntityAbility): RouteLocationRaw => {
 }
 .abilityEffect {
   width: 65%;
+}
+
+/* skip tables in the ability table so it doesn't get too messy */
+.abilityEffect :deep(table) {
+  display: none;
 }
 
 @container page (max-width: 750px) {

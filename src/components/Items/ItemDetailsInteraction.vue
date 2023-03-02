@@ -48,9 +48,7 @@ const jsonStorage = useJsonStore();
 jsonStorage.fetchShopItems();
 jsonStorage.fetchWeaponTypes();
 
-const showItemUses = computed(
-  () => entityStore.canEdit && !props.item.custom_fields?.in_storage
-);
+const showItemUses = computed(() => !props.item.custom_fields?.in_storage);
 
 const shopItem = computed(() =>
   findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)

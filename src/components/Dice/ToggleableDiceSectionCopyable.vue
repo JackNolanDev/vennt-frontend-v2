@@ -1,12 +1,11 @@
 <template>
-  <DiceCopy :dice="dice"></DiceCopy>
+  <DiceCopy :dice="dice" :text="defaultText"></DiceCopy>
   <BaseDropDown
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
+    title="Other Dice Options"
     @change="diceStore.toggleDiceDropDown()"
   >
-    <template #closedTitle>Show Other Dice Options</template>
-    <template #openTitle>Hide Other Dice Options</template>
     <div v-if="heroPointDice">
       <div class="labelText mt-8 ml-8">Hero Point boost:</div>
       <div class="alignRow split">
@@ -20,7 +19,7 @@
 
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
-import { attrFullName } from "@/utils/attributeUtils";
+import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
 import { buildDice } from "@/utils/diceUtils";
 import { computed } from "vue";
@@ -31,6 +30,10 @@ import DiceCopy from "./DiceCopy.vue";
 
 const props = defineProps<{ dice: DiceCommands; attr?: EntityAttribute }>();
 const diceStore = useDiceStore();
+
+const defaultText = computed(
+  () => props.attr && `${attrShortName(props.attr)} Check Dice`
+);
 
 const heroDiceReason = computed(() =>
   props.attr

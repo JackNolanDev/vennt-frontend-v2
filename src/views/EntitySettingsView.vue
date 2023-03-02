@@ -1,6 +1,6 @@
 <template>
   <h1>Settings</h1>
-  <EntitySettingsGeneralDropdown></EntitySettingsGeneralDropdown>
+  <EntitySettingsGeneralDropdown class="mb-8"></EntitySettingsGeneralDropdown>
   <EntitySettingsDangerous></EntitySettingsDangerous>
 </template>
 

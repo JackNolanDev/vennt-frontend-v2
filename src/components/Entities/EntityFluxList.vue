@@ -90,8 +90,10 @@ watch(
   () => {
     if (!entityStore.entity) return;
     const newFlux = entityStore.entity.flux
-      .filter((entityFlux) =>
-        state.flux.every((flux) => entityFlux.id !== flux.id)
+      .filter(
+        (entityFlux) =>
+          entityFlux.type === props.type &&
+          state.flux.every((flux) => entityFlux.id !== flux.id)
       )
       .map((newFlux) => ({ ...newFlux, open: false }));
     state.flux = state.flux

@@ -23,7 +23,9 @@ const jsonStorage = useJsonStore();
 jsonStorage.fetchWeaponTypes();
 
 const useableAbilities = computed(() =>
-  entityStore.sortedAbilities.filter((ability) => canUseAbility(ability))
+  entityStore.sortedAbilities.filter((ability) =>
+    canUseAbility(ability, entityStore.entityAttributes)
+  )
 );
 const useableWeapons = computed(() =>
   entityStore.consolidatedItems

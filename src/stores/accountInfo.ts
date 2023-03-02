@@ -89,7 +89,9 @@ export const useAccountInfoStore = defineStore("accountInfo", {
     async postLogOut() {
       localStorage.removeItem(TOKEN_LOCAL_STORAGE);
       this.accountInfo = false;
-      router.push({ name: HOME_ROUTE });
+      if (router.currentRoute.value.name !== HOME_ROUTE) {
+        router.push({ name: HOME_ROUTE });
+      }
       useEntityStore().clearLocalEntity();
       useEntityListStore().reset();
       useEntityNotesStore().reset();

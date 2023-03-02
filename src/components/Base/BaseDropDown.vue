@@ -1,26 +1,28 @@
 <template>
-  <BaseButton
-    v-if="useGivenState ? givenClosed : state.closed"
-    @click="toggleDropDown"
-    :disabled="disabled"
-    icon="keyboard_arrow_right"
-    class="wide"
-  >
-    <slot name="closedTitle"></slot>
-    {{ title }}
-  </BaseButton>
-  <div v-else class="card column">
+  <div>
     <BaseButton
+      v-if="useGivenState ? givenClosed : state.closed"
       @click="toggleDropDown"
       :disabled="disabled"
-      icon="keyboard_arrow_down"
+      icon="keyboard_arrow_right"
       class="wide"
     >
-      <slot name="openTitle"></slot>
+      <slot name="closedTitle"></slot>
       {{ title }}
     </BaseButton>
-    <div class="separator thin"></div>
-    <slot></slot>
+    <div v-else class="card column">
+      <BaseButton
+        @click="toggleDropDown"
+        :disabled="disabled"
+        icon="keyboard_arrow_down"
+        class="wide"
+      >
+        <slot name="openTitle"></slot>
+        {{ title }}
+      </BaseButton>
+      <div class="separator thin"></div>
+      <slot></slot>
+    </div>
   </div>
 </template>
 
