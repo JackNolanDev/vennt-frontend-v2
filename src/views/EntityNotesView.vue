@@ -29,6 +29,7 @@ const entityNotesStore = useEntityNotesStore();
   height: var(--page-height);
 }
 .notes-wrapper,
+.notes-wrapper :deep(.full-editor-wrapper),
 .notes-wrapper :deep(.editor-wrapper),
 .notes-wrapper :deep(.ProseMirror) {
   height: 100%;

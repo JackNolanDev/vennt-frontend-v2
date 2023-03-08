@@ -7,7 +7,10 @@
   >
     <template #title>Edit {{ attrFullName(attr) }}</template>
     <div class="alignRow split wrap mb-16">
-      <div class="alignRow labelText">
+      <div
+        class="alignRow labelText"
+        :title="entityStore.entityAttributes[attr]?.reason?.join('\n')"
+      >
         Base {{ shortName }}:
         <span v-if="attr in entityStore.entity.entity.attributes" class="ml-8">
           <BaseFraction

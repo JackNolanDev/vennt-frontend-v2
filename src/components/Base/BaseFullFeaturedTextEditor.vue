@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="full-editor-wrapper">
     <BubbleMenu :editor="editor" v-if="editor">
       <div class="alignRow card border">
         <BaseButton

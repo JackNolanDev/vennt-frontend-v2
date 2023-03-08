@@ -36,7 +36,6 @@ export const useEntityNotesStore = defineStore("entityNotes", {
       this.showNotes = !this.showNotes;
     },
     setInitialNotes(notes: string) {
-      console.log("init notes");
       if (!this.liveNotes) {
         this.liveNotes = notes;
       }

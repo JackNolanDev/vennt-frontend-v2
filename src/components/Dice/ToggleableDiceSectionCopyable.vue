@@ -1,5 +1,11 @@
 <template>
-  <DiceCopy :dice="dice" :text="defaultText"></DiceCopy>
+  <p v-if="header" class="mt-0 mb-0 labelText text-center">
+    <b>{{ defaultText ? defaultText : dice.discord }}</b>
+  </p>
+  <DiceCopy
+    :dice="dice"
+    :text="header && defaultText ? dice.discord : defaultText"
+  ></DiceCopy>
   <BaseDropDown
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
@@ -28,7 +34,11 @@ import BaseDropDown from "../Base/BaseDropDown.vue";
 import CommonDiceSettings from "./CommonDiceSettings.vue";
 import DiceCopy from "./DiceCopy.vue";
 
-const props = defineProps<{ dice: DiceCommands; attr?: EntityAttribute }>();
+const props = defineProps<{
+  dice: DiceCommands;
+  attr?: EntityAttribute;
+  header?: boolean;
+}>();
 const diceStore = useDiceStore();
 
 const defaultText = computed(

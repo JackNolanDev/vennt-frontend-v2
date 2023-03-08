@@ -15,9 +15,7 @@ import type { HTMLString } from "@/utils/backendTypes";
 import BaseButton from "./BaseButton.vue";
 
 const props = defineProps<{
-  options: {
-    [key: string]: HTMLString;
-  };
+  options: Record<string, HTMLString>;
   selected: string;
   unselectable?: boolean;
 }>();

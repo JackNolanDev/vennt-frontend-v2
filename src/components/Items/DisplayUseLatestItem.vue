@@ -3,8 +3,8 @@
     v-if="itemNewVersion"
     @click="updateItems"
     icon="refresh"
-    class="wide mt-8"
     title="Updates this item to use the latest version in the shop"
+    class="wide mt-8"
     >Use latest version</BaseButton
   >
 </template>

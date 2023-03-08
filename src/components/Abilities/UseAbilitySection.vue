@@ -7,6 +7,7 @@
       v-if="ability.custom_fields?.cast_dl"
       :dice="castingDice"
       :attr="'casting'"
+      :header="true"
     ></ToggleableDiceSectionCopyable>
   </div>
   <div v-if="ability.custom_fields?.mp_cost">

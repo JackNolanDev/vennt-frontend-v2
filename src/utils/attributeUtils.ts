@@ -292,15 +292,26 @@ export const entityAttributesMap = (
   const attrs: UpdatedEntityAttributes = {};
   // 1. Directly copy over base attribute values from the character object
   Object.entries(entity.entity.attributes).forEach(([attr, val]) => {
-    attrs[attr as EntityAttribute] = { val, base: val };
+    attrs[attr as EntityAttribute] = {
+      val,
+      base: val,
+      reason: [`Base value: ${val}`],
+    };
   });
 
-  const alterAttrs = (attr: EntityAttribute, adjust: number) => {
+  const alterAttrs = (
+    attr: EntityAttribute,
+    adjust: number,
+    reason: string
+  ) => {
     const attrMap = attrs[attr];
     if (attrMap === undefined) {
-      attrs[attr] = { val: adjust };
+      attrs[attr] = { val: adjust, reason: [reason] };
     } else {
       attrMap.val += adjust;
+      if (attrMap.reason) {
+        attrMap.reason.push(reason);
+      }
     }
   };
 
@@ -332,46 +343,81 @@ export const entityAttributesMap = (
         if (typeof val === "string") {
           equations[attr] = val;
         } else {
-          alterAttrs(attr, val);
+          const reason = `active ${item.name} ${
+            val > 0 ? "adds" : "subtracts"
+          } ${val} to ${attrShortName(attr)}`;
+          alterAttrs(attr, val, reason);
         }
         appendAdjustItem(attr, item);
       });
     }
   });
 
-  // 3. Apply interdependent attr adjustments
-  Object.entries(relatedAttrsAdjustMap).forEach(([attr, commands]) => {
-    const found = attrs[attr as EntityAttribute];
+  // 3. Fetch effects from abilities
+  entity.abilities.forEach((ability) => {
+    if (ability.uses?.adjust) {
+      Object.entries(ability.uses.adjust.attr).forEach(([attrIn, val]) => {
+        const attr = attrIn as EntityAttribute;
+        if (typeof val === "string") {
+          equations[attr] = val;
+        } else {
+          const reason = `${ability.name} ${
+            val > 0 ? "adds" : "subtracts"
+          } ${val} from ${attrShortName(attr)}`;
+          alterAttrs(attr, val, reason);
+        }
+      });
+    }
+  });
+
+  // 4. Apply interdependent attr adjustments
+  Object.entries(relatedAttrsAdjustMap).forEach(([attrIn, commands]) => {
+    const attr = attrIn as EntityAttribute;
+    const found = attrs[attr];
     if (found) {
       commands.forEach((command) => {
         const adjustVal =
           found.val *
           (command.multiplier !== undefined ? command.multiplier : 1);
-        alterAttrs(command.attr, adjustVal);
+        const reason = `${
+          adjustVal > 0 ? "Adds" : "Subtracts"
+        } ${adjustVal} to ${attrShortName(
+          command.attr
+        )} because of ${attrShortName(attr)}`;
+        alterAttrs(command.attr, adjustVal, reason);
       });
     }
   });
 
-  // 4. Apply pending equations
-  Object.entries(equations).forEach(([attr, equation]) => {
+  // 5. Apply pending equations
+  Object.entries(equations).forEach(([attrIn, equation]) => {
+    const attr = attrIn as EntityAttribute;
     const parsed = solveEquation(equation, attrs);
     if (parsed !== undefined) {
-      const attrMap = attrs[attr as EntityAttribute];
+      const attrMap = attrs[attr];
+      const reason = `Set ${attrShortName(
+        attr
+      )} to the result of "${equation}"`;
       if (attrMap) {
         // replace value instead of adjusting it
         attrMap.val = parsed;
+        if (attrMap.reason) {
+          attrMap.reason.push(reason);
+        }
       } else {
-        alterAttrs(attr as EntityAttribute, parsed);
+        alterAttrs(attr, parsed, reason);
       }
     }
   });
 
-  // 5. Enforce zero minimums
+  // 6. Enforce zero minimums
   Object.entries(attrs).forEach(([attr, map]) => {
     if (MIN_ZEROS.has(attr) && typeof map.val === "number" && map.val < 0) {
       map.val = 0;
     }
   });
+
+  // console.log(attrs);
 
   return attrs;
 };
@@ -405,7 +451,7 @@ export const solveEquation = (
     try {
       return parseInt(mexp.eval(equation));
     } catch {
-      console.log(`solving equation failed: ${equation}`);
+      console.warn(`solving equation failed: ${equation}`);
     }
     return undefined;
   }
@@ -416,8 +462,8 @@ export const additionalCombatStatsAttrs = (
 ): EntityAttribute[] => {
   const attrs = new Set<EntityAttribute>();
   entity.abilities.forEach((ability) => {
-    if (ability.uses?.exposeCombatStats) {
-      ability.uses.exposeCombatStats.forEach((attr) => attrs.add(attr));
+    if (ability.uses?.expose_combat_stats) {
+      ability.uses.expose_combat_stats.forEach((attr) => attrs.add(attr));
     }
   });
   return Array.from(attrs);

@@ -33,8 +33,10 @@ const showItems = computed(() => route.name === ENTITY_ITEM_SHOP_ROUTE);
 
 <style scoped>
 .entity-left-sidebar {
-  display: grid;
   height: var(--page-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .top {
   overflow-y: scroll;

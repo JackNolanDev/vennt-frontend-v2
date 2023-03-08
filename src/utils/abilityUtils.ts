@@ -1,10 +1,20 @@
-import type {
-  AbilityCostMapNumber,
-  CharacterGift,
-  CollectedEntity,
-  EntityAbility,
-  FullEntityAbility,
-  UpdatedEntityAttributes,
+import isEqual from "lodash.isequal";
+import {
+  abilityFieldsNameValidator,
+  type AbilityCostMapNumber,
+  type CharacterGift,
+  type CollectedEntity,
+  type CriteriaFieldOperator,
+  type EntityAbility,
+  type EntityAbilityFields,
+  type FullEntityAbility,
+  type PathsAndAbilities,
+  type UpdatedEntityAttributes,
+  type UseCriteria,
+  type UseCriteriaBase,
+  type UseCriteriaField,
+  type UseCriteriaKey,
+  type UseCriteriaSpecial,
 } from "./backendTypes";
 
 const freeAbilities = new Set(["Alchemist's Training"]); // Alchemist's Training is free with Tinker's Training
@@ -30,17 +40,163 @@ const giftInAbilityExpedited = (
   );
 };
 
+const criteriaFieldOperator = (
+  operator: CriteriaFieldOperator
+): ((field1: string, field2: string) => boolean) => {
+  switch (operator) {
+    case "equals":
+      return (field1: string, field2: string) => field1 === field2;
+    default:
+      return () => false;
+  }
+};
+
+const abilityPassCriteriaCheckBase = (
+  ability: EntityAbility,
+  criteria: UseCriteriaBase,
+  usesAbility: EntityAbility
+): boolean => {
+  if (criteria.operator === "every") {
+    return criteria.tests.every((test) =>
+      abilityPassCriteriaCheck(ability, test, usesAbility)
+    );
+  } else if (criteria.operator === "some") {
+    return criteria.tests.some((test) =>
+      abilityPassCriteriaCheck(ability, test, usesAbility)
+    );
+  }
+  return false;
+};
+
+const abilityPassCriteriaCheckField = (
+  ability: EntityAbility,
+  criteria: UseCriteriaField,
+  usesAbility: EntityAbility
+): boolean => {
+  const keys = usesAbility.custom_fields?.keys;
+  if (!keys || !keys[criteria.key]) {
+    return false;
+  }
+  // walk down ability to find field referenced by the path
+  let field: Record<string, unknown> | string = ability;
+  for (const key of criteria.path) {
+    if (typeof field !== "object" || !field) {
+      break;
+    }
+    field = field[key] as Record<string, unknown> | string;
+  }
+  if (typeof field === "string") {
+    const comparator = criteriaFieldOperator(criteria.operator);
+    return comparator(keys[criteria.key], field);
+  }
+  return false;
+};
+
+const abilityPassCriteriaCheckKey = (
+  usesAbility: EntityAbility,
+  criteria: UseCriteriaKey
+): boolean => {
+  const keys = usesAbility.custom_fields?.keys;
+  if (keys && keys[criteria.key]) {
+    const comparator = criteriaFieldOperator(criteria.operator);
+    return comparator(keys[criteria.key], criteria.value);
+  }
+  return false;
+};
+
+const abilityPassCriteriaIsSpell = (ability: EntityAbility): boolean => {
+  const basicSpell =
+    ability.custom_fields?.cast_dl || ability.custom_fields?.mp_cost;
+  if (basicSpell) {
+    return true;
+  }
+  const path = ability.custom_fields?.path;
+  if (path) {
+    const magicPath = ["Arcana", "Spellcaster", "Magician", "Wizard"].some(
+      (test) => path.includes(test)
+    );
+    return Boolean(magicPath && ability.custom_fields?.cost?.mp);
+  }
+  return false;
+};
+
+const abilityPassCriteriaCheckSpecial = (
+  ability: EntityAbility,
+  criteria: UseCriteriaSpecial
+): boolean => {
+  switch (criteria.name) {
+    case "isSpell":
+      return abilityPassCriteriaIsSpell(ability);
+    default:
+      return false;
+  }
+};
+
+const abilityPassCriteriaCheck = (
+  ability: EntityAbility,
+  criteria: UseCriteria,
+  usesAbility: EntityAbility
+): boolean => {
+  switch (criteria.type) {
+    case "base":
+      return abilityPassCriteriaCheckBase(ability, criteria, usesAbility);
+    case "field":
+      return abilityPassCriteriaCheckField(ability, criteria, usesAbility);
+    case "key":
+      return abilityPassCriteriaCheckKey(usesAbility, criteria);
+    case "special":
+      return abilityPassCriteriaCheckSpecial(ability, criteria);
+    default:
+      return false;
+  }
+};
+
+const abilityUsesCostAdjust = (
+  ability: EntityAbility,
+  entity: CollectedEntity
+): number => {
+  let totalAdjust = 0;
+  entity.abilities
+    .filter(
+      (usesAbility) =>
+        usesAbility.uses?.adjust_ability_cost ||
+        usesAbility.uses?.criteria_benefits
+    )
+    .forEach((usesAbility) => {
+      if (usesAbility.uses?.adjust_ability_cost) {
+        totalAdjust += usesAbility.uses.adjust_ability_cost.adjust_cost;
+      }
+      if (usesAbility.uses?.criteria_benefits) {
+        const passedCriteria = usesAbility.uses.criteria_benefits.filter(
+          (criteria) =>
+            criteria.adjust_ability_cost &&
+            abilityPassCriteriaCheck(ability, criteria.criteria, usesAbility)
+        );
+        passedCriteria.forEach((criteria) => {
+          if (criteria.adjust_ability_cost) {
+            totalAdjust += criteria.adjust_ability_cost.adjust_cost;
+          }
+        });
+      }
+    });
+  return totalAdjust;
+};
+
 export const actualXPCost = (
   ability: EntityAbility,
   entity?: CollectedEntity
 ): number => {
   let cost = defaultXPCost(ability);
+  if (!entity) {
+    return cost;
+  }
   if (
-    giftInAbilityExpedited(ability, entity?.entity.other_fields.gift) ||
-    giftInAbilityExpedited(ability, entity?.entity.other_fields.second_gift)
+    giftInAbilityExpedited(ability, entity.entity.other_fields.gift) ||
+    giftInAbilityExpedited(ability, entity.entity.other_fields.second_gift)
   ) {
     cost = cost / 2;
   }
+  cost += abilityUsesCostAdjust(ability, entity);
   return cost;
 };
 
@@ -168,4 +324,49 @@ export const sortPaths = (abilities: EntityAbility[]): string[] => {
   const paths = Object.keys(pathCostMap);
   paths.sort((p1, p2) => pathCostMap[p1] - pathCostMap[p2]);
   return paths;
+};
+
+const abilityUpdatableFields = (
+  Object.keys(abilityFieldsNameValidator.Values) as EntityAbilityFields[]
+).filter((field) => !["keys", "times_taken"].includes(field));
+
+const diffExistsBetweenAbilityFields = (
+  a: EntityAbility,
+  b: EntityAbility
+): boolean => {
+  if (a.name !== b.name) {
+    return true;
+  }
+  if (
+    abilityUpdatableFields.some((field) => {
+      if (!a.custom_fields && !b.custom_fields) {
+        return false;
+      }
+      const aField = a.custom_fields && a.custom_fields[field];
+      const bField = b.custom_fields && b.custom_fields[field];
+      return !isEqual(aField, bField);
+    })
+  ) {
+    return true;
+  }
+  return Boolean((a.uses || b.uses) && !isEqual(a.uses, b.uses));
+};
+
+export const findNewAbilityVersion = (
+  ability: EntityAbility,
+  paths: PathsAndAbilities
+): EntityAbility | undefined => {
+  const found = paths.abilities.find((search) => search.name === ability.name);
+  if (!found) {
+    return undefined;
+  }
+  if (diffExistsBetweenAbilityFields(ability, found)) {
+    return {
+      ...ability,
+      effect: found.effect,
+      uses: found.uses,
+      custom_fields: { ...found.custom_fields, ...ability.custom_fields },
+    };
+  }
+  return undefined;
 };

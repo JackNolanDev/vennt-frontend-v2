@@ -1,5 +1,6 @@
 <template>
   <EditItem v-if="showNewItem"></EditItem>
+  <ShopItemDetail v-else-if="shopItem" :item="shopItem"></ShopItemDetail>
   <AbilityDetails
     v-else-if="entityAbility"
     :ability="entityAbility"
@@ -9,7 +10,6 @@
     :ability="searchAbility"
   ></AbilitySearchDetails>
   <ItemDetails v-else-if="entityItem" :item="entityItem"></ItemDetails>
-  <ShopItemDetail v-else-if="shopItem" :item="shopItem"></ShopItemDetail>
   <WeaponShopDetail
     v-else-if="weaponType"
     :item="weaponType"
@@ -23,7 +23,7 @@ import ItemDetails from "../Items/ItemDetails.vue";
 import ShopItemDetail from "../Items/ShopItemDetail.vue";
 import WeaponShopDetail from "../Items/WeaponShopDetail.vue";
 import { computed } from "vue";
-import router from "@/router";
+import router, { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
 import EditItem from "../Items/EditItem.vue";
 import { idValidator } from "@/utils/backendTypes";
@@ -52,6 +52,7 @@ const entityItem = computed(() =>
 const shopItem = computed(
   () =>
     !isUUID.value &&
+    router.currentRoute.value.name === ENTITY_ITEM_SHOP_ROUTE &&
     jsonStorage.shopItems.find(
       (item) => item.name === router.currentRoute.value.params.detail
     )

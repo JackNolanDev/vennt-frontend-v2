@@ -114,6 +114,7 @@ const endDrag = () => {
   height: 100%;
   overflow-y: auto;
 }
+.notesCard :deep(.full-editor-wrapper),
 .notesCard :deep(.ProseMirror) {
   height: 100%;
 }
