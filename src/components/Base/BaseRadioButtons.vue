@@ -6,18 +6,23 @@
     @click="selectionButton(key)"
     class="skinny wide"
   >
-    <span v-html="html" class="pt-12 wrap"></span>
+    <div
+      v-html="renderMarkdown(html, attrs)"
+      class="pt-12 wrap condense-child-text"
+    ></div>
   </BaseButton>
 </template>
 
 <script setup lang="ts">
-import type { HTMLString } from "@/utils/backendTypes";
+import type { HTMLString, UpdatedEntityAttributes } from "@/utils/backendTypes";
+import { renderMarkdown } from "@/utils/textUtils";
 import BaseButton from "./BaseButton.vue";
 
 const props = defineProps<{
   options: Record<string, HTMLString>;
   selected: string;
   unselectable?: boolean;
+  attrs?: UpdatedEntityAttributes;
 }>();
 const emit = defineEmits<{
   (e: "selectedUpdated", state: string): void;

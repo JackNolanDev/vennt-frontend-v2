@@ -24,7 +24,10 @@
           {{ ability.custom_fields?.activation }}
         </div>
         <div class="abilityEffect condense-child-text">
-          <DisplayAbilityEffect :ability="ability"></DisplayAbilityEffect>
+          <DisplayAbilityEffect
+            :ability="ability"
+            :attrs="attrs"
+          ></DisplayAbilityEffect>
         </div>
       </div>
       <router-link :to="abilityLink(ability)" class="btn basicBtn link">
@@ -42,12 +45,18 @@
 
 <script setup lang="ts">
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type {
+  FullEntityAbility,
+  UpdatedEntityAttributes,
+} from "@/utils/backendTypes";
 import { stringToLinkID, improveTextForDisplay } from "@/utils/textUtils";
 import { type RouteLocationRaw, RouterLink } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 
-defineProps<{ abilities: FullEntityAbility[] }>();
+defineProps<{
+  abilities: FullEntityAbility[];
+  attrs?: UpdatedEntityAttributes;
+}>();
 
 const abilityOpened = (ability: FullEntityAbility): boolean =>
   router.currentRoute.value.params.detail === ability.id;

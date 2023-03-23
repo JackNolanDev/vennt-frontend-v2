@@ -1,24 +1,33 @@
 import { solveEquation } from "./attributeUtils";
 import type {
   CollectedEntity,
+  EntityAttribute,
   EntityItem,
   UpdatedEntityAttributes,
 } from "./backendTypes";
 
-const hasProficiency = (
+export type ResultReason<T> = {
+  reason: string;
+  result: T;
+};
+
+const weaponCategoryAdjust = (
   weapon: EntityItem,
-  entity: CollectedEntity
-): boolean => {
-  if (!weapon.custom_fields || !weapon.custom_fields.category) {
-    return false;
+  attrs: UpdatedEntityAttributes,
+  type: "acc" | "dmg"
+): ResultReason<number> | undefined => {
+  if (!weapon.custom_fields?.category) {
+    return undefined;
   }
-  const possibleNames = [
-    `${weapon.custom_fields.category} Specialist`,
-    `${weapon.custom_fields.category} Weapon Proficiency`,
-  ];
-  return entity.abilities.some((ability) =>
-    possibleNames.includes(ability.name)
-  );
+  const accKey = `${weapon.custom_fields.category.toLowerCase()}_${type}`;
+  const accAdjust = attrs[accKey as EntityAttribute];
+  if (accAdjust) {
+    return {
+      reason: accAdjust.reason?.join(", ") ?? "",
+      result: accAdjust.val,
+    };
+  }
+  return undefined;
 };
 
 const attributeBonus = (
@@ -32,21 +41,16 @@ const attributeBonus = (
   return solved ?? 0;
 };
 
-export type ResultReason<T> = {
-  reason: string;
-  result: T;
-};
-
 export const weaponAccuracy = (
   weapon: EntityItem,
-  entity: CollectedEntity,
   attrs: UpdatedEntityAttributes
 ): ResultReason<number> => {
   let acc = attributeBonus(weapon, attrs) * 10;
   let reason = weapon.custom_fields?.attr ?? "";
-  if (hasProficiency(weapon, entity)) {
-    acc += 10;
-    reason += " + proficiency";
+  const adjust = weaponCategoryAdjust(weapon, attrs, "acc");
+  if (adjust) {
+    acc += adjust.result;
+    reason += ` + ${adjust.reason}`;
   }
   if (acc < 0) {
     acc = 0;
@@ -70,7 +74,7 @@ export const enhancedBaseDiceString = (
   return (
     baseDiceString(weapon) +
     number2MathString(attributeBonus(weapon, attrs)) +
-    (hasProficiency(weapon, entity) ? "+1" : "")
+    number2MathString(weaponCategoryAdjust(weapon, attrs, "dmg")?.result ?? 0)
   );
 };
 

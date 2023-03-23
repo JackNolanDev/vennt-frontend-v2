@@ -8,7 +8,10 @@
       class="ml-16"
     ></BaseFraction>
   </div>
-  <AbilityTable :abilities="entityStore.sortedAbilities"></AbilityTable>
+  <AbilityTable
+    :abilities="entityStore.sortedAbilities"
+    :attrs="entityStore.entityAttributes"
+  ></AbilityTable>
   <AbilitySearch v-if="showEditSection"></AbilitySearch>
   <div class="mb-128"></div>
 </template>

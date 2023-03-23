@@ -28,8 +28,8 @@ const BASE_HELP_MAP: HelpMap = {
   <a href="https://vennt.fandom.com/wiki/XP" target="_blank" class="link">Wiki entry</a>`,
   sp: `Silver Pieces are Amnis's main currency.
   <a href="https://vennt.fandom.com/wiki/Money" target="_blank" class="link">Wiki entry</a>`,
-  level: `Level of the cog. See the
-  <a href="https://vennt.fandom.com/wiki/Course_of_Tactics#The_L_stat" target="_blank" class="link">Wiki entry</a>.`,
+  L: `Level of the cog. See the
+  <a href="https://vennt.fandom.com/wiki/Cogs#Level:_the_L_stat" target="_blank" class="link">Wiki entry</a>.`,
   acc: `Attacks are generally made by comparing the target's Accuracy to the target's Vim.
   <a href="https://vennt.fandom.com/wiki/Accuracy" target="_blank" class="link">Wiki entry</a>.`,
   radius: `The Radius of a cog refers to how many hexes outside of it's central hex the cog takes up`,

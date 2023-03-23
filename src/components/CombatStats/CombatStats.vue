@@ -193,6 +193,12 @@
       v-if="showItems && entity.items.length > 0"
       :entity="entity"
     ></CombatStatsItemSection>
+    <!-- ABILITIES -->
+    <CombatStatsAbilitiesSection
+      v-if="showAbilities && entity.abilities.length > 0"
+      :entity="entity"
+      :attrs="attrs"
+    ></CombatStatsAbilitiesSection>
   </div>
 </template>
 
@@ -220,12 +226,14 @@ import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
 import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
+import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
   entityAttrs?: UpdatedEntityAttributes;
   useCopyableDice: boolean;
   showItems?: boolean;
+  showAbilities?: boolean;
 }>();
 
 interface CombatStatsState {
@@ -293,7 +301,7 @@ const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "init",
   "speed",
   "armor",
-  "level",
+  "L",
   "xp",
   "sp",
 ];

@@ -2,6 +2,7 @@ import { useEntityStore } from "@/stores/entity";
 import mexp from "math-expression-evaluator";
 import {
   ATTRIBUTES_SET,
+  validAttributes,
   type CollectedEntity,
   type EntityAttribute,
   type EntityItem,
@@ -61,7 +62,7 @@ export const getBaseAttr = (
 };
 
 export const attrFullName = (attr: EntityAttribute): string => {
-  const nameMap = {
+  const nameMap: Partial<Record<EntityAttribute, string>> = {
     per: "Perception",
     tek: "Technology",
     agi: "Agility",
@@ -73,8 +74,9 @@ export const attrFullName = (attr: EntityAttribute): string => {
     cha: "Charisma",
     hero: "Hero Points",
   };
-  if (attr in nameMap) {
-    return nameMap[attr as keyof typeof nameMap];
+  const customName = nameMap[attr];
+  if (customName) {
+    return customName;
   }
   const baseAttr = getBaseAttr(attr);
   if (baseAttr !== undefined) {
@@ -84,8 +86,14 @@ export const attrFullName = (attr: EntityAttribute): string => {
 };
 
 export const attrShortName = (attr: EntityAttribute): string => {
-  if (attr === "init") {
-    return "Initiative";
+  const nameMap: Partial<Record<EntityAttribute, string>> = {
+    init: "Initiative",
+    acc: "Accuracy",
+    L: "Level",
+  };
+  const customName = nameMap[attr];
+  if (customName) {
+    return customName;
   }
   if (attr.length <= 2 || ATTRIBUTES_SET.has(attr)) {
     return attr.toUpperCase();
@@ -94,7 +102,7 @@ export const attrShortName = (attr: EntityAttribute): string => {
   if (baseAttr !== undefined) {
     return "Max " + attrShortName(baseAttr);
   }
-  return attr.charAt(0).toUpperCase() + attr.slice(1);
+  return attr.charAt(0).toUpperCase() + attr.slice(1).replaceAll("_", " ");
 };
 
 export const xp2Level = (xp?: number) => {
@@ -286,10 +294,14 @@ const relatedAttrsAdjustMap: { [attr in EntityAttribute]?: adjustCommand[] } = {
   ],
 };
 
+const defaultAttrsMap: UpdatedEntityAttributes = {
+  free_hands: { val: 2, reason: ["Default: 2"] },
+};
+
 export const entityAttributesMap = (
   entity: CollectedEntity
 ): UpdatedEntityAttributes => {
-  const attrs: UpdatedEntityAttributes = {};
+  const attrs: UpdatedEntityAttributes = { ...defaultAttrsMap };
   // 1. Directly copy over base attribute values from the character object
   Object.entries(entity.entity.attributes).forEach(([attr, val]) => {
     attrs[attr as EntityAttribute] = {
@@ -438,23 +450,52 @@ export const solvePendingEquations = (
   return cleaned;
 };
 
+const attrsRegexStr = `\\b${validAttributes.join("|")}\\b`;
+const attrsRegex = new RegExp(attrsRegexStr, "g");
+
 export const solveEquation = (
   equation: string,
   attrs: UpdatedEntityAttributes
 ): number | undefined => {
-  // replace any possible variables with current values
-  Object.entries(attrs).forEach(([replaceAttr, replaceVal]) => {
-    equation = equation.replaceAll(replaceAttr, replaceVal.val.toString());
+  let ceilResult = false;
+  const cleanedEquation = equation.replaceAll(attrsRegex, (match) => {
+    const attr = match as EntityAttribute;
+    // L always rounds up, everything else always floors
+    if (attr === "L") {
+      ceilResult = true;
+    }
+    const entityAttr = attrs[attr];
+    if (entityAttr) {
+      return entityAttr.val.toString();
+    }
+    const defaultAttr = defaultAttrsMap[attr];
+    if (defaultAttr) {
+      return defaultAttr.val.toString();
+    }
+    return "0";
   });
   // ensure all variables have been removed from the equation before attempting to solve it
-  if (/^[\d+\-*/() ]+$/.test(equation)) {
+  if (/^(?:[\d+\-*/() ]|Mod)+$/.test(cleanedEquation)) {
     try {
-      return parseInt(mexp.eval(equation));
+      const evaluated = mexp.eval(cleanedEquation);
+      const floatVal = parseFloat(evaluated);
+      if (isNaN(floatVal)) {
+        console.warn(
+          `equation did not successfully solve: ${equation} -> ${cleanedEquation} -> ${evaluated}`
+        );
+        return undefined;
+      }
+      if (ceilResult) {
+        return Math.ceil(floatVal);
+      }
+      return Math.floor(floatVal);
     } catch {
-      console.warn(`solving equation failed: ${equation}`);
+      console.warn(
+        `solving equation failed: ${equation} -> ${cleanedEquation}`
+      );
     }
-    return undefined;
   }
+  return undefined;
 };
 
 export const additionalCombatStatsAttrs = (

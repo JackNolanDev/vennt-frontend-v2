@@ -4,6 +4,7 @@
   <AbilityDetails
     v-else-if="entityAbility"
     :ability="entityAbility"
+    :attrs="entityStore.entityAttributes"
   ></AbilityDetails>
   <AbilitySearchDetails
     v-else-if="searchAbility"

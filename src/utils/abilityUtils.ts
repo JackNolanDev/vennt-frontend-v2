@@ -52,7 +52,7 @@ const criteriaFieldOperator = (
 };
 
 const abilityPassCriteriaCheckBase = (
-  ability: EntityAbility,
+  ability: EntityAbility | null,
   criteria: UseCriteriaBase,
   usesAbility: EntityAbility
 ): boolean => {
@@ -69,10 +69,13 @@ const abilityPassCriteriaCheckBase = (
 };
 
 const abilityPassCriteriaCheckField = (
-  ability: EntityAbility,
+  ability: EntityAbility | null,
   criteria: UseCriteriaField,
   usesAbility: EntityAbility
 ): boolean => {
+  if (!ability) {
+    return true;
+  }
   const keys = usesAbility.custom_fields?.keys;
   if (!keys || !keys[criteria.key]) {
     return false;
@@ -121,9 +124,12 @@ const abilityPassCriteriaIsSpell = (ability: EntityAbility): boolean => {
 };
 
 const abilityPassCriteriaCheckSpecial = (
-  ability: EntityAbility,
+  ability: EntityAbility | null,
   criteria: UseCriteriaSpecial
 ): boolean => {
+  if (!ability) {
+    return true;
+  }
   switch (criteria.name) {
     case "isSpell":
       return abilityPassCriteriaIsSpell(ability);
@@ -133,7 +139,7 @@ const abilityPassCriteriaCheckSpecial = (
 };
 
 const abilityPassCriteriaCheck = (
-  ability: EntityAbility,
+  ability: EntityAbility | null,
   criteria: UseCriteria,
   usesAbility: EntityAbility
 ): boolean => {

@@ -36,14 +36,18 @@
   <DisplayAbilityEffect
     :ability="ability"
     :flavor="true"
+    :attrs="attrs"
   ></DisplayAbilityEffect>
 </template>
 
 <script setup lang="ts">
-import type { EntityAbility } from "@/utils/backendTypes";
+import type {
+  EntityAbility,
+  UpdatedEntityAttributes,
+} from "@/utils/backendTypes";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 
-defineProps<{ ability: EntityAbility }>();
+defineProps<{ ability: EntityAbility; attrs?: UpdatedEntityAttributes }>();
 
 const tripleDigitStr = (triple: number[]): string =>
   triple.length === 3 ? `[ ${triple[0]} / ${triple[1]} / ${triple[2]} ]` : "";

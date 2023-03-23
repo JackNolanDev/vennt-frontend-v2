@@ -531,13 +531,13 @@ a.basicBtn {
 .input:focus {
   border: solid 1px var(--border-focus);
 }
-.input.invalid {
+.input.invalid, .input:invalid {
   border: solid 1px var(--border-error);
 }
-.input.invalid:hover {
+.input.invalid:hover, .input:invalid:hover {
   border: solid 1px var(--border-error-hover);
 }
-.input.invalid:focus {
+.input.invalid:focus, .input:invalid:focus {
   border: solid 1px var(--border-error-focus);
 }
 .input.wide {
@@ -847,7 +847,7 @@ tbody > tr:last-child > td:last-child {
 
 .stickyHeader {
   position: sticky;
-  top: var(--nav-height);
+  top: 0;
   display: flex;
   background-color: var(--background-highlight);
   border-radius: var(--border-radius);

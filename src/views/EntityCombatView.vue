@@ -1,6 +1,9 @@
 <template>
   <h1>Combat</h1>
-  <AbilityTable :abilities="useableAbilities"></AbilityTable>
+  <AbilityTable
+    :abilities="useableAbilities"
+    :attrs="entityStore.entityAttributes"
+  ></AbilityTable>
   <h2>Usable weapons</h2>
   <ItemTable
     :items="useableWeapons"

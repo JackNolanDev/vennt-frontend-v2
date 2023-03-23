@@ -17,11 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import {
-  attributeNameValidator,
-  type EntityAttribute,
-} from "@/utils/backendTypes";
-import { computed, reactive } from "vue";
+import { type EntityAttribute, validAttributes } from "@/utils/backendTypes";
+import { reactive } from "vue";
 import { attrFullName } from "@/utils/attributeUtils";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
@@ -30,8 +27,4 @@ interface attributesState {
   attr: EntityAttribute;
 }
 const state = reactive<attributesState>({ attr: "agi" });
-
-const validAttributes = computed(() => {
-  return Object.keys(attributeNameValidator.Values) as EntityAttribute[];
-});
 </script>

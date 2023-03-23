@@ -76,9 +76,17 @@ const bulkCapacity = computed(() => {
   if (!entityStore.entity) {
     return 0;
   }
-  return entityStore.entity.items
-    .filter((item) => item.type === "container")
-    .reduce((sum, item) => sum + item.bulk, 0);
+  let baseCapacity = 0;
+  const carryingCapacity = entityStore.entityAttributes.carrying_capacity;
+  if (carryingCapacity) {
+    baseCapacity += carryingCapacity.val;
+  }
+  return (
+    baseCapacity +
+    entityStore.entity.items
+      .filter((item) => item.type === "container")
+      .reduce((sum, item) => sum + item.bulk, 0)
+  );
 });
 
 const bulkSum = computed(() => {

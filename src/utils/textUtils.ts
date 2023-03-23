@@ -2,7 +2,8 @@ import indefinite from "indefinite";
 import pluralize from "pluralize";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import type { HTMLString } from "./backendTypes";
+import type { HTMLString, UpdatedEntityAttributes } from "./backendTypes";
+import { solveEquation } from "./attributeUtils";
 
 export const improveTextForDisplay = (text: string): string => {
   // regex from https://leancrew.com/all-this/2010/11/smart-quotes-in-javascript/
@@ -79,12 +80,16 @@ export const pluralizeName = (
   return name;
 };
 
-export const renderMarkdown = (text: string): HTMLString => {
+export const renderMarkdown = (
+  text: string,
+  attrs?: UpdatedEntityAttributes
+): HTMLString => {
   const markedOption: marked.MarkedOptions = {
     smartypants: true,
   };
   let html = marked.parse(text, markedOption);
   html = noBreakTrippleDigit(html);
+  html = solveEquationsInText(html, attrs);
   return DOMPurify.sanitize(html);
 };
 
@@ -93,6 +98,24 @@ const noBreakTrippleDigit = (text: string): string => {
   return text.replaceAll(tripleDigitRegex, (match) =>
     match.replaceAll(/\s/gim, "&nbsp;")
   );
+};
+
+const solveEquationsInText = (
+  text: string,
+  attrs?: UpdatedEntityAttributes
+): string => {
+  const equationRegex = /{{[^}]+}}/gm;
+  return text.replaceAll(equationRegex, (match) => {
+    const equation = match.substring(2, match.length - 2);
+    if (!attrs) {
+      return equation;
+    }
+    const solvedEquation = solveEquation(equation, attrs);
+    if (solvedEquation === undefined) {
+      return equation;
+    }
+    return `${equation} (${solvedEquation})`;
+  });
 };
 
 export function stringToLinkID(str: string) {

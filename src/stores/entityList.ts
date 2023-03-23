@@ -16,6 +16,9 @@ export const useEntityListStore = defineStore("entityList", {
     characters(state) {
       return state.entities.filter((entity) => entity.type === "CHARACTER");
     },
+    cogs(state) {
+      return state.entities.filter((entity) => entity.type === "COG");
+    },
   },
   actions: {
     reset() {

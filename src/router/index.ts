@@ -6,6 +6,8 @@ export const SIGNUP_ROUTE = "signup";
 export const LOGIN_ROUTE = "login";
 export const CREATE_ROUTE = "create";
 export const CREATE_NEW_ROUTE = "createNew";
+export const CREATE_COG_ROUTE = "createCog";
+export const CREATE_NEW_COG_ROUTE = "createNewCog";
 export const CREDITS_ROUTE = "credits";
 export const ADMIN_ROUTE = "admin";
 export const ENTITY_ROUTE = "entity";
@@ -48,6 +50,18 @@ const router = createRouter({
       name: CREATE_NEW_ROUTE,
       meta: { loggedInOnly: true },
       component: () => import("../views/CreateNewView.vue"),
+    },
+    {
+      path: "/create/cog",
+      name: CREATE_COG_ROUTE,
+      meta: { loggedInOnly: true },
+      component: () => import("../views/CreateCogView.vue"),
+    },
+    {
+      path: "/create/cog/new",
+      name: CREATE_NEW_COG_ROUTE,
+      meta: { loggedInOnly: true },
+      component: () => import("../views/CreateNewCogView.vue"),
     },
     {
       path: "/entity/:id",
