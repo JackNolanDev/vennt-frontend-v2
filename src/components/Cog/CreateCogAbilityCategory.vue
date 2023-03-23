@@ -5,6 +5,7 @@
     :selected="selected"
     :attrs="cogCreateStore.cogAttrs"
     :unselectable="true"
+    :disabled-options="disabledOptions"
     @selected-updated="selectionUpdated"
   ></BaseRadioButtons>
   <div v-if="showVariableCostInput">
@@ -33,6 +34,10 @@ import {
   cogAbilityMap,
   type CogAbilityCategory,
 } from "@/utils/copy/createCogAbilityOptions";
+import {
+  cogAbilityCost,
+  keysToCogAbilities,
+} from "@/utils/copy/createCogLogic";
 import { stringToLinkID } from "@/utils/textUtils";
 import { computed } from "vue";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
@@ -65,7 +70,7 @@ const variableCostInputId = computed(
   () => `${stringToLinkID(props.category.name)}-cost-input`
 );
 const selectedMaxCost = computed(() => {
-  const maxCost = selectedCogAbility.value?.maxCost ?? 0;
+  const maxCost = selectedCogAbility.value?.maxCost ?? 100;
   return typeof maxCost === "number"
     ? maxCost
     : solveEquation(maxCost, cogCreateStore.cogAttrs) ?? 0;
@@ -76,6 +81,19 @@ const variableCostInputInvalid = computed(() => {
     return true;
   }
   return value < 0 || value > selectedMaxCost.value;
+});
+const disabledOptions = computed(() => {
+  const selectedCost = selectedCogAbility.value
+    ? cogAbilityCost(selectedCogAbility.value, cogCreateStore.options)
+    : 0;
+  const unselectedAP = selectedCost + cogCreateStore.remainingAP;
+  const abilities = keysToCogAbilities(Object.keys(options.value));
+  return abilities
+    .filter(
+      (ability) =>
+        cogAbilityCost(ability, cogCreateStore.options) > unselectedAP
+    )
+    .map((ability) => ability.name);
 });
 
 const selectionUpdated = (option: string) => {

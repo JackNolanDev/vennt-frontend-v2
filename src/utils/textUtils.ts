@@ -89,6 +89,7 @@ export const renderMarkdown = (
   };
   let html = marked.parse(text, markedOption);
   html = noBreakTrippleDigit(html);
+  html = clearTemplateStrings(html);
   html = solveEquationsInText(html, attrs);
   return DOMPurify.sanitize(html);
 };
@@ -97,6 +98,13 @@ const noBreakTrippleDigit = (text: string): string => {
   const tripleDigitRegex = /\[\s\+?-?\w+\s\/\s\+?-?\w+\s\/\s\+?-?\w+\s\]/gm;
   return text.replaceAll(tripleDigitRegex, (match) =>
     match.replaceAll(/\s/gim, "&nbsp;")
+  );
+};
+
+const clearTemplateStrings = (text: string): string => {
+  const templateRegex = /\[\[[^\]]+\]\]/gm;
+  return text.replaceAll(templateRegex, (match) =>
+    match.substring(2, match.length - 2)
   );
 };
 

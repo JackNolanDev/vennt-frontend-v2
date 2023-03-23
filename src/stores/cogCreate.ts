@@ -93,7 +93,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
           public: false,
         },
         text,
-        abilities: entityAbilities(this.cogAbilities),
+        abilities: entityAbilities(this.cogAbilities, this.options),
         items: [],
         flux: [],
         changelog: [],

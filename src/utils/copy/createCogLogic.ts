@@ -6,6 +6,7 @@ import {
   type EntityAttribute,
   type UncompleteEntityAbility,
   type UpdatedEntityAttributes,
+  type UsesMap,
 } from "../backendTypes";
 import { cogAbilityMap, type CogAbility } from "./createCogAbilityOptions";
 import { cogTypeOptionsInfo } from "./createCogTypeOptions";
@@ -180,30 +181,35 @@ export const spentAP = (
   cogAbilities: CogAbility[],
   options: CogCreateOptions
 ): number => {
-  const L = LStat(options.level);
   return cogAbilities
-    .map((ability) => {
-      if (typeof ability.cost === "number") {
-        return ability.cost;
-      }
-      const attrMap: UpdatedEntityAttributes = { L: { val: L } };
-      const variableCost = options.variableAbilityCost[ability.name];
-      if (typeof variableCost === "number") {
-        attrMap.X = { val: variableCost };
-      }
-      return solveEquation(ability.cost, attrMap) ?? 0;
-    })
+    .map((ability) => cogAbilityCost(ability, options))
     .reduce((acc, cost) => acc + cost, 0);
 };
 
-export const cogAbilities = (options: CogCreateOptions): CogAbility[] => {
-  return Object.values(options.abilitySelection)
-    .map((selected) => cogAbilityMap[selected])
-    .filter(Boolean);
+export const cogAbilityCost = (
+  ability: CogAbility,
+  options: CogCreateOptions
+): number => {
+  if (typeof ability.cost === "number") {
+    return ability.cost;
+  }
+  const attrMap: UpdatedEntityAttributes = { L: { val: LStat(options.level) } };
+  const variableCost = options.variableAbilityCost[ability.name];
+  if (typeof variableCost === "number") {
+    attrMap.X = { val: variableCost };
+  }
+  return solveEquation(ability.cost, attrMap) ?? 0;
 };
 
+export const cogAbilities = (options: CogCreateOptions): CogAbility[] =>
+  keysToCogAbilities(Object.values(options.abilitySelection));
+
+export const keysToCogAbilities = (keys: string[]): CogAbility[] =>
+  keys.map((selected) => cogAbilityMap[selected]).filter(Boolean);
+
 export const entityAbilities = (
-  cogAbilities: CogAbility[]
+  cogAbilities: CogAbility[],
+  options: CogCreateOptions
 ): UncompleteEntityAbility[] => {
   return cogAbilities.map((cogAbility) => {
     const cost = cogAbility.useCost ?? { passive: true };
@@ -215,15 +221,58 @@ export const entityAbilities = (
         ? `${activation}, ${costExtension}`
         : costExtension;
     });
+    const effect = solveEffectTemplates(cogAbility, options);
+    const uses = cogAbilityUses(cogAbility, options);
     return {
       name: cogAbility.name,
-      effect: cogAbility.effect,
       custom_fields: {
         cost,
         activation,
       },
-      uses: cogAbility.uses,
+      effect,
+      uses,
       active: false,
     };
   });
+};
+
+const solveEffectTemplates = (
+  cogAbility: CogAbility,
+  options: CogCreateOptions
+): string => {
+  const { effect, name } = cogAbility;
+  const variableCost = options.variableAbilityCost[name];
+  if (variableCost && typeof variableCost === "number") {
+    const costMap = { X: { val: variableCost } };
+    const templateRegex = /\[\[[^\]]+\]\]/gm;
+    return effect.replaceAll(templateRegex, (match) => {
+      const equation = match.substring(2, match.length - 2);
+      return solveEquation(equation, costMap)?.toString() ?? equation;
+    });
+  }
+  return effect;
+};
+
+const cogAbilityUses = (
+  cogAbility: CogAbility,
+  options: CogCreateOptions
+): UsesMap | undefined => {
+  const { uses: originalUses, name } = cogAbility;
+  // need to make a deep copy so we can modify values without effecting base abilities
+  const uses: UsesMap = structuredClone(originalUses);
+  if (!uses?.adjust) {
+    return uses;
+  }
+  const variableCost = options.variableAbilityCost[name];
+  if (variableCost && typeof variableCost === "number") {
+    Object.entries(uses.adjust.attr).forEach(([attr, value]) => {
+      if (typeof value === "string") {
+        uses.adjust!.attr[attr as EntityAttribute] = value.replaceAll(
+          /\bX\b/gm,
+          variableCost.toString()
+        );
+      }
+    });
+  }
+  return uses;
 };

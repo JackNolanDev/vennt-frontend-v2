@@ -4,6 +4,7 @@
     :key="key"
     :icon="isSelected(key) ? 'radio_button_checked' : 'radio_button_unchecked'"
     @click="selectionButton(key)"
+    :disabled="optionDisabled(key)"
     class="skinny wide"
   >
     <div
@@ -23,19 +24,23 @@ const props = defineProps<{
   selected: string;
   unselectable?: boolean;
   attrs?: UpdatedEntityAttributes;
+  disabledOptions?: string[];
 }>();
 const emit = defineEmits<{
   (e: "selectedUpdated", state: string): void;
 }>();
 
-const isSelected = (key: string | number) => {
+const isSelected = (key: string) => {
   return key === props.selected;
 };
-const selectionButton = (key: string | number) => {
+const selectionButton = (key: string) => {
   if (!isSelected(key) && typeof key === "string") {
     emit("selectedUpdated", key);
   } else if (props.unselectable) {
     emit("selectedUpdated", ""); // unselect
   }
+};
+const optionDisabled = (key: string) => {
+  return !isSelected(key) && props.disabledOptions?.includes(key);
 };
 </script>

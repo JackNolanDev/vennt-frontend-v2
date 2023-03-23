@@ -31,6 +31,17 @@ export interface CogAbilitySection {
   categories: CogAbilityCategory[];
 }
 
+/**
+ * This specifies all of the options the user can make when choosing a cog's abilities.
+ *
+ * Effect formatting notes:
+ * - Mustaches: {{ }}
+ *   text withing mustache templates are equations which will be solved whenever the text is displayed.
+ *   Both the equation and the result will be displayed.
+ * - Square Brackets [[ ]]
+ *   text within square brackets are equations which will be solved whenever the text is displayed.
+ *   Only the result will be displayed. When the ability is added to the entity, these will be replaced with the final value.
+ */
 export const cogAbilityOptions: CogAbilitySection[] = [
   {
     section: "Course of Tactics",
@@ -146,7 +157,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "X",
             maxCost: "L",
             effect:
-              "This Cog can spend 2 Actions to make X melee basic attacks (up to {{L}}) that each deal {{L/5}} damage.",
+              "This Cog can spend 2 Actions to make [[X]] melee basic attacks (up to {{L}}) that each deal {{L/5}} damage.",
             useCost: { actions: 2 },
           },
         ],
@@ -159,7 +170,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "X",
             maxCost: "L",
             effect:
-              "This Cog can spend 1 Action to heal itself or an adjacent ally for X HP, up to {{L}}.",
+              "This Cog can spend 1 Action to heal itself or an adjacent ally for [[X]] HP, up to {{L}}.",
             useCost: { actions: 1 },
           },
           {
@@ -241,7 +252,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             name: "Fast",
             cost: "X",
             maxCost: "L",
-            effect: "This Cog gains X Speed, up to {{L}}.",
+            effect: "This Cog gains [[X]] Speed, up to {{L}}.",
             uses: {
               adjust: {
                 time: "permanent",
@@ -275,10 +286,275 @@ export const cogAbilityOptions: CogAbilitySection[] = [
       },
       {
         name: "Bonuses",
-        options: [],
+        options: [
+          {
+            name: "Harsh Opener",
+            cost: "3*X",
+            effect:
+              "For the first X Rounds of an Encounter, this Cog gains 1 extra Action on each of its turns.",
+          },
+          {
+            name: "Frenzy",
+            cost: "X",
+            maxCost: "L",
+            effect:
+              "When this Cog is below half HP, the first attack it deals each turn deals an additional +[[X]] damage, up to +{{L}}.",
+          },
+          {
+            name: "Armor Protection",
+            cost: "X",
+            maxCost: "L",
+            effect:
+              "This Cog's Armor cannot be reduced below [[X]] or {{L}} (whichever is lower), although this ability does not itself grant any Armor.",
+          },
+          {
+            name: "Great Initiative",
+            cost: "X",
+            maxCost: "L",
+            effect: "This Cog gains +[[X]] Initiative, up to +{{L}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  init: "init + X",
+                },
+              },
+            },
+          },
+        ],
       },
       {
         name: "Attack Modifiers",
+        options: [
+          {
+            name: "Push",
+            cost: "X",
+            maxCost: "L",
+            effect:
+              "When this Cog directly hits, it also moves the target [[X]] meters away (up to {{L}} meters).",
+          },
+          {
+            name: "Exhaust",
+            cost: "X",
+            maxCost: "L",
+            effect:
+              "When this Cog directly hits, the target also loses [[X]] Vim, up to {{L}}.",
+          },
+          {
+            name: "Drain",
+            cost: "2*X",
+            maxCost: "L/2",
+            effect:
+              "When this Cog directly hits, the target also loses [[X]] MP, up to {{L/2}}.",
+          },
+          {
+            name: "Homing",
+            cost: "L",
+            effect: "This Cog's attacks cannot be Evaded.",
+          },
+          {
+            name: "Piercing",
+            cost: "X",
+            effect: "This Cog's attacks ignore [[2*X]] Armor.",
+          },
+          {
+            name: "Radial",
+            cost: "L/2",
+            effect:
+              "This Cog's ranged attacks target a radius of {{L/4}} meters, or smaller if the Cog chooses.",
+          },
+          {
+            name: "Line",
+            cost: "L/2",
+            effect:
+              "This Cog's melee attacks target a line of {{L}} meters, or shorter if the Cog chooses.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    section: "Course of Combat",
+    categories: [
+      {
+        name: "Combat Defenses",
+        options: [
+          {
+            name: "Perceptive",
+            cost: 2,
+            effect: "This Cog is never considered flanked.",
+          },
+          {
+            name: "Cover Expert",
+            cost: 3,
+            effect:
+              "This Cog applies 1 Alert against ranged attacks that hit this Cog through Cover.",
+          },
+          {
+            name: "Patient",
+            cost: 4,
+            effect: "This Cog cannot be threatened.",
+          },
+          {
+            name: "Perfect Senses",
+            cost: 2,
+            effect: "This Cog is immune to Accuracy debuffs.",
+          },
+          {
+            name: "Tenacious",
+            cost: 2,
+            effect:
+              "This Cog is cannot be knocked prone. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
+          },
+        ],
+      },
+      {
+        name: "Combat Offenses",
+        options: [
+          {
+            name: "Predator",
+            cost: 3,
+            effect:
+              "This Cog always targets characters who are not Supported if one exists, and deals an additional 2d6 damage with damage-dealing abilities against targets who are not Supported.",
+          },
+          {
+            name: "Reach",
+            cost: "L/4",
+            effect: "This Cog gains +{{L/4}} meters of Reach.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  reach: "reach + (L/4)",
+                },
+              },
+            },
+          },
+          {
+            name: "Surrounding",
+            cost: "L/4",
+            effect:
+              "This Cog gains +{{5L}} Accuracy and +{{L}} damage on all attacks against targets they are flanking.",
+          },
+          {
+            name: "Cuffer",
+            cost: 3,
+            effect:
+              "On a direct hit that results in HP loss, this Cog's attacks also knock the target prone.",
+          },
+          {
+            name: "Obscuring",
+            cost: 3,
+            effect:
+              "On a direct hit, this Cog's attacks also apply the stacking debuff _Obscured_: -10 Accuracy.",
+          },
+          {
+            name: "Merciless",
+            cost: 3,
+            effect: "This Cog deals double damage against prone targets.",
+          },
+          {
+            name: "Threatening",
+            cost: 2,
+            effect: "This Cog's attacks threaten the target.",
+          },
+        ],
+      },
+      {
+        name: "Buffs and Debuffs",
+        options: [
+          {
+            name: "Empower",
+            cost: 2,
+            effect:
+              "Once per turn, this Cog can spend 1 Action to give a stacking _Empowered_ buff to its allies within 12 meters (including itself): gain +{{L/4}} damage on all attacks.",
+            useCost: {
+              actions: 1,
+            },
+          },
+          {
+            name: "Haste",
+            cost: 4,
+            effect:
+              "Once per turn, this Cog can spend 1 Action to grant an allied target within 12 meters +2 Actions on their next turn.",
+            useCost: {
+              actions: 1,
+            },
+          },
+          {
+            name: "Slow",
+            cost: "L/2",
+            effect:
+              "This Cog can spend 2 Actions to give a stacking Slowed debuff of -{{L/4}} Speed to a hostile target within 12 meters if they fail a DL {{7+L}} Attribute check chosen by the Cog during creation.",
+            useCost: {
+              actions: 2,
+            },
+          },
+          {
+            name: "Charge",
+            cost: 3,
+            effect:
+              "This Cog can spend 2 Actions to grant a _Charged_ buff on themself: their next attack deals double damage (then remove this buff).",
+            useCost: {
+              actions: 2,
+            },
+          },
+          {
+            name: "Weaken",
+            cost: "L/2",
+            effect:
+              "This Cog can spend 2 Actions to give a stacking _Weakened_ debuff of -{{L/4}} damage on all attacks to a hostile target within 12 meters if they fail a DL {{7+L}} Attribute check chosen by the Cog during creation.",
+            useCost: {
+              actions: 2,
+            },
+          },
+          {
+            name: "Aim",
+            cost: "L/2",
+            effect:
+              "This Cog can spend 1 Action to gain a stacking Aimed buff: their next attack has +{{5L}} Accuracy (then remove this buff).",
+            useCost: {
+              actions: 1,
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    section: "Course of Conditions",
+    categories: [
+      {
+        name: "Type Upgrades",
+        options: [],
+      },
+      {
+        name: "Condition Defenses",
+        options: [],
+      },
+      {
+        name: "Condition Offenses",
+        options: [],
+      },
+      {
+        name: "Conditional Stats",
+        options: [],
+      },
+    ],
+  },
+  {
+    section: "Course of Damages",
+    categories: [
+      {
+        name: "Damage Offenses",
+        options: [],
+      },
+      {
+        name: "Resistances",
+        options: [],
+      },
+      {
+        name: "Vulnerabilities",
         options: [],
       },
     ],
