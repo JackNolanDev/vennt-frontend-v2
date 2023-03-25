@@ -44,6 +44,7 @@ import {
   getEntityText,
 } from "@/utils/entityUtils";
 import { useEntityNotesStore } from "./entityNotes";
+import { useCogCreateStore } from "./cogCreate";
 
 const setInitialNotes = (entity: FullCollectedEntity) => {
   const foundNotes = getEntityText("NOTES", entity);
@@ -61,6 +62,7 @@ type EntityState = {
 type AddCollectedEntityOptions = {
   redirectName: string;
   clearCharacterCreation: boolean;
+  clearCogCreation: boolean;
 };
 
 export const useEntityStore = defineStore("entity", {
@@ -110,6 +112,9 @@ export const useEntityStore = defineStore("entity", {
       }
       if (options?.clearCharacterCreation) {
         useCharacterCreateStore().clearCharacter();
+      }
+      if (options?.clearCogCreation) {
+        useCogCreateStore().clearCog();
       }
       setInitialNotes(this.entity);
     },

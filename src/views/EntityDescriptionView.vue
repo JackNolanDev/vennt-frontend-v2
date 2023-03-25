@@ -3,8 +3,10 @@
     <h1>{{ entityStore.entity.entity.name }}</h1>
     <EntityDescription></EntityDescription>
     <EntityBackstory></EntityBackstory>
-    <div class="separator mt-16 mb-16"></div>
-    <EntityFlux></EntityFlux>
+    <div v-if="entityStore.entity.entity.type === 'CHARACTER'">
+      <div class="separator mt-16 mb-16"></div>
+      <EntityFlux></EntityFlux>
+    </div>
   </div>
 </template>
 

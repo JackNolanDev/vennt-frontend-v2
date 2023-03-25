@@ -135,3 +135,10 @@ export function stringToLinkID(str: string) {
 
 export const editorEmpty = (text: string): boolean =>
   !text || text === "<p></p>";
+
+export const titleText = (text: string): string => {
+  return (
+    text.charAt(0).toUpperCase() +
+    text.slice(1).toLowerCase().replaceAll("_", " ")
+  );
+};

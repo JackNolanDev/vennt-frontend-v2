@@ -77,7 +77,40 @@
         <CreateCogTypeSection></CreateCogTypeSection>
         <h2 class="step">Spend Ability Points</h2>
         <CreateCogAbilitySection></CreateCogAbilitySection>
-        <pre class="mt-64"><code>{{ cogCreateStore.collectedCog }}</code></pre>
+        <h2 class="step">Save your cog</h2>
+        <div class="alignRow gap wrap split mt-8 mb-64">
+          <ConfirmationModal
+            trigger-class="primary"
+            id="create-cog-modal"
+            @main-button="createCog"
+          >
+            <template #triggerButton>Save Cog</template>
+            <template #mainButton>Save Cog</template>
+            <template #title>Save this Cog?</template>
+            <p class="mt-0 mb-0">
+              Most fields are still editable after they have been saved. If you
+              need to edit this again in the cog creator, you can on the
+              "settings" page.
+            </p>
+          </ConfirmationModal>
+          <ConfirmationModal
+            trigger-class="clear"
+            id="clear-cog-modal"
+            @main-button="clearCog"
+          >
+            <template #triggerButton>Clear Cog</template>
+            <template #mainButton>Delete Cog</template>
+            <template #title>Delete this Cog?</template>
+            <p class="mt-0 mb-0">
+              Are you sure you want to delete this Cog? Your selections will not
+              be saved or recoverable.
+            </p>
+          </ConfirmationModal>
+        </div>
+        <BaseCopyableCode
+          :text="JSON.stringify(cogCreateStore.collectedCog, null, 2)"
+          class="mb-128"
+        ></BaseCopyableCode>
       </form>
     </PageLayout>
   </BaseLayout>
@@ -89,12 +122,37 @@ import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
 import CombatStats from "@/components/CombatStats/CombatStats.vue";
 import { useCogCreateStore } from "@/stores/cogCreate";
+import { useEntityStore } from "@/stores/entity";
 import CreateCogTypeSection from "@/components/Cog/CreateCogTypeSection.vue";
 import BaseFullFeaturedTextEditor from "@/components/Base/BaseFullFeaturedTextEditor.vue";
 import CreateCogAbilitySection from "@/components/Cog/CreateCogAbilitySection.vue";
+import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
+import router, { CREATE_COG_ROUTE, ENTITY_ROUTE } from "@/router";
+import { idValidator } from "@/utils/backendTypes";
+import BaseCopyableCode from "@/components/Base/BaseCopyableCode.vue";
 
 const cogCreateStore = useCogCreateStore();
-cogCreateStore.loadFromLocalStorage();
+const entityStore = useEntityStore();
+
+let id: string | undefined = undefined;
+if (router.currentRoute.value.query.edit) {
+  const editId = idValidator.safeParse(router.currentRoute.value.query.edit);
+  if (editId.success) {
+    id = editId.data;
+  }
+}
+cogCreateStore.loadFromEntityId(id);
+
+const createCog = () => {
+  entityStore.addCollectedEntity(cogCreateStore.collectedCog, {
+    redirectName: ENTITY_ROUTE,
+    clearCogCreation: true,
+  });
+};
+const clearCog = () => {
+  cogCreateStore.clearCog();
+  router.push({ name: CREATE_COG_ROUTE });
+};
 </script>
 
 <style scoped>

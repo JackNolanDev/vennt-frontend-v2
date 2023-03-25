@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import { reactive } from "vue";
-import ConfirmationModal from "../Base/ConfirmationModal.vue";
+import ConfirmationModal from "../../Base/ConfirmationModal.vue";
 
 const modalId = "entity-update-name-modal";
 

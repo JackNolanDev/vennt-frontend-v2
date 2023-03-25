@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import BaseDropDown from "../Base/BaseDropDown.vue";
-import ConfirmationModal from "../Base/ConfirmationModal.vue";
+import BaseDropDown from "../../Base/BaseDropDown.vue";
+import ConfirmationModal from "../../Base/ConfirmationModal.vue";
 
 const entityStore = useEntityStore();
 </script>

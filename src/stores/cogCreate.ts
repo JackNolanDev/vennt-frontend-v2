@@ -1,13 +1,14 @@
 import { entityAttributesMap } from "@/utils/attributeUtils";
-import type {
-  EntityAttribute,
-  UncompleteCollectedEntityWithChangelog,
-  UncompleteEntityText,
-  UpdatedEntityAttributes,
+import {
+  cogCreateOptionsValidator,
+  type EntityAttribute,
+  type UncompleteCollectedEntityWithChangelog,
+  type UncompleteEntityText,
+  type UpdatedEntityAttributes,
+  type CogCreateOptions,
 } from "@/utils/backendTypes";
 import {
   cogBaseAttribute,
-  cogCreateOptionsValidator,
   cogAcc,
   cogInit,
   cogHP,
@@ -16,18 +17,19 @@ import {
   cogSpeed,
   cogAbilities,
   LStat,
-  type CogCreateOptions,
   entityAbilities,
   totalAP,
   spentAP,
 } from "@/utils/copy/createCogLogic";
 import { editorEmpty } from "@/utils/textUtils";
 import { defineStore } from "pinia";
+import { useEntityStore } from "./entity";
 
 export const CREATE_COG_LOCAL_STORAGE = "create_cog";
 
 type CogCreateStore = {
   options: CogCreateOptions;
+  edit_id?: string;
 };
 
 const DEFAULT_OPTIONS: CogCreateOptions = {
@@ -89,6 +91,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
           },
           other_fields: {
             cog_type: this.options.type,
+            cog_creation_options: this.options,
           },
           public: false,
         },
@@ -118,6 +121,36 @@ export const useCogCreateStore = defineStore("cogCreate", {
     },
   },
   actions: {
+    async loadFromEntityId(id: string | undefined) {
+      if (!id) {
+        this.loadFromLocalStorage();
+        return;
+      }
+      const entityStore = useEntityStore();
+      // TODO: Clean up this code to reduce duplication
+      if (
+        entityStore.entity?.entity.id === id &&
+        entityStore.entity.entity.other_fields.cog_creation_options
+      ) {
+        this.options =
+          entityStore.entity.entity.other_fields.cog_creation_options;
+        this.edit_id = id;
+        console.log("Entity already in entityStore, no further work necessary");
+      } else {
+        await entityStore.fetchCollectedEntity(id);
+        if (
+          entityStore.entity?.entity.id === id &&
+          entityStore.entity.entity.other_fields.cog_creation_options
+        ) {
+          this.options =
+            entityStore.entity.entity.other_fields.cog_creation_options;
+          this.edit_id = id;
+          console.log("Entity needed to be fetched");
+        } else {
+          this.loadFromLocalStorage();
+        }
+      }
+    },
     loadFromLocalStorage() {
       const rawOptions = localStorage.getItem(CREATE_COG_LOCAL_STORAGE);
       if (rawOptions) {
@@ -129,6 +162,9 @@ export const useCogCreateStore = defineStore("cogCreate", {
         }
       }
     },
+    // TODO: If `edit_id` is set, we should save to the entity on the server.
+    // Also, when the entity is finally saved / the changes confirmed, instead of creating a new entity
+    // with their choices, we should just update the current entity.
     saveToLocalStorage() {
       localStorage.setItem(
         CREATE_COG_LOCAL_STORAGE,

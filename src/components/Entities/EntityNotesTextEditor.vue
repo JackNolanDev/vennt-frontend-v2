@@ -2,7 +2,7 @@
   <BaseFullFeaturedTextEditor
     v-model="entityNotesStore.liveNotes"
     @update:modelValue="entityNotesStore.typing"
-    placeholder="write character notes here"
+    placeholder="write your notes here"
     :focusOnChange="editorFocus"
   ></BaseFullFeaturedTextEditor>
 </template>

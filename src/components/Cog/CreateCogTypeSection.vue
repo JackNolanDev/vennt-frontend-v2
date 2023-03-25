@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { useCogCreateStore } from "@/stores/cogCreate";
-import { COG_ATTRIBUTE_LEVELS } from "@/utils/copy/createCogLogic";
+import { COG_ATTRIBUTE_LEVELS } from "@/utils/backendTypes";
 import { cogTypeOptions } from "@/utils/copy/createCogTypeOptions";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";

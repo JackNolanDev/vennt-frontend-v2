@@ -32,8 +32,8 @@ import {
 } from "@/utils/backendTypes";
 import { giftCopy } from "@/utils/copy/giftCopy";
 import { reactive } from "vue";
-import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
-import ConfirmationModal from "../Base/ConfirmationModal.vue";
+import BaseRadioButtons from "../../Base/BaseRadioButtons.vue";
+import ConfirmationModal from "../../Base/ConfirmationModal.vue";
 
 const props = defineProps<{
   field: keyof Pick<EntityFields, "gift" | "second_gift">;

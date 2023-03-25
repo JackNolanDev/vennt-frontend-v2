@@ -49,7 +49,7 @@ const cogCreateStore = useCogCreateStore();
 const options = computed(() => {
   return props.category.options.reduce<Record<string, HTMLString>>(
     (acc, ability) => {
-      const markdown = `**${ability.name} ({{${ability.cost}}} AP)**:<br>${ability.effect}`;
+      const markdown = `**${ability.name} [{{${ability.cost}}} AP]**:<br>${ability.effect}`;
       acc[ability.name] = markdown;
       return acc;
     },

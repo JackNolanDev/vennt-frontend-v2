@@ -131,6 +131,24 @@
         ></GiftDescription>
       </div>
     </div>
+    <button
+      v-if="entity.entity.other_fields.cog_type"
+      v-on:click="selectAttr('cog_type')"
+      class="btn basicBtn attrButton noSelect"
+      v-bind:class="attrButtonClass('cog_type')"
+    >
+      <div class="basicBtnContents attrButtonContents">
+        Cog Type: {{ titleText(entity.entity.other_fields.cog_type) }}
+      </div>
+    </button>
+    <div
+      v-if="showDropDown('cog_type')"
+      class="card column diceDropDown left right"
+    >
+      <CogTypeDescription
+        :cog_type="entity.entity.other_fields.cog_type"
+      ></CogTypeDescription>
+    </div>
     <!-- SINGLE LINE STATS -->
     <div v-for="attr in singleRowAttrs" v-bind:key="attr">
       <div v-if="attr in attrs">
@@ -217,6 +235,7 @@ import {
   getMaxAttr,
   additionalCombatStatsAttrs,
 } from "@/utils/attributeUtils";
+import { titleText } from "@/utils/textUtils";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import GiftDescription from "../Create/GiftDescription.vue";
@@ -227,6 +246,7 @@ import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
 import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
+import CogTypeDescription from "../Cog/CogTypeDescription.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -297,13 +317,15 @@ const ATTRIBUTE_ROWS: EntityAttribute[][] = [
 ];
 
 const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
-  "acc",
+  "L",
   "init",
   "speed",
   "armor",
-  "L",
   "xp",
   "sp",
+  "acc",
+  "reach",
+  "radius",
 ];
 
 const singleRowAttrs = computed(() =>

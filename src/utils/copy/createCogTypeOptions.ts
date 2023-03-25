@@ -1,5 +1,8 @@
-import type { HTMLString, BaseEntityAttribute } from "../backendTypes";
-import type { CogAttributeLevel } from "./createCogLogic";
+import type {
+  HTMLString,
+  BaseEntityAttribute,
+  CogAttributeLevel,
+} from "../backendTypes";
 
 export const cogTypeOptionsInfo: Record<
   string,

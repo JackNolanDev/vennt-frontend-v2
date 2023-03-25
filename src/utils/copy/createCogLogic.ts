@@ -1,40 +1,16 @@
-import { z } from "zod";
 import { solveEquation } from "../attributeUtils";
-import {
-  baseAttributeFieldValidator,
-  type BaseEntityAttribute,
-  type EntityAttribute,
-  type UncompleteEntityAbility,
-  type UpdatedEntityAttributes,
-  type UsesMap,
+import type {
+  CogCreateOptions,
+  EntityAttribute,
+  CogAttributeLevel,
+  BaseEntityAttribute,
+  UpdatedEntityAttributes,
+  UncompleteEntityAbility,
+  UsesMap,
 } from "../backendTypes";
+import { titleText } from "../textUtils";
 import { cogAbilityMap, type CogAbility } from "./createCogAbilityOptions";
 import { cogTypeOptionsInfo } from "./createCogTypeOptions";
-
-export const COG_ATTRIBUTE_LEVELS = [
-  "weak",
-  "moderate",
-  "strong",
-  "exceptional",
-] as const;
-
-export const cogAttributeLevelValidator = z.enum(COG_ATTRIBUTE_LEVELS);
-
-export const cogCreateOptionsValidator = z.object({
-  name: z.string(),
-  level: z.string().or(z.number()),
-  type: z.string(),
-  desc: z.string(),
-  attrOverrides: z.record(
-    baseAttributeFieldValidator,
-    cogAttributeLevelValidator
-  ),
-  abilitySelection: z.record(z.string(), z.string()),
-  variableAbilityCost: z.record(z.string(), z.string().or(z.number())),
-});
-
-export type CogCreateOptions = z.infer<typeof cogCreateOptionsValidator>;
-export type CogAttributeLevel = z.infer<typeof cogAttributeLevelValidator>;
 
 export const LStat = (level: string | number) => {
   if (typeof level === "string") {
@@ -215,8 +191,11 @@ export const entityAbilities = (
     const cost = cogAbility.useCost ?? { passive: true };
     let activation = "";
     Object.entries(cost).forEach(([costType, amount]) => {
+      const titleCostType = titleText(costType);
       const costExtension =
-        typeof amount === "boolean" ? costType : `${amount} ${costType}`;
+        typeof amount === "boolean"
+          ? titleCostType
+          : `${amount} ${titleCostType}`;
       activation = activation
         ? `${activation}, ${costExtension}`
         : costExtension;

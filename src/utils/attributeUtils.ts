@@ -14,6 +14,7 @@ import {
   type UseAttrMap,
 } from "./backendTypes";
 import { hpDiffStr, vimDiffStr, mpDiffWis } from "./copy/createCharacterCopy";
+import { titleText } from "./textUtils";
 
 export const MIN_ZEROS = new Set([
   "hp",
@@ -88,7 +89,7 @@ export const attrFullName = (attr: EntityAttribute): string => {
 export const attrShortName = (attr: EntityAttribute): string => {
   const nameMap: Partial<Record<EntityAttribute, string>> = {
     init: "Initiative",
-    acc: "Accuracy",
+    // acc: "Accuracy",
     L: "Level",
   };
   const customName = nameMap[attr];
@@ -102,7 +103,7 @@ export const attrShortName = (attr: EntityAttribute): string => {
   if (baseAttr !== undefined) {
     return "Max " + attrShortName(baseAttr);
   }
-  return attr.charAt(0).toUpperCase() + attr.slice(1).replaceAll("_", " ");
+  return titleText(attr);
 };
 
 export const xp2Level = (xp?: number) => {
@@ -340,7 +341,7 @@ export const entityAttributesMap = (
     }
   };
 
-  const equations: { [attr in EntityAttribute]?: string } = {};
+  const equations: Array<[EntityAttribute, string]> = [];
 
   // 2. Fetch effects from items
   entity.items.forEach((item) => {
@@ -353,7 +354,7 @@ export const entityAttributesMap = (
       Object.entries(item.uses.adjust.attr).forEach(([attrIn, val]) => {
         const attr = attrIn as EntityAttribute;
         if (typeof val === "string") {
-          equations[attr] = val;
+          equations.push([attr, val]);
         } else {
           const reason = `active ${item.name} ${
             val > 0 ? "adds" : "subtracts"
@@ -371,7 +372,7 @@ export const entityAttributesMap = (
       Object.entries(ability.uses.adjust.attr).forEach(([attrIn, val]) => {
         const attr = attrIn as EntityAttribute;
         if (typeof val === "string") {
-          equations[attr] = val;
+          equations.push([attr, val]);
         } else {
           const reason = `${ability.name} ${
             val > 0 ? "adds" : "subtracts"
@@ -402,14 +403,11 @@ export const entityAttributesMap = (
   });
 
   // 5. Apply pending equations
-  Object.entries(equations).forEach(([attrIn, equation]) => {
-    const attr = attrIn as EntityAttribute;
+  equations.forEach(([attr, equation]) => {
     const parsed = solveEquation(equation, attrs);
     if (parsed !== undefined) {
       const attrMap = attrs[attr];
-      const reason = `Set ${attrShortName(
-        attr
-      )} to the result of "${equation}"`;
+      const reason = `Set ${attrShortName(attr)} to "${equation}" -> parsed`;
       if (attrMap) {
         // replace value instead of adjusting it
         attrMap.val = parsed;

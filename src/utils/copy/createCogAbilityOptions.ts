@@ -242,8 +242,8 @@ export const cogAbilityOptions: CogAbilitySection[] = [
               adjust: {
                 time: "permanent",
                 attr: {
-                  radius: 3,
-                  reach: "L/5",
+                  radius: 1,
+                  reach: "reach + (L/5)",
                 },
               },
             },

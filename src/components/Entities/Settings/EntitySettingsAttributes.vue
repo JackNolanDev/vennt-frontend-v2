@@ -20,8 +20,8 @@
 import { type EntityAttribute, validAttributes } from "@/utils/backendTypes";
 import { reactive } from "vue";
 import { attrFullName } from "@/utils/attributeUtils";
-import AttributeHelp from "../Attributes/AttributeHelp.vue";
-import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
+import AttributeHelp from "../../Attributes/AttributeHelp.vue";
+import AdjustAttributeLink from "../../Attributes/AdjustAttributeLink.vue";
 
 interface attributesState {
   attr: EntityAttribute;

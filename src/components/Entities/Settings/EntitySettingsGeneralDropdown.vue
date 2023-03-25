@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseDropDown from "../Base/BaseDropDown.vue";
+import BaseDropDown from "../../Base/BaseDropDown.vue";
 import EntitySettingsAttributes from "./EntitySettingsAttributes.vue";
 import EntitySettingsGift from "./EntitySettingsGift.vue";
 import EntitySettingsName from "./EntitySettingsName.vue";
