@@ -157,7 +157,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "X",
             maxCost: "L",
             effect:
-              "This Cog can spend 2 Actions to make [[X]] melee basic attacks (up to {{L}}) that each deal {{L/5}} damage.",
+              "This Cog can spend 2 Actions to make [[X/2]] melee basic attacks (up to {{L}}) that each deal {{L/5}} damage.",
             useCost: { actions: 2 },
           },
         ],
@@ -206,6 +206,23 @@ export const cogAbilityOptions: CogAbilitySection[] = [
         name: "Traits",
         options: [
           {
+            name: "Tiny",
+            cost: "L",
+            effect:
+              "This Cog is considered {{L/2}} Levels lower for STR, HP, damage, and Speed but {{L/2}} levels higher for Vim, DEX, and AGI. They can move through hexes with hostile creatures and they gain {{L/3}} Alerts at the start of each turn.",
+            creationEffect: {
+              attrLevelAdjust: {
+                str: "L - (L/2)",
+                hp: "L - (L/2)",
+                dmg: "L - (L/2)",
+                speed: "L - (L/2)",
+                vim: "L + (L/2)",
+                dex: "L + (L/2)",
+                agi: "L + (L/2)",
+              },
+            },
+          },
+          {
             name: "Small",
             cost: "L/2",
             effect:
@@ -244,6 +261,32 @@ export const cogAbilityOptions: CogAbilitySection[] = [
                 attr: {
                   radius: 1,
                   reach: "reach + (L/5)",
+                },
+              },
+            },
+          },
+          {
+            name: "Huge",
+            cost: "L",
+            effect:
+              "This Cog is considered {{L/2}} Levels higher for STR, HP, damage, and Speed but {{L/2}} levels lower for Vim, DEX, and AGI. They take up 7 hexes (a 1-meter radius) and have a Reach of {{L/3}} meters.",
+            creationEffect: {
+              attrLevelAdjust: {
+                str: "L + (L/2)",
+                hp: "L + (L/2)",
+                dmg: "L + (L/2)",
+                speed: "L + (L/2)",
+                vim: "L - (L/2)",
+                dex: "L - (L/2)",
+                agi: "L - (L/2)",
+              },
+            },
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  radius: 1,
+                  reach: "reach + (L/3)",
                 },
               },
             },
@@ -320,6 +363,12 @@ export const cogAbilityOptions: CogAbilitySection[] = [
                 },
               },
             },
+          },
+          {
+            name: "Volatile",
+            cost: "L/2",
+            effect:
+              "When this Cog dies, they explode dealing {{L}} damage (with their base Accuracy) to all creatures in a radius of {{L/2}} (or smaller, set during Cog creation).",
           },
         ],
       },
@@ -406,6 +455,12 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect:
               "This Cog is cannot be knocked prone. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
           },
+          {
+            name: "Thorns",
+            cost: "X",
+            effect:
+              "Whenever this Cog is targeted by a melee attack from an adjacent attacker, the attacker takes an unavoidable [[X]] damage (up to {{L}}) before resolving the attack.",
+          },
         ],
       },
       {
@@ -454,9 +509,14 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect: "This Cog deals double damage against prone targets.",
           },
           {
-            name: "Threatening",
+            name: "Intimidating",
             cost: 2,
             effect: "This Cog's attacks threaten the target.",
+          },
+          {
+            name: "Threatening Aura",
+            cost: "X",
+            effect: "When an enemy to this Cog moves within [[X]] meters of this Cog, they become threatened. This Cog has {{2*X}} Armor against threatened enemies.",
           },
         ],
       },
