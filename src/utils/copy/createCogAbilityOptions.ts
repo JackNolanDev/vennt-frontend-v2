@@ -586,19 +586,137 @@ export const cogAbilityOptions: CogAbilitySection[] = [
     categories: [
       {
         name: "Type Upgrades",
-        options: [],
+        options: [
+          {
+            name: "Inherent Benefits",
+            cost: 1,
+            effect:
+              "[NYI] Based on their Type, this Cog gains the following passive bonus: \n- Arcanae: cannot become stiff\n- Automata: cannot become sick" +
+              "\n- Beast / Flora: considered +1 Level for Vim\n- Humanoid: considered +1 Level for MP\n- Monster: considered +1 Level for HP" + 
+              "\n- Undead: cannot become sick",
+          },
+          {
+            name: "Power Shift",
+            cost: "{{L/4}}",
+            effect:
+              "[NYI] Based on their Type, this Cog gains the following stat modifiers: \n- Arcanae: +{{L}} MP, -{{5*L}} Vim\n- Automata: +{{2*L}} Initiative, -{{L/2}} Speed" +
+              "\n- Beast / Flora: +{{5*L}} Vim, -{{L}} MP\n- Humanoid: +{{5*L}} Accuracy, -{{2*L}} HP\n- Monster: +{{L}} Speed, -{{2*L}} Initiative" + 
+              "\n- Undead: +{{L/2}} damage on all attacks, halved Accuracy",
+          }
+        ],
       },
       {
         name: "Condition Defenses",
-        options: [],
+        options: [
+          {
+            name: "Startled Prey",
+            cost: "{{L/2}}",
+            effect:
+              "When this Cog rolls Initiative, it loses half of its HP and Vim and gains twice as much as temporary HP and Vim.",
+          },
+          {
+            name: "Enduring",
+            cost: 2,
+            effect:
+              "This Cog cannot be fatigued.",
+          },
+          {
+            name: "Sturdy",
+            cost: 2,
+            effect:
+              "This Cog cannot be staggered. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
+          }
+        ],
       },
       {
         name: "Condition Offenses",
-        options: [],
+        options: [
+          {
+            name: "Staggering",
+            cost: 4,
+            effect:
+              "On a direct hit that results in HP loss, this Cog's attacks also stagger the target.",
+          },
+          {
+            name: "Sickening",
+            cost: 4,
+            effect:
+              "On a direct hit, this Cog's attacks also cause a sick debuff.",
+          },
+          {
+            name: "Stiffening",
+            cost: 4,
+            effect:
+              "On a direct hit, this Cog's attacks also cause a stiff debuff.",
+          },
+          {
+            name: "Tiring",
+            cost: 4,
+            effect:
+              "Once per Round, when this Cog directly hits a target, the target must succeed a Strength check DL {{3+L}} or become fatigued.",
+          },
+        ],
       },
       {
         name: "Conditional Stats",
-        options: [],
+        options: [
+          {
+            name: "Modified HP",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[5*X]] max HP. X may be between {{-L/2}} and {{L/4}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  max_hp: "max_hp + [[5*X]]",
+                },
+              },
+            },
+          },
+          {
+            name: "Modified Accuracy",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[5*X]] Accuracy. X may be between {{-L/4}} and {{L/2}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  acc: "acc + [[5*X]]",
+                },
+              },
+            },
+          },
+          {
+            name: "Modified Vim",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[5*X]] Vim. X may be between {{-L/4}} and {{L/2}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  max_vim: "max_vim + [[5*X]]",
+                },
+              },
+            },
+          },
+          {
+            name: "Modified Speed",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[X]] Speed. X may be between {{-L/4}} and {{L/4}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  speed: "speed + [[X]]",
+                },
+              },
+            },
+          }
+        ],
       },
     ],
   },
@@ -607,7 +725,44 @@ export const cogAbilityOptions: CogAbilitySection[] = [
     categories: [
       {
         name: "Damage Offenses",
-        options: [],
+        options: [
+          {
+            name: "Bleeding",
+            cost: "{{L/2}}",
+            effect:
+              "This Cog's attacks also deal {{L/2}} bleed damage with impact.",
+          },
+          {
+            name: "Burning",
+            cost: "{{L/2}}",
+            effect:
+              "This Cog's attacks also deal {{L/2}} burn damage with impact.",
+          },
+          {
+            name: "Stunning",
+            cost: 4,
+            effect:
+              "This Cog's attacks also deal 2 stun damage with impact.",
+          },
+          {
+            name: "Paralyzing",
+            cost: 4,
+            effect:
+              "This Cog's attacks also deal 2 paralysis damage with impact.",
+          },
+          {
+            name: "Taxing",
+            cost: "{{L/2}}",
+            effect:
+              "This Cog's attacks also deal {{L}} Vim damage with impact.",
+          },
+          {
+            name: "Attribute Drain",
+            cost: "{{L/2}}",
+            effect:
+              "[Attribute selection NYI] When this Cog directly hits a target, the target must succeed an Attribute check chosen during Cog creation of DL {{7+L}} or take 1 Attribute damage of an Attribute chosen during Cog creation. The Attributes for the check and damage may be the same or different Attributes.",
+          },
+        ],
       },
       {
         name: "Resistances",
