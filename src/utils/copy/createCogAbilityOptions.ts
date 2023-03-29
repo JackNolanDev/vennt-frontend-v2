@@ -669,7 +669,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
               adjust: {
                 time: "permanent",
                 attr: {
-                  max_hp: "max_hp + [[5*X]]",
+                  max_hp: "max_hp + 5*X",
                 },
               },
             },
@@ -683,7 +683,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
               adjust: {
                 time: "permanent",
                 attr: {
-                  acc: "acc + [[5*X]]",
+                  acc: "acc + 5*X",
                 },
               },
             },
@@ -697,7 +697,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
               adjust: {
                 time: "permanent",
                 attr: {
-                  max_vim: "max_vim + [[5*X]]",
+                  max_vim: "max_vim + 5*X",
                 },
               },
             },
@@ -711,7 +711,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
               adjust: {
                 time: "permanent",
                 attr: {
-                  speed: "speed + [[X]]",
+                  speed: "speed + X",
                 },
               },
             },
