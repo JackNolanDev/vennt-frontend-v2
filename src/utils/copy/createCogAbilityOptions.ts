@@ -459,7 +459,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             name: "Thorns",
             cost: "X",
             effect:
-              "Whenever this Cog is targeted by a melee attack from an adjacent attacker, the attacker takes an unavoidable {{X}} damage (up to {{L}}) before resolving the attack.",
+              "Whenever this Cog is targeted by a melee attack from an adjacent attacker, the attacker takes an unavoidable [[X]] damage (up to {{L}}) before resolving the attack.",
           },
         ],
       },
@@ -516,7 +516,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Threatening Aura",
             cost: "X",
-            effect: "When an enemy to this Cog moves within {{X}} meters of this Cog, they become threatened. This Cog has {{2*X}} Armor against threatened enemies.",
+            effect: "When an enemy to this Cog moves within [[X]] meters of this Cog, they become threatened. This Cog has {{2*X}} Armor against threatened enemies.",
           },
         ],
       },
