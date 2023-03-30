@@ -597,7 +597,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Power Shift",
-            cost: "{{L/4}}",
+            cost: "L/4",
             effect:
               "[NYI] Based on their Type, this Cog gains the following stat modifiers: \n- Arcanae: +{{L}} MP, -{{5*L}} Vim\n- Automata: +{{2*L}} Initiative, -{{L/2}} Speed" +
               "\n- Beast / Flora: +{{5*L}} Vim, -{{L}} MP\n- Humanoid: +{{5*L}} Accuracy, -{{2*L}} HP\n- Monster: +{{L}} Speed, -{{2*L}} Initiative" + 
@@ -610,7 +610,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
         options: [
           {
             name: "Startled Prey",
-            cost: "{{L/2}}",
+            cost: "L/2",
             effect:
               "When this Cog rolls Initiative, it loses half of its HP and Vim and gains twice as much as temporary HP and Vim.",
           },
@@ -728,13 +728,13 @@ export const cogAbilityOptions: CogAbilitySection[] = [
         options: [
           {
             name: "Bleeding",
-            cost: "{{L/2}}",
+            cost: "L/2",
             effect:
               "This Cog's attacks also deal {{L/2}} bleed damage with impact.",
           },
           {
             name: "Burning",
-            cost: "{{L/2}}",
+            cost: "L/2",
             effect:
               "This Cog's attacks also deal {{L/2}} burn damage with impact.",
           },
@@ -752,13 +752,13 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Taxing",
-            cost: "{{L/2}}",
+            cost: "L/2",
             effect:
               "This Cog's attacks also deal {{L}} Vim damage with impact.",
           },
           {
             name: "Attribute Drain",
-            cost: "{{L/2}}",
+            cost: "L/2",
             effect:
               "[Attribute selection NYI] When this Cog directly hits a target, the target must succeed an Attribute check chosen during Cog creation of DL {{7+L}} or take 1 Attribute damage of an Attribute chosen during Cog creation. The Attributes for the check and damage may be the same or different Attributes.",
           },
@@ -823,13 +823,13 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Magical Resistance",
-            cost: "{{L/2}}",
+            cost: "L/2",
             effect:
               "This Cog is resistant to all damage from magical attacks and gains +{{L/2}} to checks made to resist spell effects.",
           },
           {
             name: "Magical Immunity",
-            cost: "{{L}}",
+            cost: "L",
             effect:
               "This Cog is immune to all damage from magical attacks and gains +{{L}} to checks made to resist spell effects.",
           },
