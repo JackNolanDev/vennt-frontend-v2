@@ -586,19 +586,137 @@ export const cogAbilityOptions: CogAbilitySection[] = [
     categories: [
       {
         name: "Type Upgrades",
-        options: [],
+        options: [
+          {
+            name: "Inherent Benefits",
+            cost: 1,
+            effect:
+              "[NYI] Based on their Type, this Cog gains the following passive bonus: \n- Arcanae: cannot become stiff\n- Automata: cannot become sick" +
+              "\n- Beast / Flora: considered +1 Level for Vim\n- Humanoid: considered +1 Level for MP\n- Monster: considered +1 Level for HP" + 
+              "\n- Undead: cannot become sick",
+          },
+          {
+            name: "Power Shift",
+            cost: "L/4",
+            effect:
+              "[NYI] Based on their Type, this Cog gains the following stat modifiers: \n- Arcanae: +{{L}} MP, -{{5*L}} Vim\n- Automata: +{{2*L}} Initiative, -{{L/2}} Speed" +
+              "\n- Beast / Flora: +{{5*L}} Vim, -{{L}} MP\n- Humanoid: +{{5*L}} Accuracy, -{{2*L}} HP\n- Monster: +{{L}} Speed, -{{2*L}} Initiative" + 
+              "\n- Undead: +{{L/2}} damage on all attacks, halved Accuracy",
+          }
+        ],
       },
       {
         name: "Condition Defenses",
-        options: [],
+        options: [
+          {
+            name: "Startled Prey",
+            cost: "L/2",
+            effect:
+              "When this Cog rolls Initiative, it loses half of its HP and Vim and gains twice as much as temporary HP and Vim.",
+          },
+          {
+            name: "Enduring",
+            cost: 2,
+            effect:
+              "This Cog cannot be fatigued.",
+          },
+          {
+            name: "Sturdy",
+            cost: 2,
+            effect:
+              "This Cog cannot be staggered. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
+          }
+        ],
       },
       {
         name: "Condition Offenses",
-        options: [],
+        options: [
+          {
+            name: "Staggering",
+            cost: 4,
+            effect:
+              "On a direct hit that results in HP loss, this Cog's attacks also stagger the target.",
+          },
+          {
+            name: "Sickening",
+            cost: 4,
+            effect:
+              "On a direct hit, this Cog's attacks also cause a sick debuff.",
+          },
+          {
+            name: "Stiffening",
+            cost: 4,
+            effect:
+              "On a direct hit, this Cog's attacks also cause a stiff debuff.",
+          },
+          {
+            name: "Tiring",
+            cost: 4,
+            effect:
+              "Once per Round, when this Cog directly hits a target, the target must succeed a Strength check DL {{3+L}} or become fatigued.",
+          },
+        ],
       },
       {
         name: "Conditional Stats",
-        options: [],
+        options: [
+          {
+            name: "Modified HP",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[5*X]] max HP. X may be between {{-L/2}} and {{L/4}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  max_hp: "max_hp + 5*X",
+                },
+              },
+            },
+          },
+          {
+            name: "Modified Accuracy",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[5*X]] Accuracy. X may be between {{-L/4}} and {{L/2}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  acc: "acc + 5*X",
+                },
+              },
+            },
+          },
+          {
+            name: "Modified Vim",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[5*X]] Vim. X may be between {{-L/4}} and {{L/2}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  max_vim: "max_vim + 5*X",
+                },
+              },
+            },
+          },
+          {
+            name: "Modified Speed",
+            cost: "[[X]]",
+            effect:
+              "This Cog gains +[[X]] Speed. X may be between {{-L/4}} and {{L/4}}.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  speed: "speed + X",
+                },
+              },
+            },
+          }
+        ],
       },
     ],
   },
@@ -607,15 +725,268 @@ export const cogAbilityOptions: CogAbilitySection[] = [
     categories: [
       {
         name: "Damage Offenses",
-        options: [],
+        options: [
+          {
+            name: "Bleeding",
+            cost: "L/2",
+            effect:
+              "This Cog's attacks also deal {{L/2}} bleed damage with impact.",
+          },
+          {
+            name: "Burning",
+            cost: "L/2",
+            effect:
+              "This Cog's attacks also deal {{L/2}} burn damage with impact.",
+          },
+          {
+            name: "Stunning",
+            cost: 4,
+            effect:
+              "This Cog's attacks also deal 2 stun damage with impact.",
+          },
+          {
+            name: "Paralyzing",
+            cost: 4,
+            effect:
+              "This Cog's attacks also deal 2 paralysis damage with impact.",
+          },
+          {
+            name: "Taxing",
+            cost: "L/2",
+            effect:
+              "This Cog's attacks also deal {{L}} Vim damage with impact.",
+          },
+          {
+            name: "Attribute Drain",
+            cost: "L/2",
+            effect:
+              "[Attribute selection NYI] When this Cog directly hits a target, the target must succeed an Attribute check chosen during Cog creation of DL {{7+L}} or take 1 Attribute damage of an Attribute chosen during Cog creation. The Attributes for the check and damage may be the same or different Attributes.",
+          },
+        ],
       },
       {
         name: "Resistances",
-        options: [],
+        options: [
+          {
+            name: "Fatigue Resistance",
+            cost: 3,
+            effect:
+              "This Cog is resistant to Vim damage and cannot become fatigued.",
+          },
+          {
+            name: "Burn Resistance",
+            cost: 4,
+            effect:
+              "This Cog is resistant to burn damage and normal damage from fire-based attacks.",
+          },
+          {
+            name: "Burn Immunity",
+            cost: 6,
+            effect:
+              "This Cog is immune to burn damage and normal damage from fire-based attacks.",
+          },
+          {
+            name: "Stun Resistance",
+            cost: 3,
+            effect:
+              "This Cog is resistant to stun and paralysis damage.",
+          },
+          {
+            name: "Stun Immunity",
+            cost: 5,
+            effect:
+              "This Cog is immune to stun and paralysis damage.",
+          },
+          {
+            name: "Transmutation Resistance",
+            cost: 3,
+            effect:
+              "This Cog is resistant to Attribute damage.",
+          },
+          {
+            name: "Transmutation Immunity",
+            cost: 5,
+            effect:
+              "This Cog is immune to Attribute damage.",
+          },
+          {
+            name: "Galvanic Resistance",
+            cost: 3,
+            effect:
+              "This Cog is resistant to all damage from galvanic attacks.",
+          },
+          {
+            name: "Galvanic Immunity",
+            cost: 5,
+            effect:
+              "This Cog is immune to all damage from galvanic attacks.",
+          },
+          {
+            name: "Magical Resistance",
+            cost: "L/2",
+            effect:
+              "This Cog is resistant to all damage from magical attacks and gains +{{L/2}} to checks made to resist spell effects.",
+          },
+          {
+            name: "Magical Immunity",
+            cost: "L",
+            effect:
+              "This Cog is immune to all damage from magical attacks and gains +{{L}} to checks made to resist spell effects.",
+          },
+          {
+            name: "Piercing Resistance",
+            cost: 5,
+            effect:
+              "This Cog is resistant to piercing attacks and bleed damage.",
+          },
+          {
+            name: "Piercing Immunity",
+            cost: 8,
+            effect:
+              "This Cog is immune to piercing attacks and bleed damage.",
+          },
+          {
+            name: "Slashing Resistance",
+            cost: 5,
+            effect:
+              "This Cog is resistant to slashing attacks and bleed damage.",
+          },
+          {
+            name: "Slashing Immunity",
+            cost: 8,
+            effect:
+              "This Cog is resistant to slashing attacks and bleed damage.",
+          },
+          {
+            name: "Bludgeoning Resistance",
+            cost: 4,
+            effect:
+              "This Cog is resistant to bludgeoning attacks.",
+          },
+          {
+            name: "Bludgeoning Immunity",
+            cost: 6,
+            effect:
+              "This Cog is immune to bludgeoning attacks.",
+          },
+          {
+            name: "Physical Resistance",
+            cost: 10,
+            effect:
+              "This Cog is resistant to all physical normal damage.",
+          },
+          {
+            name: "Physical Immunity",
+            cost: 15,
+            effect:
+              "This Cog is immune to all physical normal damage.",
+          },
+          {
+            name: "Incredible Resistance",
+            cost: 20,
+            effect:
+              "This Cog is resistant to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+          },
+          {
+            name: "Incredible Immunity",
+            cost: 40,
+            effect:
+              "This Cog is immune to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+          },
+        ],
       },
       {
         name: "Vulnerabilities",
-        options: [],
+        options: [
+          {
+            name: "Fatigue Vulnerability",
+            cost: -3,
+            effect:
+              "This Cog is vulnerable to Vim damage and becomes fatigued whenever they take any Vim damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Burn Vulnerability",
+            cost: -4,
+            effect:
+              "This Cog is vulnerable to burn damage and normal damage from fire-based attacks. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Stun Vulnerability",
+            cost: -3,
+            effect:
+              "This Cog is vulnerable to stun and paralysis damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Transmutation Vulnerability",
+            cost: -3,
+            effect:
+              "This Cog is vulnerable to Attribute damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Galvanic Vulnerability",
+            cost: -3,
+            effect:
+              "This Cog is vulnerable to all damage from galvanic attacks. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Magical Vulnerability",
+            cost: "-{{L/2}}",
+            effect:
+              "This Cog is vulnerable to all damage from magical attacks and takes a -{{L/2}} penalty to checks made to resist spell effects. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Piercing Vulnerability",
+            cost: -5,
+            effect:
+              "This Cog is vulnerable to piercing attacks and bleed damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Slashing Vulnerability",
+            cost: -5,
+            effect:
+              "This Cog is vulnerable to slashing attacks and bleed damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Bludgeoning Vulnerability",
+            cost: -4,
+            effect:
+              "This Cog is vulnerable to bludgeoning attacks. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+          {
+            name: "Physical Vulnerability",
+            cost: -10,
+            effect:
+              "This Cog is vulnerable to all physical normal damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    section: "Course of Surroundings",
+    categories: [
+      {
+        name: "Advanced Movement",
+        options: [
+          {
+            name: "Flyer",
+            cost: "[[X]]",
+            effect:
+              "This Cog has a Flight Speed of [[X]].",
+          },
+          {
+            name: "Swimmer",
+            cost: "[[X]]",
+            effect:
+              "This Cog has a Swim Speed of [[2*X]].",
+          },
+          {
+            name: "Anchored",
+            cost: 4,
+            effect:
+              "This Cog is immune to being forcibly moved.",
+          },
+        ],
       },
     ],
   },
