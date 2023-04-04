@@ -108,7 +108,7 @@ const clearTemplateStrings = (text: string): string => {
   );
 };
 
-const solveEquationsInText = (
+export const solveEquationsInText = (
   text: string,
   attrs?: UpdatedEntityAttributes
 ): string => {

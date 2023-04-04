@@ -1,4 +1,4 @@
-import { entityAttributesMap } from "@/utils/attributeUtils";
+import { entityAttributesMap, solveEquation } from "@/utils/attributeUtils";
 import {
   cogCreateOptionsValidator,
   type EntityAttribute,
@@ -22,7 +22,8 @@ import {
   totalAP,
   spentAP,
 } from "@/utils/copy/createCogLogic";
-import { renderMarkdown, editorEmpty } from "@/utils/textUtils";
+import { solveEquationsInText, editorEmpty } from "@/utils/textUtils";
+import { computed } from "vue";
 import { defineStore } from "pinia";
 import { useEntityStore } from "./entity";
 
@@ -76,7 +77,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
       const allAbilities = entityAbilities(this.cogAbilities, this.options);
       const abilities = allAbilities.map(({ name, effect }) => ({ name, effect }));
       for (const ability of abilities) {
-        statBlock.push(`${ability.name}: ${renderMarkdown(ability.effect)}`); //FIXME I don't think renderMarkdown is what I'm looking for here
+        statBlock.push(`${ability.name}: ${solveEquationsInText(ability.effect, this.cogAttrs)}`);
       }
 
       //statBlock.push(JSON.stringify(this.collectedCog, null, 2)); //original JSON
