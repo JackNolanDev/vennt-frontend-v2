@@ -77,7 +77,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
       const allAbilities = entityAbilities(this.cogAbilities, this.options);
       const abilities = allAbilities.map(({ name, effect }) => ({ name, effect }));
       for (const ability of abilities) {
-        statBlock.push(`${ability.name}: ${solveEquationsInText(ability.effect, this.cogAttrs)}`);
+        statBlock.push(`${ability.name}: ${solveEquationsInText(ability.effect, this.cogAttrs)}`); //TODO replace [[X]] with how much X was spent for specific abilities
       }
 
       //statBlock.push(JSON.stringify(this.collectedCog, null, 2)); //original JSON
