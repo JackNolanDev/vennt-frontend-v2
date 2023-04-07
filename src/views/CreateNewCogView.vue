@@ -108,7 +108,7 @@
           </ConfirmationModal>
         </div>
         <BaseCopyableCode
-          :text="JSON.stringify(cogCreateStore.collectedCog, null, 2)"
+          :text="cogCreateStore.cogStatBlock"
           class="mb-128"
         ></BaseCopyableCode>
       </form>
