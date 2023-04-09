@@ -1,4 +1,15 @@
-import type { CollectedEntity, Entity, EntityTextKey } from "./backendTypes";
+import {
+  ATTRIBUTES,
+  type CollectedEntity,
+  type Entity,
+  type EntityAttribute,
+  type EntityTextKey,
+  type UpdatedEntityAttributes,
+} from "./backendTypes";
+import { cogTypeName } from "./copy/createCogTypeOptions";
+import TurndownService from "turndown";
+import { attrFullName, attrShortName, getMaxAttr } from "./attributeUtils";
+import { renderMarkdown } from "./textUtils";
 
 export const entityColor = (entity?: Entity): string => {
   if (!entity) {
@@ -54,3 +65,87 @@ export const defaultEntityTextPermission = (key: EntityTextKey): boolean => {
   };
   return map[key] ?? false;
 };
+
+export const getCopyableCogText = (
+  entity: CollectedEntity,
+  attrs: UpdatedEntityAttributes
+): string => {
+  const attrStr = (attr: EntityAttribute): string[] => {
+    const attrVal = attrs[attr]?.val;
+    if (!attrVal) {
+      return [];
+    }
+    const maxAttr = getMaxAttr(attr);
+    const maxAttrVal = maxAttr && attrs[maxAttr]?.val;
+    const maxAttrStr = maxAttrVal ? ` / ${maxAttrVal}` : "";
+    return [`${attrFullName(attr)}: ${attrVal}${maxAttrStr}`];
+  };
+  const turndownService = new TurndownService();
+  const description = getEntityText("DESC", entity);
+  const descLine = description ? [turndownService.turndown(description)] : [];
+  const basicAttrs = ATTRIBUTES.map(
+    (attr) => `${attrShortName(attr)}: ${attrs[attr]?.val}`
+  ).join(", ");
+  const abilities = entity.abilities.map(
+    (ability) =>
+      `${ability.name}: ${turndownService.turndown(
+        renderMarkdown(ability.effect, attrs)
+      )}`
+  );
+  const statBlock = [
+    entity.entity.name,
+    `Level ${attrs.L?.val} ${cogTypeName(entity.entity.other_fields.cog_type)}`,
+    ...descLine,
+    basicAttrs,
+    ...attrStr("init"),
+    ...attrStr("hp"),
+    ...attrStr("armor"),
+    ...attrStr("vim"),
+    ...attrStr("mp"),
+    ...attrStr("speed"),
+    ...attrStr("acc"),
+    ...abilities,
+  ];
+  return statBlock.join("\n");
+};
+
+/*
+const statBlock = [];
+      statBlock.push(this.options.name);
+      const cogTypeName = cogTypeOptions[this.options.type]?.replace(
+        /^\*\*(.*?)\*\*.*$/,
+        "$1"
+      );
+      statBlock.push(`Level ${this.options.level} ${cogTypeName}`);
+      statBlock.push(`${this.options.desc.replace(/(<([^>]+)>)/gi, "")}`);
+      const attributeString = Object.entries(
+        this.collectedCog.entity.attributes
+      )
+        .slice(0, 9) //only first 9 attrs
+        .map(([key, value]) => `${key.toUpperCase()}: ${value}`)
+        .join(", ");
+      statBlock.push(attributeString);
+      statBlock.push(`Initiative: ${this.collectedCog.entity.attributes.init}`);
+      statBlock.push(`HP: ${this.collectedCog.entity.attributes.max_hp}`);
+      statBlock.push(`Armor: ${this.cogAttrs.armor?.val ?? 0}`);
+      statBlock.push(`Vim: ${this.collectedCog.entity.attributes.max_vim}`);
+      statBlock.push(`MP: ${this.collectedCog.entity.attributes.max_mp}`);
+      statBlock.push(`Speed: ${this.collectedCog.entity.attributes.speed}`);
+      statBlock.push(`Accuracy: ${this.collectedCog.entity.attributes.acc}`);
+      const allAbilities = entityAbilities(this.cogAbilities, this.options);
+      const abilities = allAbilities.map(({ name, effect }) => ({
+        name,
+        effect,
+      }));
+      for (const ability of abilities) {
+        statBlock.push(
+          `${ability.name}: ${solveEquationsInText(
+            ability.effect,
+            this.cogAttrs
+          )}`
+        ); //TODO replace [[X]] with how much X was spent for specific abilities
+      }
+
+      //statBlock.push(JSON.stringify(this.collectedCog, null, 2)); //original JSON
+      return statBlock.join("\n");
+*/

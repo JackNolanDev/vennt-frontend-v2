@@ -334,7 +334,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             name: "Harsh Opener",
             cost: "3*X",
             effect:
-              "For the first X Rounds of an Encounter, this Cog gains 1 extra Action on each of its turns.",
+              "For the first [[X]] Rounds of an Encounter, this Cog gains 1 extra Action on each of its turns.",
           },
           {
             name: "Frenzy",
@@ -516,7 +516,8 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Threatening Aura",
             cost: "X",
-            effect: "When an enemy to this Cog moves within [[X]] meters of this Cog, they become threatened. This Cog has {{2*X}} Armor against threatened enemies.",
+            effect:
+              "When an enemy to this Cog moves within [[X]] meters of this Cog, they become threatened. This Cog has {{2*X}} Armor against threatened enemies.",
           },
         ],
       },
@@ -592,7 +593,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: 1,
             effect:
               "[NYI] Based on their Type, this Cog gains the following passive bonus: \n- Arcanae: cannot become stiff\n- Automata: cannot become sick" +
-              "\n- Beast / Flora: considered +1 Level for Vim\n- Humanoid: considered +1 Level for MP\n- Monster: considered +1 Level for HP" + 
+              "\n- Beast / Flora: considered +1 Level for Vim\n- Humanoid: considered +1 Level for MP\n- Monster: considered +1 Level for HP" +
               "\n- Undead: cannot become sick",
           },
           {
@@ -600,9 +601,9 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "L/4",
             effect:
               "[NYI] Based on their Type, this Cog gains the following stat modifiers: \n- Arcanae: +{{L}} MP, -{{5*L}} Vim\n- Automata: +{{2*L}} Initiative, -{{L/2}} Speed" +
-              "\n- Beast / Flora: +{{5*L}} Vim, -{{L}} MP\n- Humanoid: +{{5*L}} Accuracy, -{{2*L}} HP\n- Monster: +{{L}} Speed, -{{2*L}} Initiative" + 
+              "\n- Beast / Flora: +{{5*L}} Vim, -{{L}} MP\n- Humanoid: +{{5*L}} Accuracy, -{{2*L}} HP\n- Monster: +{{L}} Speed, -{{2*L}} Initiative" +
               "\n- Undead: +{{L/2}} damage on all attacks, halved Accuracy",
-          }
+          },
         ],
       },
       {
@@ -617,15 +618,14 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Enduring",
             cost: 2,
-            effect:
-              "This Cog cannot be fatigued.",
+            effect: "This Cog cannot be fatigued.",
           },
           {
             name: "Sturdy",
             cost: 2,
             effect:
               "This Cog cannot be staggered. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
-          }
+          },
         ],
       },
       {
@@ -662,7 +662,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
         options: [
           {
             name: "Modified HP",
-            cost: "[[X]]",
+            cost: "X",
             effect:
               "This Cog gains +[[5*X]] max HP. X may be between {{-L/2}} and {{L/4}}.",
             uses: {
@@ -676,7 +676,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Modified Accuracy",
-            cost: "[[X]]",
+            cost: "X",
             effect:
               "This Cog gains +[[5*X]] Accuracy. X may be between {{-L/4}} and {{L/2}}.",
             uses: {
@@ -690,7 +690,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Modified Vim",
-            cost: "[[X]]",
+            cost: "X",
             effect:
               "This Cog gains +[[5*X]] Vim. X may be between {{-L/4}} and {{L/2}}.",
             uses: {
@@ -704,7 +704,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Modified Speed",
-            cost: "[[X]]",
+            cost: "X",
             effect:
               "This Cog gains +[[X]] Speed. X may be between {{-L/4}} and {{L/4}}.",
             uses: {
@@ -715,7 +715,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
                 },
               },
             },
-          }
+          },
         ],
       },
     ],
@@ -741,8 +741,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Stunning",
             cost: 4,
-            effect:
-              "This Cog's attacks also deal 2 stun damage with impact.",
+            effect: "This Cog's attacks also deal 2 stun damage with impact.",
           },
           {
             name: "Paralyzing",
@@ -788,26 +787,22 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Stun Resistance",
             cost: 3,
-            effect:
-              "This Cog is resistant to stun and paralysis damage.",
+            effect: "This Cog is resistant to stun and paralysis damage.",
           },
           {
             name: "Stun Immunity",
             cost: 5,
-            effect:
-              "This Cog is immune to stun and paralysis damage.",
+            effect: "This Cog is immune to stun and paralysis damage.",
           },
           {
             name: "Transmutation Resistance",
             cost: 3,
-            effect:
-              "This Cog is resistant to Attribute damage.",
+            effect: "This Cog is resistant to Attribute damage.",
           },
           {
             name: "Transmutation Immunity",
             cost: 5,
-            effect:
-              "This Cog is immune to Attribute damage.",
+            effect: "This Cog is immune to Attribute damage.",
           },
           {
             name: "Galvanic Resistance",
@@ -818,8 +813,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Galvanic Immunity",
             cost: 5,
-            effect:
-              "This Cog is immune to all damage from galvanic attacks.",
+            effect: "This Cog is immune to all damage from galvanic attacks.",
           },
           {
             name: "Magical Resistance",
@@ -842,8 +836,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Piercing Immunity",
             cost: 8,
-            effect:
-              "This Cog is immune to piercing attacks and bleed damage.",
+            effect: "This Cog is immune to piercing attacks and bleed damage.",
           },
           {
             name: "Slashing Resistance",
@@ -860,26 +853,22 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Bludgeoning Resistance",
             cost: 4,
-            effect:
-              "This Cog is resistant to bludgeoning attacks.",
+            effect: "This Cog is resistant to bludgeoning attacks.",
           },
           {
             name: "Bludgeoning Immunity",
             cost: 6,
-            effect:
-              "This Cog is immune to bludgeoning attacks.",
+            effect: "This Cog is immune to bludgeoning attacks.",
           },
           {
             name: "Physical Resistance",
             cost: 10,
-            effect:
-              "This Cog is resistant to all physical normal damage.",
+            effect: "This Cog is resistant to all physical normal damage.",
           },
           {
             name: "Physical Immunity",
             cost: 15,
-            effect:
-              "This Cog is immune to all physical normal damage.",
+            effect: "This Cog is immune to all physical normal damage.",
           },
           {
             name: "Incredible Resistance",
@@ -930,7 +919,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           },
           {
             name: "Magical Vulnerability",
-            cost: "-{{L/2}}",
+            cost: "-L/2",
             effect:
               "This Cog is vulnerable to all damage from magical attacks and takes a -{{L/2}} penalty to checks made to resist spell effects. [NYI] This cannot be taken with the respective resistance or immunity.",
           },
@@ -970,21 +959,18 @@ export const cogAbilityOptions: CogAbilitySection[] = [
         options: [
           {
             name: "Flyer",
-            cost: "[[X]]",
-            effect:
-              "This Cog has a Flight Speed of [[X]].",
+            cost: "X",
+            effect: "This Cog has a Flight Speed of [[X]].",
           },
           {
             name: "Swimmer",
-            cost: "[[X]]",
-            effect:
-              "This Cog has a Swim Speed of [[2*X]].",
+            cost: "X",
+            effect: "This Cog has a Swim Speed of [[2*X]].",
           },
           {
             name: "Anchored",
             cost: 4,
-            effect:
-              "This Cog is immune to being forcibly moved.",
+            effect: "This Cog is immune to being forcibly moved.",
           },
         ],
       },

@@ -138,7 +138,7 @@
       v-bind:class="attrButtonClass('cog_type')"
     >
       <div class="basicBtnContents attrButtonContents">
-        Cog Type: {{ titleText(entity.entity.other_fields.cog_type) }}
+        Cog Type: {{ cogTypeName(entity.entity.other_fields.cog_type) }}
       </div>
     </button>
     <div
@@ -235,7 +235,7 @@ import {
   getMaxAttr,
   additionalCombatStatsAttrs,
 } from "@/utils/attributeUtils";
-import { titleText } from "@/utils/textUtils";
+import { cogTypeName } from "@/utils/copy/createCogTypeOptions";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import GiftDescription from "../Create/GiftDescription.vue";
