@@ -1,4 +1,15 @@
-import type { CollectedEntity, Entity, EntityTextKey } from "./backendTypes";
+import {
+  ATTRIBUTES,
+  type CollectedEntity,
+  type Entity,
+  type EntityAttribute,
+  type EntityTextKey,
+  type UpdatedEntityAttributes,
+} from "./backendTypes";
+import { cogTypeName } from "./copy/createCogTypeOptions";
+import TurndownService from "turndown";
+import { attrFullName, attrShortName, getMaxAttr } from "./attributeUtils";
+import { renderMarkdown } from "./textUtils";
 
 export const entityColor = (entity?: Entity): string => {
   if (!entity) {
@@ -53,4 +64,47 @@ export const defaultEntityTextPermission = (key: EntityTextKey): boolean => {
     BACKSTORY: false,
   };
   return map[key] ?? false;
+};
+
+export const getCopyableCogText = (
+  entity: CollectedEntity,
+  attrs: UpdatedEntityAttributes
+): string => {
+  const attrStr = (attr: EntityAttribute): string[] => {
+    const attrVal = attrs[attr]?.val;
+    if (!attrVal) {
+      return [];
+    }
+    const maxAttr = getMaxAttr(attr);
+    const maxAttrVal = maxAttr && attrs[maxAttr]?.val;
+    const maxAttrStr = maxAttrVal ? ` / ${maxAttrVal}` : "";
+    return [`${attrFullName(attr)}: ${attrVal}${maxAttrStr}`];
+  };
+  const turndownService = new TurndownService();
+  const description = getEntityText("DESC", entity);
+  const descLine = description ? [turndownService.turndown(description)] : [];
+  const basicAttrs = ATTRIBUTES.map(
+    (attr) => `${attrShortName(attr)}: ${attrs[attr]?.val}`
+  ).join(", ");
+  const abilities = entity.abilities.map(
+    (ability) =>
+      `${ability.name}: ${turndownService.turndown(
+        renderMarkdown(ability.effect, attrs)
+      )}`
+  );
+  const statBlock = [
+    entity.entity.name,
+    `Level ${attrs.L?.val} ${cogTypeName(entity.entity.other_fields.cog_type)}`,
+    ...descLine,
+    basicAttrs,
+    ...attrStr("init"),
+    ...attrStr("hp"),
+    ...attrStr("armor"),
+    ...attrStr("vim"),
+    ...attrStr("mp"),
+    ...attrStr("speed"),
+    ...attrStr("acc"),
+    ...abilities,
+  ];
+  return statBlock.join("\n");
 };
