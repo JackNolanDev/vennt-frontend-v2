@@ -1,5 +1,6 @@
 <template>
-  <EditItem v-if="showNewItem"></EditItem>
+  <EditAbility v-if="showNewAbility"></EditAbility>
+  <EditItem v-else-if="showNewItem"></EditItem>
   <ShopItemDetail v-else-if="shopItem" :item="shopItem"></ShopItemDetail>
   <AbilityDetails
     v-else-if="entityAbility"
@@ -30,6 +31,7 @@ import EditItem from "../Items/EditItem.vue";
 import { idValidator } from "@/utils/backendTypes";
 import AbilityDetails from "../Abilities/AbilityDetails.vue";
 import AbilitySearchDetails from "../Abilities/AbilitySearchDetails.vue";
+import EditAbility from "../Abilities/EditAbility.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
@@ -40,6 +42,9 @@ const isUUID = computed(
 
 const showNewItem = computed(
   () => router.currentRoute.value.query.new === "item"
+);
+const showNewAbility = computed(
+  () => router.currentRoute.value.query.new === "ability"
 );
 const entityItem = computed(() =>
   isUUID.value

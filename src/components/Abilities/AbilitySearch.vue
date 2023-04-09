@@ -1,5 +1,5 @@
 <template>
-  <label for="ability-search"><h2>Add New Abilities</h2></label>
+  <label for="ability-search"><h2>Search For New Abilities</h2></label>
   <input
     placeholder="Search Ability"
     v-model="state.search"
