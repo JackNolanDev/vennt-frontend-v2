@@ -1,4 +1,4 @@
-import { entityAttributesMap, solveEquation } from "@/utils/attributeUtils";
+import { entityAttributesMap } from "@/utils/attributeUtils";
 import {
   cogCreateOptionsValidator,
   type EntityAttribute,
@@ -7,7 +7,6 @@ import {
   type UpdatedEntityAttributes,
   type CogCreateOptions,
 } from "@/utils/backendTypes";
-import { cogTypeOptions } from "@/utils/copy/createCogTypeOptions";
 import {
   cogBaseAttribute,
   cogAcc,
@@ -22,10 +21,10 @@ import {
   totalAP,
   spentAP,
 } from "@/utils/copy/createCogLogic";
-import { solveEquationsInText, editorEmpty } from "@/utils/textUtils";
-import { computed } from "vue";
+import { editorEmpty } from "@/utils/textUtils";
 import { defineStore } from "pinia";
 import { useEntityStore } from "./entity";
+import { getCopyableCogText } from "@/utils/entityUtils";
 
 export const CREATE_COG_LOCAL_STORAGE = "create_cog";
 
@@ -56,32 +55,6 @@ export const useCogCreateStore = defineStore("cogCreate", {
     totalAP: (state) => totalAP(state.options),
     remainingAP(): number {
       return this.totalAP - spentAP(this.cogAbilities, this.options);
-    },
-    cogStatBlock(): string {
-      let statBlock = [];
-      statBlock.push(this.options.name);
-      const cogTypeName = cogTypeOptions[this.options.type].replace(/^\*\*(.*?)\*\*.*$/, '$1');
-      statBlock.push(`Level ${this.options.level} ${cogTypeName}`);
-      statBlock.push(`${this.options.desc.replace(/(<([^>]+)>)/gi, "")}`); //remove HTML tags because I don't know how to make this copyable code use rich formatting
-      const attributeString = Object.entries(this.collectedCog.entity.attributes)
-        .slice(0,9) //only first 9 attrs
-        .map(([key, value]) => `${key.toUpperCase()}: ${value}`).join(", ");
-      statBlock.push(attributeString);
-      statBlock.push(`Initiative: ${this.collectedCog.entity.attributes.init}`);
-      statBlock.push(`HP: ${this.collectedCog.entity.attributes.max_hp}`);
-      statBlock.push(`Armor: ${this.cogAttrs.armor?.val ?? 0}`);
-      statBlock.push(`Vim: ${this.collectedCog.entity.attributes.max_vim}`);
-      statBlock.push(`MP: ${this.collectedCog.entity.attributes.max_mp}`);
-      statBlock.push(`Speed: ${this.collectedCog.entity.attributes.speed}`);
-      statBlock.push(`Accuracy: ${this.collectedCog.entity.attributes.acc}`);
-      const allAbilities = entityAbilities(this.cogAbilities, this.options);
-      const abilities = allAbilities.map(({ name, effect }) => ({ name, effect }));
-      for (const ability of abilities) {
-        statBlock.push(`${ability.name}: ${solveEquationsInText(ability.effect, this.cogAttrs)}`); //TODO replace [[X]] with how much X was spent for specific abilities
-      }
-
-      //statBlock.push(JSON.stringify(this.collectedCog, null, 2)); //original JSON
-      return statBlock.join("\n");
     },
     collectedCog(): UncompleteCollectedEntityWithChangelog {
       const text: UncompleteEntityText[] = [];
@@ -146,6 +119,9 @@ export const useCogCreateStore = defineStore("cogCreate", {
         attrs[attr as EntityAttribute]!.val = attrs[maxAttr]!.val;
       });
       return attrs;
+    },
+    cogStatBlock(): string {
+      return getCopyableCogText(this.collectedCog, this.cogAttrs);
     },
   },
   actions: {
