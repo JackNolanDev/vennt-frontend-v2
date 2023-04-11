@@ -1,3 +1,4 @@
+import { generateAbilityActivation } from "../abilityUtils";
 import { solveEquation } from "../attributeUtils";
 import type {
   CogCreateOptions,
@@ -8,7 +9,6 @@ import type {
   UncompleteEntityAbility,
   UsesMap,
 } from "../backendTypes";
-import { titleText } from "../textUtils";
 import { cogAbilityMap, type CogAbility } from "./createCogAbilityOptions";
 import { cogTypeOptionsInfo } from "./createCogTypeOptions";
 
@@ -189,17 +189,7 @@ export const entityAbilities = (
 ): UncompleteEntityAbility[] => {
   return cogAbilities.map((cogAbility) => {
     const cost = cogAbility.useCost ?? { passive: true };
-    let activation = "";
-    Object.entries(cost).forEach(([costType, amount]) => {
-      const titleCostType = titleText(costType);
-      const costExtension =
-        typeof amount === "boolean"
-          ? titleCostType
-          : `${amount} ${titleCostType}`;
-      activation = activation
-        ? `${activation}, ${costExtension}`
-        : costExtension;
-    });
+    const activation = generateAbilityActivation(cost);
     const effect = solveEffectTemplates(cogAbility, options);
     const uses = cogAbilityUses(cogAbility, options);
     return {
