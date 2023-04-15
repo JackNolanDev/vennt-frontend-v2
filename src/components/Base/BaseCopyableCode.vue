@@ -1,15 +1,11 @@
 <template>
-  <pre><code><BaseButton @click="copyText" icon="content_copy" title="Copy this text" class="copy-button"></BaseButton>{{ text }}</code></pre>
+  <pre><code><BaseCopyButton :text="text" title="Copy this text" class="copy-button"></BaseCopyButton>{{ text }}</code></pre>
 </template>
 
 <script setup lang="ts">
-import BaseButton from "./BaseButton.vue";
+import BaseCopyButton from "./BaseCopyButton.vue";
 
-const props = defineProps<{ text: string }>();
-
-const copyText = () => {
-  navigator.clipboard.writeText(props.text);
-};
+defineProps<{ text: string }>();
 </script>
 
 <style scoped>

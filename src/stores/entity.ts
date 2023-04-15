@@ -11,6 +11,7 @@ import {
   updateFluxApi,
   deleteEntityApi,
   updateEntityApi,
+  updateEntityTextPermissionApi,
 } from "@/api/apiEntity";
 import router, {
   ENTITY_ABILITIES_ROUTE,
@@ -273,6 +274,20 @@ export const useEntityStore = defineStore("entity", {
           await updateEntityTextApi(this.entity.entity.id, key, text);
           this.apisInFlight[key] = false;
         }
+      }
+    },
+    async updateTextPermission(key: EntityTextKey, newPermission: boolean) {
+      if (!this.entity) return;
+      const foundIdx = this.entity.text.findIndex(
+        (search) => search.key === key
+      );
+      if (this.entity.text[foundIdx].public !== newPermission) {
+        this.entity.text[foundIdx].public = newPermission;
+        await updateEntityTextPermissionApi(
+          this.entity.entity.id,
+          key,
+          newPermission
+        );
       }
     },
     async saveFlux(request: UncompleteEntityFlux) {
