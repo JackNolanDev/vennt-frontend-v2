@@ -1,6 +1,6 @@
 <template>
   <form>
-    <h2 v-if="givenItem">Edit "{{ givenItem?.name }}"</h2>
+    <h2 v-if="givenItem">Edit "{{ givenItem.name }}"</h2>
     <h2 v-else>New Item</h2>
     <label for="new-item-name" class="labelText">Name:</label>
     <input

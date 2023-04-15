@@ -4,7 +4,7 @@
     @click="updateAbility"
     icon="refresh"
     title="Updates this ability to use the latest version on the wiki"
-    class="wide mt-8"
+    class="wide"
     >Use latest version</BaseButton
   >
 </template>
@@ -26,6 +26,7 @@ const updatedAbility = computed(() =>
 );
 
 const updateAbility = () => {
+  // console.log({ old: props.ability, new: updatedAbility.value });
   if (updatedAbility.value) {
     entityStore.updateAbility(props.ability.id, updatedAbility.value);
   }

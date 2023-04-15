@@ -1,6 +1,7 @@
 import isEqual from "lodash.isequal";
 import {
   abilityFieldsNameValidator,
+  type AbilityCostMap,
   type AbilityCostMapNumber,
   type CharacterGift,
   type CollectedEntity,
@@ -16,6 +17,7 @@ import {
   type UseCriteriaKey,
   type UseCriteriaSpecial,
 } from "./backendTypes";
+import { titleText } from "./textUtils";
 
 const freeAbilities = new Set(["Alchemist's Training"]); // Alchemist's Training is free with Tinker's Training
 
@@ -375,4 +377,17 @@ export const findNewAbilityVersion = (
     };
   }
   return undefined;
+};
+
+export const generateAbilityActivation = (cost: AbilityCostMap): string => {
+  let activation = "";
+  Object.entries(cost).forEach(([costType, amount]) => {
+    const titleCostType = titleText(costType);
+    const costExtension =
+      typeof amount === "boolean"
+        ? titleCostType
+        : `${amount} ${titleCostType}`;
+    activation = activation ? `${activation}, ${costExtension}` : costExtension;
+  });
+  return activation;
 };

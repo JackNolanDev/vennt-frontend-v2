@@ -30,7 +30,7 @@
       }"
       icon="add"
       class="wide"
-      >Add item</BaseButton
+      >Add custom item</BaseButton
     >
     <h2>Buy Items</h2>
     <BaseButton

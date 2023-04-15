@@ -674,6 +674,10 @@ pre > code {
   gap: 16px;
 }
 
+.center-items {
+  align-items: center;
+}
+
 .condense-child-text p:first-child {
   margin-top: 0px;
   margin-bottom: 0px;
