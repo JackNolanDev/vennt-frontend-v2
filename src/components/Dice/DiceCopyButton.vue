@@ -1,29 +1,16 @@
 <template>
-  <BaseButton
-    @click="copyCommand"
-    :title="command"
-    icon="content_copy"
-    class="wide"
-    >{{ text }}</BaseButton
-  >
+  <BaseCopyButton :text="command" :title="command" class="wide">{{
+    text
+  }}</BaseCopyButton>
 </template>
 
-<script lang="ts">
-import BaseButton from "../Base/BaseButton.vue";
+<script setup lang="ts">
+import { computed } from "vue";
+import BaseCopyButton from "../Base/BaseCopyButton.vue";
 
-export default {
-  name: "DiceCopyButton",
-  props: { dice: String, text: { type: String, default: "Roll command" } },
-  computed: {
-    command() {
-      return `/roll ${this.dice}`;
-    },
-  },
-  methods: {
-    copyCommand() {
-      navigator.clipboard.writeText(this.command);
-    },
-  },
-  components: { BaseButton },
-};
+const props = withDefaults(defineProps<{ dice: string; text?: string }>(), {
+  text: "Roll command",
+});
+
+const command = computed(() => `/roll ${props.dice}`);
 </script>
