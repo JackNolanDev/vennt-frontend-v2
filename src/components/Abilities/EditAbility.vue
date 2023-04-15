@@ -17,7 +17,7 @@
       placeholder="Big magical blast"
       class="mt-4 mb-16"
     ></BaseInlineTextEditor>
-    <BaseDropDown title="Ability Cost">
+    <BaseDropDown title="Usage Cost" class="mb-16">
       <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
         <div class="cols-2 center-items">
           <label for="ability-cost-passive" class="labelText nowrap">
@@ -143,6 +143,63 @@
         </div>
       </div>
     </BaseDropDown>
+    <BaseDropDown title="Additional Details" class="mb-16">
+      <div class="mt-8 mb-8 ml-8 mr-8">
+        <label for="new-ability-flavor" class="labelText"><i>Flavor:</i></label>
+        <input
+          type="text"
+          v-model="state.flavor"
+          placeholder="Wow! That was loud!"
+          title="Enter some flavor for this ability"
+          id="new-ability-flavor"
+          class="input wide mt-4 mb-16"
+        />
+        <label for="new-ability-range" class="labelText">Range:</label>
+        <input
+          type="text"
+          v-model="state.range"
+          placeholder="12m"
+          title="Enter the range of this ability"
+          id="new-ability-range"
+          class="input wide mt-4 mb-16"
+        />
+        <label for="new-ability-purchase" class="labelText"
+          >Purchase Cost</label
+        >
+        <input
+          type="text"
+          v-model="state.purchase"
+          placeholder="100 xp"
+          title="Enter the purchase cost of the ability. Generally, abilities cost XP"
+          id="new-ability-purchase"
+          class="input wide mt-4 mb-16"
+        />
+        <label for="new-ability-expedited" class="labelText"
+          >Expedited for</label
+        >
+        <input
+          type="text"
+          v-model="state.expedited"
+          placeholder="Alertness, Magic"
+          title="Gifts which the cost of this ability is expedited for"
+          id="new-ability-expedited"
+          class="input wide mt-4 mb-16"
+        />
+        <label class="labelText">Comment:</label>
+        <BaseInlineTextEditor
+          v-model="state.comment"
+          placeholder="notes about ability"
+          class="mt-4 mb-16"
+        ></BaseInlineTextEditor>
+      </div>
+    </BaseDropDown>
+    <BaseButton
+      :disabled="buttonDisabled"
+      @click="addAbilityButton"
+      class="primary center wide"
+    >
+      {{ givenAbility ? "Edit" : "Add" }} ability
+    </BaseButton>
     <div v-if="showPreview">
       <div class="separator mt-16 mb-16"></div>
       <h2>Ability Preview:</h2>
@@ -155,20 +212,24 @@
 </template>
 
 <script setup lang="ts">
+import { useEntityStore } from "@/stores/entity";
 import { generateAbilityActivation } from "@/utils/abilityUtils";
-import type {
-  AbilityCostMap,
-  FullEntityAbility,
-  UncompleteEntityAbility,
+import {
+  abilityValidator,
+  type AbilityCostMap,
+  type FullEntityAbility,
+  type UncompleteEntityAbility,
 } from "@/utils/backendTypes";
 import { editorEmpty } from "@/utils/textUtils";
 import { computed, reactive } from "vue";
+import BaseButton from "../Base/BaseButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 
 const props = defineProps<{ givenAbility?: FullEntityAbility }>();
-defineEmits<{ (e: "submitted"): void }>();
+const emit = defineEmits<{ (e: "submitted"): void }>();
+const entityStore = useEntityStore();
 
 interface NewAbilityState {
   name: string;
@@ -182,6 +243,12 @@ interface NewAbilityState {
   cost_reactions: string | number;
   cost_attack: boolean;
   cost_downtime: "" | "Respite" | "Intermission";
+  flavor: string;
+  range: string;
+  purchase: string;
+  expedited: string;
+  path: string;
+  comment: string;
 }
 
 const initialState: NewAbilityState = {
@@ -200,6 +267,12 @@ const initialState: NewAbilityState = {
     : props.givenAbility?.custom_fields?.cost?.intermission
     ? "Intermission"
     : "",
+  flavor: props.givenAbility?.custom_fields?.flavor ?? "",
+  range: props.givenAbility?.custom_fields?.range ?? "",
+  purchase: props.givenAbility?.custom_fields?.purchase ?? "",
+  expedited: props.givenAbility?.custom_fields?.expedited ?? "",
+  path: props.givenAbility?.custom_fields?.path ?? "",
+  comment: props.givenAbility?.comment ?? "",
 };
 
 const state = reactive({ ...initialState });
@@ -230,10 +303,37 @@ const newAbility = computed((): UncompleteEntityAbility => {
     name: state.name,
     effect: state.effect,
     active: props.givenAbility?.active ?? false,
-    custom_fields: { cost, activation },
+    comment: state.comment,
+    custom_fields: {
+      ...props.givenAbility?.custom_fields,
+      cost,
+      activation,
+      ...(state.flavor && { flavor: state.flavor }),
+      ...(state.range && { range: state.range }),
+      ...(state.purchase && { purchase: state.purchase }),
+      ...(state.expedited && { expedited: state.expedited }),
+      ...(state.path && { path: state.path }),
+    },
+    // TODO: Make USES editable
+    uses: props.givenAbility?.uses,
   };
   return ability;
 });
+const buttonDisabled = computed(
+  () => !abilityValidator.safeParse(newAbility.value).success
+);
+const addAbilityButton = () => {
+  if (props.givenAbility) {
+    entityStore.updateAbility(props.givenAbility.id, newAbility.value);
+  } else {
+    entityStore.addAbilities([newAbility.value], true);
+  }
+  emit("submitted");
+  Object.entries(initialState).forEach(([key, val]) => {
+    // @ts-ignore
+    state[key] = val;
+  });
+};
 </script>
 
 <style scoped>

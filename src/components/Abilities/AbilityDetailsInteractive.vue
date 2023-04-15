@@ -4,7 +4,7 @@
   <UseAbilitySection :ability="ability"></UseAbilitySection>
   <div class="separator mt-16 mb-16"></div>
   <BaseButton @click="emit('editButton')" icon="edit" class="wide mt-24">
-    Edit item
+    Edit Ability
   </BaseButton>
   <DeleteAbilityButton :ability="ability"></DeleteAbilityButton>
   <AbilityUseLatestButton :ability="ability"></AbilityUseLatestButton>
