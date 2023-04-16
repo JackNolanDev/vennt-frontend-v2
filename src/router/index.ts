@@ -6,6 +6,7 @@ export const SIGNUP_ROUTE = "signup";
 export const LOGIN_ROUTE = "login";
 export const CREATE_ROUTE = "create";
 export const CREATE_NEW_ROUTE = "createNew";
+export const CREATE_UPLOAD_ROUTE = "createUpload";
 export const CREATE_COG_ROUTE = "createCog";
 export const CREATE_NEW_COG_ROUTE = "createNewCog";
 export const CREDITS_ROUTE = "credits";
@@ -50,6 +51,12 @@ const router = createRouter({
       name: CREATE_NEW_ROUTE,
       meta: { loggedInOnly: true },
       component: () => import("../views/CreateNewView.vue"),
+    },
+    {
+      path: "/create/upload",
+      name: CREATE_UPLOAD_ROUTE,
+      meta: { loggedInOnly: true },
+      component: () => import("../views/CreateNewUploadView.vue"),
     },
     {
       path: "/create/cog",

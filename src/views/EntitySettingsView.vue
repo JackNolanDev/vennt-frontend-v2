@@ -3,10 +3,12 @@
   <EntitySettingsCogs class="mb-8"></EntitySettingsCogs>
   <EntitySettingsGeneralDropdown class="mb-8"></EntitySettingsGeneralDropdown>
   <EntitySettingsPermissions class="mb-8"></EntitySettingsPermissions>
-  <EntitySettingsDangerous></EntitySettingsDangerous>
+  <EntitySettingsDangerous class="mb-8"></EntitySettingsDangerous>
+  <EntityDownload></EntityDownload>
 </template>
 
 <script setup lang="ts">
+import EntityDownload from "@/components/Entities/Settings/EntityDownload.vue";
 import EntitySettingsCogs from "@/components/Entities/Settings/EntitySettingsCogs.vue";
 import EntitySettingsDangerous from "@/components/Entities/Settings/EntitySettingsDangerous.vue";
 import EntitySettingsGeneralDropdown from "@/components/Entities/Settings/EntitySettingsGeneralDropdown.vue";

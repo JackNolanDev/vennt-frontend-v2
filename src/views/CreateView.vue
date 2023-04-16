@@ -13,6 +13,12 @@
       >
         Make a new character!
       </BaseButton>
+      <BaseButton
+        :to="{ name: CREATE_UPLOAD_ROUTE }"
+        class="primary bold center mb-8"
+      >
+        Upload an entity
+      </BaseButton>
     </PageLayout>
   </BaseLayout>
 </template>
@@ -22,5 +28,5 @@ import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
-import { CREATE_NEW_ROUTE } from "@/router";
+import { CREATE_NEW_ROUTE, CREATE_UPLOAD_ROUTE } from "@/router";
 </script>

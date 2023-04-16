@@ -24,6 +24,8 @@ import {
   type PartialEntityFlux,
   type UncompleteEntityFlux,
   fullEntityFluxValidator,
+  fullCollectedEntityWithChangelogValidator,
+  type FullCollectedEntityWithChangelog,
 } from "@/utils/backendTypes";
 import api from "./apiInstance";
 import { authConfig, wrapAPI } from "./utils";
@@ -51,6 +53,15 @@ export const fetchCollectedEntityApi = (
   return wrapAPI(
     () => api.get(`/entity/${entityId}`, authConfig()),
     fullCollectedEntityValidator
+  );
+};
+
+export const fetchCollectedEntityFullApi = (
+  entityId: string
+): Promise<FullCollectedEntityWithChangelog> => {
+  return wrapAPI(
+    () => api.get(`/entity/${entityId}/full`, authConfig()),
+    fullCollectedEntityWithChangelogValidator
   );
 };
 

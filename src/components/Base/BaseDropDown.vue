@@ -42,10 +42,9 @@ const state = reactive({ closed: !props.defaultOpen });
 const emit = defineEmits<{ (e: "change", state: boolean): void }>();
 
 const toggleDropDown = () => {
-  if (props.useGivenState) {
-    emit("change", !props.givenClosed);
-  } else {
+  if (!props.useGivenState) {
     state.closed = !state.closed;
   }
+  emit("change", !props.givenClosed);
 };
 </script>
