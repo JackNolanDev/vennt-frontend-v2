@@ -41,7 +41,13 @@ const entityStore = useEntityStore();
 const spentXP = computed(() =>
   entityStore.entity
     ? entityStore.entity.abilities.reduce(
-        (sum, ability) => sum + actualXPCost(ability, entityStore.entity),
+        (sum, ability) =>
+          sum +
+          actualXPCost(
+            ability,
+            entityStore.entityAttributes,
+            entityStore.entity
+          ),
         0
       )
     : 0

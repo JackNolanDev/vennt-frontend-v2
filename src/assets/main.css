@@ -258,13 +258,13 @@ ul {
   font-size: 12pt;
 }
 
-.errorText {
+.errorText, .error-text {
   color: var(--text-error);
 }
-.mutedText {
+.mutedText, .muted-text {
   color: var(--text-muted);
 }
-.contrastText {
+.contrastText, .contrast-text {
   color: var(--text-contrast);
 }
 

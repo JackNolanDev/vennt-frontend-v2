@@ -12,6 +12,7 @@ import {
   type PathsAndAbilities,
   type UpdatedEntityAttributes,
   type UseCriteria,
+  type UseCriteriaAttr,
   type UseCriteriaBase,
   type UseCriteriaField,
   type UseCriteriaKey,
@@ -48,6 +49,9 @@ const criteriaFieldOperator = (
   switch (operator) {
     case "equals":
       return (field1: string, field2: string) => field1 === field2;
+    case "gte":
+      return (field1: string, field2: string) =>
+        parseInt(field1) >= parseInt(field2);
     default:
       return () => false;
   }
@@ -56,15 +60,16 @@ const criteriaFieldOperator = (
 const abilityPassCriteriaCheckBase = (
   ability: EntityAbility | null,
   criteria: UseCriteriaBase,
-  usesAbility: EntityAbility
+  usesAbility: EntityAbility,
+  attrs: UpdatedEntityAttributes
 ): boolean => {
   if (criteria.operator === "every") {
     return criteria.tests.every((test) =>
-      abilityPassCriteriaCheck(ability, test, usesAbility)
+      abilityPassCriteriaCheck(ability, test, usesAbility, attrs)
     );
   } else if (criteria.operator === "some") {
     return criteria.tests.some((test) =>
-      abilityPassCriteriaCheck(ability, test, usesAbility)
+      abilityPassCriteriaCheck(ability, test, usesAbility, attrs)
     );
   }
   return false;
@@ -109,6 +114,18 @@ const abilityPassCriteriaCheckKey = (
   return false;
 };
 
+const abilityPassCriteriaAttr = (
+  criteria: UseCriteriaAttr,
+  attrs: UpdatedEntityAttributes
+): boolean => {
+  const found = attrs[criteria.attr];
+  if (!found) {
+    return false;
+  }
+  const comparator = criteriaFieldOperator(criteria.operator);
+  return comparator(found.val.toString(), criteria.value);
+};
+
 const abilityPassCriteriaIsSpell = (ability: EntityAbility): boolean => {
   const basicSpell =
     ability.custom_fields?.cast_dl || ability.custom_fields?.mp_cost;
@@ -140,18 +157,26 @@ const abilityPassCriteriaCheckSpecial = (
   }
 };
 
-const abilityPassCriteriaCheck = (
+export const abilityPassCriteriaCheck = (
   ability: EntityAbility | null,
   criteria: UseCriteria,
-  usesAbility: EntityAbility
+  usesAbility: EntityAbility,
+  attrs: UpdatedEntityAttributes
 ): boolean => {
   switch (criteria.type) {
     case "base":
-      return abilityPassCriteriaCheckBase(ability, criteria, usesAbility);
+      return abilityPassCriteriaCheckBase(
+        ability,
+        criteria,
+        usesAbility,
+        attrs
+      );
     case "field":
       return abilityPassCriteriaCheckField(ability, criteria, usesAbility);
     case "key":
       return abilityPassCriteriaCheckKey(usesAbility, criteria);
+    case "attr":
+      return abilityPassCriteriaAttr(criteria, attrs);
     case "special":
       return abilityPassCriteriaCheckSpecial(ability, criteria);
     default:
@@ -161,7 +186,8 @@ const abilityPassCriteriaCheck = (
 
 const abilityUsesCostAdjust = (
   ability: EntityAbility,
-  entity: CollectedEntity
+  entity: CollectedEntity,
+  attrs: UpdatedEntityAttributes
 ): number => {
   let totalAdjust = 0;
   entity.abilities
@@ -178,7 +204,12 @@ const abilityUsesCostAdjust = (
         const passedCriteria = usesAbility.uses.criteria_benefits.filter(
           (criteria) =>
             criteria.adjust_ability_cost &&
-            abilityPassCriteriaCheck(ability, criteria.criteria, usesAbility)
+            abilityPassCriteriaCheck(
+              ability,
+              criteria.criteria,
+              usesAbility,
+              attrs
+            )
         );
         passedCriteria.forEach((criteria) => {
           if (criteria.adjust_ability_cost) {
@@ -192,6 +223,7 @@ const abilityUsesCostAdjust = (
 
 export const actualXPCost = (
   ability: EntityAbility,
+  attrs: UpdatedEntityAttributes,
   entity?: CollectedEntity
 ): number => {
   let cost = defaultXPCost(ability);
@@ -204,7 +236,7 @@ export const actualXPCost = (
   ) {
     cost = cost / 2;
   }
-  cost += abilityUsesCostAdjust(ability, entity);
+  cost += abilityUsesCostAdjust(ability, entity, attrs);
   return cost;
 };
 

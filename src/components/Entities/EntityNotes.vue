@@ -116,6 +116,6 @@ const endDrag = () => {
 }
 .notesCard :deep(.full-editor-wrapper),
 .notesCard :deep(.ProseMirror) {
-  height: 100%;
+  height: calc(100% - 46px);
 }
 </style>

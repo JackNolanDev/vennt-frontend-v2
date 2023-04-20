@@ -15,6 +15,7 @@ import {
 } from "./backendTypes";
 import { hpDiffStr, vimDiffStr, mpDiffWis } from "./copy/createCharacterCopy";
 import { titleText } from "./textUtils";
+import { abilityPassCriteriaCheck } from "./abilityUtils";
 
 export const MIN_ZEROS = new Set([
   "hp",
@@ -302,7 +303,7 @@ const defaultAttrsMap: UpdatedEntityAttributes = {
 export const entityAttributesMap = (
   entity: CollectedEntity
 ): UpdatedEntityAttributes => {
-  const attrs: UpdatedEntityAttributes = { ...defaultAttrsMap };
+  const attrs: UpdatedEntityAttributes = structuredClone(defaultAttrsMap);
   // 1. Directly copy over base attribute values from the character object
   Object.entries(entity.entity.attributes).forEach(([attr, val]) => {
     attrs[attr as EntityAttribute] = {
@@ -368,8 +369,20 @@ export const entityAttributesMap = (
 
   // 3. Fetch effects from abilities
   entity.abilities.forEach((ability) => {
-    if (ability.uses?.adjust) {
-      Object.entries(ability.uses.adjust.attr).forEach(([attrIn, val]) => {
+    const adjusts =
+      ability.uses?.criteria_benefits
+        ?.filter(
+          (criteria) =>
+            criteria.adjust &&
+            abilityPassCriteriaCheck(null, criteria.criteria, ability, attrs)
+        )
+        .map((criteria) => criteria.adjust) ?? [];
+    adjusts.push(ability.uses?.adjust);
+    adjusts.forEach((adjust) => {
+      if (!adjust) {
+        return;
+      }
+      Object.entries(adjust.attr).forEach(([attrIn, val]) => {
         const attr = attrIn as EntityAttribute;
         if (typeof val === "string") {
           equations.push([attr, val]);
@@ -380,7 +393,7 @@ export const entityAttributesMap = (
           alterAttrs(attr, val, reason);
         }
       });
-    }
+    });
   });
 
   // 4. Apply interdependent attr adjustments
@@ -426,8 +439,6 @@ export const entityAttributesMap = (
       map.val = 0;
     }
   });
-
-  // console.log(attrs);
 
   return attrs;
 };
