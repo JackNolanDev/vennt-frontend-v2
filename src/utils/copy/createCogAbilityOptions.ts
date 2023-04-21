@@ -450,6 +450,18 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect: "This Cog is immune to Accuracy debuffs.",
           },
           {
+            name: "Shield",
+            cost: "X",
+            effect:
+              "This Cog has a Shield Bonus of [[3*X]] (up to {{L}}) and can Shield Block (Fighter).",
+          },
+          {
+            name: "Shell",
+            cost: 4,
+            effect:
+              "Attacks which target this Cog are completely negated unless either (a) the damage roll shows doubles or (b) the attack ignores any amount of Armor.",
+          },
+          {
             name: "Tenacious",
             cost: 2,
             effect:
