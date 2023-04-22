@@ -5,13 +5,14 @@ const getGiftedPathLinkSentence = (name: string): string => {
   return `Having this gift partially unlocks the <a href="https://vennt.fandom.com/wiki/${linkName}" target="_blank" class="link">${name}</a>.`;
 };
 
-type GiftCopy = {
-  [gift in CharacterGift]: {
+type GiftCopy = Record<
+  CharacterGift,
+  {
     title: string;
     flavor: string;
     benefits: HTMLString[];
-  };
-};
+  }
+>;
 
 export const giftCopy: GiftCopy = {
   Alertness: {

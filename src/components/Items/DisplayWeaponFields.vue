@@ -42,11 +42,7 @@ const acc = computed(
 const damageDiceString = computed(
   () =>
     entityStore.entity &&
-    enhancedBaseDiceString(
-      props.item,
-      entityStore.entity,
-      entityStore.entityAttributes
-    )
+    enhancedBaseDiceString(props.item, entityStore.entityAttributes)
 );
 const damageString = computed(
   () =>

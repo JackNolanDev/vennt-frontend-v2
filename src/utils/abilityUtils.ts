@@ -5,20 +5,15 @@ import {
   type AbilityCostMapNumber,
   type CharacterGift,
   type CollectedEntity,
-  type CriteriaFieldOperator,
   type EntityAbility,
   type EntityAbilityFields,
   type FullEntityAbility,
   type PathsAndAbilities,
   type UpdatedEntityAttributes,
-  type UseCriteria,
-  type UseCriteriaAttr,
-  type UseCriteriaBase,
-  type UseCriteriaField,
-  type UseCriteriaKey,
-  type UseCriteriaSpecial,
 } from "./backendTypes";
 import { titleText } from "./textUtils";
+import { abilityPassCriteriaCheck } from "./criteriaUtils";
+import { solveEquation } from "./attributeUtils";
 
 const freeAbilities = new Set(["Alchemist's Training"]); // Alchemist's Training is free with Tinker's Training
 
@@ -43,153 +38,20 @@ const giftInAbilityExpedited = (
   );
 };
 
-const criteriaFieldOperator = (
-  operator: CriteriaFieldOperator
-): ((field1: string, field2: string) => boolean) => {
-  switch (operator) {
-    case "equals":
-      return (field1: string, field2: string) => field1 === field2;
-    case "gte":
-      return (field1: string, field2: string) =>
-        parseInt(field1) >= parseInt(field2);
-    default:
-      return () => false;
-  }
-};
-
-const abilityPassCriteriaCheckBase = (
-  ability: EntityAbility | null,
-  criteria: UseCriteriaBase,
-  usesAbility: EntityAbility,
-  attrs: UpdatedEntityAttributes
-): boolean => {
-  if (criteria.operator === "every") {
-    return criteria.tests.every((test) =>
-      abilityPassCriteriaCheck(ability, test, usesAbility, attrs)
-    );
-  } else if (criteria.operator === "some") {
-    return criteria.tests.some((test) =>
-      abilityPassCriteriaCheck(ability, test, usesAbility, attrs)
-    );
-  }
-  return false;
-};
-
-const abilityPassCriteriaCheckField = (
-  ability: EntityAbility | null,
-  criteria: UseCriteriaField,
-  usesAbility: EntityAbility
-): boolean => {
-  if (!ability) {
-    return true;
-  }
-  const keys = usesAbility.custom_fields?.keys;
-  if (!keys || !keys[criteria.key]) {
-    return false;
-  }
-  // walk down ability to find field referenced by the path
-  let field: Record<string, unknown> | string = ability;
-  for (const key of criteria.path) {
-    if (typeof field !== "object" || !field) {
-      break;
-    }
-    field = field[key] as Record<string, unknown> | string;
-  }
-  if (typeof field === "string") {
-    const comparator = criteriaFieldOperator(criteria.operator);
-    return comparator(keys[criteria.key], field);
-  }
-  return false;
-};
-
-const abilityPassCriteriaCheckKey = (
-  usesAbility: EntityAbility,
-  criteria: UseCriteriaKey
-): boolean => {
-  const keys = usesAbility.custom_fields?.keys;
-  if (keys && keys[criteria.key]) {
-    const comparator = criteriaFieldOperator(criteria.operator);
-    return comparator(keys[criteria.key], criteria.value);
-  }
-  return false;
-};
-
-const abilityPassCriteriaAttr = (
-  criteria: UseCriteriaAttr,
-  attrs: UpdatedEntityAttributes
-): boolean => {
-  const found = attrs[criteria.attr];
-  if (!found) {
-    return false;
-  }
-  const comparator = criteriaFieldOperator(criteria.operator);
-  return comparator(found.val.toString(), criteria.value);
-};
-
-const abilityPassCriteriaIsSpell = (ability: EntityAbility): boolean => {
-  const basicSpell =
-    ability.custom_fields?.cast_dl || ability.custom_fields?.mp_cost;
-  if (basicSpell) {
-    return true;
-  }
-  const path = ability.custom_fields?.path;
-  if (path) {
-    const magicPath = ["Arcana", "Spellcaster", "Magician", "Wizard"].some(
-      (test) => path.includes(test)
-    );
-    return Boolean(magicPath && ability.custom_fields?.cost?.mp);
-  }
-  return false;
-};
-
-const abilityPassCriteriaCheckSpecial = (
-  ability: EntityAbility | null,
-  criteria: UseCriteriaSpecial
-): boolean => {
-  if (!ability) {
-    return true;
-  }
-  switch (criteria.name) {
-    case "isSpell":
-      return abilityPassCriteriaIsSpell(ability);
-    default:
-      return false;
-  }
-};
-
-export const abilityPassCriteriaCheck = (
-  ability: EntityAbility | null,
-  criteria: UseCriteria,
-  usesAbility: EntityAbility,
-  attrs: UpdatedEntityAttributes
-): boolean => {
-  switch (criteria.type) {
-    case "base":
-      return abilityPassCriteriaCheckBase(
-        ability,
-        criteria,
-        usesAbility,
-        attrs
-      );
-    case "field":
-      return abilityPassCriteriaCheckField(ability, criteria, usesAbility);
-    case "key":
-      return abilityPassCriteriaCheckKey(usesAbility, criteria);
-    case "attr":
-      return abilityPassCriteriaAttr(criteria, attrs);
-    case "special":
-      return abilityPassCriteriaCheckSpecial(ability, criteria);
-    default:
-      return false;
-  }
-};
-
 const abilityUsesCostAdjust = (
   ability: EntityAbility,
   entity: CollectedEntity,
   attrs: UpdatedEntityAttributes
 ): number => {
   let totalAdjust = 0;
+  const adjustTotal = (adjustCost: number | string) => {
+    if (typeof adjustCost === "number") {
+      totalAdjust += adjustCost;
+    } else {
+      totalAdjust = solveEquation(adjustCost, attrs) ?? totalAdjust;
+    }
+  };
+
   entity.abilities
     .filter(
       (usesAbility) =>
@@ -198,22 +60,22 @@ const abilityUsesCostAdjust = (
     )
     .forEach((usesAbility) => {
       if (usesAbility.uses?.adjust_ability_cost) {
-        totalAdjust += usesAbility.uses.adjust_ability_cost.adjust_cost;
+        adjustTotal(usesAbility.uses.adjust_ability_cost.adjust_cost);
       }
       if (usesAbility.uses?.criteria_benefits) {
         const passedCriteria = usesAbility.uses.criteria_benefits.filter(
           (criteria) =>
             criteria.adjust_ability_cost &&
             abilityPassCriteriaCheck(
-              ability,
               criteria.criteria,
               usesAbility,
+              ability,
               attrs
             )
         );
         passedCriteria.forEach((criteria) => {
           if (criteria.adjust_ability_cost) {
-            totalAdjust += criteria.adjust_ability_cost.adjust_cost;
+            adjustTotal(criteria.adjust_ability_cost.adjust_cost);
           }
         });
       }

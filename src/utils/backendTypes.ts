@@ -208,6 +208,7 @@ export const otherAttributesValidator = z.object({
   second_gift: giftValidator.optional(),
   cog_type: z.string().max(NAME_MAX).optional(),
   cog_creation_options: cogCreateOptionsValidator.optional(),
+  gift_boon: z.string().optional(),
 });
 
 export const entityValidator = z.object({
@@ -247,29 +248,66 @@ export const useAdjustValidator = z.object({
   time: z.enum(["turn", "encounter", "rest", "permanent"]),
   attr: useAttrMapValidator,
 });
-export const criteriaFieldOperator = z.enum(["equals", "gte"]);
+export const criteriaFieldOperator = z.enum([
+  "equals",
+  "gte",
+  "gt",
+  "lte",
+  "lt",
+]);
 export type CriteriaFieldOperator = z.infer<typeof criteriaFieldOperator>;
-export const useCriteriaFieldValidator = z.object({
-  type: z.literal("field"),
-  path: z.string().min(1).array(),
-  operator: criteriaFieldOperator,
-  key: z.string().min(1),
-});
-export type UseCriteriaField = z.infer<typeof useCriteriaFieldValidator>;
-export const useCriteriaKeyValidator = z.object({
-  type: z.literal("key"),
-  operator: criteriaFieldOperator,
-  key: z.string().min(1),
-  value: z.string().min(1),
-});
-export type UseCriteriaKey = z.infer<typeof useCriteriaKeyValidator>;
-export const useCriteriaAttrValidator = z.object({
+export const useCriteriaCompFieldAttrValidator = z.object({
   type: z.literal("attr"),
-  operator: criteriaFieldOperator,
   attr: attributeNameValidator,
-  value: z.string().min(1),
 });
-export type UseCriteriaAttr = z.infer<typeof useCriteriaAttrValidator>;
+export type UseCriteriaCompFieldAttr = z.infer<
+  typeof useCriteriaCompFieldAttrValidator
+>;
+export const useCriteriaCompFieldAbilityValidator = z.object({
+  type: z.literal("ability_field"),
+  path: z.string().min(1).array(),
+});
+export type UseCriteriaCompFieldAbilityField = z.infer<
+  typeof useCriteriaCompFieldAbilityValidator
+>;
+export const useCriteriaCompFieldKeyValidator = z.object({
+  type: z.literal("key"),
+  key: z.string().min(1),
+});
+export type UseCriteriaCompFieldKey = z.infer<
+  typeof useCriteriaCompFieldKeyValidator
+>;
+export const useCriteriaCompFieldConstValidator = z.object({
+  type: z.literal("const"),
+  const: z.string().min(1),
+});
+export type UseCriteriaCompFieldCost = z.infer<
+  typeof useCriteriaCompFieldConstValidator
+>;
+export const useCriteriaCompFieldEquationValidator = z.object({
+  type: z.literal("equation"),
+  equation: z.string().min(1),
+});
+export type UseCriteriaCompFieldEquation = z.infer<
+  typeof useCriteriaCompFieldEquationValidator
+>;
+export const useCriteriaCompFieldValidator = z.union([
+  useCriteriaCompFieldAttrValidator,
+  useCriteriaCompFieldAbilityValidator,
+  useCriteriaCompFieldKeyValidator,
+  useCriteriaCompFieldConstValidator,
+  useCriteriaCompFieldEquationValidator,
+]);
+export type UseCriteriaCompField = z.infer<
+  typeof useCriteriaCompFieldValidator
+>;
+export const useCriteriaCompValidator = z.object({
+  type: z.literal("comp"),
+  left: useCriteriaCompFieldValidator,
+  right: useCriteriaCompFieldValidator,
+  operator: criteriaFieldOperator,
+});
+export type UseCriteriaComp = z.infer<typeof useCriteriaCompValidator>;
 export const useCriteriaSpecialValidator = z.object({
   type: z.literal("special"),
   name: z.enum(["isSpell"]),
@@ -287,15 +325,13 @@ export const useCriteriaBaseValidator: z.ZodType<UseCriteriaBase> =
     tests: z.array(z.lazy(() => useCriteriaValidator)),
   });
 export const useCriteriaValidator = z.union([
-  useCriteriaFieldValidator,
-  useCriteriaKeyValidator,
-  useCriteriaAttrValidator,
+  useCriteriaCompValidator,
   useCriteriaSpecialValidator,
   useCriteriaBaseValidator,
 ]);
 export type UseCriteria = z.infer<typeof useCriteriaValidator>;
 export const useAdjustAbilityCostValidator = z.object({
-  adjust_cost: z.number().int(),
+  adjust_cost: z.union([z.number().int(), z.string().min(1).max(NAME_MAX)]),
 });
 export const useCheckValidator = z.object({
   bonus: z.string().min(1).max(NAME_MAX),
@@ -358,6 +394,7 @@ export const abilityCostBooleanValidator = z.object({
   attack: z.boolean().optional(),
   passive: z.boolean().optional(),
   respite: z.boolean().optional(),
+  rest: z.boolean().optional(),
   intermission: z.boolean().optional(),
 });
 

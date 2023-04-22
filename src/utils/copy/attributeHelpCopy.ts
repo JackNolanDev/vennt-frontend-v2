@@ -42,6 +42,7 @@ const BASE_HELP_MAP: HelpMap = {
   <a href="https://vennt.fandom.com/wiki/Armor#Shields" target="_blank" class="link">Wiki entry</a>.`,
   casting: `Used as the adjustment when doing spell casting roll. Note: this field acts as an adjustment on top of your spirit / burden.
   <a href="https://vennt.fandom.com/wiki/Casting_roll" target="_blank" class="link">Wiki entry</a>.`,
+  bluespace: `<a href="https://vennt.fandom.com/wiki/Bluespace" target="_blank" class="link">Wiki entry</a>.`,
   // name: "This character's name.",
   // gift: `<i>Most legends are born gifted in some way. Mozart was gifted in music, Achilles was gifted in combat,
   // and Merlin was gifted in magic. There are nine gifts available to choose from as a hero of Amnis, each one

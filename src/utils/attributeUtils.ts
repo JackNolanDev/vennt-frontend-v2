@@ -15,7 +15,7 @@ import {
 } from "./backendTypes";
 import { hpDiffStr, vimDiffStr, mpDiffWis } from "./copy/createCharacterCopy";
 import { titleText } from "./textUtils";
-import { abilityPassCriteriaCheck } from "./abilityUtils";
+import { abilityPassCriteriaCheck } from "./criteriaUtils";
 
 export const MIN_ZEROS = new Set([
   "hp",
@@ -284,17 +284,11 @@ export const adjustAttrsAPI = async (
   return true;
 };
 
-interface adjustCommand {
-  attr: EntityAttribute;
-  multiplier?: number;
-}
-const relatedAttrsAdjustMap: { [attr in EntityAttribute]?: adjustCommand[] } = {
-  spi: [{ attr: "casting" }],
-  burden: [
-    { attr: "speed", multiplier: -1 },
-    { attr: "casting", multiplier: -1 },
-  ],
-};
+const defaultEquations: Array<[EntityAttribute, string]> = [
+  ["casting", "casting + spi - burden"],
+  ["speed", "speed - burden"],
+  ["bluespace", "bluespace + (int * int)"],
+];
 
 const defaultAttrsMap: UpdatedEntityAttributes = {
   free_hands: { val: 2, reason: ["Default: 2"] },
@@ -342,7 +336,7 @@ export const entityAttributesMap = (
     }
   };
 
-  const equations: Array<[EntityAttribute, string]> = [];
+  const equations: Array<[EntityAttribute, string]> = [...defaultEquations];
 
   // 2. Fetch effects from items
   entity.items.forEach((item) => {
@@ -374,7 +368,7 @@ export const entityAttributesMap = (
         ?.filter(
           (criteria) =>
             criteria.adjust &&
-            abilityPassCriteriaCheck(null, criteria.criteria, ability, attrs)
+            abilityPassCriteriaCheck(criteria.criteria, ability, null, attrs)
         )
         .map((criteria) => criteria.adjust) ?? [];
     adjusts.push(ability.uses?.adjust);
@@ -396,31 +390,12 @@ export const entityAttributesMap = (
     });
   });
 
-  // 4. Apply interdependent attr adjustments
-  Object.entries(relatedAttrsAdjustMap).forEach(([attrIn, commands]) => {
-    const attr = attrIn as EntityAttribute;
-    const found = attrs[attr];
-    if (found) {
-      commands.forEach((command) => {
-        const adjustVal =
-          found.val *
-          (command.multiplier !== undefined ? command.multiplier : 1);
-        const reason = `${
-          adjustVal > 0 ? "Adds" : "Subtracts"
-        } ${adjustVal} to ${attrShortName(
-          command.attr
-        )} because of ${attrShortName(attr)}`;
-        alterAttrs(command.attr, adjustVal, reason);
-      });
-    }
-  });
-
-  // 5. Apply pending equations
+  // 4. Apply pending equations
   equations.forEach(([attr, equation]) => {
     const parsed = solveEquation(equation, attrs);
     if (parsed !== undefined) {
       const attrMap = attrs[attr];
-      const reason = `Set ${attrShortName(attr)} to "${equation}" -> parsed`;
+      const reason = `Set ${attrShortName(attr)} to "${equation}" -> ${parsed}`;
       if (attrMap) {
         // replace value instead of adjusting it
         attrMap.val = parsed;
@@ -433,7 +408,7 @@ export const entityAttributesMap = (
     }
   });
 
-  // 6. Enforce zero minimums
+  // 5. Enforce zero minimums
   Object.entries(attrs).forEach(([attr, map]) => {
     if (MIN_ZEROS.has(attr) && typeof map.val === "number" && map.val < 0) {
       map.val = 0;
@@ -484,7 +459,7 @@ export const solveEquation = (
     return "0";
   });
   // ensure all variables have been removed from the equation before attempting to solve it
-  if (/^(?:[\d+\-*/() ]|Mod)+$/.test(cleanedEquation)) {
+  if (/^(?:[\d+\-*/()^ ]|Mod)+$/.test(cleanedEquation)) {
     try {
       const evaluated = mexp.eval(cleanedEquation);
       const floatVal = parseFloat(evaluated);

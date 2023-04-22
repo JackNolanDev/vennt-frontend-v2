@@ -1,6 +1,5 @@
 import { solveEquation } from "./attributeUtils";
 import type {
-  CollectedEntity,
   EntityAttribute,
   EntityItem,
   UpdatedEntityAttributes,
@@ -47,10 +46,15 @@ export const weaponAccuracy = (
 ): ResultReason<number> => {
   let acc = attributeBonus(weapon, attrs) * 10;
   let reason = weapon.custom_fields?.attr ?? "";
-  const adjust = weaponCategoryAdjust(weapon, attrs, "acc");
-  if (adjust) {
-    acc += adjust.result;
-    reason += ` + ${adjust.reason}`;
+  const categoryAdjust = weaponCategoryAdjust(weapon, attrs, "acc");
+  if (categoryAdjust) {
+    acc += categoryAdjust.result;
+    reason += ` + ${categoryAdjust.reason}`;
+  }
+  const baseAdjust = attrs.acc;
+  if (baseAdjust) {
+    acc += baseAdjust.val;
+    reason += ` + ${baseAdjust.reason?.join(", ") ?? ""}`;
   }
   if (acc < 0) {
     acc = 0;
@@ -68,13 +72,13 @@ export const baseDiceString = (weapon: EntityItem): string => {
 
 export const enhancedBaseDiceString = (
   weapon: EntityItem,
-  entity: CollectedEntity,
   attrs: UpdatedEntityAttributes
 ): string => {
   return (
     baseDiceString(weapon) +
     number2MathString(attributeBonus(weapon, attrs)) +
-    number2MathString(weaponCategoryAdjust(weapon, attrs, "dmg")?.result ?? 0)
+    number2MathString(weaponCategoryAdjust(weapon, attrs, "dmg")?.result ?? 0) +
+    number2MathString(attrs.dmg?.val ?? 0)
   );
 };
 
