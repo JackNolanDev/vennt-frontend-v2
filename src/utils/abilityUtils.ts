@@ -39,16 +39,16 @@ const giftInAbilityExpedited = (
 };
 
 const abilityUsesCostAdjust = (
+  cost: number,
   ability: EntityAbility,
   entity: CollectedEntity,
   attrs: UpdatedEntityAttributes
 ): number => {
-  let totalAdjust = 0;
   const adjustTotal = (adjustCost: number | string) => {
     if (typeof adjustCost === "number") {
-      totalAdjust += adjustCost;
+      cost += adjustCost;
     } else {
-      totalAdjust = solveEquation(adjustCost, attrs) ?? totalAdjust;
+      cost = solveEquation(adjustCost, attrs) ?? cost;
     }
   };
 
@@ -80,7 +80,7 @@ const abilityUsesCostAdjust = (
         });
       }
     });
-  return totalAdjust;
+  return cost;
 };
 
 export const actualXPCost = (
@@ -98,8 +98,7 @@ export const actualXPCost = (
   ) {
     cost = cost / 2;
   }
-  cost += abilityUsesCostAdjust(ability, entity, attrs);
-  return cost;
+  return abilityUsesCostAdjust(cost, ability, entity, attrs);
 };
 
 export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;

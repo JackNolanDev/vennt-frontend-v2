@@ -21,6 +21,7 @@ const useItem = () => {
   if (entityStore.entity && props.item.uses?.heal) {
     adjustAttrsAPI(
       entityStore.entity,
+      entityStore.entityAttributes,
       solvePendingEquations(
         props.item.uses.heal.attr,
         entityStore.entityAttributes

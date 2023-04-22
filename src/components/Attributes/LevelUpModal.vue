@@ -5,10 +5,10 @@
     :large="true"
     @closeModal="closeModal"
   >
-    <template #title>Level Up to {{ levelToProcess }}</template>
+    <template #title>Level Up to {{ attrLevelToProcess }}</template>
     <div>
       <p class="mt-0">
-        Select an attribute to increase for level {{ levelToProcess }}:
+        Select an attribute to increase for level {{ attrLevelToProcess }}:
       </p>
       <AttributeSelection
         :selected="state.selected"
@@ -35,28 +35,29 @@ import { ATTRIBUTES, type BaseEntityAttribute } from "@/utils/backendTypes";
 import AttributeSelection from "./AttributeSelection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
+import { XP_AMOUNT_TO_INCREASE_ATTR } from "@/utils/copy/venntConfig";
 
 const state = reactive<{ selected: BaseEntityAttribute[] }>({ selected: [] });
 const entityStore = useEntityStore();
 
-const levelToProcess = computed(() => {
-  if (entityStore.entity && entityStore.entity.entity.attributes.xp) {
+const attrLevelToProcess = computed(() => {
+  if (entityStore.entity && entityStore.entityAttributes.xp) {
     return (
-      Math.floor(entityStore.entity.entity.attributes.xp / 1000) -
+      Math.floor(
+        entityStore.entityAttributes.xp.val / XP_AMOUNT_TO_INCREASE_ATTR
+      ) -
       entityStore.levelsToProcess +
       1
     );
   }
   return 0;
 });
-const disabledChoices = computed(() => {
-  return ATTRIBUTES.filter((attr) =>
-    entityStore.entity
-      ? entityStore.entity.entity.attributes[attr] >
-        Math.floor(levelToProcess.value / 2)
-      : true
-  );
-});
+const disabledChoices = computed(() =>
+  ATTRIBUTES.filter((attr) => {
+    const found = entityStore.entityAttributes[attr];
+    return found ? found.val > Math.floor(attrLevelToProcess.value / 2) : true;
+  })
+);
 const buttonDisabled = computed(() => state.selected.length === 0);
 
 const closeModal = () => {
@@ -71,8 +72,9 @@ const levelUpButton = () => {
     const attrs = { [state.selected[0]]: 1 };
     adjustAttrsAPI(
       entityStore.entity,
+      entityStore.entityAttributes,
       attrs,
-      `Level up bonus for level ${levelToProcess.value}`
+      `Level up bonus for level ${attrLevelToProcess.value}`
     );
     closeModal();
   }

@@ -162,20 +162,27 @@ export const generateDefaultAdjustMsg = (
 };
 
 export const adjustAttrsObject = (
-  entity: FullCollectedEntity,
+  entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
   propagateChanges = true,
   enforceMaximums = false
 ): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
-  const defaultVal = (attr: EntityAttribute): number => {
-    if (entity.entity.attributes[attr] !== undefined)
-      return entity.entity.attributes[attr] as number;
-    return 0;
+  const defaultVal = (
+    attr: EntityAttribute,
+    fetchAdjustedVal = false
+  ): number => {
+    if (fetchAdjustedVal) {
+      return entityAttrs[attr]?.val ?? 0;
+    }
+    return entityAttrs[attr]?.base ?? 0;
   };
-  const currentVal = (attr: EntityAttribute): number => {
+  const currentVal = (
+    attr: EntityAttribute,
+    fetchAdjustedVal = false
+  ): number => {
     if (attrs[attr] !== undefined) return attrs[attr] as number;
-    return defaultVal(attr);
+    return defaultVal(attr, fetchAdjustedVal);
   };
 
   // 1. get resulting effects
@@ -242,8 +249,12 @@ export const adjustAttrsObject = (
     Object.entries(attrs).forEach(([attrIn, val]) => {
       const attr = attrIn as EntityAttribute;
       const maxAttr = getMaxAttr(attr);
-      if (maxAttr && currentVal(maxAttr) && val > currentVal(maxAttr)) {
-        attrs[attr] = currentVal(maxAttr);
+      if (!maxAttr) {
+        return;
+      }
+      const maxAttrCurrentVal = currentVal(maxAttr, true);
+      if (val > maxAttrCurrentVal) {
+        attrs[attr] = maxAttrCurrentVal;
       }
     });
   }
@@ -253,13 +264,14 @@ export const adjustAttrsObject = (
 
 export const adjustAttrsAPI = async (
   entity: FullCollectedEntity,
+  entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
   msg?: string,
   propagateChanges = true,
   enforceMaximums = false
 ): Promise<boolean> => {
   const attrs = adjustAttrsObject(
-    entity,
+    entityAttrs,
     adjustAttrs,
     propagateChanges,
     enforceMaximums
@@ -383,7 +395,7 @@ export const entityAttributesMap = (
         } else {
           const reason = `${ability.name} ${
             val > 0 ? "adds" : "subtracts"
-          } ${val} from ${attrShortName(attr)}`;
+          } ${val} to ${attrShortName(attr)}`;
           alterAttrs(attr, val, reason);
         }
       });

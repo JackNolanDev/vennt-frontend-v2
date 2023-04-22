@@ -5,6 +5,7 @@
       <EntitySettingsName></EntitySettingsName>
       <EntitySettingsGift field="gift"></EntitySettingsGift>
       <EntitySettingsGift field="second_gift"></EntitySettingsGift>
+      <EntitySettingsGiftBoon></EntitySettingsGiftBoon>
     </div>
   </BaseDropDown>
 </template>
@@ -13,5 +14,6 @@
 import BaseDropDown from "../../Base/BaseDropDown.vue";
 import EntitySettingsAttributes from "./EntitySettingsAttributes.vue";
 import EntitySettingsGift from "./EntitySettingsGift.vue";
+import EntitySettingsGiftBoon from "./EntitySettingsGiftBoon.vue";
 import EntitySettingsName from "./EntitySettingsName.vue";
 </script>

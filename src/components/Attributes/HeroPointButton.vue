@@ -24,8 +24,8 @@ const entityStore = useEntityStore();
 const enabled = computed(
   () =>
     entityStore.entity &&
-    entityStore.entity.entity.attributes.hero &&
-    entityStore.entity.entity.attributes.hero > 0
+    entityStore.entityAttributes.hero &&
+    entityStore.entityAttributes.hero.val > 0
 );
 
 const heroButton = () => {
@@ -33,7 +33,12 @@ const heroButton = () => {
     const msg = props.reason
       ? props.reason
       : generateDefaultAdjustMsg("hero", -1);
-    adjustAttrsAPI(entityStore.entity, { hero: -1 }, msg);
+    adjustAttrsAPI(
+      entityStore.entity,
+      entityStore.entityAttributes,
+      { hero: -1 },
+      msg
+    );
   }
 };
 </script>

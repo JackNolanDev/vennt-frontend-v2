@@ -1,7 +1,7 @@
 <template>
   <p v-if="ability.custom_fields?.purchase" class="mt-16 mb-0">
     <b>Cost:</b> {{ ability.custom_fields.purchase }}
-    <i v-if="actualCost">(Actual cost: {{ actualCost }} XP)</i>
+    <i v-if="actualCost !== false">(Actual cost: {{ actualCost }} XP)</i>
   </p>
   <p v-if="ability.custom_fields?.expedited" class="mt-16 mb-0">
     <b>Expedited for:</b> {{ ability.custom_fields.expedited }}

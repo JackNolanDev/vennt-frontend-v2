@@ -64,8 +64,8 @@ export const giftBoonCopy: GiftBoonCopy = {
       active: false,
       custom_fields: {
         path: "Gift of Craft Boon",
-        activation: "Rest",
-        cost: { rest: true },
+        activation: "Passive",
+        cost: { passive: true },
       },
     },
   },
@@ -92,8 +92,8 @@ export const giftBoonCopy: GiftBoonCopy = {
       active: false,
       custom_fields: {
         path: "Gift of Craft Boon",
-        activation: "Rest",
-        cost: { rest: true },
+        activation: "Passive",
+        cost: { passive: true },
       },
     },
   },
@@ -303,10 +303,193 @@ export const giftBoonCopy: GiftBoonCopy = {
     ability: {
       name: "Boon: Projected Spirit",
       effect:
-        "Once per Rest, you may automatically succeed an INT check up to DL {{11 + (2*int)}} instead of rolling. Additionally, gain +10 XP whenever you purchase an ability Expedited for your Gift.",
+        "Whenever you use a single-target ability, you may spend X Vim (at least 5) to extend its effective range by up to X meters. This includes spells and attacks that normally require adjacency or touching the target.",
       active: false,
       custom_fields: {
         path: "Gift of Magic Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  Meaty: {
+    gift: "Rage",
+    ability: {
+      name: "Boon: Meaty",
+      effect:
+        "Gain 20 max HP. Whenever you Rest, gain 9 HP. Whenever you wear Armor, increase its Burden by 2.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Rage Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+      uses: {
+        adjust: {
+          time: "permanent",
+          attr: {
+            max_hp: 20,
+          },
+        },
+      },
+    },
+  },
+  "B4ST-RD": {
+    gift: "Rage",
+    ability: {
+      name: "Boon: B4ST-RD",
+      effect:
+        "You gain a B4ST-RD Sword. This enormous steam-powered weapon requires either this boon or 9 Strength to wield. This weapon uses Strength as its weapon attribute and deals 5d6 damage. When you declare an Attack with this weapon, the attack hits everything in a 2-hex line and consumes all of your remaining Reactions. You may spend 3 Actions to make a special skill strike with this weapon that hits every hex within a 2 meter radius and consumes all of your remaining Reactions. If you lose your B4ST-RD Sword, another one may be purchased for 300 sp.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Rage Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  "Exceptional Strength": {
+    gift: "Rage",
+    ability: {
+      name: "Boon: Exceptional Strength",
+      effect:
+        "Once per Rest, you may automatically succeed an STR check up to DL {{11 + (2*str)}} instead of rolling. Additionally, gain +10 XP whenever you purchase an ability Expedited for your Gift.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Rage Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  "Inquisitive Experimentation": {
+    gift: "Science",
+    ability: {
+      name: "Boon: Inquisitive Experimentation",
+      effect:
+        "Whenever you would roll 3d6, you may instead roll 4d6-2 or 2d6+4.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Science Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  "Astute Observation": {
+    gift: "Science",
+    ability: {
+      name: "Boon: Astute Observation",
+      effect:
+        "Whenever you make a roll of any kind (e.g. a check, damage with a certain weapon, or casting a particular spell), you may record the dice result. On your next roll of the same kind, you may choose to use your recorded result instead of rolling and recording a new result. Regardless of whether you use your recorded result, the recorded result is then discarded and unable to be used again. Recorded results using **Astute Observation** never expire, but when using a recorded result, you should narratively recount where you are remembering it from.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Science Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  "Exceptional Wisdom": {
+    gift: "Science",
+    ability: {
+      name: "Boon: Exceptional Wisdom",
+      effect:
+        "Once per Rest, you may automatically succeed an WIS check up to DL {{11 + (2*wis)}} instead of rolling. Additionally, gain +10 XP whenever you purchase an ability Expedited for your Gift.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Science Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  "Helpful Heart": {
+    gift: "Charm",
+    ability: {
+      name: "Boon: Helpful Heart",
+      effect:
+        "Whenever you Assist, gain +6 to your roll to Assist. If you succeed, your Assistance provides +6 instead of +3.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Charm Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  Tycoon: {
+    gift: "Charm",
+    ability: {
+      name: "Boon: Tycoon",
+      effect:
+        "Whenever you complete a Quest, gain 12d6 SP per Act in the Quest.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Charm Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+      uses: {
+        roll: { dice: "12d6", attr: "sp" },
+      },
+    },
+  },
+  "Exceptional Charisma": {
+    gift: "Charm",
+    ability: {
+      name: "Boon: Exceptional Charisma",
+      effect:
+        "Once per Rest, you may automatically succeed an CHA check up to DL {{11 + (2*cha)}} instead of rolling. Additionally, gain +10 XP whenever you purchase an ability Expedited for your Gift.",
+      active: false,
+      custom_fields: {
+        path: "Gift of Charm Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  Generalist: {
+    gift: "None",
+    ability: {
+      name: "Boon: Generalist",
+      effect: "All abilities cost 100 XP less (min. 50 XP)",
+      active: false,
+      custom_fields: {
+        path: "Normality Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+      uses: {
+        adjust_ability_cost: {
+          adjust_cost: -100,
+        },
+      },
+    },
+  },
+  Underdog: {
+    gift: "None",
+    ability: {
+      name: "Boon: Underdog",
+      effect:
+        "Whenever you deal damage to named characters, deal an extra +3 per d6, up to +12.",
+      active: false,
+      custom_fields: {
+        path: "Normality Boon",
+        activation: "Passive",
+        cost: { passive: true },
+      },
+    },
+  },
+  Hardcore: {
+    gift: "None",
+    ability: {
+      name: "Boon: Hardcore",
+      effect:
+        "You cannot purchase abilities in the Path of the Colorful. You are either very mundane or trying to prove something.",
+      active: false,
+      custom_fields: {
+        path: "Normality Boon",
         activation: "Passive",
         cost: { passive: true },
       },

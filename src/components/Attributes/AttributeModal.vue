@@ -14,9 +14,9 @@
         Base {{ shortName }}:
         <span v-if="attr in entityStore.entity.entity.attributes" class="ml-8">
           <BaseFraction
-            v-if="maxAttr && maxAttr in entityStore.entity.entity.attributes"
+            v-if="maxAttr && maxAttr in entityStore.entityAttributes"
             :top="entityStore.entity.entity.attributes[attr]"
-            :bottom="entityStore.entity.entity.attributes[maxAttr]"
+            :bottom="entityStore.entityAttributes[maxAttr]?.val"
           ></BaseFraction>
           <span v-else class="number">{{
             entityStore.entity.entity.attributes[attr]

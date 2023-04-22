@@ -118,17 +118,17 @@
       v-if="showDropDown('gift')"
       class="card column diceDropDown left right"
     >
-      <GiftDescription
+      <GiftDescriptionV14
         v-if="entity.entity.other_fields.gift"
         :gift="entity.entity.other_fields.gift"
         :showTitle="false"
-      ></GiftDescription>
+      ></GiftDescriptionV14>
       <div v-if="entity.entity.other_fields.second_gift">
         <div class="separator thin"></div>
-        <GiftDescription
+        <GiftDescriptionV14
           :gift="entity.entity.other_fields.second_gift"
           :showTitle="false"
-        ></GiftDescription>
+        ></GiftDescriptionV14>
       </div>
     </div>
     <button
@@ -238,7 +238,7 @@ import {
 import { cogTypeName } from "@/utils/copy/createCogTypeOptions";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
-import GiftDescription from "../Create/GiftDescription.vue";
+import GiftDescriptionV14 from "../Create/GiftDescriptionV14.vue";
 import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
 import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";

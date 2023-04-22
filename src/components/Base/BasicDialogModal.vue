@@ -6,9 +6,12 @@
         <BaseButton @click="closeModal" icon="close"></BaseButton>
       </div>
       <div class="separator thin"></div>
-      <div class="dialogue-details">
-        <slot></slot>
+      <div class="dialogue-details-wrapper">
+        <div class="dialogue-details">
+          <slot></slot>
+        </div>
       </div>
+
       <div class="separator thin"></div>
       <div class="alignRow end gap wrap dialogue-details">
         <slot name="buttons"></slot>
@@ -49,5 +52,9 @@ dialog {
 }
 dialog::backdrop {
   background: rgba(0, 0, 0, 0.7);
+}
+.dialogue-details-wrapper {
+  max-height: 540px;
+  overflow-y: auto;
 }
 </style>

@@ -67,6 +67,7 @@ const sellItem = () => {
   }
   adjustAttrsAPI(
     entityStore.entity,
+    entityStore.entityAttributes,
     { sp: sellValue.value },
     prefixName(props.item.name, "Sold", false)
   );

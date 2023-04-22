@@ -73,6 +73,7 @@ const useButton = () => {
     : "Used";
   adjustAttrsAPI(
     entityStore.entity,
+    entityStore.entityAttributes,
     adjustAttrs,
     `${prefix} ${props.ability.name}`
   );

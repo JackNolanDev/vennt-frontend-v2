@@ -123,7 +123,12 @@ const adjustAttrFromAdjustField = async () => {
     emit("updateTriggered");
     state.adjust = "";
     state.reason = "";
-    await adjustAttrsAPI(entityStore.entity, attrs, reason);
+    await adjustAttrsAPI(
+      entityStore.entity,
+      entityStore.entityAttributes,
+      attrs,
+      reason
+    );
     emit("updateComplete");
   }
 };

@@ -87,6 +87,7 @@ const buyItem = () => {
   if (entityStore.entity && props.item.sp) {
     adjustAttrsAPI(
       entityStore.entity,
+      entityStore.entityAttributes,
       { sp: -props.item.sp },
       `Purchased "${state.weaponName}"`
     );

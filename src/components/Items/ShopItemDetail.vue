@@ -99,6 +99,7 @@ const buyItem = () => {
   if (entityStore.entity && props.item.sp) {
     adjustAttrsAPI(
       entityStore.entity,
+      entityStore.entityAttributes,
       { sp: -cost.value },
       pluralizeName(newItem.value.name, false, parsedCount.value, "Purchased")
     );

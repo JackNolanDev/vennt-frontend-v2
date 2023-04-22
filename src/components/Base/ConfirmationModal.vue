@@ -7,7 +7,7 @@
       <slot name="title"></slot>
     </template>
     <template #buttons>
-      <BaseButton @click="mainButton" class="primary">
+      <BaseButton v-if="!noMainButton" @click="mainButton" class="primary">
         <slot name="mainButton"></slot>
       </BaseButton>
     </template>
@@ -25,6 +25,7 @@ const props = defineProps<{
   id: string;
   triggerClass?: string;
   triggerIcon?: string;
+  noMainButton?: boolean;
 }>();
 const emit = defineEmits<{
   (e: "mainButton"): void;
@@ -32,13 +33,13 @@ const emit = defineEmits<{
 }>();
 
 const openDialog = () => {
-  const dialog = document.getElementById(props.id) as HTMLDialogElement;
-  dialog.showModal();
+  const dialog = document.getElementById(props.id) as HTMLDialogElement | null;
+  dialog?.showModal();
 };
 
 const mainButton = () => {
-  const dialog = document.getElementById(props.id) as HTMLDialogElement;
-  dialog.close();
+  const dialog = document.getElementById(props.id) as HTMLDialogElement | null;
+  dialog?.close();
   emit("mainButton");
 };
 </script>
