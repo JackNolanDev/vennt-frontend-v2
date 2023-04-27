@@ -299,7 +299,7 @@ const dropdownClass = (index: number, length: number) => ({
 
 const attrDisplayVal = (attr: EntityAttribute) => {
   const map = attrs.value[attr];
-  return map === undefined ? undefined : map.val;
+  return map?.val;
 };
 
 const attrMaxDisplayVal = (attr: EntityAttribute) => {

@@ -23,15 +23,13 @@
     </div>
     <p>
       <b>Cost:</b> {{ cost }} SP
-      <span v-if="entityStore.entity?.entity.attributes.sp" class="mutedText">
-        (You have {{ entityStore.entity.entity.attributes.sp }} SP)
+      <span v-if="entityStore.entityAttributes.sp" class="mutedText">
+        (You have {{ entityStore.entityAttributes.sp.val }} SP)
       </span>
     </p>
     <BaseButton
-      v-if="entityStore.entity?.entity.attributes.sp && item.sp !== undefined"
-      :disabled="
-        !countValid || entityStore.entity.entity.attributes.sp < item.sp
-      "
+      v-if="entityStore.entityAttributes.sp && item.sp !== undefined"
+      :disabled="!countValid || entityStore.entityAttributes.sp.val < item.sp"
       @click="buyItem"
       class="primary wide mb-8"
     >

@@ -65,7 +65,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
           key: "DESC",
         });
       }
-      const entity: UncompleteCollectedEntityWithChangelog = {
+      return {
         entity: {
           name: this.options.name,
           type: "COG",
@@ -102,10 +102,6 @@ export const useCogCreateStore = defineStore("cogCreate", {
         flux: [],
         changelog: [],
       };
-      if (this.options.level !== "") {
-        entity.entity.attributes.L = this.LStat;
-      }
-      return entity;
     },
     cogAttrs(): UpdatedEntityAttributes {
       const attrs = entityAttributesMap(this.collectedCog);

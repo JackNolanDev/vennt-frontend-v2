@@ -35,7 +35,7 @@ import { ATTRIBUTES, type BaseEntityAttribute } from "@/utils/backendTypes";
 import AttributeSelection from "./AttributeSelection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
-import { XP_AMOUNT_TO_INCREASE_ATTR } from "@/utils/copy/venntConfig";
+import { XP_AMOUNT_TO_INCREASE_ATTR } from "@/utils/venntConfig";
 
 const state = reactive<{ selected: BaseEntityAttribute[] }>({ selected: [] });
 const entityStore = useEntityStore();
