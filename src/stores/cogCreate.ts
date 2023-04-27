@@ -1,7 +1,6 @@
 import { entityAttributesMap } from "@/utils/attributeUtils";
 import {
   cogCreateOptionsValidator,
-  type EntityAttribute,
   type UncompleteCollectedEntityWithChangelog,
   type UncompleteEntityText,
   type UpdatedEntityAttributes,
@@ -104,17 +103,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
       };
     },
     cogAttrs(): UpdatedEntityAttributes {
-      const attrs = entityAttributesMap(this.collectedCog);
-      // Kinda hacky, but we need to make sure hp, vim, and mp stay equal with their max values during cog creation
-      const keepEqual: Partial<Record<EntityAttribute, EntityAttribute>> = {
-        hp: "max_hp",
-        vim: "max_vim",
-        mp: "max_mp",
-      };
-      Object.entries(keepEqual).forEach(([attr, maxAttr]) => {
-        attrs[attr as EntityAttribute]!.val = attrs[maxAttr]!.val;
-      });
-      return attrs;
+      return entityAttributesMap(this.collectedCog);
     },
     cogStatBlock(): string {
       return getCopyableCogText(this.collectedCog, this.cogAttrs);

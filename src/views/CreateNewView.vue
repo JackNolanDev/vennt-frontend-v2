@@ -6,6 +6,8 @@
         :entity="characterCreateStore.collectedCharacter"
         :use-copyable-dice="false"
         :show-items="true"
+        :show-full-health="true"
+        :entity-attrs="characterCreateStore.characterAttrs"
       ></CombatStats>
     </template>
     <PageLayout>
@@ -99,6 +101,7 @@ import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import router, { CREATE_ROUTE, ENTITY_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
+import { entityCreationFullyHealed } from "@/utils/entityUtils";
 
 const characterCreateStore = useCharacterCreateStore();
 const entityStore = useEntityStore();
@@ -108,7 +111,11 @@ characterCreateStore.loadFromLocalStorage();
 jsonStore.fetchShopItems();
 
 const createCharacter = () => {
-  entityStore.addCollectedEntity(characterCreateStore.collectedCharacter, {
+  const character = entityCreationFullyHealed(
+    characterCreateStore.collectedCharacter,
+    characterCreateStore.characterAttrs
+  );
+  entityStore.addCollectedEntity(character, {
     redirectName: ENTITY_ROUTE,
     clearCharacterCreation: true,
   });

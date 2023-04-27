@@ -4,9 +4,9 @@
     <template #sidebar>
       <CombatStats
         :entity="cogCreateStore.collectedCog"
-        :entity-attrs="cogCreateStore.cogAttrs"
         :use-copyable-dice="false"
         :show-abilities="true"
+        :show-full-health="true"
       ></CombatStats>
     </template>
     <PageLayout>
@@ -130,6 +130,7 @@ import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import router, { CREATE_COG_ROUTE, ENTITY_ROUTE } from "@/router";
 import { idValidator } from "@/utils/backendTypes";
 import BaseCopyableCode from "@/components/Base/BaseCopyableCode.vue";
+import { entityCreationFullyHealed } from "@/utils/entityUtils";
 
 const cogCreateStore = useCogCreateStore();
 const entityStore = useEntityStore();
@@ -144,7 +145,11 @@ if (router.currentRoute.value.query.edit) {
 cogCreateStore.loadFromEntityId(id);
 
 const createCog = () => {
-  entityStore.addCollectedEntity(cogCreateStore.collectedCog, {
+  const cog = entityCreationFullyHealed(
+    cogCreateStore.collectedCog,
+    cogCreateStore.cogAttrs
+  );
+  entityStore.addCollectedEntity(cog, {
     redirectName: ENTITY_ROUTE,
     clearCogCreation: true,
   });
