@@ -13,9 +13,9 @@ import {
   type UpdateEntityAttributes,
   type UseAttrMap,
 } from "./backendTypes";
-import { hpDiffStr, vimDiffStr, mpDiffWis } from "./copy/createCharacterCopy";
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
+import { DEFAULT_ATTRS_MAP, DEFAULT_CHARACTER_EQUATIONS } from "./venntConfig";
 
 export const MIN_ZEROS = new Set([
   "hp",
@@ -164,7 +164,6 @@ export const generateDefaultAdjustMsg = (
 export const adjustAttrsObject = (
   entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
-  propagateChanges = true,
   enforceMaximums = false
 ): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
@@ -190,6 +189,8 @@ export const adjustAttrsObject = (
     const attr = attrIn as EntityAttribute;
     const newVal = currentVal(attr) + adjustment;
     attrs[attr] = newVal;
+    // TODO: Delete this code. It has been deprecated in favor of using equations that can be updated however we want
+    /*
     if (propagateChanges) {
       // HP & VIM
       if (attr === "str") {
@@ -216,8 +217,12 @@ export const adjustAttrsObject = (
         attrs.init = currentVal("init") + adjustment;
       }
     }
+    */
   });
 
+  // TODO: Also remove this logic - I don't believe its usually accurate now that attributes are rarely fully defined by their base val
+  // OR refactor it to make it work again
+  /*
   // 2. clamp logic
   Object.entries(attrs).forEach(([attrIn, maxVal]) => {
     const attr = attrIn as EntityAttribute;
@@ -235,6 +240,7 @@ export const adjustAttrsObject = (
       }
     }
   });
+  */
 
   // 3. enforce zero minimums
   Object.entries(attrs).forEach(([attrIn, val]) => {
@@ -270,12 +276,7 @@ export const adjustAttrsAPI = async (
   propagateChanges = true,
   enforceMaximums = false
 ): Promise<boolean> => {
-  const attrs = adjustAttrsObject(
-    entityAttrs,
-    adjustAttrs,
-    propagateChanges,
-    enforceMaximums
-  );
+  const attrs = adjustAttrsObject(entityAttrs, adjustAttrs, enforceMaximums);
 
   if (Object.keys(attrs).length === 0) {
     return false;
@@ -296,20 +297,10 @@ export const adjustAttrsAPI = async (
   return true;
 };
 
-const defaultEquations: Array<[EntityAttribute, string]> = [
-  ["casting", "casting + spi - burden"],
-  ["speed", "speed - burden"],
-  ["bluespace", "bluespace + (int * int)"],
-];
-
-const defaultAttrsMap: UpdatedEntityAttributes = {
-  free_hands: { val: 2, reason: ["Default: 2"] },
-};
-
 export const entityAttributesMap = (
   entity: CollectedEntity
 ): UpdatedEntityAttributes => {
-  const attrs: UpdatedEntityAttributes = structuredClone(defaultAttrsMap);
+  const attrs: UpdatedEntityAttributes = structuredClone(DEFAULT_ATTRS_MAP);
   // 1. Directly copy over base attribute values from the character object
   Object.entries(entity.entity.attributes).forEach(([attr, val]) => {
     attrs[attr as EntityAttribute] = {
@@ -347,6 +338,9 @@ export const entityAttributesMap = (
       attrMap.items.push(item);
     }
   };
+
+  const defaultEquations =
+    entity.entity.type === "CHARACTER" ? DEFAULT_CHARACTER_EQUATIONS : [];
 
   const equations: Array<[EntityAttribute, string]> = [...defaultEquations];
 
@@ -427,6 +421,8 @@ export const entityAttributesMap = (
     }
   });
 
+  // console.log(attrs);
+
   return attrs;
 };
 
@@ -464,7 +460,7 @@ export const solveEquation = (
     if (entityAttr) {
       return entityAttr.val.toString();
     }
-    const defaultAttr = defaultAttrsMap[attr];
+    const defaultAttr = DEFAULT_ATTRS_MAP[attr];
     if (defaultAttr) {
       return defaultAttr.val.toString();
     }

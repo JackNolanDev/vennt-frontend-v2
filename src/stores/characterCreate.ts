@@ -1,17 +1,14 @@
+import { entityAttributesMap } from "@/utils/attributeUtils";
 import type {
   UncompleteCollectedEntityWithChangelog,
   UncompleteEntityFlux,
   UncompleteEntityText,
+  UpdatedEntityAttributes,
 } from "@/utils/backendTypes";
 import {
   calculateAttribute,
-  calculateHP,
-  calculateVim,
-  calculateMP,
   DEFAULT_HERO,
   DEFAULT_HERO_MAX,
-  calculateInit,
-  calculateSpeed,
   characterCreateOptionsValidator,
   type CharacterCreateOptions,
   calculateSP,
@@ -90,15 +87,6 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     sp(state) {
       return calculateSP(state.options);
     },
-    hp(): number {
-      return calculateHP(this.xp, this.str);
-    },
-    mp(): number {
-      return calculateMP(this.wis);
-    },
-    vim(): number {
-      return calculateVim(this.xp, this.str);
-    },
     collectedCharacter(): UncompleteCollectedEntityWithChangelog {
       const text: UncompleteEntityText[] = [];
       if (!editorEmpty(this.options.desc)) {
@@ -132,16 +120,16 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
             str: this.str,
             wis: this.wis,
             cha: this.cha,
-            hp: this.hp,
-            max_hp: this.hp,
-            mp: this.mp,
-            max_mp: this.mp,
-            vim: this.vim,
-            max_vim: this.vim,
+            hp: 0,
+            max_hp: 0,
+            mp: 0,
+            max_mp: 0,
+            vim: 0,
+            max_vim: 0,
             hero: DEFAULT_HERO,
             max_hero: DEFAULT_HERO_MAX,
-            init: calculateInit(this.agi, this.dex),
-            speed: calculateSpeed(this.agi),
+            init: 0,
+            speed: 0,
             xp: this.xp,
             sp: this.sp,
           },
@@ -156,6 +144,9 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
         text,
         flux,
       };
+    },
+    characterAttrs(): UpdatedEntityAttributes {
+      return entityAttributesMap(this.collectedCharacter);
     },
   },
   actions: {

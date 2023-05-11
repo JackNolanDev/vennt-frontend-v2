@@ -12,7 +12,8 @@ export function buildDice(
   count: number,
   sides: number,
   adjust: number | string = 0,
-  settings: DiceSettings = {}
+  settings: DiceSettings = {},
+  comment = ""
 ): DiceCommands {
   let adjustStr = "";
   if (typeof adjust === "string") {
@@ -25,23 +26,20 @@ export function buildDice(
     }
   }
 
+  let dropLowest = 0;
+  let dropHighest = 0;
+
   const explodeFields = { discord: "", roll20: "", web: "" };
   if (settings.explodes) {
-    explodeFields.discord = "e1";
+    explodeFields.discord = " ie6";
     explodeFields.roll20 = "!";
     explodeFields.web = "!";
   }
   const rerollFields = { discord: "", roll20: "", web: "" };
   if (settings.rr1s) {
-    rerollFields.discord = "rr1";
+    rerollFields.discord = " ir1";
     rerollFields.roll20 = "r";
     rerollFields.web = "r";
-  }
-  const dropFields = { discord: "", roll20: "", web: "" };
-  if ("drop" in settings) {
-    dropFields.discord = `p${settings.drop}`;
-    dropFields.roll20 = `d${settings.drop}`;
-    dropFields.web = `dl${settings.drop}`;
   }
   let fatiguedStr = "";
   if (settings.fatigued) {
@@ -52,11 +50,39 @@ export function buildDice(
     endStr = settings.end;
   }
   if (settings.flow) {
-    count++;
+    count += settings.flow;
+    dropLowest += settings.flow;
   }
   if (settings.ebb) {
-    count--;
+    count += settings.ebb;
+    dropHighest += settings.ebb;
   }
+  if (settings.drop) {
+    dropLowest += settings.drop;
+  }
+  const dropLowestFields =
+    dropLowest === 0
+      ? { discord: "", roll20: "", web: "" }
+      : {
+          discord: ` d${dropLowest}`,
+          roll20: `dl${dropLowest}`,
+          web: `dl${dropLowest}`,
+        };
+  const dropHighestFields =
+    dropHighest === 0
+      ? { discord: "", roll20: "", web: "" }
+      : {
+          discord: ` kl${count - dropHighest}`,
+          roll20: `dh${dropHighest}`,
+          web: `dh${dropHighest}`,
+        };
+  const commentFields = !comment
+    ? { discord: "", roll20: "", web: "" }
+    : {
+        discord: ` ! ${comment}`,
+        roll20: ` [${comment}]`,
+        web: "",
+      };
   return {
     discord:
       count +
@@ -64,30 +90,37 @@ export function buildDice(
       sides +
       explodeFields.discord +
       rerollFields.discord +
-      dropFields.discord +
+      dropLowestFields.discord +
+      dropHighestFields.discord +
+      " " +
       adjustStr +
       fatiguedStr +
-      endStr,
+      endStr +
+      commentFields.discord,
     roll20:
       count +
       "d" +
       sides +
       explodeFields.roll20 +
       rerollFields.roll20 +
-      dropFields.roll20 +
+      dropLowestFields.roll20 +
+      dropHighestFields.roll20 +
       adjustStr +
       fatiguedStr +
-      endStr,
+      endStr +
+      commentFields.roll20,
     web:
       count +
       "d" +
       sides +
       explodeFields.web +
       rerollFields.web +
-      dropFields.web +
+      dropLowestFields.web +
+      dropHighestFields.web +
       adjustStr +
       fatiguedStr +
-      endStr,
+      endStr +
+      commentFields.web,
     settings: { ...settings, adjust, count, sides },
   };
 }
@@ -96,7 +129,8 @@ export function defaultDice(
   attrs: UpdatedEntityAttributes,
   attr: EntityAttribute,
   givenSettings: DiceSettings = {},
-  diceToggles: DiceToggles = {}
+  diceToggles: DiceToggles = {},
+  comment = ""
 ) {
   const attrMap = attrs[attr];
   const adjust = attrMap ? attrMap.val : 0;
@@ -121,12 +155,13 @@ export function defaultDice(
       }
     }
   });
-  return buildDice(diceCount, 6, adjust, settings);
+  return buildDice(diceCount, 6, adjust, settings, comment);
 }
 
 export function diceParseFromString(
   diceStr: string,
-  settings: DiceSettings = {}
+  settings: DiceSettings = {},
+  comment = ""
 ) {
   const match = diceStr.match(/(\d+)d(\d+)/);
   if (!match || match.length < 3) {
@@ -138,11 +173,11 @@ export function diceParseFromString(
     return undefined;
   }
   const adjust = diceStr.substring(match[0].length);
-  return buildDice(count, sides, adjust, settings);
+  return buildDice(count, sides, adjust, settings, comment);
 }
 
 // TODO: This should probably either come from the ability / items themselves
-// OR for now just move out into a seperate JSON file
+// OR for now just move out into a separate JSON file
 const diceAbilities: { name: string; toggle: DiceToggle }[] = [
   { name: "Sleight of Hand", toggle: { attr: "dex", end: "+3" } },
 ];

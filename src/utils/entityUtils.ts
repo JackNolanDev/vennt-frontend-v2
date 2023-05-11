@@ -4,6 +4,7 @@ import {
   type Entity,
   type EntityAttribute,
   type EntityTextKey,
+  type UncompleteCollectedEntityWithChangelog,
   type UpdatedEntityAttributes,
 } from "./backendTypes";
 import { cogTypeName } from "./copy/createCogTypeOptions";
@@ -107,4 +108,19 @@ export const getCopyableCogText = (
     ...abilities,
   ];
   return statBlock.join("\n");
+};
+
+export const entityCreationFullyHealed = (
+  entity: UncompleteCollectedEntityWithChangelog,
+  attrs: UpdatedEntityAttributes
+): UncompleteCollectedEntityWithChangelog => {
+  const keepEqual: Partial<Record<EntityAttribute, EntityAttribute>> = {
+    hp: "max_hp",
+    vim: "max_vim",
+    mp: "max_mp",
+  };
+  Object.entries(keepEqual).forEach(([attr, maxAttr]) => {
+    entity.entity.attributes[attr as EntityAttribute] = attrs[maxAttr]!.val;
+  });
+  return entity;
 };

@@ -22,7 +22,11 @@
             <div class="basicBtnContents attrButtonContents">
               <span class="fractionLabel">{{ attrShortName(attr) }}:</span>
               <BaseFraction
-                :top="attrDisplayVal(attr)"
+                :top="
+                  !showFullHealth || attr === 'hero'
+                    ? attrDisplayVal(attr)
+                    : attrMaxDisplayVal(attr)
+                "
                 :bottom="attrMaxDisplayVal(attr)"
               ></BaseFraction>
             </div>
@@ -254,6 +258,7 @@ const props = defineProps<{
   useCopyableDice: boolean;
   showItems?: boolean;
   showAbilities?: boolean;
+  showFullHealth?: boolean;
 }>();
 
 interface CombatStatsState {
@@ -299,7 +304,7 @@ const dropdownClass = (index: number, length: number) => ({
 
 const attrDisplayVal = (attr: EntityAttribute) => {
   const map = attrs.value[attr];
-  return map === undefined ? undefined : map.val;
+  return map?.val;
 };
 
 const attrMaxDisplayVal = (attr: EntityAttribute) => {

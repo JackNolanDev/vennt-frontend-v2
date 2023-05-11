@@ -16,8 +16,8 @@ export const useDiceStore = defineStore("dice", {
     return {
       latestRoll: {},
       defaultDiceSettings: {
-        flow: false,
-        ebb: false,
+        flow: 0,
+        ebb: 0,
         rr1s: false,
         otherToggles: {},
       },

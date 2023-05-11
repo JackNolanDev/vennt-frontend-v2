@@ -7,7 +7,11 @@
     ></DiceCopyButton>
     <div v-else class="alignRow gap">
       <DiceCopyButton :dice="dice.discord" text="Discord"></DiceCopyButton>
-      <DiceCopyButton :dice="dice.roll20" text="Roll20"></DiceCopyButton>
+      <DiceCopyButton
+        :dice="dice.roll20"
+        text="Roll20"
+        :command-prefix="true"
+      ></DiceCopyButton>
     </div>
   </div>
 </template>

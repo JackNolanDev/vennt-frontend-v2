@@ -284,15 +284,11 @@ export const calculateSP = (options: CharacterCreateOptions) => {
   return sum;
 };
 
-export const HP_BASE_VAL = 20;
-export const MP_BASE_VAL = 6;
-export const VIM_BASE_VAL = 20;
-export const INIT_BASE_VAL = 0;
-export const SPEED_BASE_VAL = 3;
-
 export const DEFAULT_HERO = 3;
 export const DEFAULT_HERO_MAX = 9;
 
+// TODO: Delete this code:
+/*
 export const hpDiffStr = (str: number): number => {
   return str * 3;
 };
@@ -302,21 +298,7 @@ export const mpDiffWis = (wis: number): number => {
 export const vimDiffStr = (str: number): number => {
   return str * 3;
 };
-export const calculateHP = (xp: number, str: number): number => {
-  return HP_BASE_VAL + Math.floor(xp / 1000) + hpDiffStr(str);
-};
-export const calculateMP = (wis: number): number => {
-  return MP_BASE_VAL + mpDiffWis(wis);
-};
-export const calculateVim = (xp: number, str: number): number => {
-  return VIM_BASE_VAL + Math.floor(xp / 1000) + vimDiffStr(str);
-};
-export const calculateInit = (agi: number, dex: number) => {
-  return INIT_BASE_VAL + agi + dex;
-};
-export const calculateSpeed = (agi: number) => {
-  return SPEED_BASE_VAL + agi;
-};
+*/
 
 export const calculateItems = (
   options: CharacterCreateOptions

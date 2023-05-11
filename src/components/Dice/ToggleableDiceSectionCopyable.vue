@@ -1,10 +1,10 @@
 <template>
   <p v-if="header" class="mt-0 mb-0 labelText text-center">
-    <b>{{ defaultText ? defaultText : dice.discord }}</b>
+    <b>{{ defaultText ? defaultText : dice.roll20 }}</b>
   </p>
   <DiceCopy
     :dice="dice"
-    :text="header && defaultText ? dice.discord : defaultText"
+    :text="header && defaultText ? dice.roll20 : defaultText"
   ></DiceCopy>
   <BaseDropDown
     :use-given-state="true"
@@ -38,6 +38,7 @@ const props = defineProps<{
   dice: DiceCommands;
   attr?: EntityAttribute;
   header?: boolean;
+  comment?: string;
 }>();
 const diceStore = useDiceStore();
 
@@ -52,6 +53,13 @@ const heroDiceReason = computed(() =>
 );
 const heroPointDice = computed(() => {
   if (props.dice.settings.count && props.dice.settings.sides) {
+    let baseComment = "dice check";
+    if (props.attr) {
+      baseComment = `${attrShortName(props.attr)} check`;
+    }
+    if (props.comment) {
+      baseComment = props.comment;
+    }
     return buildDice(
       props.dice.settings.count,
       props.dice.settings.sides,
@@ -60,7 +68,8 @@ const heroPointDice = computed(() => {
         ...props.dice.settings,
         drop: 1,
         end: "+9",
-      }
+      },
+      `${baseComment} - Hero Point Boost`
     );
   }
   return false;

@@ -23,11 +23,11 @@
     ></BaseInlineTextEditor>
     <BaseButton
       v-if="
-        typeof entityStore.entity?.entity.attributes.sp === 'number' &&
+        typeof entityStore.entityAttributes.sp?.val === 'number' &&
         typeof item.sp === 'number'
       "
       :disabled="
-        buttonsDisabled || entityStore.entity.entity.attributes.sp < item.sp
+        buttonsDisabled || entityStore.entityAttributes.sp.val < item.sp
       "
       @click="buyItem"
       class="primary wide mb-8"

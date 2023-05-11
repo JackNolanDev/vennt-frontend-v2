@@ -18,6 +18,7 @@
     v-else
     :dice="dice"
     :attr="attr"
+    :comment="comment"
   ></ToggleableDiceSectionCopyable>
 </template>
 
@@ -28,7 +29,7 @@ import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
 import ToggleableDiceSectionCopyable from "./ToggleableDiceSectionCopyable.vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 
-defineProps<{ dice: DiceCommands; attr?: EntityAttribute }>();
+defineProps<{ dice: DiceCommands; attr?: EntityAttribute; comment?: string }>();
 const emit = defineEmits<{ (e: "rollValue", state: number): void }>();
 const diceStore = useDiceStore();
 

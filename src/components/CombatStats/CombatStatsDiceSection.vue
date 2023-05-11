@@ -20,7 +20,7 @@
       icon="casino"
       class="selected"
     >
-      Roll {{ attr.toUpperCase() }}
+      Roll {{ attrShortName(attr) }}
     </BaseButton>
   </div>
   <div v-if="!useCopyableDice" class="diceSection">
@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { useDiceStore } from "@/stores/dice";
-import { attrFullName } from "@/utils/attributeUtils";
+import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import {
   ATTRIBUTES_SET,
   type EntityAttribute,
@@ -85,7 +85,8 @@ const computedDice = computed(() => {
     props.attrs,
     props.attr,
     diceStore.defaultDiceSettings,
-    {} // TODO: fetch diceToggles from character store, probably
+    {}, // TODO: fetch diceToggles from character store, probably
+    `${attrShortName(props.attr)} check`
   );
 });
 

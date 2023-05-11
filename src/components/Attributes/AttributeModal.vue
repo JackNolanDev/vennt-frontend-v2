@@ -138,8 +138,8 @@ const showResetButton = computed(
   () =>
     entityStore.entity &&
     maxAttr.value !== undefined &&
-    entityStore.entity.entity.attributes[maxAttr.value] !==
-      entityStore.entity.entity.attributes[props.attr] &&
+    entityStore.entityAttributes[maxAttr.value]?.val !==
+      entityStore.entityAttributes[props.attr]?.val &&
     props.attr !== "hero"
 );
 const showClearHistoryButton = computed(
@@ -157,7 +157,7 @@ const closeModal = () => {
 };
 const resetButton = () => {
   if (entityStore.entity && maxAttr.value) {
-    const newValue = entityStore.entity.entity.attributes[maxAttr.value];
+    const newValue = entityStore.entityAttributes[maxAttr.value]?.val;
     if (newValue !== undefined) {
       entityStore.updateEntityAttributes(entityStore.entity.entity.id, {
         attributes: {
