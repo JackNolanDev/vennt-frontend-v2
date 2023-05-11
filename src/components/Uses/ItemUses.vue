@@ -1,7 +1,11 @@
 <template>
   <ItemHealUse v-if="item.uses?.heal" :item="item"></ItemHealUse>
   <ItemRollUse v-if="item.uses?.roll" :item="item"></ItemRollUse>
-  <CheckUse v-if="item.uses?.check" :use="item.uses.check"></CheckUse>
+  <CheckUse
+    v-if="item.uses?.check"
+    :use="item.uses.check"
+    :name="item.name"
+  ></CheckUse>
 </template>
 
 <script setup lang="ts">

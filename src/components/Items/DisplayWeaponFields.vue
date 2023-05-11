@@ -13,6 +13,7 @@
     <ToggleableDiceSectionCopyable
       :dice="damageDice"
       :header="true"
+      :comment="diceReason"
     ></ToggleableDiceSectionCopyable>
   </div>
 </template>
@@ -49,10 +50,20 @@ const damageString = computed(
     damageDiceString.value &&
     enhancedDmgString(props.item, damageDiceString.value)
 );
+const diceReason = computed(
+  () =>
+    `${props.item.name} attack dmg${
+      acc.value ? `, Accuracy: ${acc.value.result}` : ""
+    }`
+);
 const damageDice = computed(
   () =>
     damageDiceString.value &&
-    diceParseFromString(damageDiceString.value, diceStore.defaultDiceSettings)
+    diceParseFromString(
+      damageDiceString.value,
+      diceStore.defaultDiceSettings,
+      diceReason.value
+    )
 );
 const showDamageDice = computed(
   () => props.item.active && !props.item.custom_fields?.in_storage

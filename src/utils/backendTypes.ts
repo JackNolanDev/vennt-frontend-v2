@@ -777,8 +777,8 @@ export type DiceSettings = {
   drop?: number;
   fatigued?: boolean;
   end?: string;
-  flow?: boolean;
-  ebb?: boolean;
+  flow?: number;
+  ebb?: number;
   otherToggles?: DiceOtherToggles;
   adjust?: number | string;
   count?: number;

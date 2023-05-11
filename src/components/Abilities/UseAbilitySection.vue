@@ -8,6 +8,7 @@
       :dice="castingDice"
       :attr="'casting'"
       :header="true"
+      :comment="diceComment"
     ></ToggleableDiceSectionCopyable>
   </div>
   <div v-if="ability.custom_fields?.mp_cost">
@@ -34,12 +35,14 @@ const props = defineProps<{ ability: FullEntityAbility }>();
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
+const diceComment = computed(() => `Casting ${props.ability.name}`);
 const castingDice = computed(() => {
   return defaultDice(
     entityStore.entityAttributes,
     "casting",
     diceStore.defaultDiceSettings,
-    {} // TODO: fetch diceToggles from character store, probably
+    {}, // TODO: fetch diceToggles from character store, probably
+    diceComment.value
   );
 });
 const showUseButton = computed(
