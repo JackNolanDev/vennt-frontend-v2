@@ -627,11 +627,13 @@ export const filterChangelogValidator = z.object({
 export const WEAPON_TYPES_KEY = "VENNT_WEAPON_TYPES";
 export const SHOP_ITEMS_KEY = "VENNT_SHOP_ITEMS";
 export const ABILITIES_KEY = "VENNT_ABILITIES";
+export const ABILITIES_KEY_OLD = "VENNT_ABILITIES_0.13.7";
 
 export const jsonStorageKeyValidator = z.enum([
   WEAPON_TYPES_KEY,
   SHOP_ITEMS_KEY,
   ABILITIES_KEY,
+  ABILITIES_KEY_OLD,
 ]);
 
 export const pathDetailsValidator = z.object({
