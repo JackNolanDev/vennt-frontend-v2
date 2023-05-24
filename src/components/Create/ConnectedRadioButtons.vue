@@ -18,10 +18,6 @@ const characterCreateStore = useCharacterCreateStore();
 
 const selectedUpdated = (key: string) => {
   characterCreateStore.options.radioSelections[props.radioKey] = key;
-  if (RADIO_OPTIONS[props.radioKey].clearAdditionalAttrs) {
-    // tbh kinda hacky, but whatever
-    characterCreateStore.options.attributeSelections.additionalAttrs = [];
-  }
   characterCreateStore.saveToLocalStorage();
 };
 </script>

@@ -17,11 +17,11 @@
         class="btn noSelect card selectable column giftCard"
         :class="{ selected: gift === giftItem }"
       >
-        <GiftDescription :gift="giftItem" :show-title="true" />
+        <GiftDescriptionV14 :gift="giftItem" :show-title="true" />
       </button>
     </div>
     <div v-else>
-      <GiftDescription :gift="gift" :show-title="true" class="card column" />
+      <GiftDescriptionV14 :gift="gift" :show-title="true" class="card column" />
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@
 import { CHARACTER_GIFTS, type CharacterGift } from "@/utils/backendTypes";
 import { reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
-import GiftDescription from "./GiftDescription.vue";
+import GiftDescriptionV14 from "./GiftDescriptionV14.vue";
 
 const state = reactive({ closed: false });
 const props = defineProps<{ gift?: CharacterGift }>();

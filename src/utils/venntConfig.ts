@@ -1,7 +1,7 @@
 import type { EntityAttribute, UpdatedEntityAttributes } from "./backendTypes";
 
 // TODO: For v0.14 increase to 2000
-export const XP_AMOUNT_TO_INCREASE_ATTR = 1000;
+export const LEVEL_UPS_TO_INCREASE_ATTR = 2;
 
 export const DEFAULT_ATTRS_MAP: UpdatedEntityAttributes = {
   free_hands: { val: 2, reason: ["Default: 2"] },

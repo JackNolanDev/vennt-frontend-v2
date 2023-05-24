@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-  ATTRIBUTES,
   baseAttributeFieldValidator,
   giftValidator,
   nameValidator,
@@ -8,26 +7,25 @@ import {
   type CharacterGift,
   type EntityAttribute,
   type HTMLString,
+  type UncompleteEntityAbility,
   type UncompleteEntityItem,
 } from "../backendTypes";
 import { namesToItems } from "../itemUtils";
 import { useJsonStore } from "@/stores/jsonStorage";
+import { giftBoonCopy } from "./giftBoonsCopy";
 
 export const AttributeSelectionsValidator = z.object({
   childAttrs: baseAttributeFieldValidator.array(),
   adultAttrs: baseAttributeFieldValidator.array(),
-  additionalAttrs: baseAttributeFieldValidator.array(),
+  noGiftAttrs: baseAttributeFieldValidator.array(),
   badAttrs: baseAttributeFieldValidator.array(),
   grate1: baseAttributeFieldValidator.array(),
   grate3: baseAttributeFieldValidator.array(),
 });
 export const RadioSelectionsValidator = z.object({
-  additionalAttrChoice: z.string(),
   sideItem: z.string(),
-  rememberItem: z.string(),
-  outfit: z.string(),
   itemSet: z.string(),
-  experience: z.string(),
+  guildRank: z.string(),
 });
 export const characterCreateOptionsValidator = z.object({
   name: nameValidator,
@@ -37,6 +35,7 @@ export const characterCreateOptionsValidator = z.object({
   desc: z.string(),
   backstory: z.string(),
   quests: z.string().array().length(3),
+  boon: z.string().optional(),
 });
 export type AttributeSelections = z.infer<typeof AttributeSelectionsValidator>;
 export type RadioSelections = z.infer<typeof RadioSelectionsValidator>;
@@ -62,8 +61,9 @@ export const GIFT_TO_ATTR_MAP: GiftToAttrMap = {
   None: undefined,
 };
 
-export const ATTR_FILTERS_ON_GIFT_SELECTION: (keyof AttributeSelections)[] = [
-  "badAttrs",
+export const ATTR_FILTERS_ON_GIFT_SELECTION: (keyof AttributeSelections)[] = [];
+export const ATTR_RESET_ON_GIFT_SELECTION: (keyof AttributeSelections)[] = [
+  "noGiftAttrs",
 ];
 
 export const giftMatchesAttr = (
@@ -87,59 +87,15 @@ export type AttributeSelectionOptionsDetails = {
 export const ATTR_OPTIONS: AttributeSelectionOptionsDetails = {
   childAttrs: {
     max: 3,
-    filterLists: ["additionalAttrs", "badAttrs"],
   },
   adultAttrs: {
     max: 3,
-    filterLists: ["additionalAttrs", "badAttrs"],
   },
-  additionalAttrs: {
-    max: (options) => {
-      switch (options.radioSelections.additionalAttrChoice) {
-        case "any":
-          return 1;
-        case "one":
-          return 2;
-        case "zero":
-          return 3;
-      }
-      return 0;
-    },
-    filterLists: ["badAttrs"],
-    disabledGenerator: (options) => {
-      switch (options.radioSelections.additionalAttrChoice) {
-        case "one":
-          return ATTRIBUTES.filter(
-            // block if attribute has only been selected by one of the previous options
-            (attr) =>
-              giftMatchesAttr(options.gift, attr) ||
-              options.attributeSelections.childAttrs.includes(attr) ===
-                options.attributeSelections.adultAttrs.includes(attr)
-          );
-        case "zero":
-          // block if any attribute modifiers have already been selected
-          return ATTRIBUTES.filter(
-            (attr) =>
-              giftMatchesAttr(options.gift, attr) ||
-              options.attributeSelections.childAttrs.includes(attr) ||
-              options.attributeSelections.adultAttrs.includes(attr)
-          );
-      }
-      // don't block any choices
-      return [];
-    },
+  noGiftAttrs: {
+    max: 3,
   },
   badAttrs: {
-    max: 1,
-    disabledGenerator: (options) => {
-      return ATTRIBUTES.filter(
-        (attr) =>
-          giftMatchesAttr(options.gift, attr) ||
-          options.attributeSelections.childAttrs.includes(attr) ||
-          options.attributeSelections.adultAttrs.includes(attr) ||
-          options.attributeSelections.additionalAttrs.includes(attr)
-      );
-    },
+    max: 3,
     diff: -1,
   },
   grate1: { max: 1, diff: -1 },
@@ -151,83 +107,105 @@ export type RadioButtonOptionsDetails = {
     options: {
       [key: string]: HTMLString;
     };
-    clearAdditionalAttrs?: boolean;
   };
 };
 
 export const RADIO_OPTIONS: RadioButtonOptionsDetails = {
-  additionalAttrChoice: {
+  itemSet: {
     options: {
-      any: "Add 1 to one Attribute of your choice",
-      one: "Add 1 to two Attributes at 1",
-      zero: "Add 1 to three Attributes at 0",
+      chef: "**Chef:** 3 Rations, 3 Tasty Waters, 1 Frying Pan, 1 Cooking Kit",
+      dungeoneer:
+        "**Dungeoneer:** 1 Flare Rocket, 1 Lockpick set, 1 Flint and Steel, 1 Rope, 1 bag of Sounding Stones, 1 Lux Ward, 1 Lantern",
+      merchant:
+        "**Merchant:** 1 Elixir of Energy, 1 Rope, 1 Writing Kit, 1 Lantern, 3 Coffee or Alcohol",
+      medic:
+        "**Medic:** 3 Bandages, 2 Healing Salves, 1 Godfire, 1 Sour Blessing, 1 Elixir of Life",
+      scientist:
+        "**Scientist:** 1 Lux Ward, 1 Elixir of Focus, 1 Compass, 1 Writing Kit, 1 Bullseye Lantern",
+      traveler: "**Traveler:** 1 Bedroll, 1 Lux Ward, 1 Spyglass, 6 Rations",
     },
-    clearAdditionalAttrs: true,
   },
   sideItem: {
     options: {
-      sharp:
-        "<b>Something sharp:</b> Gain +1 Dexterity and two more Blade weapons.",
-      remember: "<b>Something to remember:</b> Gain +1 Spirit OR +1 Charisma.",
-      useful:
-        "<b>Something useful:</b> Gain +1 Wisdom and 50 sp to spend on Equipment.",
-      eat: "<b>Something to eat:</b> Gain +1 Strength and 50 sp to spend on Consumables.",
-      read: "<b>Something to read:</b> Gain +1 Intelligence and 100 XP.",
+      meaningful: `**Something meaningful:** Gain a Memento, an item with 1 Bulk.
+        You can spend your Memento at a narratively meaningful moment for a +6 bonus to any one check.`,
+      eat: `**Something to eat:** Gain a Snack, an item with 1 Bulk.
+        You can eat your Snack during any Rest to fully heal your HP, MP, and Vim once.`,
+      coin: `**Some coin:** Gain 150 sp.`,
     },
   },
-  rememberItem: {
+  guildRank: {
     options: {
-      spi: "<b>Spirit:</b> Gain +1 Spirit.",
-      cha: "<b>Charisma:</b> Gain +1 Charisma.",
+      recruit: `**Recruit:** A freshly recruited adventurer with 0-3 months of experience.`,
+      member: `**Member:** An accepted but unremarkable member of the guild; typically 3-18 months of experience.`,
+      veteran: `**Veteran:** A senior member of the guild, having at least 3 years of adventuring experience.`,
+      officer: `**Officer:** A high-ranking adventurer, often retired from the field and having more executive or administrative duties.`,
     },
   },
-  outfit: {
-    options: {
-      fashionable:
-        "<b>Fashionable:</b> Gain +1 Charisma and 100sp. Your fashionable outfit has a carrying capacity of 5 Bulk.",
-      functional:
-        "<b>Functional:</b> Gain +1 Agility. Your functional outfit has a carrying capacity of 15 Bulk.",
-    },
+};
+
+const sideItemMap: Record<string, UncompleteEntityItem> = {
+  meaningful: {
+    name: "Memento",
+    bulk: 0,
+    type: "consumable",
+    desc: "Memento from character creation. You can spend your Memento at a narratively meaningful moment for a +6 bonus to any one check.",
+    active: false,
   },
-  itemSet: {
-    options: {
-      chef: "<b>Chef:</b> 3 Rations, 3 Tasty Waters, 1 Frying Pan, 1 Cooking Kit",
-      dungeoneer:
-        "<b>Dungeoneer:</b> 1 Flare Rocket, 1 Lockpick set, 1 Flint and Steel, 1 Rope, 1 bag of Sounding Stones, 1 Lux Ward, 1 Lantern",
-      merchant:
-        "<b>Merchant:</b> 1 Elixir of Energy, 1 Rope, 1 Writing Kit, 1 Lantern, 3 Coffee or Alcohol",
-      medic:
-        "<b>Medic:</b> 3 Bandages, 2 Healing Salves, 1 Godfire, 1 Sour Blessing, 1 Elixir of Life",
-      scientist:
-        "<b>Scientist:</b> 1 Lux Ward, 1 Elixir of Focus, 1 Compass, 1 Writing Kit, 1 Bullseye Lantern",
-      traveler: "<b>Traveler:</b> 1 Bedroll, 1 Lux Ward, 1 Spyglass, 6 Rations",
-    },
+  eat: {
+    name: "Snack",
+    bulk: 1,
+    type: "consumable",
+    desc: "Snack from character creation. You can eat your Snack during any Rest to fully heal your HP, MP, and Vim once.",
+    uses: { heal: { attr: { hp: 1000, mp: 1000, vim: 1000 } } },
+    active: false,
   },
-  experience: {
-    options: {
-      starter: `<b>Yes:</b> Gain 1000 XP. When you complete a Novice Path for the first time, gain 300 XP.
-    When you complete a Journeyman Path for the first time, gain 700 XP.
-    When you complete an Adept Path for the first time, gain 1000 XP.`,
-      experienced: "<b>No:</b> Gain 2500 XP.",
+};
+
+const guildRankAbilityMap: Record<string, UncompleteEntityAbility> = {
+  recruit: {
+    name: "Guild Rank: Recruit",
+    effect: "Once per Quest, a Recruit can reroll any roll.",
+    custom_fields: {
+      path: "Guild Ranks",
+      activation: "Quest",
     },
+    active: false,
+  },
+  member: {
+    name: "Guild Rank: Member",
+    effect:
+      "Once per Rest, when a Member would reach 0 HP, Vim, or MP, they gain 1 of that pool. This effect can trigger only once per Rest across all pools.",
+    custom_fields: {
+      path: "Guild Ranks",
+      activation: "Rest",
+      cost: { rest: true },
+    },
+    active: false,
+  },
+  veteran: {
+    name: "Guild Rank: Veteran",
+    effect:
+      "Once per Rest, they may reroll an Attribute check if that Attribute is 3 or higher.",
+    custom_fields: {
+      path: "Guild Ranks",
+      activation: "Rest",
+      cost: { rest: true },
+    },
+    active: false,
+  },
+  officer: {
+    name: "Guild Rank: Officer",
+    effect: "Once per Quest, Officers gain 6d6 * 10 sp.",
+    custom_fields: {
+      path: "Guild Ranks",
+      activation: "Quest",
+    },
+    active: false,
   },
 };
 
 // Combat stat functions
-
-type RadioOptionAttrsMap = { [key: string]: BaseEntityAttribute };
-const RADIO_OPTION_ATTRS_MAP: RadioOptionAttrsMap = {
-  sharp: "dex",
-  useful: "wis",
-  eat: "str",
-  read: "int",
-  fashionable: "cha",
-  functional: "agi",
-};
-const REMEMBER_SPECIAL_RADIO_ATTRS_MAP: RadioOptionAttrsMap = {
-  spi: "spi",
-  cha: "cha",
-};
 
 export const calculateAttribute = (
   options: CharacterCreateOptions,
@@ -248,57 +226,24 @@ export const calculateAttribute = (
       }
     }
   );
-  Object.values(options.radioSelections).forEach((selection) => {
-    if (
-      RADIO_OPTION_ATTRS_MAP[selection] === attr ||
-      (options.radioSelections.sideItem === "remember" &&
-        REMEMBER_SPECIAL_RADIO_ATTRS_MAP[selection] === attr)
-    ) {
-      sum++;
-    }
-  });
   return sum;
 };
 
-export const calculateXP = (options: CharacterCreateOptions) => {
-  let sum = 0;
-  if (options.radioSelections.experience === "starter") {
-    sum += 1000;
-  } else if (options.radioSelections.experience === "experienced") {
-    sum += 2500;
-  }
-  if (options.radioSelections.sideItem === "read") {
-    sum += 100;
-  }
+export const calculateXP = () => {
+  const sum = 1000;
   return sum;
 };
 
 export const calculateSP = (options: CharacterCreateOptions) => {
   let sum = 0;
-  if (["useful", "eat"].includes(options.radioSelections.sideItem)) {
-    sum += 50;
-  }
-  if (options.radioSelections.outfit === "fashionable") {
-    sum += 100;
+  if (options.radioSelections.sideItem === "coin") {
+    sum += 150;
   }
   return sum;
 };
 
 export const DEFAULT_HERO = 3;
 export const DEFAULT_HERO_MAX = 9;
-
-// TODO: Delete this code:
-/*
-export const hpDiffStr = (str: number): number => {
-  return str * 3;
-};
-export const mpDiffWis = (wis: number): number => {
-  return wis * 3;
-};
-export const vimDiffStr = (str: number): number => {
-  return str * 3;
-};
-*/
 
 export const calculateItems = (
   options: CharacterCreateOptions
@@ -307,19 +252,13 @@ export const calculateItems = (
   if (jsonStore.shopItems === undefined) {
     return [];
   }
-  const itemNames: string[] = [];
-  if (options.radioSelections.outfit === "fashionable") {
-    itemNames.push("Fashionable Outfit");
-  } else if (options.radioSelections.outfit === "functional") {
-    itemNames.push("Functional Outfit");
-  }
 
   // all characters start with both of these weapons for free
-  itemNames.push("Melee Blade", "Ranged Sidearm");
-
-  if (options.radioSelections.sideItem === "sharp") {
-    itemNames.push("Melee Blade", "Melee Blade");
-  }
+  const itemNames: string[] = [
+    "Functional Outfit",
+    "Melee Blade",
+    "Ranged Sidearm",
+  ];
 
   switch (options.radioSelections.itemSet) {
     case "chef":
@@ -392,5 +331,30 @@ export const calculateItems = (
       );
       break;
   }
-  return namesToItems(jsonStore.shopItems, itemNames);
+  const fullItems = namesToItems(jsonStore.shopItems, itemNames);
+
+  const sideItem = sideItemMap[options.radioSelections.sideItem];
+  if (sideItem) {
+    fullItems.push(sideItem);
+  }
+
+  return fullItems;
+};
+
+export const calculateAbilities = (
+  options: CharacterCreateOptions
+): UncompleteEntityAbility[] => {
+  const abilities: UncompleteEntityAbility[] = [];
+
+  const boon = options.boon && giftBoonCopy[options.boon];
+  if (boon) {
+    abilities.push(boon.ability);
+  }
+
+  const guildRank = guildRankAbilityMap[options.radioSelections.guildRank];
+  if (guildRank) {
+    abilities.push(guildRank);
+  }
+
+  return abilities;
 };

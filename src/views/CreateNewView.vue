@@ -5,6 +5,7 @@
       <CombatStats
         :entity="characterCreateStore.collectedCharacter"
         :use-copyable-dice="false"
+        :show-abilities="true"
         :show-items="true"
         :show-full-health="true"
         :entity-attrs="characterCreateStore.characterAttrs"
@@ -13,12 +14,12 @@
     <PageLayout>
       <h1 class="centeredText">CHARACTER CREATION</h1>
       <p class="textBlock">
-        Current version:
+        Current version: v0.14,
         <a
-          href="https://vennt.fandom.com/wiki/Character_Creation?oldid=4426"
+          href="https://vennt.fandom.com/wiki/Character_Creation?oldid=5973"
           target="_blank"
         >
-          Revision as of 16:44, 15 March 2022
+          Revision as of 19:32, 27 March 2023
         </a>
       </p>
       <h2 class="step">Choose a name</h2>
@@ -42,7 +43,7 @@
       <CreateSectionQuests></CreateSectionQuests>
       <h2 class="step">Beginner Boons</h2>
       <CreateSectionBoons></CreateSectionBoons>
-      <h2 class="step">XP and Abilities</h2>
+      <h2 class="step">Buy Abilities</h2>
       <CreateSectionXP></CreateSectionXP>
       <h2 class="step">Finish the character</h2>
       <p class="textBlock">

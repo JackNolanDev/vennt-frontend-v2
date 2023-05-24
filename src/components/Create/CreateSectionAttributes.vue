@@ -16,21 +16,21 @@
       attrKey="adultAttrs"
     ></ConnectedAttributeSelection>
   </div>
-  <div class="card column padded mb-24">
-    <p class="textBlock mt-0">3. Choose one:</p>
-    <ConnectedRadioButtons
-      radioKey="additionalAttrChoice"
-    ></ConnectedRadioButtons>
-    <div class="separator mt-16 mb-16"></div>
+  <div
+    class="card column padded mb-24"
+    v-if="characterCreateStore.options.gift === 'None'"
+  >
+    <p class="textBlock mt-0">
+      3. Add 1 to any three Attributes if you have No Gift.
+    </p>
     <ConnectedAttributeSelection
-      attrKey="additionalAttrs"
+      attrKey="noGiftAttrs"
     ></ConnectedAttributeSelection>
   </div>
   <div class="card column padded mb-24">
     <p class="textBlock mt-0 mb-0">
-      4. Subtract 1 from one Attribute that is currently at 0, if one exists.
-      You may pick any Attribute from amongst those at 0, but if your character
-      is...
+      4. Subtract 1 from three Attributes. You may pick any Attribute, but if
+      your character is...
     </p>
     <ul>
       <li>Inattentive... ...You might want to pick PER.</li>
@@ -75,6 +75,8 @@
 </template>
 
 <script setup lang="ts">
+import { useCharacterCreateStore } from "@/stores/characterCreate";
 import ConnectedAttributeSelection from "./ConnectedAttributeSelection.vue";
-import ConnectedRadioButtons from "./ConnectedRadioButtons.vue";
+
+const characterCreateStore = useCharacterCreateStore();
 </script>

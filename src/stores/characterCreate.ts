@@ -14,6 +14,7 @@ import {
   calculateSP,
   calculateXP,
   calculateItems,
+  calculateAbilities,
 } from "@/utils/copy/createCharacterCopy";
 import { editorEmpty } from "@/utils/textUtils";
 import { defineStore } from "pinia";
@@ -29,18 +30,15 @@ const DEFAULT_OPTIONS: CharacterCreateOptions = {
   attributeSelections: {
     childAttrs: [],
     adultAttrs: [],
-    additionalAttrs: [],
+    noGiftAttrs: [],
     badAttrs: [],
     grate1: [],
     grate3: [],
   },
   radioSelections: {
-    additionalAttrChoice: "",
     sideItem: "",
-    rememberItem: "",
-    outfit: "",
     itemSet: "",
-    experience: "",
+    guildRank: "",
   },
   desc: "",
   backstory: "",
@@ -80,12 +78,6 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     },
     cha(state) {
       return calculateAttribute(state.options, "cha");
-    },
-    xp(state) {
-      return calculateXP(state.options);
-    },
-    sp(state) {
-      return calculateSP(state.options);
     },
     collectedCharacter(): UncompleteCollectedEntityWithChangelog {
       const text: UncompleteEntityText[] = [];
@@ -130,15 +122,15 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
             max_hero: DEFAULT_HERO_MAX,
             init: 0,
             speed: 0,
-            xp: this.xp,
-            sp: this.sp,
+            xp: calculateXP(),
+            sp: calculateSP(this.options),
           },
           other_fields: {
             gift: this.options.gift,
           },
           public: false,
         },
-        abilities: [],
+        abilities: calculateAbilities(this.options),
         items: calculateItems(this.options),
         changelog: [],
         text,

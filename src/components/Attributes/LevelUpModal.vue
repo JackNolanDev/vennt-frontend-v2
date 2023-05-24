@@ -6,7 +6,7 @@
     @closeModal="closeModal"
   >
     <template #title>Level Up to {{ attrLevelToProcess }}</template>
-    <div>
+    <div v-if="increaseAttrs">
       <p class="mt-0">
         Select an attribute to increase for level {{ attrLevelToProcess }}:
       </p>
@@ -24,6 +24,12 @@
         >Level Up</BaseButton
       >
     </div>
+    <div v-else>
+      <p class="mt-0">Nothing is required for this level up!</p>
+      <BaseButton @click="closeModal" class="primary wide center bold mt-16"
+        >Level Up</BaseButton
+      >
+    </div>
   </BaseModal>
 </template>
 
@@ -35,7 +41,7 @@ import { ATTRIBUTES, type BaseEntityAttribute } from "@/utils/backendTypes";
 import AttributeSelection from "./AttributeSelection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
-import { XP_AMOUNT_TO_INCREASE_ATTR } from "@/utils/venntConfig";
+import { LEVEL_UPS_TO_INCREASE_ATTR } from "@/utils/venntConfig";
 
 const state = reactive<{ selected: BaseEntityAttribute[] }>({ selected: [] });
 const entityStore = useEntityStore();
@@ -43,15 +49,16 @@ const entityStore = useEntityStore();
 const attrLevelToProcess = computed(() => {
   if (entityStore.entity && entityStore.entityAttributes.xp) {
     return (
-      Math.floor(
-        entityStore.entityAttributes.xp.val / XP_AMOUNT_TO_INCREASE_ATTR
-      ) -
+      Math.floor(entityStore.entityAttributes.xp.val / 1000) -
       entityStore.levelsToProcess +
       1
     );
   }
   return 0;
 });
+const increaseAttrs = computed(
+  () => attrLevelToProcess.value % LEVEL_UPS_TO_INCREASE_ATTR === 0
+);
 const disabledChoices = computed(() =>
   ATTRIBUTES.filter((attr) => {
     const found = entityStore.entityAttributes[attr];

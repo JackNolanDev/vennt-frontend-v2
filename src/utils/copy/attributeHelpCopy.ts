@@ -10,7 +10,8 @@ const BASE_HELP_MAP: HelpMap = {
   <a href="https://vennt.fandom.com/wiki/Health" target="_blank" class="link">Wiki entry</a>.`,
   mp: `Your default maximum Mana (MP) is 6 + 3 times Wisdom.
   <a href="https://vennt.fandom.com/wiki/Mana" target="_blank" class="link">Wiki entry</a>.`,
-  vim: `Your default maximum Vim is equal to your maximum HP.
+  vim: `Your default maximum Vim is 20 + Level + Strength times Agility.
+  Vim is used to mitigate incoming attacks and perform combat feats and abilities which use physical exertion..
   <a href="https://vennt.fandom.com/wiki/Vim" target="_blank" class="link">Wiki entry</a>`,
   hero: `Hero Points are reserves of luck that can be spent to create moments of shining excellence.
   <a href="https://vennt.fandom.com/wiki/Hero_Points" target="_blank" class="link">Wiki entry</a>.

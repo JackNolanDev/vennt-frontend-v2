@@ -46,9 +46,9 @@ const abilityUsesCostAdjust = (
 ): number => {
   const adjustTotal = (adjustCost: number | string) => {
     if (typeof adjustCost === "number") {
-      cost += adjustCost;
+      cost = Math.max(cost + adjustCost, 0);
     } else {
-      cost = solveEquation(adjustCost, attrs) ?? cost;
+      cost = Math.max(solveEquation(adjustCost, attrs) ?? cost, 0);
     }
   };
 
