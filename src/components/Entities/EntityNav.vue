@@ -51,7 +51,7 @@
   <div v-if="state.dropdownOpen" class="nav-dropdown" @click="toggleDropdown">
     <div class="separator"></div>
     <nav class="mt-8 mb-8 ml-8 mr-8">
-      <div v-if="accountInfoStore.isLoggedIn">
+      <div>
         <BaseButton
           :to="{ name: ENTITY_STATS_ROUTE, params: { id: entity.id } }"
           title="Character stats"
@@ -79,14 +79,13 @@
         >
         <BaseButton
           :to="{ name: ENTITY_COMBAT_ROUTE, params: { id: entity.id } }"
-          title="Combat (c)"
           icon="sports_kabaddi"
           class="skinny bold wide mobile-only"
           >Combat</BaseButton
         >
         <BaseButton
+          v-if="entityState.canEdit"
           :to="{ name: ENTITY_NOTES_ROUTE, params: { id: entity.id } }"
-          title="Combat (c)"
           icon="edit_note"
           class="skinny bold wide mobile-only"
           >Notes</BaseButton
