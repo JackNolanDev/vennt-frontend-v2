@@ -20,6 +20,10 @@
     v-else-if="showUseButton"
     :ability="ability"
   ></UseAbilityButton>
+  <AbilityTinkerItem
+    v-if="ability.custom_fields?.build_dc"
+    :ability="ability"
+  ></AbilityTinkerItem>
 </template>
 
 <script setup lang="ts">
@@ -30,6 +34,7 @@ import { defaultDice } from "@/utils/diceUtils";
 import { computed } from "vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
 import UseAbilityButton from "./UseAbilityButton.vue";
+import AbilityTinkerItem from "./AbilityTinkerItem.vue";
 
 const props = defineProps<{ ability: FullEntityAbility }>();
 const entityStore = useEntityStore();

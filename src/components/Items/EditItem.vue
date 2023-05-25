@@ -167,6 +167,16 @@
           id="new-item-special"
           class="input mt-4 mb-16"
         ></textarea>
+        <label for="new-item-dc-cost" class="labelText">DC Cost:</label>
+        <input
+          type="number"
+          inputmode="numeric"
+          v-model="state.dcCost"
+          placeholder="1"
+          title="Tinkering item DC cost"
+          id="new-item-dc-cost"
+          class="input wide mt-4 mb-16"
+        />
         <label class="labelText">Comment:</label>
         <BaseInlineTextEditor
           v-model="state.comment"
@@ -249,6 +259,7 @@ interface NewItemState {
   weaponType: string;
   courses: string;
   special: string;
+  dcCost: string;
   comment: string;
   defineActive: boolean;
   active: boolean;
@@ -271,6 +282,7 @@ const initialState: NewItemState = {
   weaponType: props.givenItem?.custom_fields?.weapon_type ?? "",
   courses: props.givenItem?.custom_fields?.courses ?? "",
   special: props.givenItem?.custom_fields?.special ?? "",
+  dcCost: props.givenItem?.custom_fields?.dc_cost?.toString() ?? "",
   comment: props.givenItem?.comment ?? "",
   defineActive: false,
   active: props.givenItem?.active ?? false,
@@ -353,25 +365,21 @@ const newItem = computed((): UncompleteEntityItem => {
     type: state.type,
     active: itemActive.value,
     comment: state.comment,
-    custom_fields: {},
+    custom_fields: {
+      ...(state.courses && { courses: state.courses }),
+      ...(state.special && { special: state.special }),
+      ...(state.inStorage && { in_storage: state.inStorage }),
+      ...(state.dcCost && { dc_cost: parseInt(state.dcCost) }),
+      ...(state.type === ITEM_TYPE_WEAPON && {
+        attr: state.weaponAttr,
+        dmg: state.weaponDmg,
+        category: state.weaponCategory,
+        range: state.weaponRange,
+        weapon_type: state.weaponType,
+      }),
+    },
     uses: baseUses.value,
   };
-  if (item.custom_fields && state.courses) {
-    item.custom_fields.courses = state.courses;
-  }
-  if (item.custom_fields && state.special) {
-    item.custom_fields.special = state.special;
-  }
-  if (item.custom_fields && state.inStorage) {
-    item.custom_fields.in_storage = state.inStorage;
-  }
-  if (item.custom_fields && state.type === ITEM_TYPE_WEAPON) {
-    item.custom_fields.attr = state.weaponAttr;
-    item.custom_fields.dmg = state.weaponDmg;
-    item.custom_fields.category = state.weaponCategory;
-    item.custom_fields.range = state.weaponRange;
-    item.custom_fields.weapon_type = state.weaponType;
-  }
   return item;
 });
 const buttonDisabled = computed(

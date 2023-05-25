@@ -161,7 +161,17 @@
           class="btn basicBtn attrButton noSelect"
           v-bind:class="attrButtonClass(attr)"
         >
-          <div class="basicBtnContents attrButtonContents cols-2 wide">
+          <div
+            v-if="attr === 'bluespace'"
+            class="basicBtnContents attrButtonContents alignRow wide"
+          >
+            <div class="attrLabelWide">{{ attrShortName(attr) }}:</div>
+            <BaseFraction
+              :top="totalBuiltDC"
+              :bottom="attrDisplayVal(attr)"
+            ></BaseFraction>
+          </div>
+          <div v-else class="basicBtnContents attrButtonContents cols-2 wide">
             <div class="alignRow">
               <div class="attrLabelWide">{{ attrShortName(attr) }}:</div>
               <div class="number">{{ attrDisplayVal(attr) }}</div>
@@ -251,6 +261,7 @@ import { useAccountInfoStore } from "@/stores/accountInfo";
 import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
 import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
 import CogTypeDescription from "../Cog/CogTypeDescription.vue";
+import { totalDC } from "@/utils/itemUtils";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -356,6 +367,8 @@ const showUpdateDropdown = computed(() => {
     fullEntity.owner === accountInfoStore.accountInfo.id
   );
 });
+
+const totalBuiltDC = computed(() => totalDC(props.entity.items));
 </script>
 
 <style scoped>

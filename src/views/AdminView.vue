@@ -14,6 +14,9 @@
           <BaseButton @click="scrapeAbilities" class="wide"
             >Scrape Abilities</BaseButton
           >
+          <BaseButton @click="scrapeAbilitiesForwardCompatible" class="wide"
+            >Scrape Abilities Forward Compatible</BaseButton
+          >
           <div class="separator mt-16 mb-16"></div>
           <BaseButton @click="updateItemShopUses" class="wide"
             >Update Item Shop Uses</BaseButton
@@ -59,6 +62,7 @@ import PageLayout from "@/components/Base/PageLayout.vue";
 import BaseNav from "@/components/Base/BaseNav.vue";
 import {
   ABILITIES_KEY,
+  ABILITIES_KEY_OLD,
   SHOP_ITEMS_KEY,
   WEAPON_TYPES_KEY,
 } from "@/utils/backendTypes";
@@ -66,6 +70,8 @@ import {
 const scrapeWeaponTypes = () => triggerWebscraperApi(WEAPON_TYPES_KEY);
 const scrapeItemShop = () => triggerWebscraperApi(SHOP_ITEMS_KEY);
 const scrapeAbilities = () => triggerWebscraperApi(ABILITIES_KEY);
+const scrapeAbilitiesForwardCompatible = () =>
+  triggerWebscraperApi(ABILITIES_KEY_OLD);
 const updateItemShopUses = () => triggerUpdateUses(SHOP_ITEMS_KEY);
 const updateAbilityUses = () => triggerUpdateUses(ABILITIES_KEY);
 const configureStorageBucket = () => configureStorageBucketApi();

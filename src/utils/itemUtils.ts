@@ -276,3 +276,8 @@ export const shopItemActive = (
 ): boolean => {
   return itemActiveDirectFields(item.type, item.category, entity);
 };
+
+export const totalDC = (items: EntityItem[]): number =>
+  items
+    .map((item) => item.custom_fields?.dc_cost ?? 0)
+    .reduce((acc, cost) => acc + cost, 0);
