@@ -31,7 +31,7 @@ const dice = computed(() =>
     props.use.attr,
     {
       ...diceStore.defaultDiceSettings,
-      end: props.use.bonus,
+      end: diceStore.defaultDiceSettings.end + props.use.bonus,
     },
     {},
     diceComment.value

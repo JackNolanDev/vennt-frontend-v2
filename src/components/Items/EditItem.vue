@@ -378,7 +378,7 @@ const newItem = computed((): UncompleteEntityItem => {
         weapon_type: state.weaponType,
       }),
     },
-    uses: baseUses.value,
+    uses: { ...props.givenItem?.uses, ...baseUses.value },
   };
   return item;
 });

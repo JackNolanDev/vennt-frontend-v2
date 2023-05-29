@@ -445,10 +445,10 @@ export const solvePendingEquations = (
 const attrsRegexStr = `\\b${validAttributes.join("|")}\\b`;
 const attrsRegex = new RegExp(attrsRegexStr, "g");
 
-export const solveEquation = (
+export const replaceVariablesInEquation = (
   equation: string,
   attrs: UpdatedEntityAttributes
-): number | undefined => {
+): { cleanedEquation: string; details: { ceilResult: boolean } } => {
   let ceilResult = false;
   const cleanedEquation = equation.replaceAll(attrsRegex, (match) => {
     const attr = match as EntityAttribute;
@@ -466,6 +466,17 @@ export const solveEquation = (
     }
     return "0";
   });
+  return { cleanedEquation, details: { ceilResult } };
+};
+
+export const solveEquation = (
+  equation: string,
+  attrs: UpdatedEntityAttributes
+): number | undefined => {
+  const {
+    cleanedEquation,
+    details: { ceilResult },
+  } = replaceVariablesInEquation(equation, attrs);
   // ensure all variables have been removed from the equation before attempting to solve it
   if (/^(?:[\d+\-*/()^ ]|Mod)+$/.test(cleanedEquation)) {
     try {

@@ -124,11 +124,11 @@ export const giftCopyV14: Record<
   },
   Alacrity: {
     title: "Alacrity, the Gift of Agility",
-    desc: "You can appear and disappear in the blink of an eye. Every surface, be they walls or even ceilings, is yours to traverse, as easily as others would walk across the street. You have almost as much maneuverability in midair as you do upon the ground, and you could barely lose a race even if you tried. This gift greatly benefits duelists, rogues, and gunslingers.",
+    desc: "Graceful as a cat, swift as the wind, you can appear and disappear in the blink of an eye. For good or evil, you can hide, dodge, maneuver, and strike with blade or bullet when your enemy least expects with startling precision. Every surface, be they walls or even ceilings, is yours to traverse, as easily as others would walk across the street. You have almost as much maneuverability in midair as you do upon the ground, and you could barely lose a race even if you tried. This gift greatly benefits rogues, spies, and ninjas.",
   },
   Finesse: {
     title: "Finesse, The Gift of Dexterity",
-    desc: "Graceful as a cat, swift as the wind, you have mastered fine motor control. For good or evil, you can hide, dodge, maneuver, and strike with blade or bullet when your enemy least expects with startling precision. This gift greatly benefits duelists, rogues, and gunslingers.",
+    desc: "You have mastered fine motor control and can perform miracles with your hands. Locks picked, traps disarmed, knives out, shots fired, you can master anything at your fingertips. This gift greatly benefits duelists, gunslingers, and gadgeteers.",
   },
   Mind: {
     title: "Mind, The Gift of Intelligence",
