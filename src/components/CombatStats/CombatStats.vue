@@ -173,7 +173,9 @@
           </div>
           <div v-else class="basicBtnContents attrButtonContents cols-2 wide">
             <div class="alignRow">
-              <div class="attrLabelWide">{{ attrShortName(attr) }}:</div>
+              <div class="attrLabelWide nowrap title-case">
+                {{ attrShortName(attr) }}:
+              </div>
               <div class="number">{{ attrDisplayVal(attr) }}</div>
             </div>
             <div v-if="singleSecondaryMap[attr]" class="alignRow">
@@ -342,6 +344,7 @@ const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "acc",
   "reach",
   "radius",
+  "recovery_shock",
 ];
 
 const singleRowAttrs = computed(() =>

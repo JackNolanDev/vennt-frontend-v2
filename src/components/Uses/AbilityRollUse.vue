@@ -42,7 +42,7 @@ import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";
 import { diceParseFromString } from "@/utils/diceUtils";
 import BaseButton from "../Base/BaseButton.vue";
-import { adjustAttrsAPI } from "@/utils/attributeUtils";
+import { adjustAttrsAPI, solvePendingEquations } from "@/utils/attributeUtils";
 import { abilityUsedStats } from "@/utils/abilityUtils";
 
 const props = defineProps<{ ability: FullEntityAbility }>();
@@ -73,14 +73,24 @@ const useAbility = () => {
   if (!entityStore.entity || !props.ability.uses?.roll?.attr) {
     return;
   }
-  const adjustAttrs: PartialEntityAttributes = {};
+  let adjustAttrs: PartialEntityAttributes = {
+    [props.ability.uses.roll.attr]: adjust.value,
+  };
   abilityUsedStats.forEach((attr) => {
     const costStat = (props.ability.custom_fields?.cost ?? {})[attr];
     if (costStat) {
       adjustAttrs[attr] = -costStat;
     }
   });
-  adjustAttrs[props.ability.uses.roll.attr] = adjust.value;
+  if (props.ability.uses.roll.heal) {
+    adjustAttrs = {
+      ...adjustAttrs,
+      ...solvePendingEquations(
+        props.ability.uses.roll.heal,
+        entityStore.entityAttributes
+      ),
+    };
+  }
   adjustAttrsAPI(
     entityStore.entity,
     entityStore.entityAttributes,

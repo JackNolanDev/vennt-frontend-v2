@@ -33,13 +33,16 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type {
+  ConsolidatedItem,
+  PartialEntityAttributes,
+} from "@/utils/backendTypes";
 import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";
 import { diceParseFromString } from "@/utils/diceUtils";
 import BaseButton from "../Base/BaseButton.vue";
-import { adjustAttrsAPI } from "@/utils/attributeUtils";
+import { adjustAttrsAPI, solvePendingEquations } from "@/utils/attributeUtils";
 import { prefixName } from "@/utils/textUtils";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
@@ -70,10 +73,22 @@ const consumeItem = () => {
   if (!entityStore.entity || !props.item.uses?.roll?.attr) {
     return;
   }
+  let adjustAttrs: PartialEntityAttributes = {
+    [props.item.uses.roll.attr]: adjust.value,
+  };
+  if (props.item.uses.roll.heal) {
+    adjustAttrs = {
+      ...adjustAttrs,
+      ...solvePendingEquations(
+        props.item.uses.roll.heal,
+        entityStore.entityAttributes
+      ),
+    };
+  }
   adjustAttrsAPI(
     entityStore.entity,
     entityStore.entityAttributes,
-    { [props.item.uses.roll.attr]: adjust.value },
+    adjustAttrs,
     prefixName(props.item.name, "consumed", false),
     true,
     true

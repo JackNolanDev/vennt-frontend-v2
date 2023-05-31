@@ -57,12 +57,14 @@ import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import DiceRender from "../Dice/DiceRender.vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
+import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{
   attrs: UpdatedEntityAttributes;
   attr: EntityAttribute;
   useCopyableDice: boolean;
 }>();
+const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
 const isBaseAttribute = computed(() => {
@@ -85,7 +87,7 @@ const computedDice = computed(() => {
     props.attrs,
     props.attr,
     diceStore.defaultDiceSettings,
-    {}, // TODO: fetch diceToggles from character store, probably
+    entityStore.diceToggles,
     `${attrShortName(props.attr)} check`
   );
 });

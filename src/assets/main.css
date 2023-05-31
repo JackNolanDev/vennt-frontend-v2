@@ -231,7 +231,7 @@ ul {
   list-style-type: circle;
 }
 
-.nowrap {
+.nowrap, .no-wrap {
   white-space: nowrap;
 }
 
@@ -247,8 +247,12 @@ ul {
   text-overflow: ellipsis;
 }
 
-.textBlock {
+.textBlock, .text-block {
   max-width: 75ch; /* 75 character limit for legibility */
+}
+
+.title-case {
+  text-transform: capitalize;
 }
 
 .pt-10 {
@@ -268,7 +272,7 @@ ul {
   color: var(--text-contrast);
 }
 
-.labelText {
+.labelText, .label-text {
   font-size: 16pt;
   display: inline-block;
 }

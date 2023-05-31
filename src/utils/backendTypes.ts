@@ -789,8 +789,7 @@ export type UpdatedEntityAttributes = {
 
 export type DiceToggle = {
   attr?: EntityAttribute;
-  end?: string;
-  diceNumberAdjust?: number;
+  setting: DiceSettings;
   default?: boolean; // currently not really supported
 };
 export type DiceToggles = {

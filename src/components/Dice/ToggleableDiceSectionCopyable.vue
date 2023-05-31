@@ -6,6 +6,7 @@
     :dice="dice"
     :text="header && defaultText ? dice.roll20 : defaultText"
   ></DiceCopy>
+  <DiceToggles :attr="attr" :skip-key="skipKey"></DiceToggles>
   <BaseDropDown
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
@@ -25,21 +26,25 @@
 
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
+import { useEntityStore } from "@/stores/entity";
 import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
-import { buildDice } from "@/utils/diceUtils";
+import { buildDice, combineDiceSettings } from "@/utils/diceUtils";
 import { computed } from "vue";
 import HeroPointButton from "../Attributes/HeroPointButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import CommonDiceSettings from "./CommonDiceSettings.vue";
 import DiceCopy from "./DiceCopy.vue";
+import DiceToggles from "./DiceToggles.vue";
 
 const props = defineProps<{
   dice: DiceCommands;
   attr?: EntityAttribute;
   header?: boolean;
   comment?: string;
+  skipKey?: string;
 }>();
+const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
 const defaultText = computed(
@@ -64,11 +69,11 @@ const heroPointDice = computed(() => {
       props.dice.settings.count,
       props.dice.settings.sides,
       props.dice.settings.adjust,
-      {
-        ...props.dice.settings,
-        drop: 1,
-        end: "+9",
-      },
+      combineDiceSettings(
+        props.dice.settings,
+        { drop: 1, end: "+9" },
+        entityStore.entityAttributes
+      ),
       `${baseComment} - Hero Point Boost`
     );
   }

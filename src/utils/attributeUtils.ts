@@ -349,7 +349,7 @@ export const entityAttributesMap = (
     if (
       item.uses &&
       item.uses.adjust &&
-      item.active &&
+      (item.active || item.type === "equipment") &&
       !item.custom_fields?.in_storage
     ) {
       Object.entries(item.uses.adjust.attr).forEach(([attrIn, val]) => {

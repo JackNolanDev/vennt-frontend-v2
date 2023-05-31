@@ -12,6 +12,8 @@
     v-if="diceStore.useBuiltinDice"
     :dice="dice"
     :attr="attr"
+    :comment="comment"
+    :skip-key="skipKey"
     @roll-value="rollValue"
   ></ToggleableDiceSectionRollable>
   <ToggleableDiceSectionCopyable
@@ -19,6 +21,7 @@
     :dice="dice"
     :attr="attr"
     :comment="comment"
+    :skip-key="skipKey"
   ></ToggleableDiceSectionCopyable>
 </template>
 
@@ -29,7 +32,12 @@ import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
 import ToggleableDiceSectionCopyable from "./ToggleableDiceSectionCopyable.vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 
-defineProps<{ dice: DiceCommands; attr?: EntityAttribute; comment?: string }>();
+defineProps<{
+  dice: DiceCommands;
+  attr?: EntityAttribute;
+  comment?: string;
+  skipKey?: string;
+}>();
 const emit = defineEmits<{ (e: "rollValue", state: number): void }>();
 const diceStore = useDiceStore();
 

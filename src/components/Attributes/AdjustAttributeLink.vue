@@ -1,5 +1,5 @@
 <template>
-  <BaseButton :to="link" icon="edit">
+  <BaseButton :to="link" icon="edit" class="title-case">
     Edit {{ attrFullName(attr) }} / History
   </BaseButton>
 </template>

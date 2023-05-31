@@ -3,6 +3,7 @@
     Roll {{ dice.web }}
   </BaseButton>
   <DiceRender v-if="showDice" :roll="state.roll"></DiceRender>
+  <DiceToggles :attr="attr" :skip-key="skipKey"></DiceToggles>
   <BaseDropDown
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
@@ -25,9 +26,9 @@
 
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
-import { attrFullName } from "@/utils/attributeUtils";
+import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
-import { buildDice } from "@/utils/diceUtils";
+import { buildDice, combineDiceSettings } from "@/utils/diceUtils";
 import { computed, reactive } from "vue";
 import HeroPointButton from "../Attributes/HeroPointButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
@@ -35,10 +36,18 @@ import CommonDiceSettings from "./CommonDiceSettings.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import DiceRender from "./DiceRender.vue";
+import { useEntityStore } from "@/stores/entity";
+import DiceToggles from "./DiceToggles.vue";
 
-const props = defineProps<{ dice: DiceCommands; attr?: EntityAttribute }>();
+const props = defineProps<{
+  dice: DiceCommands;
+  attr?: EntityAttribute;
+  comment?: string;
+  skipKey?: string;
+}>();
 const state = reactive<{ roll?: DiceRoll }>({ roll: undefined });
 const emit = defineEmits<{ (e: "rollValue", state: number): void }>();
+const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
 const heroDiceReason = computed(() =>
@@ -48,15 +57,23 @@ const heroDiceReason = computed(() =>
 );
 const heroPointDice = computed(() => {
   if (props.dice.settings.count && props.dice.settings.sides) {
+    let baseComment = "dice check";
+    if (props.attr) {
+      baseComment = `${attrShortName(props.attr)} check`;
+    }
+    if (props.comment) {
+      baseComment = props.comment;
+    }
     return buildDice(
       props.dice.settings.count,
       props.dice.settings.sides,
       props.dice.settings.adjust,
-      {
-        ...props.dice.settings,
-        drop: 1,
-        end: "+9",
-      }
+      combineDiceSettings(
+        props.dice.settings,
+        { drop: 1, end: "+9" },
+        entityStore.entityAttributes
+      ),
+      `${baseComment} - Hero Point Boost`
     );
   }
   return false;

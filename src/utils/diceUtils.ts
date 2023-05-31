@@ -1,3 +1,4 @@
+import { replaceVariablesInEquation } from "./attributeUtils";
 import type {
   CollectedEntity,
   DiceCommands,
@@ -6,7 +7,9 @@ import type {
   DiceToggles,
   EntityAttribute,
   UpdatedEntityAttributes,
+  UsesCheck,
 } from "./backendTypes";
+import { abilityPassCriteriaCheck } from "./criteriaUtils";
 
 export function buildDice(
   count: number,
@@ -130,32 +133,32 @@ export function defaultDice(
   attr: EntityAttribute,
   givenSettings: DiceSettings = {},
   diceToggles: DiceToggles = {},
-  comment = ""
+  comment = "",
+  skipKey = ""
 ) {
   const attrMap = attrs[attr];
   const adjust = attrMap ? attrMap.val : 0;
 
-  let diceCount = 3;
-  const settings = { ...givenSettings };
+  let settings = {
+    ...givenSettings,
+  };
   Object.entries(diceToggles).forEach(([key, toggle]) => {
     if (
-      settings.otherToggles !== undefined &&
-      settings.otherToggles[key] &&
-      toggle.attr === attr
+      settings.otherToggles &&
+      (settings.otherToggles[key]?.toggled ?? toggle.default) &&
+      toggle.attr === attr &&
+      skipKey !== key
     ) {
-      if (toggle.diceNumberAdjust !== undefined) {
-        diceCount = diceCount + toggle.diceNumberAdjust;
-      }
-      if (toggle.end !== undefined) {
-        if (settings.end !== undefined) {
-          settings.end = settings.end + toggle.end;
-        } else {
-          settings.end = toggle.end;
-        }
-      }
+      settings = combineDiceSettings(settings, toggle.setting, attrs);
     }
   });
-  return buildDice(diceCount, 6, adjust, settings, comment);
+  return buildDice(
+    settings.count ?? 3,
+    settings.sides ?? 6,
+    adjust,
+    settings,
+    comment
+  );
 }
 
 export function diceParseFromString(
@@ -176,18 +179,91 @@ export function diceParseFromString(
   return buildDice(count, sides, adjust, settings, comment);
 }
 
-// TODO: This should probably either come from the ability / items themselves
-// OR for now just move out into a separate JSON file
-const diceAbilities: { name: string; toggle: DiceToggle }[] = [
-  { name: "Sleight of Hand", toggle: { attr: "dex", end: "+3" } },
-];
-
-export function diceToggles(entity: CollectedEntity) {
+export function diceTogglesForEntity(
+  entity: CollectedEntity,
+  attrs: UpdatedEntityAttributes
+): DiceToggles {
   const toggles: DiceToggles = {};
-  diceAbilities.forEach((diceAbility) => {
-    if (entity.abilities.some((ability) => ability.name === diceAbility.name)) {
-      toggles[diceAbility.name] = diceAbility.toggle;
+
+  const saveSettingToToggle = (key: string, check?: UsesCheck): void => {
+    if (!check) {
+      return;
     }
+    const setting: DiceSettings = check.dice_settings ?? {
+      end: check.bonus,
+    };
+    const toggle: DiceToggle = {
+      setting,
+      attr: check.attr,
+    };
+    toggles[key] = toggle;
+  };
+
+  entity.abilities.forEach((ability) => {
+    const checks =
+      ability.uses?.criteria_benefits
+        ?.filter(
+          (criteria) =>
+            criteria.check &&
+            abilityPassCriteriaCheck(criteria.criteria, ability, null, attrs)
+        )
+        .map((criteria) => criteria.check) ?? [];
+    checks.push(ability.uses?.check);
+    checks.forEach((check) => {
+      saveSettingToToggle(ability.name, check);
+    });
   });
+
+  entity.items
+    .filter(
+      (item) =>
+        (item.active || item.type === "equipment") &&
+        !item.custom_fields?.in_storage
+    )
+    .forEach((item) => {
+      saveSettingToToggle(item.name, item.uses?.check);
+    });
+
   return toggles;
 }
+
+export const combineDiceSettings = (
+  baseSettings: DiceSettings,
+  newSettings: DiceSettings,
+  attrs: UpdatedEntityAttributes
+): DiceSettings => {
+  const settings = {
+    ...baseSettings,
+  };
+  if (newSettings.count) {
+    settings.count = (settings.count ?? 3) + newSettings.count;
+  }
+  if (newSettings.sides) {
+    settings.sides = (settings.sides ?? 6) + newSettings.sides;
+  }
+  if (newSettings.drop) {
+    settings.drop = (settings.drop ?? 0) + newSettings.drop;
+  }
+  if (newSettings.ebb) {
+    settings.ebb = (settings.ebb ?? 0) + newSettings.ebb;
+  }
+  if (newSettings.flow) {
+    settings.flow = (settings.flow ?? 0) + newSettings.flow;
+  }
+  if (newSettings.end) {
+    settings.end = replaceVariablesInEquation(
+      `${settings.end ?? ""}${newSettings.end}`,
+      attrs
+    ).cleanedEquation;
+  }
+  if (newSettings.explodes) {
+    settings.explodes = true;
+  }
+  if (newSettings.rr1s) {
+    settings.rr1s = true;
+  }
+  if (newSettings.fatigued) {
+    settings.fatigued = true;
+  }
+  return settings;
+};

@@ -20,6 +20,7 @@ import router, {
 } from "@/router";
 import type {
   ConsolidatedItem,
+  DiceToggles,
   EntityTextKey,
   FullCollectedEntity,
   PartialEntity,
@@ -46,6 +47,7 @@ import {
 } from "@/utils/entityUtils";
 import { useEntityNotesStore } from "./entityNotes";
 import { useCogCreateStore } from "./cogCreate";
+import { diceTogglesForEntity } from "@/utils/diceUtils";
 
 const setInitialNotes = (entity: FullCollectedEntity) => {
   const foundNotes = getEntityText("NOTES", entity);
@@ -93,6 +95,12 @@ export const useEntityStore = defineStore("entity", {
     },
     backstory: (state) => getEntityText("BACKSTORY", state.entity),
     description: (state) => getEntityText("DESC", state.entity),
+    diceToggles(): DiceToggles {
+      if (!this.entity) {
+        return {};
+      }
+      return diceTogglesForEntity(this.entity, this.entityAttributes);
+    },
   },
   actions: {
     clearLocalEntity() {

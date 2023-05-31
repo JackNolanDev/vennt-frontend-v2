@@ -258,6 +258,7 @@ export const findNewAbilityVersion = (
   paths: PathsAndAbilities
 ): EntityAbility | undefined => {
   const found = paths.abilities.find((search) => search.name === ability.name);
+  console.log(found);
   if (!found) {
     return undefined;
   }

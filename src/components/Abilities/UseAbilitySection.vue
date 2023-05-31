@@ -46,7 +46,7 @@ const castingDice = computed(() => {
     entityStore.entityAttributes,
     "casting",
     diceStore.defaultDiceSettings,
-    {}, // TODO: fetch diceToggles from character store, probably
+    entityStore.diceToggles,
     diceComment.value
   );
 });

@@ -5,6 +5,7 @@
       :dice="dice"
       :header="true"
       :comment="diceComment"
+      :skip-key="name"
     ></ToggleableDiceSectionCopyable>
   </div>
 </template>
@@ -14,7 +15,7 @@ import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import { attrShortName } from "@/utils/attributeUtils";
 import type { UsesCheck } from "@/utils/backendTypes";
-import { defaultDice } from "@/utils/diceUtils";
+import { defaultDice, combineDiceSettings } from "@/utils/diceUtils";
 import { computed } from "vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
 
@@ -29,12 +30,14 @@ const dice = computed(() =>
   defaultDice(
     entityStore.entityAttributes,
     props.use.attr,
-    {
-      ...diceStore.defaultDiceSettings,
-      end: diceStore.defaultDiceSettings.end + props.use.bonus,
-    },
-    {},
-    diceComment.value
+    combineDiceSettings(
+      diceStore.defaultDiceSettings,
+      { end: props.use.bonus },
+      entityStore.entityAttributes
+    ),
+    entityStore.diceToggles,
+    diceComment.value,
+    props.name
   )
 );
 </script>
