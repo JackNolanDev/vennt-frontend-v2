@@ -16,6 +16,19 @@
       :comment="diceReason"
     ></ToggleableDiceSectionCopyable>
   </div>
+  <SimpleAbilityTable
+    v-if="onAttackAbilities.length > 0 && showDamageDice"
+    :abilities="onAttackAbilities"
+    :link-on-name="true"
+    :show-uses="true"
+    class="mt-16"
+  ></SimpleAbilityTable>
+  <SimpleItemTable
+    v-if="ammoItems.length > 0 && showDamageDice"
+    :items="ammoItems"
+    :link-on-name="true"
+    class="mt-16"
+  ></SimpleItemTable>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +42,9 @@ import {
   enhancedDmgString,
 } from "@/utils/weaponUtils";
 import { computed } from "vue";
+import SimpleAbilityTable from "../Abilities/SimpleAbilityTable.vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
+import SimpleItemTable from "./SimpleItemTable.vue";
 
 const props = defineProps<{ item: EntityItem }>();
 const entityStore = useEntityStore();
@@ -68,4 +83,21 @@ const damageDice = computed(
 const showDamageDice = computed(
   () => props.item.active && !props.item.custom_fields?.in_storage
 );
+const onAttackAbilities = computed(() =>
+  entityStore.sortedAbilities.filter(
+    (ability) => ability.custom_fields?.cost?.attack
+  )
+);
+const ammoItems = computed(() => {
+  if (
+    props.item.custom_fields?.weapon_type?.toLowerCase().includes("ranged") &&
+    !props.item.custom_fields.in_storage &&
+    props.item.name !== "Improvised Attack"
+  ) {
+    return [];
+  }
+  return entityStore.consolidatedItems.filter((item) =>
+    ["Ammunition", "Ammo"].some((indicator) => item.name.includes(indicator))
+  );
+});
 </script>

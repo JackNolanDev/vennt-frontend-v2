@@ -1,7 +1,12 @@
 <template>
   <p v-if="ability.custom_fields?.purchase" class="mt-16 mb-0">
     <b>Cost:</b> {{ ability.custom_fields.purchase }}
-    <i v-if="actualCost !== false">(Actual cost: {{ actualCost }} XP)</i>
+    <i class="no-wrap" v-if="actualCost !== false"
+      >(Actual cost: {{ actualCost }} XP<span
+        v-if="ability.custom_fields?.times_taken"
+        >, taken {{ ability.custom_fields?.times_taken }} times</span
+      >)</i
+    >
   </p>
   <p v-if="ability.custom_fields?.expedited" class="mt-16 mb-0">
     <b>Expedited for:</b> {{ ability.custom_fields.expedited }}

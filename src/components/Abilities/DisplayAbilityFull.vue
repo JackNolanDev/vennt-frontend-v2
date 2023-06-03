@@ -2,33 +2,7 @@
   <p v-if="ability.custom_fields?.path" class="mt-16 mb-0">
     <i>{{ ability.custom_fields.path }}</i>
   </p>
-  <p
-    v-if="
-      ability.custom_fields?.mp_cost &&
-      tripleDigitStr(ability.custom_fields.mp_cost)
-    "
-    class="mt-16 mb-0"
-  >
-    <b>MP Cost:</b> {{ tripleDigitStr(ability.custom_fields.mp_cost) }}
-  </p>
-  <p
-    v-if="
-      ability.custom_fields?.cast_dl &&
-      tripleDigitStr(ability.custom_fields.cast_dl)
-    "
-    class="mt-16 mb-0"
-  >
-    <b>Casting DL:</b> {{ tripleDigitStr(ability.custom_fields.cast_dl) }}
-  </p>
-  <p v-if="ability.custom_fields?.build_dc" class="mt-16 mb-0">
-    <b>Build DC:</b> {{ ability.custom_fields.build_dc }}
-  </p>
-  <div v-if="ability.custom_fields?.build_time" class="mt-16 mb-0">
-    <b>Build Time:</b> {{ ability.custom_fields.build_time }}
-  </div>
-  <p v-if="ability.custom_fields?.activation" class="mt-16 mb-0">
-    <b>Activation:</b> {{ ability.custom_fields.activation }}
-  </p>
+  <DisplayAbilityUseCost :ability="ability"></DisplayAbilityUseCost>
   <div v-if="ability.custom_fields?.range" class="mt-16 mb-0">
     <b>Range:</b> {{ ability.custom_fields.range }}
   </div>
@@ -46,9 +20,7 @@ import type {
   UpdatedEntityAttributes,
 } from "@/utils/backendTypes";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
+import DisplayAbilityUseCost from "./DisplayAbilityUseCost.vue";
 
 defineProps<{ ability: EntityAbility; attrs?: UpdatedEntityAttributes }>();
-
-const tripleDigitStr = (triple: number[]): string =>
-  triple.length === 3 ? `[ ${triple[0]} / ${triple[1]} / ${triple[2]} ]` : "";
 </script>

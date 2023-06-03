@@ -98,7 +98,8 @@ export const actualXPCost = (
   ) {
     cost = cost / 2;
   }
-  return abilityUsesCostAdjust(cost, ability, entity, attrs);
+  const singleAbilityCost = abilityUsesCostAdjust(cost, ability, entity, attrs);
+  return singleAbilityCost * (ability.custom_fields?.times_taken ?? 1);
 };
 
 export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;

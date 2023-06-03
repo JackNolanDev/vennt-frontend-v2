@@ -1,5 +1,5 @@
 <template>
-  <div class="card column border">
+  <div :class="{ border: showBorder }" class="card column">
     <div
       v-for="(item, index) in items"
       v-bind:key="item.name + index"
@@ -27,7 +27,11 @@ import { improveTextForDisplay } from "@/utils/textUtils";
 import { type RouteLocationRaw, RouterLink } from "vue-router";
 import ItemDesc from "./ItemDesc.vue";
 
-defineProps<{ items: EntityItem[]; linkOnName?: boolean }>();
+defineProps<{
+  items: EntityItem[];
+  linkOnName?: boolean;
+  showBorder?: boolean;
+}>();
 
 const itemRoute = (item: FullEntityItem): RouteLocationRaw => {
   return {
