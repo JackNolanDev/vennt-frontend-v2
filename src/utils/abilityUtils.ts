@@ -268,7 +268,11 @@ export const findNewAbilityVersion = (
       ...ability,
       effect: found.effect,
       uses: found.uses,
-      custom_fields: { ...found.custom_fields, ...ability.custom_fields },
+      custom_fields: {
+        ...found.custom_fields,
+        keys: ability.custom_fields?.keys,
+        times_taken: ability.custom_fields?.times_taken,
+      },
     };
   }
   return undefined;
