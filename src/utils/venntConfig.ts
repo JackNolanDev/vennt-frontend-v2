@@ -12,8 +12,5 @@ export const DEFAULT_CHARACTER_EQUATIONS: Array<[EntityAttribute, string]> = [
   ["max_vim", "max_vim + 20 + (xp / 1000) + (str * agi)"],
   ["max_mp", "max_mp + 6 + (3 * wis)"],
   ["init", "init + agi + dex"],
-  ["speed", "speed + 3 + agi"],
-  ["casting", "casting + spi - burden"],
-  ["speed", "speed - burden"],
-  ["bluespace", "bluespace + (int * int)"],
+  ["speed", "speed + 3 + agi - burden"],
 ];

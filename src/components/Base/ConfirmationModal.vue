@@ -7,7 +7,12 @@
       <slot name="title"></slot>
     </template>
     <template #buttons>
-      <BaseButton v-if="!noMainButton" @click="mainButton" class="primary">
+      <BaseButton
+        v-if="!noMainButton"
+        @click="mainButton"
+        class="primary"
+        :disabled="mainButtonDisabled"
+      >
         <slot name="mainButton"></slot>
       </BaseButton>
     </template>
@@ -26,6 +31,7 @@ const props = defineProps<{
   triggerClass?: string;
   triggerIcon?: string;
   noMainButton?: boolean;
+  mainButtonDisabled?: boolean;
 }>();
 const emit = defineEmits<{
   (e: "mainButton"): void;

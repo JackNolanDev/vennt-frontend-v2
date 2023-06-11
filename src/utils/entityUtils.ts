@@ -114,7 +114,7 @@ export const entityCreationFullyHealed = (
   entity: UncompleteCollectedEntityWithChangelog,
   attrs: UpdatedEntityAttributes
 ): UncompleteCollectedEntityWithChangelog => {
-  const keepEqual: Partial<Record<EntityAttribute, EntityAttribute>> = {
+  const keepEqual: Record<EntityAttribute, EntityAttribute> = {
     hp: "max_hp",
     vim: "max_vim",
     mp: "max_mp",

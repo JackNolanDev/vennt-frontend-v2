@@ -64,7 +64,7 @@ export const getBaseAttr = (
 };
 
 export const attrFullName = (attr: EntityAttribute): string => {
-  const nameMap: Partial<Record<EntityAttribute, string>> = {
+  const nameMap: Record<EntityAttribute, string> = {
     per: "Perception",
     tek: "Technology",
     agi: "Agility",
@@ -88,7 +88,7 @@ export const attrFullName = (attr: EntityAttribute): string => {
 };
 
 export const attrShortName = (attr: EntityAttribute): string => {
-  const nameMap: Partial<Record<EntityAttribute, string>> = {
+  const nameMap: Record<EntityAttribute, string> = {
     init: "Initiative",
     // acc: "Accuracy",
     L: "Level",
@@ -189,60 +189,9 @@ export const adjustAttrsObject = (
     const attr = attrIn as EntityAttribute;
     const newVal = currentVal(attr) + adjustment;
     attrs[attr] = newVal;
-    // TODO: Delete this code. It has been deprecated in favor of using equations that can be updated however we want
-    /*
-    if (propagateChanges) {
-      // HP & VIM
-      if (attr === "str") {
-        attrs.max_hp = currentVal("max_hp") + hpDiffStr(adjustment);
-        attrs.max_vim = currentVal("max_vim") + vimDiffStr(adjustment);
-      }
-      if (attr === "xp") {
-        const levelDiff = calcLevelDiff(newVal, defaultVal("xp"));
-        if (levelDiff !== 0) {
-          attrs.max_hp = currentVal("max_hp") + levelDiff;
-          attrs.max_vim = currentVal("max_vim") + levelDiff;
-        }
-      }
-      // MP
-      if (attr === "wis") {
-        attrs.max_mp = currentVal("max_mp") + mpDiffWis(adjustment);
-      }
-      // SPEED
-      if (attr === "agi") {
-        attrs.speed = currentVal("speed") + adjustment;
-      }
-      // INIT
-      if (attr === "agi" || attr === "dex") {
-        attrs.init = currentVal("init") + adjustment;
-      }
-    }
-    */
   });
 
-  // TODO: Also remove this logic - I don't believe its usually accurate now that attributes are rarely fully defined by their base val
-  // OR refactor it to make it work again
-  /*
-  // 2. clamp logic
-  Object.entries(attrs).forEach(([attrIn, maxVal]) => {
-    const attr = attrIn as EntityAttribute;
-    const baseAttr = getBaseAttr(attr);
-    if (baseAttr) {
-      const originalBaseVal = defaultVal(baseAttr);
-      const originalVal = defaultVal(attr);
-      if (
-        originalBaseVal <= originalVal &&
-        currentVal(baseAttr) > maxVal
-        // example case here is hp = 10, maxHp = 10 -> maxHp changed to 7, hp should also be changed to 7
-        // if hp = 15, maxHp = 10 -> maxHp changed to 7, keep hp at 15
-      ) {
-        attrs[baseAttr] = maxVal;
-      }
-    }
-  });
-  */
-
-  // 3. enforce zero minimums
+  // 2. enforce zero minimums
   Object.entries(attrs).forEach(([attrIn, val]) => {
     const attr = attrIn as EntityAttribute;
     if (MIN_ZEROS.has(attr) && val < 0) {
@@ -250,7 +199,7 @@ export const adjustAttrsObject = (
     }
   });
 
-  // 4. enforce maximums
+  // 3. enforce maximums
   if (enforceMaximums) {
     Object.entries(attrs).forEach(([attrIn, val]) => {
       const attr = attrIn as EntityAttribute;
@@ -416,7 +365,7 @@ export const entityAttributesMap = (
 
   // 5. Enforce zero minimums
   Object.entries(attrs).forEach(([attr, map]) => {
-    if (MIN_ZEROS.has(attr) && typeof map.val === "number" && map.val < 0) {
+    if (map && MIN_ZEROS.has(attr) && map.val < 0) {
       map.val = 0;
     }
   });
@@ -431,10 +380,12 @@ export const solvePendingEquations = (
   attrs: UpdatedEntityAttributes
 ): PartialEntityAttributes => {
   const cleaned: PartialEntityAttributes = {};
-  Object.entries(usesMap).forEach(([attrIn, val]) => {
-    const attr = attrIn as EntityAttribute;
+  Object.entries(usesMap).forEach(([attr, val]) => {
     if (typeof val === "string") {
-      cleaned[attr] = solveEquation(val, attrs);
+      const solved = solveEquation(val, attrs);
+      if (solved) {
+        cleaned[attr] = solved;
+      }
     } else {
       cleaned[attr] = val;
     }
@@ -511,4 +462,8 @@ export const additionalCombatStatsAttrs = (
     }
   });
   return Array.from(attrs);
+};
+
+export const isCustomAttr = (attr: EntityAttribute): boolean => {
+  return !validAttributes.includes(attr);
 };

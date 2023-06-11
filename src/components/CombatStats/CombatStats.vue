@@ -162,13 +162,13 @@
           v-bind:class="attrButtonClass(attr)"
         >
           <div
-            v-if="attr === 'bluespace'"
+            v-if="fractionMap[attr]"
             class="basicBtnContents attrButtonContents alignRow wide"
           >
             <div class="attrLabelWide">{{ attrShortName(attr) }}:</div>
             <BaseFraction
-              :top="totalBuiltDC"
-              :bottom="attrDisplayVal(attr)"
+              :top="fractionMap[attr].top"
+              :bottom="fractionMap[attr].bottom"
             ></BaseFraction>
           </div>
           <div v-else class="basicBtnContents attrButtonContents cols-2 wide">
@@ -196,7 +196,7 @@
           <div class="margin">
             <div v-if="showUpdateDropdown">
               <AdjustAttributeVal
-                v-if="ADJUST_SINGLE.has(attr)"
+                v-if="ADJUST_SINGLE.has(attr) || customAttrs.includes(attr)"
                 :attr="attr"
                 loc="combat-stats"
               ></AdjustAttributeVal>
@@ -237,11 +237,12 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  CollectedEntity,
-  EntityAttribute,
-  FullEntity,
-  UpdatedEntityAttributes,
+import {
+  validAttributes,
+  type CollectedEntity,
+  type EntityAttribute,
+  type FullEntity,
+  type UpdatedEntityAttributes,
 } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import BulletPointVue from "../Base/BulletPoint.vue";
@@ -347,15 +348,21 @@ const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "recovery_shock",
 ];
 
-const singleRowAttrs = computed(() =>
-  BASE_SINGLE_ROW_ATTRIBUTES.concat(additionalCombatStatsAttrs(props.entity))
+const customAttrs = computed(() =>
+  Object.keys(attrs.value).filter((attr) => !validAttributes.includes(attr))
 );
 
-const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp"]);
+const singleRowAttrs = computed(() =>
+  BASE_SINGLE_ROW_ATTRIBUTES.concat(
+    additionalCombatStatsAttrs(props.entity)
+  ).concat(customAttrs.value)
+);
+
+const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp", "trii"]);
 const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init", "casting"]);
 
 const singleSecondaryMap = computed(() => {
-  const map: Partial<Record<EntityAttribute, EntityAttribute>> = {};
+  const map: Record<EntityAttribute, EntityAttribute> = {};
   if (attrs.value.burden) {
     map.armor = "burden";
   }
@@ -371,7 +378,18 @@ const showUpdateDropdown = computed(() => {
   );
 });
 
-const totalBuiltDC = computed(() => totalDC(props.entity.items));
+const fractionMap = computed(
+  (): Record<EntityAttribute, { top?: number; bottom?: number }> => ({
+    bluespace: {
+      top: totalDC(props.entity.items),
+      bottom: attrDisplayVal("bluespace"),
+    },
+    trii: {
+      top: attrDisplayVal("trii"),
+      bottom: attrDisplayVal("max_trii"),
+    },
+  })
+);
 </script>
 
 <style scoped>

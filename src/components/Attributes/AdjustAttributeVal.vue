@@ -1,7 +1,7 @@
 <template>
   <form>
     <label v-bind:for="adjustReasonID" class="labelText">
-      Adjust Base {{ attrDisplayName }} Values:
+      Adjust {{ baseInTitle ? "Base" : "" }} {{ attrDisplayName }} Values:
     </label>
     <input
       type="text"
@@ -46,6 +46,7 @@ import {
   adjustAttrsAPI,
   attrFullName,
   generateDefaultAdjustMsg,
+  isCustomAttr,
   MIN_ZEROS,
 } from "@/utils/attributeUtils";
 import {
@@ -107,6 +108,12 @@ const showError = computed(
 const inputAdjustFieldClass = computed(() =>
   showError.value ? "invalid" : ""
 );
+const baseInTitle = computed(() => {
+  if (isCustomAttr(props.attr)) {
+    return false;
+  }
+  return !["xp", "sp", "trii"].includes(props.attr);
+});
 
 const jumpToAdjustField = () =>
   document.getElementById(adjustFieldID.value)?.focus();
