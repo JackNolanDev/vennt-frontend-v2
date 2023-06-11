@@ -353,9 +353,14 @@ const customAttrs = computed(() =>
 );
 
 const singleRowAttrs = computed(() =>
-  BASE_SINGLE_ROW_ATTRIBUTES.concat(
-    additionalCombatStatsAttrs(props.entity)
-  ).concat(customAttrs.value)
+  // dedupe values
+  Array.from(
+    new Set(
+      BASE_SINGLE_ROW_ATTRIBUTES.concat(
+        additionalCombatStatsAttrs(props.entity)
+      ).concat(customAttrs.value)
+    )
+  )
 );
 
 const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp", "trii"]);
