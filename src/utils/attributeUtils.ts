@@ -393,15 +393,20 @@ export const solvePendingEquations = (
   return cleaned;
 };
 
-const attrsRegexStr = `\\b${validAttributes.join("|")}\\b`;
-const attrsRegex = new RegExp(attrsRegexStr, "g");
+const attrsRegex = (attrs: UpdatedEntityAttributes): RegExp => {
+  const attributes = Array.from(
+    new Set([...validAttributes, ...Object.keys(attrs)])
+  );
+  const attrsRegexStr = `\\b${attributes.join("|")}\\b`;
+  return new RegExp(attrsRegexStr, "g");
+};
 
 export const replaceVariablesInEquation = (
   equation: string,
   attrs: UpdatedEntityAttributes
 ): { cleanedEquation: string; details: { ceilResult: boolean } } => {
   let ceilResult = false;
-  const cleanedEquation = equation.replaceAll(attrsRegex, (match) => {
+  const cleanedEquation = equation.replaceAll(attrsRegex(attrs), (match) => {
     const attr = match as EntityAttribute;
     // L always rounds up, everything else always floors
     if (attr === "L") {
