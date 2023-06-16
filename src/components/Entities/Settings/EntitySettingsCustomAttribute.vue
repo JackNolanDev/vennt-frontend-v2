@@ -86,6 +86,7 @@ const saveAttr = async () => {
       message: `Initial Value for ${state.attr} is ${state.val}`,
     });
   }
+  resetState();
 };
 
 const resetState = () => {

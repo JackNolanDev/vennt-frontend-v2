@@ -1,7 +1,7 @@
 <template>
+  <UseAbilitySection :ability="ability"></UseAbilitySection>
   <AbilityUses :ability="ability"></AbilityUses>
   <AbilityComment :ability="ability"></AbilityComment>
-  <UseAbilitySection :ability="ability"></UseAbilitySection>
   <div class="separator mt-16 mb-24"></div>
   <AbilityRepeatableSection :ability="ability"></AbilityRepeatableSection>
   <BaseButton @click="emit('editButton')" icon="edit" class="wide">

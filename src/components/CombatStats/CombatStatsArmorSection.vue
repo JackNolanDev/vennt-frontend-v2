@@ -6,7 +6,6 @@
     <SimpleItemTable
       :items="attrs.armor.items"
       :link-on-name="true"
-      :show-border="true"
       class="mb-8"
     ></SimpleItemTable>
   </div>
@@ -17,7 +16,6 @@
     <SimpleItemTable
       :items="attrs.shield.items"
       :link-on-name="true"
-      :show-border="true"
       class="mb-8"
     ></SimpleItemTable>
   </div>

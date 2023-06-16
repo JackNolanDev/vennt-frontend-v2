@@ -589,7 +589,8 @@ select.input {
 .card.padded.thin {
   padding: 8px;
 }
-.card.border {
+.card.border,
+.card .card:has(.tableItems) {
   border: 1px solid var(--border);
 }
 .column {

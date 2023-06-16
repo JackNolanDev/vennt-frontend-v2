@@ -2,7 +2,7 @@
   <CombatStats
     v-if="entityStore.entity"
     :entity="entityStore.entity"
-    :use-copyable-dice="false"
+    :use-copyable-dice="true"
   ></CombatStats>
 </template>
 

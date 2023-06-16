@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ border: showBorder }" class="card column">
+  <div class="card column">
+    <div v-if="title" class="tableItems noHeader padded">
+      <h3 class="mt-0 mb-0 text-center">{{ title }}</h3>
+    </div>
     <div
       v-for="(ability, index) in abilities"
       v-bind:key="ability.name + index"
@@ -47,7 +50,7 @@ defineProps<{
   abilities: EntityAbility[];
   linkOnName?: boolean;
   showUses?: boolean;
-  showBorder?: boolean;
+  title?: string;
 }>();
 const entityStore = useEntityStore();
 

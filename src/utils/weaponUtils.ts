@@ -1,4 +1,8 @@
-import { solveEquation } from "./attributeUtils";
+import {
+  attrsRegexStr,
+  replaceVariablesInEquation,
+  solveEquation,
+} from "./attributeUtils";
 import type {
   EntityAttribute,
   EntityItem,
@@ -62,42 +66,49 @@ export const weaponAccuracy = (
   return { result: acc, reason };
 };
 
-export const baseDiceString = (weapon: EntityItem): string => {
+const baseDiceRegex = (attrs: UpdatedEntityAttributes) => {
+  const attrsRegexString = attrsRegexStr(attrs);
+  return new RegExp(
+    `^\\d*d\\d+(?: ?[+\\-*\\/]\\(?(?:\\d*d\\d+|\\d+|${attrsRegexString})\\)?)*`,
+    "u"
+  );
+};
+
+export const baseDiceString = (
+  weapon: EntityItem,
+  attrs: UpdatedEntityAttributes
+): string => {
   if (!weapon.custom_fields?.dmg) {
     return "";
   }
-  const [first] = weapon.custom_fields.dmg.match(/\d*d\d+([+-]\d+)*/gm) || [];
+  const [first] = weapon.custom_fields.dmg.match(baseDiceRegex(attrs)) || [];
   return first ? first : "";
 };
+
+const addIfExists = (str: string | undefined): string => (str ? `+${str}` : "");
 
 export const enhancedBaseDiceString = (
   weapon: EntityItem,
   attrs: UpdatedEntityAttributes
 ): string => {
-  return (
-    baseDiceString(weapon) +
-    number2MathString(attributeBonus(weapon, attrs)) +
-    number2MathString(weaponCategoryAdjust(weapon, attrs, "dmg")?.result ?? 0) +
-    number2MathString(attrs.dmg?.val ?? 0)
-  );
+  const diceString = `${baseDiceString(weapon, attrs)}${addIfExists(
+    weapon.custom_fields?.attr
+  )}${addIfExists(
+    weaponCategoryAdjust(weapon, attrs, "dmg")?.result.toString()
+  )}${addIfExists(attrs.dmg?.val.toString())}`;
+  return replaceVariablesInEquation(diceString, attrs).cleanedEquation;
 };
 
 export const enhancedDmgString = (
   weapon: EntityItem,
-  enhancedBaseDiceString: string
+  enhancedBaseDiceString: string,
+  attrs: UpdatedEntityAttributes
 ): string => {
   if (!weapon.custom_fields || !weapon.custom_fields.dmg) {
     return "";
   }
   return weapon.custom_fields.dmg.replace(
-    baseDiceString(weapon),
+    baseDiceString(weapon, attrs),
     enhancedBaseDiceString
   );
-};
-
-const number2MathString = (num: number): string => {
-  if (num === 0) {
-    return "";
-  }
-  return num > 0 ? `+${num.toString()}` : num.toString();
 };

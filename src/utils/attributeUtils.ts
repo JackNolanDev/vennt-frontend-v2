@@ -393,12 +393,22 @@ export const solvePendingEquations = (
   return cleaned;
 };
 
-const attrsRegex = (attrs: UpdatedEntityAttributes): RegExp => {
+export const attrsRegexStr = (attrs: UpdatedEntityAttributes): string => {
   const attributes = Array.from(
     new Set([...validAttributes, ...Object.keys(attrs)])
   );
-  const attrsRegexStr = `\\b${attributes.join("|")}\\b`;
-  return new RegExp(attrsRegexStr, "g");
+  return `\\b${attributes.join("|")}\\b`;
+};
+
+const attrsRegex = (attrs: UpdatedEntityAttributes): RegExp =>
+  new RegExp(attrsRegexStr(attrs), "g");
+
+const numToStr = (num: number): string => {
+  const numStr = num.toString();
+  if (num < 0) {
+    return `(${numStr})`;
+  }
+  return numStr;
 };
 
 export const replaceVariablesInEquation = (
@@ -414,11 +424,11 @@ export const replaceVariablesInEquation = (
     }
     const entityAttr = attrs[attr];
     if (entityAttr) {
-      return entityAttr.val.toString();
+      return numToStr(entityAttr.val);
     }
     const defaultAttr = DEFAULT_ATTRS_MAP[attr];
     if (defaultAttr) {
-      return defaultAttr.val.toString();
+      return numToStr(defaultAttr.val);
     }
     return "0";
   });

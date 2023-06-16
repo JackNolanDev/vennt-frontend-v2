@@ -21,12 +21,14 @@
     :abilities="onAttackAbilities"
     :link-on-name="true"
     :show-uses="true"
+    title="On Attack Abilities"
     class="mt-16"
   ></SimpleAbilityTable>
   <SimpleItemTable
     v-if="ammoItems.length > 0 && showDamageDice"
     :items="ammoItems"
     :link-on-name="true"
+    title="Ammo"
     class="mt-16"
   ></SimpleItemTable>
 </template>
@@ -63,7 +65,11 @@ const damageDiceString = computed(
 const damageString = computed(
   () =>
     damageDiceString.value &&
-    enhancedDmgString(props.item, damageDiceString.value)
+    enhancedDmgString(
+      props.item,
+      damageDiceString.value,
+      entityStore.entityAttributes
+    )
 );
 const diceReason = computed(
   () =>
