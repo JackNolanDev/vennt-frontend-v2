@@ -933,7 +933,7 @@ nav.nav {
   height: 100%;
   background-color: var(--sub-nav-background);
   font-size: 18pt;
-  /* overflow-x: scroll; */
+  overflow-x: hidden;
   max-width: 100vw;
 }
 

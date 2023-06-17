@@ -120,5 +120,44 @@
   .page-layout.sidebar-right:not(.sidebar) > .main-body {
     display: none;
   }
+
+  /* FIX: DO NOT USE GRID ON MOBILE (causes weird double scrollbars) */
+
+  .page-layout {
+    display: block;
+    min-height: unset;
+  }
+  .sidebar-body,
+  .sidebar-right-body,
+  .main-body {
+    /* !important to override higher specificity above */
+    height: unset !important;
+  }
+
+  .page-layout.nav > .sidebar-body,
+  .page-layout.nav > .sidebar-right-body,
+  .page-layout.nav > .main-body {
+    margin-top: var(--nav-height);
+  }
+  .page-layout.sub-nav > .sidebar-body,
+  .page-layout.sub-nav > .sidebar-right-body,
+  .page-layout.sub-nav > .main-body {
+    margin-top: var(--total-nav-height);
+  }
+
+  .nav-body {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 4;
+  }
+  .sub-nav-body {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    z-index: 5;
+  }
 }
 </style>
