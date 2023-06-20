@@ -822,3 +822,8 @@ export type DiceCommands = {
 export type ConsolidatedItem = FullEntityItem & {
   ids: string[];
 };
+
+export type PathTree = Record<
+  string,
+  { children: PathTree; abilities: string[] }
+>;

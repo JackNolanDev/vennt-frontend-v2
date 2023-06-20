@@ -21,6 +21,9 @@ export const ENTITY_STATS_ROUTE = "entityStats";
 export const ENTITY_NOTES_ROUTE = "entityNotes";
 export const ENTITY_WEAPON_SHOP_ROUTE = "entityWeaponShop";
 export const ENTITY_SETTINGS_ROUTE = "entitySettings";
+export const WIKI_ROUTE = "wiki";
+export const WIKI_PATHS_ROUTE = "wikiPaths";
+export const WIKI_PATHS_SPECIFIC_ROUTE = "wikiPathsSpecific";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -120,6 +123,21 @@ const router = createRouter({
           component: () => import("../views/EntitySettingsView.vue"),
         },
       ],
+    },
+    {
+      path: "/wiki",
+      name: WIKI_ROUTE,
+      component: () => import("../views/WikiView.vue"),
+    },
+    {
+      path: "/wiki/paths",
+      name: WIKI_PATHS_ROUTE,
+      component: () => import("../views/WikiPathsView.vue"),
+    },
+    {
+      path: "/wiki/paths/:path",
+      name: WIKI_PATHS_SPECIFIC_ROUTE,
+      component: () => import("../views/WikiPathsSpecificView.vue"),
     },
     {
       path: "/credits",

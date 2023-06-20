@@ -3,6 +3,7 @@ import {
   fetchShopItemsApi,
   fetchWeaponTypesApi,
 } from "@/api/apiStorage";
+import { buildPathMap } from "@/utils/abilityUtils";
 import type { PathsAndAbilities, ShopItem } from "@/utils/backendTypes";
 import { getDefaultWeapons } from "@/utils/itemUtils";
 import { defineStore } from "pinia";
@@ -23,6 +24,7 @@ export const useJsonStore = defineStore("json", {
   },
   getters: {
     defaultWeapons: (state) => getDefaultWeapons(state.weaponTypes),
+    pathMap: (state) => buildPathMap(state.abilities),
   },
   actions: {
     async fetchWeaponTypes() {

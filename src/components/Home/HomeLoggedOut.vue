@@ -11,6 +11,11 @@
       <BaseButton :to="{ name: SIGNUP_ROUTE }" class="clear bolder center mb-8">
         SIGNUP
       </BaseButton>
+      <BaseButton
+        :to="{ name: WIKI_PATHS_ROUTE }"
+        class="secondary center mt-64 mb-8"
+        >Abilities Wiki</BaseButton
+      >
       <p>
         The wiki can be found
         <a
@@ -27,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/router";
+import { LOGIN_ROUTE, SIGNUP_ROUTE, WIKI_PATHS_ROUTE } from "@/router";
 import { RouterLink } from "vue-router";
 import BaseButton from "../Base/BaseButton.vue";
 import PageLayout from "../Base/PageLayout.vue";

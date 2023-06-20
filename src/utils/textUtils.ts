@@ -130,7 +130,7 @@ export function stringToLinkID(str: string) {
   str = str.replace(/[ (),'":*]/gm, "-");
   str = str.replace(/\./gm, "_");
   str = str.replace(/[^a-zA-Z0-9-_:.]/gm, ""); // remove any invalid characters
-  return "link-" + str;
+  return str;
 }
 
 export const editorEmpty = (text: string): boolean =>

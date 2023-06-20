@@ -608,6 +608,16 @@ select.input {
 .card .card {
   background-color: var(--table-contrast);
 }
+/* There's probably a better way to go about this */
+.card .card .card {
+  background-color: var(--background-highlight);
+}
+.card .card .card .card {
+  background-color: var(--table-contrast);
+}
+.card .card .card .card .card {
+  background-color: var(--background-highlight);
+}
 
 /* separator */
 

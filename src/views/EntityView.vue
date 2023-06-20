@@ -72,6 +72,9 @@ onUnmounted(() => {
 });
 
 const keyMapper = (e: KeyboardEvent) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "f") {
+    console.log("should override search");
+  }
   if (!e.target || e.metaKey || e.ctrlKey) {
     return;
   }
