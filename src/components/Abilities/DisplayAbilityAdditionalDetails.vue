@@ -12,16 +12,25 @@
     <b>Expedited for:</b> {{ ability.custom_fields.expedited }}
   </p>
   <p v-if="ability.custom_fields?.unlocks" class="mt-16 mb-0">
-    <b>Unlocks:</b> {{ ability.custom_fields.unlocks }}
+    <b class="mr-8">Unlocks:</b>
+    <WikiLinksSingleLine
+      :line="ability.custom_fields.unlocks"
+    ></WikiLinksSingleLine>
   </p>
   <p v-if="ability.custom_fields?.partial_unlocks" class="mt-16 mb-0">
-    <b>Partially Unlocked:</b> {{ ability.custom_fields.partial_unlocks }}
+    <b class="mr-8">Partially Unlocked:</b>
+    <WikiLinksSingleLine
+      :line="ability.custom_fields.partial_unlocks"
+    ></WikiLinksSingleLine>
   </p>
   <p v-if="ability.custom_fields?.prereq" class="mt-16 mb-0">
-    <b>Prerequisites:</b> {{ ability.custom_fields.prereq }}
+    <b class="mr-8">Prerequisites:</b>
+    <WikiLinksSingleLine
+      :line="ability.custom_fields.prereq"
+    ></WikiLinksSingleLine>
   </p>
   <p v-if="ability.custom_fields?.not_req" class="mt-16 mb-0">
-    This ability is not required for the Path Completion Bonus.
+    <i>This ability is not required for the Path Completion Bonus.</i>
   </p>
 </template>
 
@@ -30,6 +39,7 @@ import { useEntityStore } from "@/stores/entity";
 import { actualXPCost, defaultXPCost } from "@/utils/abilityUtils";
 import type { EntityAbility } from "@/utils/backendTypes";
 import { computed } from "vue";
+import WikiLinksSingleLine from "../Wiki/WikiLinksSingleLine.vue";
 
 const props = defineProps<{ ability: EntityAbility }>();
 const entityStore = useEntityStore();

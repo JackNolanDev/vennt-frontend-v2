@@ -33,7 +33,7 @@ import type {
   UncompleteEntityItem,
   UpdateEntityAttributes,
 } from "@/utils/backendTypes";
-import { sortAbilities } from "@/utils/abilityUtils";
+import { sortAbilities, actualXPCost } from "@/utils/abilityUtils";
 import { consolidateItemList } from "@/utils/itemUtils";
 import { entityAttributesMap } from "@/utils/attributeUtils";
 import { defineStore } from "pinia";
@@ -100,6 +100,16 @@ export const useEntityStore = defineStore("entity", {
         return {};
       }
       return diceTogglesForEntity(this.entity, this.entityAttributes);
+    },
+    spentXP(): number {
+      if (!this.entity) {
+        return 0;
+      }
+      return this.entity.abilities.reduce(
+        (sum, ability) =>
+          sum + actualXPCost(ability, this.entityAttributes, this.entity),
+        0
+      );
     },
   },
   actions: {

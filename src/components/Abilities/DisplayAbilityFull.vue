@@ -3,7 +3,12 @@
     v-if="ability.custom_fields?.path && !hiddenFields?.path"
     class="mt-16 mb-0 text-block"
   >
-    <i>{{ ability.custom_fields.path }}</i>
+    <i
+      ><RouterLink v-if="pathIsLink" :to="pathLink" class="stealth">{{
+        ability.custom_fields.path
+      }}</RouterLink>
+      <span v-else>{{ ability.custom_fields.path }}</span></i
+    >
   </p>
   <DisplayAbilityUseCost :ability="ability"></DisplayAbilityUseCost>
   <div v-if="ability.custom_fields?.range" class="mt-16 mb-0 text-block">
@@ -20,14 +25,20 @@
 </template>
 
 <script setup lang="ts">
+import router, { WIKI_PATHS_SPECIFIC_ROUTE } from "@/router";
+import { useEntityStore } from "@/stores/entity";
+import { useJsonStore } from "@/stores/jsonStorage";
 import type {
   EntityAbility,
   UpdatedEntityAttributes,
 } from "@/utils/backendTypes";
+import { stringToLinkID } from "@/utils/textUtils";
+import { computed } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 import DisplayAbilityUseCost from "./DisplayAbilityUseCost.vue";
 
-defineProps<{
+const props = defineProps<{
   ability: EntityAbility;
   attrs?: UpdatedEntityAttributes;
   hiddenFields?: {
@@ -35,4 +46,38 @@ defineProps<{
     effect?: boolean;
   };
 }>();
+const entityStore = useEntityStore();
+const jsonStorage = useJsonStore();
+
+const pathIsLink = computed(() => {
+  return (
+    props.ability.custom_fields?.path &&
+    jsonStorage.abilities.paths.some(
+      (path) => path.name === props.ability.custom_fields?.path
+    )
+  );
+});
+const pathLink = computed((): RouteLocationRaw => {
+  const pathAbility = jsonStorage.abilities.abilities.find(
+    (pathAbility) => pathAbility.name === props.ability.name
+  );
+  if (pathAbility && pathAbility.custom_fields?.path) {
+    return {
+      name: WIKI_PATHS_SPECIFIC_ROUTE,
+      params: { path: stringToLinkID(pathAbility.custom_fields.path) },
+      query: entityStore.entity
+        ? { entity: entityStore.entity.entity.id }
+        : router.currentRoute.value.query,
+      hash: "#" + stringToLinkID(pathAbility.name),
+    };
+  }
+  return {
+    name: WIKI_PATHS_SPECIFIC_ROUTE,
+    params: { path: stringToLinkID(props.ability.custom_fields!.path!) },
+    query: entityStore.entity
+      ? { entity: entityStore.entity.entity.id }
+      : router.currentRoute.value.query,
+    hash: "#top",
+  };
+});
 </script>

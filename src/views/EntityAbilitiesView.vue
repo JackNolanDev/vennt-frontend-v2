@@ -1,13 +1,6 @@
 <template>
   <h1>Abilities</h1>
-  <div v-if="entityStore.entityAttributes.xp" class="alignRow labelText mb-16">
-    Spent XP:
-    <BaseFraction
-      :top="spentXP"
-      :bottom="entityStore.entityAttributes.xp.val"
-      class="ml-16"
-    ></BaseFraction>
-  </div>
+  <EntitySpentXP></EntitySpentXP>
   <AbilityTable
     :abilities="entityStore.sortedAbilities"
     :attrs="entityStore.entityAttributes"
@@ -23,6 +16,16 @@
     class="wide mt-24"
     >Add custom ability</BaseButton
   >
+  <BaseButton
+    v-if="entityStore.entity?.entity.id"
+    :to="{
+      name: WIKI_PATHS_ROUTE,
+      query: { entity: entityStore.entity.entity.id },
+    }"
+    icon="find_in_page"
+    class="wide"
+    >Find abilities via wiki</BaseButton
+  >
   <AbilitySearch v-if="showEditSection"></AbilitySearch>
   <div class="mb-128"></div>
 </template>
@@ -30,28 +33,12 @@
 import AbilitySearch from "@/components/Abilities/AbilitySearch.vue";
 import AbilityTable from "@/components/Abilities/AbilityTable.vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
-import BaseFraction from "@/components/Base/BaseFraction.vue";
-import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
+import EntitySpentXP from "@/components/Entities/EntitySpentXP.vue";
+import router, { ENTITY_ABILITIES_ROUTE, WIKI_PATHS_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
-import { actualXPCost } from "@/utils/abilityUtils";
 import { computed } from "vue";
 
 const entityStore = useEntityStore();
-
-const spentXP = computed(() =>
-  entityStore.entity
-    ? entityStore.entity.abilities.reduce(
-        (sum, ability) =>
-          sum +
-          actualXPCost(
-            ability,
-            entityStore.entityAttributes,
-            entityStore.entity
-          ),
-        0
-      )
-    : 0
-);
 
 const showEditSection = computed(
   () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"

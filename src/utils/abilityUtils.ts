@@ -8,9 +8,7 @@ import {
   type EntityAbility,
   type EntityAbilityFields,
   type FullEntityAbility,
-  type PathDetails,
   type PathsAndAbilities,
-  type PathTree,
   type UpdatedEntityAttributes,
 } from "./backendTypes";
 import { titleText } from "./textUtils";
@@ -87,7 +85,7 @@ const abilityUsesCostAdjust = (
 
 export const actualXPCost = (
   ability: EntityAbility,
-  attrs: UpdatedEntityAttributes,
+  attrs?: UpdatedEntityAttributes,
   entity?: CollectedEntity
 ): number => {
   let cost = defaultXPCost(ability);
@@ -99,6 +97,9 @@ export const actualXPCost = (
     giftInAbilityExpedited(ability, entity.entity.other_fields.second_gift)
   ) {
     cost = cost / 2;
+  }
+  if (!attrs) {
+    return cost;
   }
   const singleAbilityCost = abilityUsesCostAdjust(cost, ability, entity, attrs);
   return singleAbilityCost * (ability.custom_fields?.times_taken ?? 1);
@@ -195,9 +196,12 @@ export function sortAbilities(
       }
       return cost;
     };
-    return (
-      costInt(a1.custom_fields?.purchase) - costInt(a2.custom_fields?.purchase)
-    );
+    const diff =
+      costInt(a1.custom_fields?.purchase) - costInt(a2.custom_fields?.purchase);
+    if (diff !== 0) {
+      return diff;
+    }
+    return a1.name.localeCompare(a2.name);
   });
 }
 
@@ -291,57 +295,4 @@ export const generateAbilityActivation = (cost: AbilityCostMap): string => {
     activation = activation ? `${activation}, ${costExtension}` : costExtension;
   });
   return activation;
-};
-
-export const buildPathMap = (abilities: PathsAndAbilities): PathTree => {
-  const flatTreeMap: PathTree = {};
-  const pathTree: PathTree = {};
-
-  const validPaths = new Set(abilities.paths.map((path) => path.name));
-
-  const abilitiesForPath = (path: string): string[] =>
-    abilities.abilities
-      .filter((ability) => ability.custom_fields?.path === path)
-      .map((ability) => ability.name);
-
-  const unprocessedPaths = [...abilities.paths];
-
-  const addToTree = (path: PathDetails, parent?: string) => {
-    const node = { children: {}, abilities: abilitiesForPath(path.name) };
-    if (!parent || !validPaths.has(parent)) {
-      flatTreeMap[path.name] = node;
-      pathTree[path.name] = node;
-      return;
-    } else if (parent in flatTreeMap) {
-      const parentNode = flatTreeMap[parent];
-      parentNode.children[path.name] = node;
-      flatTreeMap[path.name] = node;
-      return;
-    } else {
-      // re-push the path onto our list of paths to process, we should find / insert the parent eventually
-      // UNLESS there is a loop. This map logic sucks and should definitely be fixed
-      unprocessedPaths.push(path);
-    }
-  };
-
-  while (unprocessedPaths.length > 0) {
-    const path = unprocessedPaths.shift();
-    if (!path) {
-      break;
-    }
-
-    if (!path.reqs) {
-      addToTree(path);
-      continue;
-    }
-    const parents = path.reqs
-      .match(/(?!\()[\w ]+(?=\))/gimu)
-      ?.map((parent) => `Path of the ${parent}`);
-    if (!parents || parents.length === 0) {
-      addToTree(path);
-      continue;
-    }
-    addToTree(path, parents[0]);
-  }
-  return pathTree;
 };

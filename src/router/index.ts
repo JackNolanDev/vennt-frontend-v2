@@ -161,6 +161,20 @@ const router = createRouter({
       component: () => import("../views/NotFoundView.vue"),
     },
   ],
+  scrollBehavior(to, _from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition; // default behavior when using forward & backward buttons
+    }
+    if (to.hash) {
+      setTimeout(() => {
+        const id = to.hash.substring(1);
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 50);
+    }
+  },
 });
 
 export default router;

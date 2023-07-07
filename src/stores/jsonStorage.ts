@@ -3,9 +3,9 @@ import {
   fetchShopItemsApi,
   fetchWeaponTypesApi,
 } from "@/api/apiStorage";
-import { buildPathMap } from "@/utils/abilityUtils";
 import type { PathsAndAbilities, ShopItem } from "@/utils/backendTypes";
 import { getDefaultWeapons } from "@/utils/itemUtils";
+import { buildPathGraph, buildAbilityMap } from "@/utils/wikiUtils";
 import { defineStore } from "pinia";
 
 interface JsonStore {
@@ -24,7 +24,8 @@ export const useJsonStore = defineStore("json", {
   },
   getters: {
     defaultWeapons: (state) => getDefaultWeapons(state.weaponTypes),
-    pathMap: (state) => buildPathMap(state.abilities),
+    pathGraph: (state) => buildPathGraph(state.abilities),
+    abilityMap: (state) => buildAbilityMap(state.abilities),
   },
   actions: {
     async fetchWeaponTypes() {

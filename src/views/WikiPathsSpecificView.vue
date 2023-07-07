@@ -1,15 +1,18 @@
 <template>
   <BaseLayout class="nav sidebar">
-    <template #nav><BaseNav></BaseNav></template>
+    <template #nav><WikiNav></WikiNav></template>
     <template #sidebar>
-      <WikiMenu :tree="jsonStorage.pathMap"></WikiMenu>
+      <WikiSidePanel></WikiSidePanel>
     </template>
     <PageLayout>
       <div v-if="pathAndAbilities">
-        <h1>{{ pathAndAbilities.path.name }}</h1>
-        <p>{{ pathAndAbilities.path.desc }}</p>
+        <h1 id="top">{{ pathAndAbilities.path.name }}</h1>
+        <div v-html="renderMarkdown(pathAndAbilities.path.desc)"></div>
         <p v-if="pathAndAbilities.path.reqs">
-          <b>Requirements:</b> {{ pathAndAbilities.path.reqs }}
+          <b class="mr-8">Requirements:</b>
+          <WikiLinksSingleLine
+            :line="pathAndAbilities.path.reqs"
+          ></WikiLinksSingleLine>
         </p>
         <p v-if="pathAndAbilities.path.completionBonus">
           <b>Path Completion Bonus:</b>
@@ -41,6 +44,31 @@
             :ability="ability"
             :flavor="true"
           ></DisplayAbilityEffect>
+          <div v-if="entityStore.entity">
+            <BaseButton
+              v-if="
+                entityStore.entity.abilities.some(
+                  (owned) => owned.name === ability.name
+                )
+              "
+              :to="{
+                name: ENTITY_ABILITIES_ROUTE,
+                params: {
+                  id: entityStore.entity.entity.id,
+                  detail: entityStore.entity.abilities.find(
+                    (owned) => owned.name === ability.name
+                  )?.id,
+                },
+              }"
+              icon="person"
+              class="primary wide mt-24"
+              >View for {{ entityStore.entity.entity.name }}</BaseButton
+            >
+            <AddSearchAbilityButton
+              v-else
+              :ability="ability"
+            ></AddSearchAbilityButton>
+          </div>
         </div>
       </div>
       <div v-else>Not found</div>
@@ -54,17 +82,53 @@ import DisplayAbilityEffect from "@/components/Abilities/DisplayAbilityEffect.vu
 import DisplayAbilityFull from "@/components/Abilities/DisplayAbilityFull.vue";
 import BaseCopyButton from "@/components/Base/BaseCopyButton.vue";
 import BaseLayout from "@/components/Base/BaseLayout.vue";
-import BaseNav from "@/components/Base/BaseNav.vue";
+import WikiNav from "@/components/Wiki/WikiNav.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
-import WikiMenu from "@/components/Wiki/WikiMenu.vue";
-import router from "@/router";
+import WikiLinksSingleLine from "@/components/Wiki/WikiLinksSingleLine.vue";
+import WikiSidePanel from "@/components/Wiki/WikiSidePanel.vue";
+import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
+import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { EntityAbility } from "@/utils/backendTypes";
-import { stringToLinkID } from "@/utils/textUtils";
-import { computed } from "vue";
+import { idValidator, type EntityAbility } from "@/utils/backendTypes";
+import { renderMarkdown, stringToLinkID } from "@/utils/textUtils";
+import { computed, onBeforeMount, watch } from "vue";
+import AddSearchAbilityButton from "@/components/Abilities/AddSearchAbilityButton.vue";
+import BaseButton from "@/components/Base/BaseButton.vue";
 
+const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
 jsonStorage.fetchAbilities();
+
+onBeforeMount(() => {
+  const id = idValidator.safeParse(router.currentRoute.value.query.entity);
+  if (!id.success) {
+    return;
+  }
+  if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
+    entityStore.clearLocalEntity();
+    entityStore.fetchCollectedEntity(id.data);
+  }
+});
+
+// Implements the jump to element logic for after abilities arrive to browser
+watch(
+  () => [jsonStorage.abilities],
+  () => {
+    const baseHash = router.currentRoute.value.hash;
+    if (!baseHash) {
+      return;
+    }
+    const hash = baseHash.substring(1);
+    setTimeout(() => {
+      const element = document.getElementById(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      } else {
+        console.log(`Couldn't find element: ${hash}`);
+      }
+    }, 50);
+  }
+);
 
 const pathAndAbilities = computed(() => {
   const path = jsonStorage.abilities.paths.find(

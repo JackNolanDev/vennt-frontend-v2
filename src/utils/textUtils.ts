@@ -82,12 +82,18 @@ export const pluralizeName = (
 
 export const renderMarkdown = (
   text: string,
-  attrs?: UpdatedEntityAttributes
+  attrs?: UpdatedEntityAttributes,
+  inline?: boolean
 ): HTMLString => {
   const markedOption: marked.MarkedOptions = {
     smartypants: true,
   };
-  let html = marked.parse(text, markedOption);
+  let html = "";
+  if (inline) {
+    html = marked.parseInline(text, markedOption);
+  } else {
+    html = marked.parse(text, markedOption);
+  }
   html = noBreakTrippleDigit(html);
   html = clearTemplateStrings(html);
   html = solveEquationsInText(html, attrs);
