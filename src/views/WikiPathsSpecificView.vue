@@ -61,7 +61,7 @@
                 },
               }"
               icon="person"
-              class="primary wide mt-24"
+              class="secondary wide mt-24"
               >View for {{ entityStore.entity.entity.name }}</BaseButton
             >
             <AddSearchAbilityButton
