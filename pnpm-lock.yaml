@@ -42,6 +42,8 @@ specifiers:
   '@vue/eslint-config-typescript': ^11.0.2
   '@vue/tsconfig': ^0.1.3
   axios: ^1.3.5
+  chart.js: ^4.3.0
+  chartjs-chart-graph: ^4.2.3
   dompurify: ^2.4.5
   eslint: ^8.38.0
   eslint-plugin-vue: ^9.10.0
@@ -71,6 +73,7 @@ specifiers:
   uuid: ^9.0.0
   vite: ^3.2.5
   vue: ^3.2.47
+  vue-chartjs: ^5.2.0
   vue-router: ^4.1.6
   vue-tsc: ^1.2.0
   zod: ^3.21.4
@@ -102,6 +105,8 @@ dependencies:
   '@tiptap/pm': 2.0.2_xzobyxekojg7s63egj2c4mbq34
   '@tiptap/vue-3': 2.0.0-beta.207_d3utadcwfm2ec334ibpz5ykfoe
   axios: 1.3.5
+  chart.js: 4.3.0
+  chartjs-chart-graph: 4.2.3_chart.js@4.3.0
   dompurify: 2.4.5
   graph-data-structure: 3.3.0
   indefinite: 2.4.2
@@ -125,6 +130,7 @@ dependencies:
   turndown: 7.1.2
   uuid: 9.0.0
   vue: 3.2.47
+  vue-chartjs: 5.2.0_chart.js@4.3.0+vue@3.2.47
   vue-router: 4.1.6_vue@3.2.47
   zod: 3.21.4
 
@@ -266,6 +272,10 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@kurkle/color/0.3.2:
+    resolution: {integrity: sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==}
+    dev: false
 
   /@linaria/core/3.0.0-beta.13:
     resolution: {integrity: sha512-3zEi5plBCOsEzUneRVuQb+2SAx3qaC1dj0FfFAI6zIJQoDWu0dlSwKijMRack7oO9tUWrchfj3OkKQAd1LBdVg==}
@@ -595,6 +605,14 @@ packages:
       vue: 3.2.47
     transitivePeerDependencies:
       - '@tiptap/pm'
+    dev: false
+
+  /@types/d3-force/3.0.4:
+    resolution: {integrity: sha512-q7xbVLrWcXvSBBEoadowIUJ7sRpS1yvgMWnzHJggFy5cUZBq2HZL5k/pBSm0GdYWS1vs5/EDwMjSKF55PDY4Aw==}
+    dev: false
+
+  /@types/d3-hierarchy/3.1.2:
+    resolution: {integrity: sha512-9hjRTVoZjRFR6xo8igAJyNXQyPX6Aq++Nhb5ebrUF414dv4jr2MitM2fWiOY475wa3Za7TOS2Gh9fmqEhLTt0A==}
     dev: false
 
   /@types/dompurify/2.4.0:
@@ -1110,6 +1128,28 @@ packages:
       supports-color: 7.2.0
     dev: true
 
+  /chart.js/4.3.0:
+    resolution: {integrity: sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g==}
+    engines: {pnpm: '>=7'}
+    dependencies:
+      '@kurkle/color': 0.3.2
+    dev: false
+
+  /chartjs-chart-graph/4.2.3_chart.js@4.3.0:
+    resolution: {integrity: sha512-YPFvQKHBBKvCJJAGSO9aCvLKIfWWtQB3FiPhGMdQbzQqDUc2dxZEvo7MXTr2/U3eTGOz0GliQcM55fIGxMtvqg==}
+    peerDependencies:
+      chart.js: ^4.1.0
+    dependencies:
+      '@types/d3-force': 3.0.4
+      '@types/d3-hierarchy': 3.1.2
+      chart.js: 4.3.0
+      d3-dispatch: 3.0.1
+      d3-force: 3.0.0
+      d3-hierarchy: 3.1.2
+      d3-quadtree: 3.0.1
+      d3-timer: 3.0.1
+    dev: false
+
   /color-convert/1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
     dependencies:
@@ -1178,6 +1218,35 @@ packages:
 
   /csstype/2.6.21:
     resolution: {integrity: sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==}
+
+  /d3-dispatch/3.0.1:
+    resolution: {integrity: sha512-rzUyPU/S7rwUflMyLc1ETDeBj0NRuHKKAcvukozwhshr6g6c5d8zh4c2gQjY2bZ0dXeGLWc1PF174P2tVvKhfg==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-force/3.0.0:
+    resolution: {integrity: sha512-zxV/SsA+U4yte8051P4ECydjD/S+qeYtnaIyAs9tgHCqfguma/aAQDjo85A9Z6EKhBirHRJHXIgJUlffT4wdLg==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-dispatch: 3.0.1
+      d3-quadtree: 3.0.1
+      d3-timer: 3.0.1
+    dev: false
+
+  /d3-hierarchy/3.1.2:
+    resolution: {integrity: sha512-FX/9frcub54beBdugHjDCdikxThEqjnR93Qt7PvQTOHxyiNCAlvMrHhclk3cD5VeAaq9fxmfRp+CnWw9rEMBuA==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-quadtree/3.0.1:
+    resolution: {integrity: sha512-04xDrxQTDTCFwP5H6hRhsRcb9xxv2RzkcsygFzmkSIOJy3PeRJP7sNk3VRIbKXcog561P9oU0/rVH6vDROAgUw==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-timer/3.0.1:
+    resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
+    engines: {node: '>=12'}
+    dev: false
 
   /dash-get/1.0.2:
     resolution: {integrity: sha512-4FbVrHDwfOASx7uQVxeiCTo7ggSdYZbqs8lH+WU6ViypPlDbe9y6IP5VVUDQBv9DcnyaiPT5XT0UWHgJ64zLeQ==}
@@ -3124,6 +3193,16 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
+
+  /vue-chartjs/5.2.0_chart.js@4.3.0+vue@3.2.47:
+    resolution: {integrity: sha512-d3zpKmGZr2OWHQ1xmxBcAn5ShTG917+/UCLaSpaCDDqT0U7DBsvFzTs69ZnHCgKoXT55GZDW8YEj9Av+dlONLA==}
+    peerDependencies:
+      chart.js: ^4.1.1
+      vue: ^3.0.0-0 || ^2.7.0
+    dependencies:
+      chart.js: 4.3.0
+      vue: 3.2.47
+    dev: false
 
   /vue-demi/0.13.11_vue@3.2.47:
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
