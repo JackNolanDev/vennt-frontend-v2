@@ -4,11 +4,11 @@ import {
   ATTRIBUTES_SET,
   validAttributes,
   type CollectedEntity,
+  type DiceSettings,
   type EntityAttribute,
   type EntityItem,
   type FullCollectedEntity,
   type PartialEntityAttributes,
-  type UpdatedEntityAttribute,
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
   type UseAttrMap,
@@ -16,6 +16,7 @@ import {
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
 import { DEFAULT_ATTRS_MAP, DEFAULT_CHARACTER_EQUATIONS } from "./venntConfig";
+import { combineDiceSettings } from "./diceUtils";
 
 export const MIN_ZEROS = new Set([
   "hp",
@@ -280,11 +281,24 @@ export const entityAttributesMap = (
     if (attrCheck === undefined) {
       attrs[attr] = { val: 0 };
     }
-    const attrMap = attrs[attr] as UpdatedEntityAttribute;
+    const attrMap = attrs[attr]!;
     if (!attrMap.items) {
       attrMap.items = [item];
     } else {
       attrMap.items.push(item);
+    }
+  };
+
+  const appendDiceAdjust = (attr: EntityAttribute, dice: DiceSettings) => {
+    const attrCheck = attrs[attr];
+    if (attrCheck === undefined) {
+      attrs[attr] = { val: 0 };
+    }
+    const attrMap = attrs[attr]!;
+    if (!attrMap.dice) {
+      attrMap.dice = dice;
+    } else {
+      attrMap.dice = combineDiceSettings(attrMap.dice, dice, attrs);
     }
   };
 
@@ -296,23 +310,28 @@ export const entityAttributesMap = (
   // 2. Fetch effects from items
   entity.items.forEach((item) => {
     if (
-      item.uses &&
-      item.uses.adjust &&
+      item.uses?.adjust &&
       (item.active || item.type === "equipment") &&
       !item.custom_fields?.in_storage
     ) {
-      Object.entries(item.uses.adjust.attr).forEach(([attrIn, val]) => {
-        const attr = attrIn as EntityAttribute;
-        if (typeof val === "string") {
-          equations.push([attr, val]);
-        } else {
-          const reason = `active ${item.name} ${
-            val > 0 ? "adds" : "subtracts"
-          } ${val} to ${attrShortName(attr)}`;
-          alterAttrs(attr, val, reason);
-        }
-        appendAdjustItem(attr, item);
-      });
+      if (item.uses.adjust.attr) {
+        Object.entries(item.uses.adjust.attr).forEach(([attr, val]) => {
+          if (typeof val === "string") {
+            equations.push([attr, val]);
+          } else {
+            const reason = `active ${item.name} ${
+              val > 0 ? "adds" : "subtracts"
+            } ${val} to ${attrShortName(attr)}`;
+            alterAttrs(attr, val, reason);
+          }
+          appendAdjustItem(attr, item);
+        });
+      }
+      if (item.uses.adjust.dice) {
+        Object.entries(item.uses.adjust.dice).forEach(([attr, dice]) => {
+          appendDiceAdjust(attr, dice);
+        });
+      }
     }
   });
 
@@ -328,20 +347,23 @@ export const entityAttributesMap = (
         .map((criteria) => criteria.adjust) ?? [];
     adjusts.push(ability.uses?.adjust);
     adjusts.forEach((adjust) => {
-      if (!adjust) {
-        return;
+      if (adjust?.attr) {
+        Object.entries(adjust.attr).forEach(([attr, val]) => {
+          if (typeof val === "string") {
+            equations.push([attr, val]);
+          } else {
+            const reason = `${ability.name} ${
+              val > 0 ? "adds" : "subtracts"
+            } ${val} to ${attrShortName(attr)}`;
+            alterAttrs(attr, val, reason);
+          }
+        });
       }
-      Object.entries(adjust.attr).forEach(([attrIn, val]) => {
-        const attr = attrIn as EntityAttribute;
-        if (typeof val === "string") {
-          equations.push([attr, val]);
-        } else {
-          const reason = `${ability.name} ${
-            val > 0 ? "adds" : "subtracts"
-          } ${val} to ${attrShortName(attr)}`;
-          alterAttrs(attr, val, reason);
-        }
-      });
+      if (adjust?.dice) {
+        Object.entries(adjust.dice).forEach(([attr, dice]) => {
+          appendDiceAdjust(attr, dice);
+        });
+      }
     });
   });
 

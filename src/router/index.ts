@@ -131,13 +131,19 @@ const router = createRouter({
     },
     {
       path: "/wiki/paths",
-      name: WIKI_PATHS_ROUTE,
-      component: () => import("../views/WikiPathsView.vue"),
-    },
-    {
-      path: "/wiki/paths/:path",
-      name: WIKI_PATHS_SPECIFIC_ROUTE,
-      component: () => import("../views/WikiPathsSpecificView.vue"),
+      component: () => import("../views/WikiPathsContainerView.vue"),
+      children: [
+        {
+          path: "",
+          name: WIKI_PATHS_ROUTE,
+          component: () => import("../views/WikiPathsView.vue"),
+        },
+        {
+          path: ":path",
+          name: WIKI_PATHS_SPECIFIC_ROUTE,
+          component: () => import("../views/WikiPathsSpecificView.vue"),
+        },
+      ],
     },
     {
       path: "/credits",

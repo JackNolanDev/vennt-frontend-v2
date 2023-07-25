@@ -24,6 +24,9 @@
       v-if="entityStore.canEdit"
       @edit-button="toggleEditAbility"
     ></AbilityDetailsInteractive>
+    <div v-if="false">
+      <pre><code>{{ ability }}</code></pre>
+    </div>
   </div>
 </template>
 

@@ -37,11 +37,15 @@
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import type { EntityItem } from "@/utils/backendTypes";
-import { diceParseFromString } from "@/utils/diceUtils";
+import {
+  buildSettingsForAttrList,
+  diceParseFromString,
+} from "@/utils/diceUtils";
 import {
   weaponAccuracy,
   enhancedBaseDiceString,
   enhancedDmgString,
+  relatedAttrsForWeapon,
 } from "@/utils/weaponUtils";
 import { computed } from "vue";
 import SimpleAbilityTable from "../Abilities/SimpleAbilityTable.vue";
@@ -82,7 +86,11 @@ const damageDice = computed(
     damageDiceString.value &&
     diceParseFromString(
       damageDiceString.value,
-      diceStore.defaultDiceSettings,
+      buildSettingsForAttrList(
+        diceStore.defaultDiceSettings,
+        relatedAttrsForWeapon(props.item, "dmg"),
+        entityStore.entityAttributes
+      ),
       diceReason.value
     )
 );

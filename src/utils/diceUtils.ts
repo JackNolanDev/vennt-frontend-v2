@@ -11,13 +11,13 @@ import type {
 } from "./backendTypes";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
 
-export function buildDice(
+export const buildDice = (
   count: number,
   sides: number,
   adjust: number | string = 0,
   settings: DiceSettings = {},
   comment = ""
-): DiceCommands {
+): DiceCommands => {
   let adjustStr = "";
   if (typeof adjust === "string") {
     adjustStr = adjust;
@@ -126,16 +126,16 @@ export function buildDice(
       commentFields.web,
     settings: { ...settings, adjust, count, sides },
   };
-}
+};
 
-export function defaultDice(
+export const defaultDice = (
   attrs: UpdatedEntityAttributes,
   attr: EntityAttribute,
   givenSettings: DiceSettings = {},
   diceToggles: DiceToggles = {},
   comment = "",
   skipKey = ""
-) {
+): DiceCommands => {
   const attrMap = attrs[attr];
   const adjust = attrMap ? attrMap.val : 0;
 
@@ -159,13 +159,13 @@ export function defaultDice(
     settings,
     comment
   );
-}
+};
 
-export function diceParseFromString(
+export const diceParseFromString = (
   diceStr: string,
   settings: DiceSettings = {},
   comment = ""
-) {
+): DiceCommands | undefined => {
   const match = diceStr.match(/(\d+)d(\d+)/);
   if (!match || match.length < 3) {
     return undefined;
@@ -177,12 +177,25 @@ export function diceParseFromString(
   }
   const adjust = diceStr.substring(match[0].length);
   return buildDice(count, sides, adjust, settings, comment);
-}
+};
 
-export function diceTogglesForEntity(
+export const buildSettingsForAttrList = (
+  baseSettings: DiceSettings,
+  relatedAttrs: EntityAttribute[],
+  attrs: UpdatedEntityAttributes
+): DiceSettings =>
+  relatedAttrs.reduce((settings, attr) => {
+    const attrMap = attrs[attr];
+    if (!attrMap?.dice) {
+      return settings;
+    }
+    return combineDiceSettings(settings, attrMap.dice, attrs);
+  }, baseSettings);
+
+export const diceTogglesForEntity = (
   entity: CollectedEntity,
   attrs: UpdatedEntityAttributes
-): DiceToggles {
+): DiceToggles => {
   const toggles: DiceToggles = {};
 
   const saveSettingToToggle = (key: string, check?: UsesCheck): void => {
@@ -225,7 +238,7 @@ export function diceTogglesForEntity(
     });
 
   return toggles;
-}
+};
 
 export const combineDiceSettings = (
   baseSettings: DiceSettings,

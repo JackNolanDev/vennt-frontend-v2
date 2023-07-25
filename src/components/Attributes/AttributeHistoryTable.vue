@@ -1,6 +1,6 @@
 <template>
-  <div v-if="hasHistory" class="card column border">
-    <div class="alignRow tableData tableHeader noBtn">
+  <div v-if="hasHistory" class="card column border history-table">
+    <div class="alignRow tableData tableHeader sticky noBtn">
       <div class="logPrev headerFont">
         <b v-if="showDiff">Change</b>
         <b v-else>Prev Val</b>
@@ -79,6 +79,10 @@ const hasHistory = computed(() => parsedChangelog.value.length > 0);
 </script>
 
 <style scoped>
+.history-table {
+  max-height: 480px;
+  overflow-y: auto;
+}
 .logPrev {
   width: 30%;
 }

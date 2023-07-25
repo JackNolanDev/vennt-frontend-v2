@@ -233,10 +233,10 @@ const cogAbilityUses = (
     return uses;
   }
   const variableCost = options.variableAbilityCost[name];
-  if (variableCost && typeof variableCost === "number") {
+  if (variableCost && typeof variableCost === "number" && uses.adjust.attr) {
     Object.entries(uses.adjust.attr).forEach(([attr, value]) => {
       if (typeof value === "string") {
-        uses.adjust!.attr[attr as EntityAttribute] = value.replaceAll(
+        uses.adjust!.attr![attr as EntityAttribute] = value.replaceAll(
           /\bX\b/gm,
           variableCost.toString()
         );

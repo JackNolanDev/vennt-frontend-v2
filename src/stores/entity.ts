@@ -12,6 +12,8 @@ import {
   deleteEntityApi,
   updateEntityApi,
   updateEntityTextPermissionApi,
+  fetchEntityChangelogApi,
+  filterEntityChangelogApi,
 } from "@/api/apiEntity";
 import router, {
   ENTITY_ABILITIES_ROUTE,
@@ -21,8 +23,10 @@ import router, {
 import type {
   ConsolidatedItem,
   DiceToggles,
+  EntityAttribute,
   EntityTextKey,
   FullCollectedEntity,
+  FullEntityChangelog,
   PartialEntity,
   PartialEntityAbility,
   PartialEntityFlux,
@@ -60,6 +64,10 @@ type EntityState = {
   entity: undefined | FullCollectedEntity;
   levelsToProcess: number;
   apisInFlight: Record<string, boolean>;
+  changelogs: Record<
+    EntityAttribute,
+    { fetched: boolean; changelog: FullEntityChangelog[] }
+  >;
 };
 
 type AddCollectedEntityOptions = {
@@ -74,6 +82,7 @@ export const useEntityStore = defineStore("entity", {
       entity: undefined,
       levelsToProcess: 0,
       apisInFlight: {},
+      changelogs: {},
     };
   },
   getters: {
@@ -117,6 +126,7 @@ export const useEntityStore = defineStore("entity", {
       this.entity = undefined;
       this.levelsToProcess = 0;
       this.apisInFlight = {};
+      this.changelogs = {};
     },
     async addCollectedEntity(
       request: UncompleteCollectedEntityWithChangelog,
@@ -157,11 +167,61 @@ export const useEntityStore = defineStore("entity", {
       }
     },
     async updateEntityAttributes(id: string, request: UpdateEntityAttributes) {
-      // TODO: may want to pre-apply the change
-      const updatedBaseEntity = await updateEntityAttributesApi(id, request);
-      if (this.entity) {
-        this.entity = { ...this.entity, entity: updatedBaseEntity };
+      if (!this.entity) {
+        return;
       }
+      // 1. Run updates optimistically
+      if (request.message) {
+        Object.keys(this.entity.entity.attributes).forEach((attr) => {
+          const row: FullEntityChangelog = {
+            id: "mock",
+            attr,
+            time: new Date().toISOString(),
+            entity_id: this.entity!.entity.id,
+            msg: request.message!,
+            prev: this.entity?.entity.attributes[attr],
+          };
+          const changelog = this.changelogs[attr];
+          if (changelog) {
+            changelog.changelog.push(row);
+          } else {
+            this.changelogs[attr] = { fetched: false, changelog: [row] };
+          }
+        });
+      }
+      this.entity.entity.attributes = {
+        ...this.entity.entity.attributes,
+        ...request.attributes,
+      };
+      // 2. Get real results & use proper values
+      const updatedBaseEntity = await updateEntityAttributesApi(id, request);
+      this.entity = { ...this.entity, entity: updatedBaseEntity };
+    },
+    async fetchChangelog(attr: EntityAttribute, force?: boolean) {
+      const key = `changelog_${attr}`;
+      if (
+        !this.entity ||
+        this.apisInFlight[key] ||
+        (!force && this.changelogs[attr]?.fetched)
+      ) {
+        return;
+      }
+      this.apisInFlight[key] = true;
+      const changelog = await fetchEntityChangelogApi(
+        this.entity.entity.id,
+        attr
+      );
+      this.changelogs[attr] = { fetched: true, changelog };
+      this.apisInFlight[key] = false;
+    },
+    clearChangelog(attrs: EntityAttribute[]) {
+      if (!this.entity) {
+        return;
+      }
+      attrs.forEach((attr) => {
+        this.changelogs[attr] = { fetched: false, changelog: [] };
+      });
+      filterEntityChangelogApi(this.entity.entity.id, { attributes: attrs });
     },
     async addAbilities(
       abilities: UncompleteEntityAbility[],

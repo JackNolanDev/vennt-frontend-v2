@@ -1,9 +1,25 @@
 <template>
   <div v-if="entity" class="ml-16">
-    <h2>Paths for {{ entity.name }}</h2>
+    <h2>
+      <RouterLink
+        :to="{ name: WIKI_PATHS_ROUTE, query: { entity: entity.id } }"
+        class="stealth"
+        >Paths</RouterLink
+      >
+      for
+      <RouterLink
+        :to="{ name: ENTITY_ABILITIES_ROUTE, params: { id: entity.id } }"
+        class="stealth"
+        >{{ entity.name }}</RouterLink
+      >
+    </h2>
     <EntitySpentXP></EntitySpentXP>
   </div>
-  <h2 v-else class="ml-16">Paths</h2>
+  <h2 v-else class="ml-16">
+    <RouterLink :to="{ name: WIKI_PATHS_ROUTE }" class="stealth"
+      >Paths</RouterLink
+    >
+  </h2>
   <WikiMenu
     v-for="path in basePaths"
     :key="`base-${path}`"
@@ -12,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
+import router, { ENTITY_ABILITIES_ROUTE, WIKI_PATHS_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { sortWikiPaths } from "@/utils/wikiUtils";

@@ -1,31 +1,22 @@
 <template>
-  <BaseLayout class="nav sidebar prefers-sidebar">
-    <template #nav><WikiNav></WikiNav></template>
-    <template #sidebar>
-      <WikiSidePanel></WikiSidePanel>
-    </template>
-    <div class="alignRow split ml-16 mr-16">
-      <h1 class="ml-16">Path Map</h1>
-      <BaseCheckBox
-        @click="state.showTree = !state.showTree"
-        :checked="!state.showTree"
-        :use-toggle="true"
-        :highlight="true"
-        >Show Graph Version</BaseCheckBox
-      >
-    </div>
-    <div class="separator"></div>
-    <WikiPathGraph
-      v-if="jsonStorage.abilities.paths.length > 0"
-      :show-tree="state.showTree"
-    ></WikiPathGraph>
-  </BaseLayout>
+  <div class="alignRow split ml-16 mr-16">
+    <h1 class="ml-16">Path Map</h1>
+    <BaseCheckBox
+      @click="state.showTree = !state.showTree"
+      :checked="!state.showTree"
+      :use-toggle="true"
+      :highlight="true"
+      >Show Graph Version</BaseCheckBox
+    >
+  </div>
+  <div class="separator"></div>
+  <WikiPathGraph
+    v-if="jsonStorage.abilities.paths.length > 0"
+    :show-tree="state.showTree"
+  ></WikiPathGraph>
 </template>
 
 <script setup lang="ts">
-import BaseLayout from "@/components/Base/BaseLayout.vue";
-import WikiNav from "@/components/Wiki/WikiNav.vue";
-import WikiSidePanel from "@/components/Wiki/WikiSidePanel.vue";
 import router from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
@@ -37,7 +28,6 @@ import BaseCheckBox from "@/components/Base/BaseCheckBox.vue";
 const state = reactive({ showTree: true });
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
-jsonStorage.fetchAbilities();
 
 onBeforeMount(() => {
   const id = idValidator.safeParse(router.currentRoute.value.query.entity);

@@ -85,17 +85,21 @@ export const baseDiceString = (
   return first ? first : "";
 };
 
-const addIfExists = (str: string | undefined): string => (str ? `+${str}` : "");
+const addIfExists = (str: string | number | undefined): string =>
+  str ? `+${str}` : "";
 
 export const enhancedBaseDiceString = (
   weapon: EntityItem,
   attrs: UpdatedEntityAttributes
 ): string => {
-  const diceString = `${baseDiceString(weapon, attrs)}${addIfExists(
+  const baseString = baseDiceString(weapon, attrs);
+  const categoryDmgString = weaponCategoryAdjust(weapon, attrs, "dmg")?.result;
+  const baseDmg = attrs.dmg?.val;
+
+  const diceString = `${baseString}${addIfExists(
     weapon.custom_fields?.attr
-  )}${addIfExists(
-    weaponCategoryAdjust(weapon, attrs, "dmg")?.result.toString()
-  )}${addIfExists(attrs.dmg?.val.toString())}`;
+  )}${addIfExists(categoryDmgString)}${addIfExists(baseDmg)}`;
+
   return replaceVariablesInEquation(diceString, attrs).cleanedEquation;
 };
 
@@ -111,4 +115,15 @@ export const enhancedDmgString = (
     baseDiceString(weapon, attrs),
     enhancedBaseDiceString
   );
+};
+
+export const relatedAttrsForWeapon = (
+  weapon: EntityItem,
+  type: "acc" | "dmg"
+): EntityAttribute[] => {
+  const attrList: EntityAttribute[] = ["dmg"];
+  if (weapon.custom_fields?.category) {
+    attrList.push(`${weapon.custom_fields.category.toLowerCase()}_${type}`);
+  }
+  return attrList;
 };
