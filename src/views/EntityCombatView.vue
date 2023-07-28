@@ -1,5 +1,11 @@
 <template>
   <h1>Combat</h1>
+  <BaseButton
+    :to="{ params: { detail: 'damage' } }"
+    icon="calculate"
+    class="wide mb-16"
+    >Damage Calculator</BaseButton
+  >
   <AbilityTable
     :abilities="useableAbilities"
     :attrs="entityStore.entityAttributes"
@@ -15,6 +21,7 @@
 
 <script setup lang="ts">
 import AbilityTable from "@/components/Abilities/AbilityTable.vue";
+import BaseButton from "@/components/Base/BaseButton.vue";
 import ItemTable from "@/components/Items/ItemTable.vue";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";

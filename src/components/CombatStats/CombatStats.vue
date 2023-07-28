@@ -346,6 +346,7 @@ const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "reach",
   "radius",
   "recovery_shock",
+  "alerts",
 ];
 
 const customAttrs = computed(() =>
@@ -363,7 +364,12 @@ const singleRowAttrs = computed(() =>
   )
 );
 
-const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp", "trii"]);
+const ADJUST_SINGLE: Set<EntityAttribute> = new Set([
+  "xp",
+  "sp",
+  "trii",
+  "alerts",
+]);
 const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init", "casting"]);
 
 const singleSecondaryMap = computed(() => {
@@ -388,6 +394,10 @@ const fractionMap = computed(
     bluespace: {
       top: totalDC(props.entity.items),
       bottom: attrDisplayVal("bluespace"),
+    },
+    alerts: {
+      top: attrDisplayVal("alerts"),
+      bottom: attrDisplayVal("max_alerts"),
     },
     trii: {
       top: attrDisplayVal("trii"),

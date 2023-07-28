@@ -37,6 +37,8 @@ const attrMaxMap: { [attr in EntityAttribute]?: EntityAttribute } = {
   mp: "max_mp",
   vim: "max_vim",
   hero: "max_hero",
+  trii: "max_trii",
+  alerts: "max_alerts",
 };
 
 const attrBaseMap: { [attr in EntityAttribute]?: EntityAttribute } = {
@@ -44,6 +46,8 @@ const attrBaseMap: { [attr in EntityAttribute]?: EntityAttribute } = {
   max_mp: "mp",
   max_vim: "vim",
   max_hero: "hero",
+  max_trii: "trii",
+  max_alerts: "alerts",
 };
 
 export const getMaxAttr = (
@@ -419,7 +423,7 @@ export const attrsRegexStr = (attrs: UpdatedEntityAttributes): string => {
   const attributes = Array.from(
     new Set([...validAttributes, ...Object.keys(attrs)])
   );
-  return `\\b${attributes.join("|")}\\b`;
+  return attributes.map((attr) => `\\b${attr}\\b`).join("|");
 };
 
 const attrsRegex = (attrs: UpdatedEntityAttributes): RegExp =>
@@ -486,6 +490,7 @@ export const solveEquation = (
       );
     }
   }
+  // console.log(`Couldn't solve equation: ${cleanedEquation}`);
   return undefined;
 };
 

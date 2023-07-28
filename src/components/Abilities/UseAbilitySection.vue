@@ -52,7 +52,8 @@ const castingDice = computed(() => {
 });
 const showUseButton = computed(
   () =>
-    props.ability.custom_fields?.cost &&
-    !props.ability.custom_fields.cost.passive
+    (props.ability.custom_fields?.cost &&
+      !props.ability.custom_fields.cost.passive) ||
+    props.ability.uses?.heal
 );
 </script>

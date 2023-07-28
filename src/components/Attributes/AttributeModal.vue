@@ -36,6 +36,12 @@
           >)</span
         >
       </div>
+      <BaseButton
+        v-if="isRemovableCustomAttr"
+        @click="removeCustomAttr"
+        icon="delete_outline"
+        >Delete Custom Attribute</BaseButton
+      >
       <AdjustAttributeLink
         v-if="maxAttr"
         :attr="maxAttr"
@@ -103,7 +109,7 @@ import {
   getBaseAttr,
   getMaxAttr,
 } from "@/utils/attributeUtils";
-import type { EntityAttribute } from "@/utils/backendTypes";
+import { validAttributes, type EntityAttribute } from "@/utils/backendTypes";
 import { computed, onBeforeMount } from "vue";
 import BaseFraction from "../Base/BaseFraction.vue";
 import BaseModal from "../Base/BaseModal.vue";
@@ -141,6 +147,12 @@ const showResetButton = computed(
 const showClearHistoryButton = computed(
   () => changelog.value && changelog.value.length > 0
 );
+const isRemovableCustomAttr = computed(
+  () =>
+    !validAttributes.includes(props.attr) &&
+    !showClearHistoryButton.value &&
+    typeof entityStore.entity?.entity.attributes[props.attr] === "number"
+);
 
 const closeModal = () => {
   const query = { ...router.currentRoute.value.query };
@@ -166,6 +178,15 @@ const resetButton = () => {
 };
 const clearHistoryButton = () => {
   entityStore.clearChangelog([props.attr]);
+};
+const removeCustomAttr = async () => {
+  if (!entityStore.entity) {
+    return;
+  }
+  const attributes = entityStore.entity.entity.attributes;
+  delete attributes[props.attr];
+  await entityStore.updateEntity({ attributes });
+  closeModal();
 };
 
 const refetchChangelog = async (attr?: EntityAttribute) => {

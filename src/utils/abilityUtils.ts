@@ -1,12 +1,14 @@
 import isEqual from "lodash.isequal";
 import {
   abilityFieldsNameValidator,
+  validAttributes,
   type AbilityCostMap,
   type AbilityCostMapNumber,
   type CharacterGift,
   type CollectedEntity,
   type EntityAbility,
   type EntityAbilityFields,
+  type EntityAttribute,
   type FullEntityAbility,
   type PathsAndAbilities,
   type UpdatedEntityAttributes,
@@ -106,12 +108,87 @@ export const actualXPCost = (
 };
 
 export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;
+export const abilityCostAttrsIgnore = ["actions", "reactions"];
+
+export const abilityUseAdjustments = (
+  ability: EntityAbility,
+  attrs: UpdatedEntityAttributes,
+  additionalAdjustments?: Record<EntityAttribute, number>
+): Record<EntityAttribute, number> => {
+  const adjustMap: Record<EntityAttribute, number> = {
+    ...additionalAdjustments,
+  };
+
+  const insertVal = (attr: EntityAttribute, val: number | string | boolean) => {
+    if (
+      abilityCostAttrsIgnore.includes(attr) ||
+      // For now, only allow predefined attributes here, this can maybe change in the future
+      !validAttributes.includes(attr)
+    ) {
+      return;
+    }
+
+    if (typeof val === "number") {
+      insertNumberIntoMap(attr, val);
+    } else if (typeof val === "string") {
+      const solved = solveEquation(val, attrs);
+      if (solved) {
+        insertNumberIntoMap(attr, solved);
+      }
+    }
+  };
+
+  const insertNumberIntoMap = (attr: EntityAttribute, val: number) => {
+    if (adjustMap[attr]) {
+      adjustMap[attr] = adjustMap[attr] + val;
+    } else {
+      adjustMap[attr] = val;
+    }
+  };
+
+  if (ability.custom_fields?.cost) {
+    Object.entries(ability.custom_fields.cost).forEach(([attr, val]) => {
+      insertVal(attr, val);
+    });
+  }
+  if (ability.uses?.heal?.attr) {
+    Object.entries(ability.uses.heal.attr).forEach(([attr, val]) => {
+      insertVal(attr, val);
+    });
+  }
+
+  return adjustMap;
+};
+
+export const canAffordAdjustments = (
+  adjustments: Record<EntityAttribute, number>,
+  attrs: UpdatedEntityAttributes
+): boolean => {
+  return Object.entries(adjustments).every(([attr, adjust]) => {
+    const attrMap = attrs[attr];
+    if (!attrMap) {
+      return adjust > 0;
+    }
+    return attrMap.val + adjust >= 0;
+  });
+};
+
+export const abilityUsable = (ability: EntityAbility): boolean => {
+  return !(
+    ability.active ||
+    ability.custom_fields?.cost?.passive ||
+    ability.custom_fields?.activation?.toLowerCase().includes("passive")
+  );
+};
 
 export const canUseAbility = (
   ability: EntityAbility,
   attrs: UpdatedEntityAttributes,
-  additionalCost?: Partial<AbilityCostMapNumber>
+  additionalCost?: Record<EntityAttribute, number>
 ): boolean => {
+  if (!abilityUsable(ability)) {
+    return false;
+  }
   const costMap = { ...ability.custom_fields?.cost };
   if (additionalCost) {
     Object.entries(additionalCost).forEach(([attrIn, cost]) => {
@@ -123,13 +200,6 @@ export const canUseAbility = (
         costMap[attr] = cost;
       }
     });
-  }
-  if (
-    ability.active ||
-    costMap.passive ||
-    ability.custom_fields?.activation?.toLowerCase().includes("passive")
-  ) {
-    return false;
   }
   return abilityUsedStats.every((attr) => {
     const statCurrent = attrs[attr];
@@ -295,4 +365,25 @@ export const generateAbilityActivation = (cost: AbilityCostMap): string => {
     activation = activation ? `${activation}, ${costExtension}` : costExtension;
   });
   return activation;
+};
+
+export const abilityExtendEntityAttributes = (
+  ability: EntityAbility,
+  attrs: UpdatedEntityAttributes
+): UpdatedEntityAttributes => {
+  const keyStorage = ability.custom_fields?.keys;
+  if (!keyStorage) {
+    return attrs;
+  }
+
+  return Object.entries(keyStorage).reduce<UpdatedEntityAttributes>(
+    (acc, [key, val]) => {
+      const parsed = solveEquation(val, acc);
+      if (parsed) {
+        acc[key] = { val: parsed };
+      }
+      return acc;
+    },
+    attrs
+  );
 };

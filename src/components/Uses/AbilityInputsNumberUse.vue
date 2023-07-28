@@ -1,7 +1,14 @@
 <template>
   <div class="mt-8">
     <label :for="id" class="labelText">{{ input.label ?? input.key }}</label>
-    <input type="text" v-model="state.input" :id="id" class="input wide mt-4" />
+    <input
+      type="number"
+      v-model="state.input"
+      :id="id"
+      :min="input.min"
+      :max="input.max"
+      class="input wide mt-4"
+    />
     <BaseButton
       @click="saveButton"
       :disabled="saveButtonDisabled"
@@ -13,13 +20,13 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility, UseTextInput } from "@/utils/backendTypes";
+import type { FullEntityAbility, UseNumberInput } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 
 const props = defineProps<{
   ability: FullEntityAbility;
-  input: UseTextInput;
+  input: UseNumberInput;
 }>();
 const entityStore = useEntityStore();
 
@@ -29,7 +36,8 @@ const defaultState = computed(() => {
   if (keys) {
     return keys[props.input.key];
   }
-  return "";
+  const def = props.input.default;
+  return typeof def === "number" ? def.toString() : def ?? "";
 });
 
 const state = reactive({ input: defaultState.value });
@@ -41,7 +49,7 @@ const saveButton = () => {
   if (!custom_fields.keys) {
     custom_fields.keys = {};
   }
-  custom_fields.keys[props.input.key] = state.input;
+  custom_fields.keys[props.input.key] = state.input.toString();
   entityStore.updateAbility(props.ability.id, { custom_fields });
 };
 </script>
