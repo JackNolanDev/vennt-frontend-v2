@@ -5,6 +5,7 @@ import {
   validAttributes,
   type CollectedEntity,
   type DiceSettings,
+  type EntityAbility,
   type EntityAttribute,
   type EntityItem,
   type FullCollectedEntity,
@@ -280,11 +281,15 @@ export const entityAttributesMap = (
     }
   };
 
-  const appendAdjustItem = (attr: EntityAttribute, item: EntityItem) => {
+  const ensureDefaultAttrVal = (attr: EntityAttribute) => {
     const attrCheck = attrs[attr];
     if (attrCheck === undefined) {
       attrs[attr] = { val: 0 };
     }
+  };
+
+  const appendAdjustItem = (attr: EntityAttribute, item: EntityItem) => {
+    ensureDefaultAttrVal(attr);
     const attrMap = attrs[attr]!;
     if (!attrMap.items) {
       attrMap.items = [item];
@@ -293,11 +298,21 @@ export const entityAttributesMap = (
     }
   };
 
-  const appendDiceAdjust = (attr: EntityAttribute, dice: DiceSettings) => {
-    const attrCheck = attrs[attr];
-    if (attrCheck === undefined) {
-      attrs[attr] = { val: 0 };
+  const appendAdjustAbility = (
+    attr: EntityAttribute,
+    ability: EntityAbility
+  ) => {
+    ensureDefaultAttrVal(attr);
+    const attrMap = attrs[attr]!;
+    if (!attrMap.abilities) {
+      attrMap.abilities = [ability];
+    } else {
+      attrMap.abilities.push(ability);
     }
+  };
+
+  const appendDiceAdjust = (attr: EntityAttribute, dice: DiceSettings) => {
+    ensureDefaultAttrVal(attr);
     const attrMap = attrs[attr]!;
     if (!attrMap.dice) {
       attrMap.dice = dice;
@@ -351,22 +366,25 @@ export const entityAttributesMap = (
         .map((criteria) => criteria.adjust) ?? [];
     adjusts.push(ability.uses?.adjust);
     adjusts.forEach((adjust) => {
-      if (adjust?.attr) {
-        Object.entries(adjust.attr).forEach(([attr, val]) => {
-          if (typeof val === "string") {
-            equations.push([attr, val]);
-          } else {
-            const reason = `${ability.name} ${
-              val > 0 ? "adds" : "subtracts"
-            } ${val} to ${attrShortName(attr)}`;
-            alterAttrs(attr, val, reason);
-          }
-        });
-      }
-      if (adjust?.dice) {
-        Object.entries(adjust.dice).forEach(([attr, dice]) => {
-          appendDiceAdjust(attr, dice);
-        });
+      if (adjust && (adjust.time === "permanent" || ability.active)) {
+        if (adjust?.attr) {
+          Object.entries(adjust.attr).forEach(([attr, val]) => {
+            if (typeof val === "string") {
+              equations.push([attr, val]);
+            } else {
+              const reason = `${ability.name} ${
+                val > 0 ? "adds" : "subtracts"
+              } ${val} to ${attrShortName(attr)}`;
+              alterAttrs(attr, val, reason);
+            }
+            appendAdjustAbility(attr, ability);
+          });
+        }
+        if (adjust?.dice) {
+          Object.entries(adjust.dice).forEach(([attr, dice]) => {
+            appendDiceAdjust(attr, dice);
+          });
+        }
       }
     });
   });
@@ -396,7 +414,7 @@ export const entityAttributesMap = (
     }
   });
 
-  // console.log(attrs);
+  console.log(attrs);
 
   return attrs;
 };

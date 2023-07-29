@@ -31,6 +31,20 @@
         class="input"
       />
     </div>
+    <div class="alignRow mt-4">
+      <label :for="Fields.TYPE" class="nowrap label-text label-min">
+        Type:
+      </label>
+      <select v-model="state.type" :id="Fields.TYPE" class="input">
+        <option
+          v-for="choice in Object.values(DamageType)"
+          :key="choice"
+          :value="choice"
+        >
+          {{ choice.substring(0, 1).toUpperCase() }}{{ choice.substring(1) }}
+        </option>
+      </select>
+    </div>
     <div class="separator mt-8 mb-8"></div>
     <BaseCheckBox
       v-if="hasDodge"
@@ -86,9 +100,30 @@ import { useEntityStore } from "@/stores/entity";
 import { computed, reactive } from "vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 
+enum Fields {
+  DAMAGE = "damage-calculator-damage",
+  ACCURACY = "damage-calculator-accuracy",
+  TYPE = "damage-calculator-type",
+  ALERTS = "damage-calculator-alerts",
+}
+
+enum DamageType {
+  PHYSICAL = "physical",
+  PIERCING = "piercing",
+  SLASHING = "slashing",
+  BLUDGEONING = "bludgeoning",
+  BURN = "burn",
+  BLEED = "bleed",
+  STUN = "stun",
+  PARALYSIS = "paralysis",
+  ATTRIBUTE = "attribute",
+  FALL = "fall",
+}
+
 const state = reactive<{
   damage: string | number;
   accuracy: string | number;
+  type: DamageType;
   alerts: string | number;
   useDodge: boolean;
   useBlock: boolean;
@@ -96,18 +131,13 @@ const state = reactive<{
 }>({
   damage: "",
   accuracy: "",
+  type: DamageType.PHYSICAL,
   alerts: "",
   useDodge: false,
   useBlock: false,
   holyShield: false,
 });
 const entityStore = useEntityStore();
-
-enum Fields {
-  DAMAGE = "damage-calculator-damage",
-  ACCURACY = "damage-calculator-accuracy",
-  ALERTS = "damage-calculator-alerts",
-}
 
 const alerts = computed(() => entityStore.entityAttributes.alerts?.val);
 const hasDodge = computed(() => entityStore.abilityNames.includes("Dodge"));
@@ -120,6 +150,12 @@ const canDodge = computed(
         : parseInt(state.accuracy))
 );
 const hasBlock = computed(() => entityStore.abilityNames.includes("Block"));
+const hasShieldBlock = computed(() =>
+  entityStore.abilityNames.includes("Shield Block")
+);
+const hasImprovedShieldBlock = computed(() =>
+  entityStore.abilityNames.includes("Improved Shield Block")
+);
 
 const calculatorResult = computed(() => {
   let damage =
@@ -146,9 +182,12 @@ const calculatorResult = computed(() => {
     };
   }
 
+  let isGlancingBlow = false;
+
   // 1. glancing blow
   if (vim >= acc) {
     damage /= 2;
+    isGlancingBlow = true;
     reasons.push("glancing blow");
   }
 
@@ -169,10 +208,28 @@ const calculatorResult = computed(() => {
     entityStore.entityAttributes.armor &&
     entityStore.entityAttributes.armor.val > 0
   ) {
-    damage -= entityStore.entityAttributes.armor.val;
-    reasons.push(
-      `armor reduced damage by ${entityStore.entityAttributes.armor.val}`
-    );
+    let armor = entityStore.entityAttributes.armor.val;
+    let additionalReason = "";
+
+    // Support for Shields
+    if (
+      state.useBlock &&
+      isGlancingBlow &&
+      hasShieldBlock.value &&
+      entityStore.entityAttributes.shield &&
+      entityStore.entityAttributes.shield.val > 0
+    ) {
+      armor += entityStore.entityAttributes.shield.val;
+      additionalReason += ` including ${entityStore.entityAttributes.shield.val} from Shield Blocking`;
+
+      if (hasImprovedShieldBlock.value && entityStore.entityAttributes.str) {
+        armor += entityStore.entityAttributes.str.val;
+        additionalReason += ` and ${entityStore.entityAttributes.str.val} from Improved Shield Blocking`;
+      }
+    }
+
+    damage -= armor;
+    reasons.push(`armor reduced damage by ${armor}${additionalReason}`);
   }
 
   // 4. Modifiers that apply to "incoming damage after Armor reduction"
@@ -206,7 +263,7 @@ const calculatorResult = computed(() => {
   const adjustAttrs = {
     ...(finalDamage > 0 && { hp: -finalDamage }),
     ...(vimCost > 0 && { vim: -vimCost }),
-    ...(manualAlerts > 0 && { alert: -manualAlerts }),
+    ...(manualAlerts > 0 && { alerts: -manualAlerts }),
   };
   return { adjustAttrs, finalDamage, reasons };
 });
