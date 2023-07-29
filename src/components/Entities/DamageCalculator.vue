@@ -45,6 +45,16 @@
         </option>
       </select>
     </div>
+    <div v-if="showDamageAttribute" class="alignRow mt-4">
+      <label :for="Fields.ATTRIBUTE" class="nowrap label-text label-min">
+        Attribute:
+      </label>
+      <select v-model="state.attribute" :id="Fields.ATTRIBUTE" class="input">
+        <option v-for="attr in ATTRIBUTES" :key="attr" :value="attr">
+          {{ attrFullName(attr) }}
+        </option>
+      </select>
+    </div>
     <div class="separator mt-8 mb-8"></div>
     <BaseCheckBox
       v-if="hasDodge"
@@ -97,6 +107,8 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
+import { attrFullName } from "@/utils/attributeUtils";
+import { ATTRIBUTES, type EntityAttribute } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 
@@ -104,14 +116,18 @@ enum Fields {
   DAMAGE = "damage-calculator-damage",
   ACCURACY = "damage-calculator-accuracy",
   TYPE = "damage-calculator-type",
+  ATTRIBUTE = "damage-calculator-attribute",
   ALERTS = "damage-calculator-alerts",
 }
 
 enum DamageType {
   PHYSICAL = "physical",
+  MAGICAL = "magical",
+  GALVANIC = "galvanic",
   PIERCING = "piercing",
   SLASHING = "slashing",
   BLUDGEONING = "bludgeoning",
+  VIM = "vim",
   BURN = "burn",
   BLEED = "bleed",
   STUN = "stun",
@@ -124,6 +140,7 @@ const state = reactive<{
   damage: string | number;
   accuracy: string | number;
   type: DamageType;
+  attribute: EntityAttribute;
   alerts: string | number;
   useDodge: boolean;
   useBlock: boolean;
@@ -132,6 +149,7 @@ const state = reactive<{
   damage: "",
   accuracy: "",
   type: DamageType.PHYSICAL,
+  attribute: "per",
   alerts: "",
   useDodge: false,
   useBlock: false,
@@ -139,6 +157,7 @@ const state = reactive<{
 });
 const entityStore = useEntityStore();
 
+const showDamageAttribute = computed(() => state.type === DamageType.ATTRIBUTE);
 const alerts = computed(() => entityStore.entityAttributes.alerts?.val);
 const hasDodge = computed(() => entityStore.abilityNames.includes("Dodge"));
 const canDodge = computed(
@@ -157,22 +176,48 @@ const hasImprovedShieldBlock = computed(() =>
   entityStore.abilityNames.includes("Improved Shield Block")
 );
 
+const numberFieldVal = (val: number | string, allowNaN?: boolean): number => {
+  const parsedVal = typeof val === "number" ? val : parseInt(val);
+  if (isNaN(parsedVal) && !allowNaN) {
+    return 0;
+  }
+  return parsedVal;
+};
+
 const calculatorResult = computed(() => {
-  let damage =
-    typeof state.damage === "number" ? state.damage : parseInt(state.damage);
+  let damage = numberFieldVal(state.damage);
   let vimCost = 0;
   const reasons: string[] = [];
-  const acc =
-    typeof state.accuracy === "number"
-      ? state.accuracy
-      : parseInt(state.accuracy);
-  const manualAlerts =
-    typeof state.alerts === "number" ? state.alerts : parseInt(state.alerts);
+  const acc = numberFieldVal(state.accuracy, true);
+  const manualAlerts = numberFieldVal(state.alerts);
   let alerts = isNaN(manualAlerts) ? 0 : manualAlerts;
 
   const vim = entityStore.entityAttributes.vim?.val ?? 0;
 
-  // 0. exit early if evading attack
+  // 0. Handle damage resistance
+  const resistance_attr = `${state.type}_damage_resistance`;
+  const resistanceVal = entityStore.entityAttributes[resistance_attr]?.val;
+  if (resistanceVal) {
+    if (resistanceVal <= -2) {
+      reasons.push(`Damage doubled due to damage type`);
+      damage = damage * 2;
+    } else if (resistanceVal <= -1) {
+      reasons.push(
+        `Damage increased by ${damage / 2} due to ${state.type} vulnerability`
+      );
+      damage = damage + damage / 2;
+    } else if (resistanceVal <= 1) {
+      reasons.push(
+        `Damage decreased by ${damage / 2} due to ${state.type} resistance`
+      );
+      damage = damage / 2;
+    } else {
+      reasons.push(`Damage negated due to ${state.type} invulnerability`);
+      damage = 0;
+    }
+  }
+
+  // 0.5 exit early if evading attack
   if (hasDodge.value && canDodge.value && state.useDodge) {
     reasons.push("evaded attack using Dodge");
     return {
@@ -198,7 +243,7 @@ const calculatorResult = computed(() => {
     reasons.push(`gained 1 alert from Holy Shield`);
   }
 
-  if (alerts > 0) {
+  if (alerts > 0 && damage > 0) {
     damage = damage >> alerts;
     reasons.push(`used ${alerts} alerts`);
   }
@@ -206,7 +251,16 @@ const calculatorResult = computed(() => {
   // 3. Armor
   if (
     entityStore.entityAttributes.armor &&
-    entityStore.entityAttributes.armor.val > 0
+    entityStore.entityAttributes.armor.val > 0 &&
+    damage > 0 &&
+    ![
+      DamageType.ATTRIBUTE,
+      DamageType.BLEED,
+      DamageType.BURN,
+      DamageType.FALL,
+      DamageType.PARALYSIS,
+      DamageType.STUN,
+    ].includes(state.type)
   ) {
     let armor = entityStore.entityAttributes.armor.val;
     let additionalReason = "";
@@ -228,6 +282,7 @@ const calculatorResult = computed(() => {
       }
     }
 
+    armor = Math.min(armor, damage);
     damage -= armor;
     reasons.push(`armor reduced damage by ${armor}${additionalReason}`);
   }
@@ -259,13 +314,22 @@ const calculatorResult = computed(() => {
     }
   }
 
-  const finalDamage = isNaN(damage) ? 0 : Math.max(Math.floor(damage), 0);
-  const adjustAttrs = {
-    ...(finalDamage > 0 && { hp: -finalDamage }),
+  // Organize damage
+  damage = Math.max(Math.floor(damage), 0);
+
+  switch (state.type) {
+    case DamageType.VIM: {
+      vimCost += damage;
+      damage = 0;
+    }
+  }
+
+  let adjustAttrs: Record<EntityAttribute, number> = {
+    ...(damage > 0 && { hp: -damage }),
     ...(vimCost > 0 && { vim: -vimCost }),
     ...(manualAlerts > 0 && { alerts: -manualAlerts }),
   };
-  return { adjustAttrs, finalDamage, reasons };
+  return { adjustAttrs, hpDamage: damage, reasons };
 });
 
 const jumpToNextField = (current: Fields) => {
@@ -279,7 +343,9 @@ const getNextField = (current: Fields): string | false => {
   switch (current) {
     case Fields.DAMAGE:
       return Fields.ACCURACY;
-    case Fields.ACCURACY: {
+    case Fields.ACCURACY:
+      return Fields.TYPE;
+    case Fields.TYPE: {
       if (alerts.value) {
         return Fields.ALERTS;
       }

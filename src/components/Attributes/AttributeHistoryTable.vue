@@ -55,6 +55,7 @@ const diffAttrs = new Set<EntityAttribute>([
   "hero",
   "xp",
   "sp",
+  "alerts",
 ]);
 const showDiff = computed(() => diffAttrs.has(props.attr));
 const parsedChangelog = computed(() => {

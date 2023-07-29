@@ -414,7 +414,7 @@ export const entityAttributesMap = (
     }
   });
 
-  console.log(attrs);
+  // console.log(attrs);
 
   return attrs;
 };

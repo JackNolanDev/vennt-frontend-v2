@@ -7,7 +7,7 @@
     :highlight="true"
     @click="optionToggled(toggle)"
     class="wide"
-    >Use {{ toggle.name }}</BaseCheckBox
+    >{{ toggle.label ?? `Use ${toggle.name}` }}</BaseCheckBox
   >
 </template>
 

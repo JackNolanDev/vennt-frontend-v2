@@ -172,7 +172,7 @@ export const useEntityStore = defineStore("entity", {
       }
       // 1. Run updates optimistically
       if (request.message) {
-        Object.keys(this.entity.entity.attributes).forEach((attr) => {
+        Object.keys(request.attributes).forEach((attr) => {
           const row: FullEntityChangelog = {
             id: "mock",
             attr,

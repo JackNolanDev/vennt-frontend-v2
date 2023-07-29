@@ -208,6 +208,7 @@ export const diceTogglesForEntity = (
     const toggle: DiceToggle = {
       setting,
       attr: check.attr,
+      label: check.label,
     };
     toggles[key] = toggle;
   };

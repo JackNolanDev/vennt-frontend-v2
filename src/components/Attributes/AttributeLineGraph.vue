@@ -31,7 +31,7 @@ const show = computed(() => {
   if (props.alwaysShow) {
     return true;
   }
-  return ["hp", "vim", "mp", "hero", "xp", "sp"]
+  return ["hp", "vim", "mp", "hero", "xp", "sp", "alerts"]
     .concat(ATTRIBUTES)
     .includes(props.attr);
 });
