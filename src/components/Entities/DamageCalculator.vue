@@ -413,19 +413,19 @@ const calculatorResult = computed(() => {
         break;
       }
       case DamageType.BLEED: {
-        bleeding = -damage;
+        bleeding = damage;
         break;
       }
       case DamageType.BURN: {
-        burning = -damage;
+        burning = damage;
         break;
       }
       case DamageType.PARALYSIS: {
-        paralysis = -damage;
+        paralysis = damage;
         break;
       }
       case DamageType.STUN: {
-        stun = -damage;
+        stun = damage;
         break;
       }
     }
@@ -435,10 +435,10 @@ const calculatorResult = computed(() => {
     ...(hpDamage > 0 && { hp: -hpDamage }),
     ...(vimCost > 0 && { vim: -vimCost }),
     ...(manualAlerts > 0 && { alerts: -manualAlerts }),
-    ...(bleeding !== 0 && { bleeding }),
-    ...(burning !== 0 && { burning }),
-    ...(paralysis !== 0 && { paralysis }),
-    ...(stun !== 0 && { stun }),
+    ...(bleeding > 0 && { bleeding }),
+    ...(burning > 0 && { burning }),
+    ...(paralysis > 0 && { paralysis }),
+    ...(stun > 0 && { stun }),
   };
 
   if (state.type === DamageType.ATTRIBUTE && damage > 0) {

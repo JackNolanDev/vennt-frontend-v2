@@ -32,6 +32,20 @@ export const MIN_ZEROS = new Set([
   "armor",
   "speed",
   "alerts",
+  "max_alerts",
+  "burning",
+  "bleeding",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
 ]);
 
 const attrMaxMap: { [attr in EntityAttribute]?: EntityAttribute } = {
@@ -174,7 +188,8 @@ export const generateDefaultAdjustMsg = (
 export const adjustAttrsObject = (
   entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
-  enforceMaximums = false
+  enforceMaximums = false,
+  propagateChanges = true
 ): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
   const defaultVal = (
@@ -197,13 +212,28 @@ export const adjustAttrsObject = (
   // 1. get resulting effects
   Object.entries(adjustAttrs).forEach(([attrIn, adjustment]) => {
     const attr = attrIn as EntityAttribute;
-    const newVal = currentVal(attr) + adjustment;
+    const attrVal = currentVal(attr);
+    const newVal = attrVal + adjustment;
     attrs[attr] = newVal;
+
+    // Special case logic
+    if (propagateChanges) {
+      const bleedingVal = currentVal("bleeding");
+      if (attr === "hp" && adjustment > 0 && bleedingVal > 0) {
+        const bleedingDiff = bleedingVal - adjustment;
+        if (bleedingDiff >= 0) {
+          attrs.bleeding = bleedingDiff;
+          attrs.hp = attrVal;
+        } else {
+          attrs.bleeding = 0;
+          attrs.hp = newVal - bleedingVal;
+        }
+      }
+    }
   });
 
   // 2. enforce zero minimums
-  Object.entries(attrs).forEach(([attrIn, val]) => {
-    const attr = attrIn as EntityAttribute;
+  Object.entries(attrs).forEach(([attr, val]) => {
     if (MIN_ZEROS.has(attr) && val < 0) {
       attrs[attr] = 0;
     }
@@ -211,8 +241,7 @@ export const adjustAttrsObject = (
 
   // 3. enforce maximums
   if (enforceMaximums) {
-    Object.entries(attrs).forEach(([attrIn, val]) => {
-      const attr = attrIn as EntityAttribute;
+    Object.entries(attrs).forEach(([attr, val]) => {
       const maxAttr = getMaxAttr(attr);
       if (!maxAttr) {
         return;

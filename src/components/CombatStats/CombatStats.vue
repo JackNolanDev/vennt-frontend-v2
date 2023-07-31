@@ -155,7 +155,7 @@
     </div>
     <!-- SINGLE LINE STATS -->
     <div v-for="attr in singleRowAttrs" v-bind:key="attr">
-      <div v-if="attr in attrs">
+      <div v-if="attr in attrs && !hideZeroAttr(attr)">
         <button
           v-on:click="selectAttr(attr)"
           class="btn basicBtn attrButton noSelect"
@@ -347,7 +347,37 @@ const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "radius",
   "recovery_shock",
   "alerts",
+  "burning",
+  "bleeding",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
 ];
+
+const HIDE_ZERO_ATTRIBUTES = new Set([
+  "recovery_shock",
+  "burning",
+  "bleeding",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
+]);
 
 const customAttrs = computed(() =>
   Object.keys(attrs.value).filter((attr) => !validAttributes.includes(attr))
@@ -364,11 +394,25 @@ const singleRowAttrs = computed(() =>
   )
 );
 
+const hideZeroAttr = (attr: EntityAttribute): boolean =>
+  attrs.value[attr]?.val === 0 && HIDE_ZERO_ATTRIBUTES.has(attr);
+
 const ADJUST_SINGLE: Set<EntityAttribute> = new Set([
   "xp",
   "sp",
   "trii",
   "alerts",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
 ]);
 const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init", "casting"]);
 

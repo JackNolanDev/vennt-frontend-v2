@@ -133,6 +133,15 @@ const relatedAttrs: Partial<Record<EntityAttribute, EntityAttribute>> = {
   armor: "burden",
   burden: "armor",
   shield: "burden",
+  agi_dmg: "agi",
+  cha_dmg: "cha",
+  dex_dmg: "dex",
+  int_dmg: "int",
+  per_dmg: "per",
+  spi_dmg: "spi",
+  str_dmg: "str",
+  tek_dmg: "tek",
+  wis_dmg: "wis",
 };
 
 const relatedAttr = computed(() => relatedAttrs[props.attr]);
