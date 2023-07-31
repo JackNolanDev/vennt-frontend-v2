@@ -14,4 +14,5 @@ export const DEFAULT_CHARACTER_EQUATIONS: Array<[EntityAttribute, string]> = [
   ["init", "init + agi + dex"],
   ["speed", "speed + 3 + agi - burden"],
   ["max_alerts", "max_alerts + agi + per"],
+  ["agi", "agi - agi_dmg"],
 ];

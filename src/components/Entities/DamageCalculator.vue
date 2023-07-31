@@ -7,6 +7,7 @@
       </label>
       <input
         type="number"
+        inputmode="numeric"
         @keyup.enter="jumpToNextField(Fields.DAMAGE)"
         min="0"
         v-model.number="state.damage"
@@ -22,6 +23,7 @@
       </label>
       <input
         type="number"
+        inputmode="numeric"
         @keyup.enter="jumpToNextField(Fields.ACCURACY)"
         min="0"
         v-model.number="state.accuracy"
@@ -55,6 +57,22 @@
         </option>
       </select>
     </div>
+    <div class="alignRow mt-4">
+      <label :for="Fields.NUMBER" class="nowrap label-text label-min">
+        Number:
+      </label>
+      <input
+        type="number"
+        inputmode="numeric"
+        @keyup.enter="jumpToNextField(Fields.NUMBER)"
+        min="0"
+        v-model.number="state.number"
+        placeholder="1 (Optional)"
+        title="number of incoming attacks"
+        :id="Fields.NUMBER"
+        class="input"
+      />
+    </div>
     <div class="separator mt-8 mb-8"></div>
     <BaseCheckBox
       v-if="hasDodge"
@@ -81,6 +99,7 @@
       </label>
       <input
         type="number"
+        inputmode="numeric"
         @keyup.enter="jumpToNextField(Fields.ALERTS)"
         v-model.number="state.alerts"
         min="0"
@@ -94,22 +113,52 @@
     <BaseCheckBox
       v-if="hasBlock"
       :checked="state.useBlock"
-      :disabled="state.useDodge && canDodge"
+      :disabled="!canBlock"
       :useToggle="true"
       :highlight="true"
       @click="state.useBlock = !state.useBlock"
       class="wide mt-4"
       >Use Block</BaseCheckBox
     >
-    <div class="mt-16">{{ calculatorResult }}</div>
+    <div class="separator mt-8 mb-8"></div>
+    <BaseButton
+      :disabled="state.damage === ''"
+      @click="applyResult"
+      class="primary wide"
+      >Apply Result (total {{ calculatorResult.hpDamage }} HP)</BaseButton
+    >
+    <table
+      v-if="Object.keys(calculatorResult.adjustAttrs).length > 0"
+      class="mt-8"
+    >
+      <tr>
+        <th>Attribute</th>
+        <th>Change</th>
+      </tr>
+      <tr v-for="(change, attr) in calculatorResult.adjustAttrs" :key="attr">
+        <td>{{ attrShortName(attr) }}</td>
+        <td>{{ change }}</td>
+      </tr>
+    </table>
+    <p>Explanation:</p>
+    <ol>
+      <li v-for="reason in calculatorResult.reasons" :key="reason">
+        {{ reason }}
+      </li>
+    </ol>
   </form>
 </template>
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import { attrFullName } from "@/utils/attributeUtils";
+import {
+  adjustAttrsAPI,
+  attrFullName,
+  attrShortName,
+} from "@/utils/attributeUtils";
 import { ATTRIBUTES, type EntityAttribute } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
+import BaseButton from "../Base/BaseButton.vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 
 enum Fields {
@@ -117,6 +166,7 @@ enum Fields {
   ACCURACY = "damage-calculator-accuracy",
   TYPE = "damage-calculator-type",
   ATTRIBUTE = "damage-calculator-attribute",
+  NUMBER = "damage-calculator-number",
   ALERTS = "damage-calculator-alerts",
 }
 
@@ -136,26 +186,46 @@ enum DamageType {
   FALL = "fall",
 }
 
-const state = reactive<{
+interface CalculatorState {
   damage: string | number;
   accuracy: string | number;
   type: DamageType;
   attribute: EntityAttribute;
+  number: string | number;
   alerts: string | number;
   useDodge: boolean;
   useBlock: boolean;
   holyShield: boolean;
-}>({
+}
+
+const defaultState = (): CalculatorState => ({
   damage: "",
   accuracy: "",
   type: DamageType.PHYSICAL,
+  number: "",
   attribute: "per",
   alerts: "",
   useDodge: false,
   useBlock: false,
   holyShield: false,
 });
+
+const state = reactive<CalculatorState>(defaultState());
 const entityStore = useEntityStore();
+
+const normalDamage = [
+  DamageType.BLUDGEONING,
+  DamageType.GALVANIC,
+  DamageType.MAGICAL,
+  DamageType.PHYSICAL,
+  DamageType.PIERCING,
+  DamageType.SLASHING,
+];
+const physicalSubDamages = [
+  DamageType.BLUDGEONING,
+  DamageType.PIERCING,
+  DamageType.SLASHING,
+];
 
 const showDamageAttribute = computed(() => state.type === DamageType.ATTRIBUTE);
 const alerts = computed(() => entityStore.entityAttributes.alerts?.val);
@@ -169,6 +239,9 @@ const canDodge = computed(
         : parseInt(state.accuracy))
 );
 const hasBlock = computed(() => entityStore.abilityNames.includes("Block"));
+const canBlock = computed(
+  () => !(canDodge.value && state.useDodge) && normalDamage.includes(state.type)
+);
 const hasShieldBlock = computed(() =>
   entityStore.abilityNames.includes("Shield Block")
 );
@@ -195,8 +268,13 @@ const calculatorResult = computed(() => {
   const vim = entityStore.entityAttributes.vim?.val ?? 0;
 
   // 0. Handle damage resistance
-  const resistance_attr = `${state.type}_damage_resistance`;
-  const resistanceVal = entityStore.entityAttributes[resistance_attr]?.val;
+  const resistanceAttr = `${state.type}_damage_resistance`;
+  let resistanceVal = entityStore.entityAttributes[resistanceAttr]?.val;
+  if (!resistanceVal && physicalSubDamages.includes(state.type)) {
+    // Look for default physical damage resistance
+    resistanceVal =
+      entityStore.entityAttributes.physical_damage_resistance?.val;
+  }
   if (resistanceVal) {
     if (resistanceVal <= -2) {
       reasons.push(`Damage doubled due to damage type`);
@@ -222,7 +300,7 @@ const calculatorResult = computed(() => {
     reasons.push("evaded attack using Dodge");
     return {
       adjustAttrs: { vim: -Math.floor(acc / 10) },
-      finalDamage: 0,
+      hpDamage: 0,
       reasons,
     };
   }
@@ -234,6 +312,10 @@ const calculatorResult = computed(() => {
     damage /= 2;
     isGlancingBlow = true;
     reasons.push("glancing blow");
+  }
+
+  if (isGlancingBlow && [DamageType.ATTRIBUTE].includes(state.type)) {
+    damage = 0;
   }
 
   // 2. Modifiers that apply to "incoming damage"
@@ -316,20 +398,57 @@ const calculatorResult = computed(() => {
 
   // Organize damage
   damage = Math.max(Math.floor(damage), 0);
+  let hpDamage = damage;
+  let bleeding = 0;
+  let burning = 0;
+  let paralysis = 0;
+  let stun = 0;
 
-  switch (state.type) {
-    case DamageType.VIM: {
-      vimCost += damage;
-      damage = 0;
+  if (!normalDamage.includes(state.type)) {
+    hpDamage = 0;
+
+    switch (state.type) {
+      case DamageType.VIM: {
+        vimCost += damage;
+        break;
+      }
+      case DamageType.BLEED: {
+        bleeding = -damage;
+        break;
+      }
+      case DamageType.BURN: {
+        burning = -damage;
+        break;
+      }
+      case DamageType.PARALYSIS: {
+        paralysis = -damage;
+        break;
+      }
+      case DamageType.STUN: {
+        stun = -damage;
+        break;
+      }
     }
   }
 
-  let adjustAttrs: Record<EntityAttribute, number> = {
-    ...(damage > 0 && { hp: -damage }),
+  const adjustAttrs: Record<EntityAttribute, number> = {
+    ...(hpDamage > 0 && { hp: -hpDamage }),
     ...(vimCost > 0 && { vim: -vimCost }),
     ...(manualAlerts > 0 && { alerts: -manualAlerts }),
+    ...(bleeding !== 0 && { bleeding }),
+    ...(burning !== 0 && { burning }),
+    ...(paralysis !== 0 && { paralysis }),
+    ...(stun !== 0 && { stun }),
   };
-  return { adjustAttrs, hpDamage: damage, reasons };
+
+  if (state.type === DamageType.ATTRIBUTE && damage > 0) {
+    adjustAttrs[`${state.attribute}_dmg`] = damage;
+  }
+
+  const resultMessage = `result: ${state.type} attack for ${damage} damage`;
+  reasons.push(resultMessage);
+
+  return { adjustAttrs, hpDamage, resultMessage, reasons };
 });
 
 const jumpToNextField = (current: Fields) => {
@@ -346,6 +465,14 @@ const getNextField = (current: Fields): string | false => {
     case Fields.ACCURACY:
       return Fields.TYPE;
     case Fields.TYPE: {
+      if (showDamageAttribute.value) {
+        return Fields.ATTRIBUTE;
+      }
+      return Fields.NUMBER;
+    }
+    case Fields.ATTRIBUTE:
+      return Fields.NUMBER;
+    case Fields.NUMBER: {
       if (alerts.value) {
         return Fields.ALERTS;
       }
@@ -353,6 +480,40 @@ const getNextField = (current: Fields): string | false => {
     }
     default:
       return false;
+  }
+};
+
+const applyResult = () => {
+  if (!entityStore.entity) {
+    return;
+  }
+  let mainAction = "Took";
+  if (state.useDodge) {
+    mainAction = "Dodged";
+  } else if (state.useBlock) {
+    mainAction = "Blocked";
+  }
+  adjustAttrsAPI(
+    entityStore.entity,
+    entityStore.entityAttributes,
+    calculatorResult.value.adjustAttrs,
+    `${mainAction} ${state.type} attack for ${state.damage} damage`
+  );
+
+  const attacksNumber = numberFieldVal(state.number);
+  if (attacksNumber > 1) {
+    state.number = attacksNumber - 1;
+  } else {
+    const defState = defaultState();
+    state.accuracy = defState.accuracy;
+    state.alerts = defState.alerts;
+    state.attribute = defState.attribute;
+    state.damage = defState.damage;
+    state.holyShield = defState.holyShield;
+    state.number = defState.number;
+    state.type = defState.type;
+    state.useBlock = defState.useBlock;
+    state.useDodge = defState.useDodge;
   }
 };
 </script>

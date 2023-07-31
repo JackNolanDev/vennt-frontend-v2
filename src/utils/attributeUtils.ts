@@ -31,6 +31,7 @@ export const MIN_ZEROS = new Set([
   "xp",
   "armor",
   "speed",
+  "alerts",
 ]);
 
 const attrMaxMap: { [attr in EntityAttribute]?: EntityAttribute } = {
@@ -109,6 +110,9 @@ export const attrShortName = (attr: EntityAttribute): string => {
   const baseAttr = getBaseAttr(attr);
   if (baseAttr !== undefined) {
     return "Max " + attrShortName(baseAttr);
+  }
+  if (/^[a-z]{3}_dmg$/u.exec(attr)) {
+    return `${attrShortName(attr.substring(0, 3))} Damage`;
   }
   return titleText(attr);
 };
