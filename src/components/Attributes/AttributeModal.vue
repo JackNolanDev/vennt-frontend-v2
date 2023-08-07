@@ -94,7 +94,10 @@
           @update-complete="refetchChangelog"
           class="mb-16"
         ></AdjustAttributeVal>
-        <AttributeLineGraph :attr="attr"></AttributeLineGraph>
+        <AttributeLineGraph
+          v-if="changelog && changelog.length > 0"
+          :attr="attr"
+        ></AttributeLineGraph>
       </div>
     </div>
   </BaseModal>

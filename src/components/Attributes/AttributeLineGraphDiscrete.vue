@@ -5,6 +5,7 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import { attrShortName, getMaxAttr } from "@/utils/attributeUtils";
+import { entityColor } from "@/utils/entityUtils";
 import type { EntityAttribute } from "@/utils/backendTypes";
 import {
   Filler,
@@ -47,13 +48,16 @@ const data = computed((): ChartData<"line", (number | Point | null)[]> => {
   const changelogValues = changelog
     .map((el) => el.prev ?? null)
     .concat([entityStore.entityAttributes[props.attr]?.base ?? null]);
+  const color = entityColor(entityStore.entity?.entity);
   const datasets: ChartDataset<"line", (number | Point | null)[]>[] = [
     {
       label: attrShortName(props.attr),
       data: changelogValues,
       fill: true,
-      borderColor: "rgb(75, 192, 192)",
+      borderColor: color,
+      backgroundColor: color + "40",
       tension: 0.1,
+      pointStyle: false,
     },
   ];
 
@@ -66,9 +70,10 @@ const data = computed((): ChartData<"line", (number | Point | null)[]> => {
       datasets.push({
         label: attrShortName(maxAttr.value),
         data: maxData,
-        borderColor: "red",
+        borderColor: "#d66260",
         borderDash: [5, 15],
         spanGaps: true,
+        pointStyle: false,
       });
     }
   }
