@@ -5,7 +5,8 @@ const randomNamesValidator = z.string().array();
 
 export const fetchRandomNamesApi = async (): Promise<string[]> => {
   const number = Math.floor(Math.random() * 45) + 5;
-  const url = `http://names.drycodes.com/${number}?nameOptions=boy_names,girl_names&separator=space`;
+  // const url = `http://names.drycodes.com/${number}?nameOptions=boy_names,girl_names&separator=space`;
+  const url = `https://namey.muffinlabs.com/name.json?count=${number}&with_surname=true&frequency=all`;
   const response = await apiInstanceOther.get("/get", { params: { url } });
   if (response.data.contents) {
     const ret = JSON.parse(response.data.contents);

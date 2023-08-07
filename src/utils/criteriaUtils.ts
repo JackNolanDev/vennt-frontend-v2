@@ -121,6 +121,7 @@ const abilityPassCriteriaCheckComp = (
   if (typeof right === "boolean") {
     return right;
   }
+  // console.log(criteria, left, right);
   const comparator = criteriaFieldOperator(criteria.operator);
   return comparator(left, right);
 };

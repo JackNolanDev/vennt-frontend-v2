@@ -270,9 +270,7 @@ export const giftBoonCopy: GiftBoonCopy = {
       uses: {
         adjust: {
           time: "permanent",
-          attr: {
-            max_mp: 9,
-          },
+          attr: { max_mp: 9 },
         },
       },
     },
@@ -291,9 +289,12 @@ export const giftBoonCopy: GiftBoonCopy = {
       uses: {
         adjust: {
           time: "permanent",
-          attr: {
-            casting: 1,
-          },
+          attr: { casting: 1 },
+        },
+        check: {
+          attr: "casting",
+          bonus: "+1",
+          label: "At full HP",
         },
       },
     },

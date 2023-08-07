@@ -125,7 +125,8 @@
   --table-contrast: var(--gray-200);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Dark color scheme is only color scheme for now, I don't need to support multiple tbh */
+/* @media (prefers-color-scheme: dark) { */
   :root {
     --background: var(--purple-950);
     --background-highlight: var(--purple-900);
@@ -162,7 +163,7 @@
 
     --table-contrast: var(--purple-925);
   }
-}
+/* } */
 
 body {
   margin: 0 !important;

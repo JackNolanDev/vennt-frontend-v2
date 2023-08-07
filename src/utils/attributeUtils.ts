@@ -285,6 +285,10 @@ export const adjustAttrsAPI = async (
   return true;
 };
 
+// TODO: Need to add a way to change the order adjustments / equations / criteria checks are completed
+// E.g. if I want to check that the entity is at full health, I would like to use a criteria check
+// but this is impossible since max_hp is a calculated attribute
+
 export const entityAttributesMap = (
   entity: CollectedEntity
 ): UpdatedEntityAttributes => {
@@ -310,6 +314,8 @@ export const entityAttributesMap = (
       attrMap.val += adjust;
       if (attrMap.reason) {
         attrMap.reason.push(reason);
+      } else {
+        attrMap.reason = [reason];
       }
     }
   };
