@@ -251,7 +251,7 @@ interface NewAbilityState {
   comment: string;
 }
 
-const initialState: NewAbilityState = {
+const initialState = (): NewAbilityState => ({
   name: props.givenAbility?.name ?? "",
   effect: props.givenAbility?.effect ?? "",
   cost_passive: props.givenAbility?.custom_fields?.cost?.passive ?? false,
@@ -273,9 +273,9 @@ const initialState: NewAbilityState = {
   expedited: props.givenAbility?.custom_fields?.expedited ?? "",
   path: props.givenAbility?.custom_fields?.path ?? "",
   comment: props.givenAbility?.comment ?? "",
-};
+});
 
-const state = reactive({ ...initialState });
+const state = reactive(initialState());
 
 const showPreview = computed(() => !editorEmpty(state.name));
 
@@ -329,7 +329,7 @@ const addAbilityButton = () => {
     entityStore.addAbilities([newAbility.value], true);
   }
   emit("submitted");
-  Object.entries(initialState).forEach(([key, val]) => {
+  Object.entries(initialState()).forEach(([key, val]) => {
     // @ts-ignore
     state[key] = val;
   });

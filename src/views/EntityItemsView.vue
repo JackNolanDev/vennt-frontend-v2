@@ -20,6 +20,10 @@
     <h2>Items in storage</h2>
     <ItemTable :items="storedItems" class="mb-24"></ItemTable>
   </div>
+  <div v-if="activeConsumables.length > 0">
+    <h2>Consumed / Active items</h2>
+    <ItemTable :items="activeConsumables" class="mb-24"></ItemTable>
+  </div>
   <div v-if="showEditSection">
     <BaseButton
       v-if="entityStore.entity?.entity.id"
@@ -107,8 +111,11 @@ const itemLists = computed(() => {
   const stored: ConsolidatedItem[] = [];
   const weapons: ConsolidatedItem[] = [];
   const others: ConsolidatedItem[] = [];
+  const activeConsumables: ConsolidatedItem[] = [];
   entityStore.consolidatedItems.forEach((item) => {
-    if (item.custom_fields?.in_storage) {
+    if (item.type === "consumable" && item.active) {
+      activeConsumables.push(item);
+    } else if (item.custom_fields?.in_storage) {
       stored.push(item);
     } else if (item.type === "weapon") {
       weapons.push(item);
@@ -116,12 +123,13 @@ const itemLists = computed(() => {
       others.push(item);
     }
   });
-  return { weapons, stored, others };
+  return { weapons, stored, others, activeConsumables };
 });
 
 const weapons = computed(() => itemLists.value.weapons);
 const otherItems = computed(() => itemLists.value.others);
 const storedItems = computed(() => itemLists.value.stored);
+const activeConsumables = computed(() => itemLists.value.activeConsumables);
 
 const showEditSection = computed(
   () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"

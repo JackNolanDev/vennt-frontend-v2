@@ -9,6 +9,7 @@
         >{{ item.custom_fields.category }}</a
       >)</span
     >
+    <span v-if="item.type === 'consumable' && item.active">(Active)</span>
   </h2>
 </template>
 

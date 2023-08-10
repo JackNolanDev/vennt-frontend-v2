@@ -42,7 +42,7 @@
               loc="combat-stats"
             ></AdjustAttributeVal>
             <CombatStatsDiceSection
-              v-else-if="SHOW_DICE_SINGLE.has(attr)"
+              v-else-if="showDice.includes(attr)"
               :attrs="attrs"
               :attr="attr"
               :use-copyable-dice="useCopyableDice"
@@ -140,7 +140,14 @@ const ADJUST_SINGLE: Set<EntityAttribute> = new Set([
   "tek_dmg",
   "wis_dmg",
 ]);
-const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init", "casting"]);
+
+const showDice = computed(() => {
+  const list: EntityAttribute[] = ["casting"];
+  if (props.entity.entity.type === "CHARACTER") {
+    list.push("init");
+  }
+  return list;
+});
 
 const hideZeroAttr = (attr: EntityAttribute): boolean =>
   props.attrs[attr]?.val === 0 && HIDE_ZERO_ATTRIBUTES.has(attr);

@@ -24,7 +24,7 @@
       v-if="entityStore.canEdit"
       @edit-button="toggleEditAbility"
     ></AbilityDetailsInteractive>
-    <div v-if="true">
+    <div v-if="debug">
       <pre><code>{{ ability }}</code></pre>
     </div>
   </div>
@@ -50,4 +50,6 @@ const entityStore = useEntityStore();
 const toggleEditAbility = () => {
   state.editAbility = !state.editAbility;
 };
+
+const debug = process.env.NODE_ENV === "development";
 </script>

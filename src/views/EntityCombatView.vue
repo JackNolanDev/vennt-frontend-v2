@@ -6,6 +6,7 @@
     class="wide mb-16"
     >Damage Calculator</BaseButton
   >
+  <CombatTimeButtons></CombatTimeButtons>
   <AbilityTable
     :abilities="useableAbilities"
     :attrs="entityStore.entityAttributes"
@@ -23,6 +24,7 @@
 import AbilityTable from "@/components/Abilities/AbilityTable.vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import ItemTable from "@/components/Items/ItemTable.vue";
+import CombatTimeButtons from "@/components/Combat/CombatTimeButtons.vue";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { canUseAbility } from "@/utils/abilityUtils";

@@ -12,6 +12,9 @@
       :item="item"
       @edit-button="toggleEditItem"
     ></ItemDetailsInteraction>
+    <div v-if="debug">
+      <pre><code>{{ item }}</code></pre>
+    </div>
   </div>
 </template>
 
@@ -37,4 +40,6 @@ const showInteractionSection = computed(
 const toggleEditItem = () => {
   state.editItem = !state.editItem;
 };
+
+const debug = process.env.NODE_ENV === "development";
 </script>
