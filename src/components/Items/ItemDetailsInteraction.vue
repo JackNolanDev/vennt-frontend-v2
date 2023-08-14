@@ -1,11 +1,11 @@
 <template>
-  <ItemUses v-if="showItemUses" :item="item"></ItemUses>
+  <ItemUses v-if="showItemUses && !item.active" :item="item"></ItemUses>
   <ItemComment :item="item"></ItemComment>
   <div class="separator mt-24 mb-24"></div>
   <BaseButton @click="deleteItem" class="clear wide center">
     Remove Item
   </BaseButton>
-  <div v-if="sellValue" class="mt-8">
+  <div v-if="sellValue && !item.active" class="mt-8">
     <BaseButton @click="sellItem" class="primary wide center">
       Sell Item for {{ sellValue }} SP
     </BaseButton>
@@ -49,7 +49,6 @@ jsonStorage.fetchShopItems();
 jsonStorage.fetchWeaponTypes();
 
 const showItemUses = computed(() => !props.item.custom_fields?.in_storage);
-
 const shopItem = computed(() =>
   findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
 );

@@ -648,24 +648,28 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: 4,
             effect:
               "On a direct hit that results in HP loss, this Cog's attacks also stagger the target.",
+            useCost: { attack: true },
           },
           {
             name: "Sickening",
             cost: 4,
             effect:
               "On a direct hit, this Cog's attacks also cause a sick debuff.",
+            useCost: { attack: true },
           },
           {
             name: "Stiffening",
             cost: 4,
             effect:
               "On a direct hit, this Cog's attacks also cause a stiff debuff.",
+            useCost: { attack: true },
           },
           {
             name: "Tiring",
             cost: 4,
             effect:
               "Once per Round, when this Cog directly hits a target, the target must succeed a Strength check DL {{3+L}} or become fatigued.",
+            useCost: { attack: true },
           },
         ],
       },
@@ -743,35 +747,41 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "L/2",
             effect:
               "This Cog's attacks also deal {{L/2}} bleed damage with impact.",
+            useCost: { attack: true },
           },
           {
             name: "Burning",
             cost: "L/2",
             effect:
               "This Cog's attacks also deal {{L/2}} burn damage with impact.",
+            useCost: { attack: true },
           },
           {
             name: "Stunning",
             cost: 4,
             effect: "This Cog's attacks also deal 2 stun damage with impact.",
+            useCost: { attack: true },
           },
           {
             name: "Paralyzing",
             cost: 4,
             effect:
               "This Cog's attacks also deal 2 paralysis damage with impact.",
+            useCost: { attack: true },
           },
           {
             name: "Taxing",
             cost: "L/2",
             effect:
               "This Cog's attacks also deal {{L}} Vim damage with impact.",
+            useCost: { attack: true },
           },
           {
             name: "Attribute Drain",
             cost: "L/2",
             effect:
               "[Attribute selection NYI] When this Cog directly hits a target, the target must succeed an Attribute check chosen during Cog creation of DL {{7+L}} or take 1 Attribute damage of an Attribute chosen during Cog creation. The Attributes for the check and damage may be the same or different Attributes.",
+            useCost: { attack: true },
           },
         ],
       },
@@ -783,116 +793,367 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: 3,
             effect:
               "This Cog is resistant to Vim damage and cannot become fatigued.",
+            uses: {
+              adjust: { time: "permanent", attr: { vim_damage_resistance: 1 } },
+            },
           },
           {
             name: "Burn Resistance",
             cost: 4,
             effect:
               "This Cog is resistant to burn damage and normal damage from fire-based attacks.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { burn_damage_resistance: 1 },
+              },
+            },
           },
           {
             name: "Burn Immunity",
             cost: 6,
             effect:
               "This Cog is immune to burn damage and normal damage from fire-based attacks.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { burn_damage_resistance: 2 },
+              },
+            },
           },
           {
             name: "Stun Resistance",
             cost: 3,
             effect: "This Cog is resistant to stun and paralysis damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  stun_damage_resistance: 1,
+                  paralysis_damage_resistance: 1,
+                },
+              },
+            },
           },
           {
             name: "Stun Immunity",
             cost: 5,
             effect: "This Cog is immune to stun and paralysis damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  stun_damage_resistance: 2,
+                  paralysis_damage_resistance: 2,
+                },
+              },
+            },
           },
           {
             name: "Transmutation Resistance",
             cost: 3,
             effect: "This Cog is resistant to Attribute damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { attribute_damage_resistance: 1 },
+              },
+            },
           },
           {
             name: "Transmutation Immunity",
             cost: 5,
             effect: "This Cog is immune to Attribute damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { attribute_damage_resistance: 2 },
+              },
+            },
           },
           {
             name: "Galvanic Resistance",
             cost: 3,
             effect:
               "This Cog is resistant to all damage from galvanic attacks.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { galvanic_damage_resistance: 1 },
+              },
+            },
           },
           {
             name: "Galvanic Immunity",
             cost: 5,
             effect: "This Cog is immune to all damage from galvanic attacks.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { galvanic_damage_resistance: 2 },
+              },
+            },
           },
           {
             name: "Magical Resistance",
             cost: "L/2",
             effect:
               "This Cog is resistant to all damage from magical attacks and gains +{{L/2}} to checks made to resist spell effects.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { magical_damage_resistance: 1 },
+              },
+            },
           },
           {
             name: "Magical Immunity",
             cost: "L",
             effect:
               "This Cog is immune to all damage from magical attacks and gains +{{L}} to checks made to resist spell effects.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: { magical_damage_resistance: 2 },
+              },
+            },
           },
           {
             name: "Piercing Resistance",
             cost: 5,
             effect:
               "This Cog is resistant to piercing attacks and bleed damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  piercing_damage_resistance: 1,
+                  bleed_damage_resistance: 1,
+                },
+              },
+            },
           },
           {
             name: "Piercing Immunity",
             cost: 8,
             effect: "This Cog is immune to piercing attacks and bleed damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  piercing_damage_resistance: 2,
+                  bleed_damage_resistance: 2,
+                },
+              },
+            },
           },
           {
             name: "Slashing Resistance",
             cost: 5,
             effect:
               "This Cog is resistant to slashing attacks and bleed damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  slashing_damage_resistance: 1,
+                  bleed_damage_resistance: 1,
+                },
+              },
+            },
           },
           {
             name: "Slashing Immunity",
             cost: 8,
             effect:
               "This Cog is resistant to slashing attacks and bleed damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  slashing_damage_resistance: 2,
+                  bleed_damage_resistance: 2,
+                },
+              },
+            },
           },
           {
             name: "Bludgeoning Resistance",
             cost: 4,
             effect: "This Cog is resistant to bludgeoning attacks.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  bludgeoning_damage_resistance: 1,
+                },
+              },
+            },
           },
           {
             name: "Bludgeoning Immunity",
             cost: 6,
             effect: "This Cog is immune to bludgeoning attacks.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  bludgeoning_damage_resistance: 2,
+                },
+              },
+            },
           },
           {
             name: "Physical Resistance",
             cost: 10,
             effect: "This Cog is resistant to all physical normal damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  physical_damage_resistance: 1,
+                },
+              },
+            },
           },
           {
             name: "Physical Immunity",
             cost: 15,
             effect: "This Cog is immune to all physical normal damage.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  physical_damage_resistance: 2,
+                },
+              },
+            },
           },
           {
-            name: "Incredible Resistance",
+            name: "Incredible Resistance (galvanic)",
             cost: 20,
             effect:
               "This Cog is resistant to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  fall_damage_resistance: 1,
+                  vim_damage_resistance: 1,
+                  burn_damage_resistance: 1,
+                  bleed_damage_resistance: 1,
+                  stun_damage_resistance: 1,
+                  paralysis_damage_resistance: 1,
+                  attribute_damage_resistance: 1,
+                  galvanic_damage_resistance: 1,
+                },
+              },
+            },
           },
           {
-            name: "Incredible Immunity",
+            name: "Incredible Resistance (magical)",
+            cost: 20,
+            effect:
+              "This Cog is resistant to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  fall_damage_resistance: 1,
+                  vim_damage_resistance: 1,
+                  burn_damage_resistance: 1,
+                  bleed_damage_resistance: 1,
+                  stun_damage_resistance: 1,
+                  paralysis_damage_resistance: 1,
+                  attribute_damage_resistance: 1,
+                  magical_damage_resistance: 1,
+                },
+              },
+            },
+          },
+          {
+            name: "Incredible Resistance (physical)",
+            cost: 20,
+            effect:
+              "This Cog is resistant to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  fall_damage_resistance: 1,
+                  vim_damage_resistance: 1,
+                  burn_damage_resistance: 1,
+                  bleed_damage_resistance: 1,
+                  stun_damage_resistance: 1,
+                  paralysis_damage_resistance: 1,
+                  attribute_damage_resistance: 1,
+                  physical_damage_resistance: 1,
+                },
+              },
+            },
+          },
+          {
+            name: "Incredible Immunity (galvanic)",
             cost: 40,
             effect:
               "This Cog is immune to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  fall_damage_resistance: 2,
+                  vim_damage_resistance: 2,
+                  burn_damage_resistance: 2,
+                  bleed_damage_resistance: 2,
+                  stun_damage_resistance: 2,
+                  paralysis_damage_resistance: 2,
+                  attribute_damage_resistance: 2,
+                  galvanic_damage_resistance: 2,
+                },
+              },
+            },
+          },
+          {
+            name: "Incredible Immunity (magical)",
+            cost: 40,
+            effect:
+              "This Cog is immune to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  fall_damage_resistance: 2,
+                  vim_damage_resistance: 2,
+                  burn_damage_resistance: 2,
+                  bleed_damage_resistance: 2,
+                  stun_damage_resistance: 2,
+                  paralysis_damage_resistance: 2,
+                  attribute_damage_resistance: 2,
+                  magical_damage_resistance: 2,
+                },
+              },
+            },
+          },
+          {
+            name: "Incredible Immunity (physical)",
+            cost: 40,
+            effect:
+              "This Cog is immune to all special damage types and one type of normal damage (galvanic, magical, or physical).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  fall_damage_resistance: 2,
+                  vim_damage_resistance: 2,
+                  burn_damage_resistance: 2,
+                  bleed_damage_resistance: 2,
+                  stun_damage_resistance: 2,
+                  paralysis_damage_resistance: 2,
+                  attribute_damage_resistance: 2,
+                  physical_damage_resistance: 2,
+                },
+              },
+            },
           },
         ],
       },
@@ -904,60 +1165,143 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: -3,
             effect:
               "This Cog is vulnerable to Vim damage and becomes fatigued whenever they take any Vim damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  vim_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Burn Vulnerability",
             cost: -4,
             effect:
               "This Cog is vulnerable to burn damage and normal damage from fire-based attacks. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  burn_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Stun Vulnerability",
             cost: -3,
             effect:
               "This Cog is vulnerable to stun and paralysis damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  stun_damage_resistance: -1,
+                  paralysis_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Transmutation Vulnerability",
             cost: -3,
             effect:
               "This Cog is vulnerable to Attribute damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  attribute_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Galvanic Vulnerability",
             cost: -3,
             effect:
               "This Cog is vulnerable to all damage from galvanic attacks. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  galvanic_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Magical Vulnerability",
             cost: "-L/2",
             effect:
               "This Cog is vulnerable to all damage from magical attacks and takes a -{{L/2}} penalty to checks made to resist spell effects. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  magical_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Piercing Vulnerability",
             cost: -5,
             effect:
               "This Cog is vulnerable to piercing attacks and bleed damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  piercing_damage_resistance: -1,
+                  bleed_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Slashing Vulnerability",
             cost: -5,
             effect:
               "This Cog is vulnerable to slashing attacks and bleed damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  slashing_damage_resistance: -1,
+                  bleed_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Bludgeoning Vulnerability",
             cost: -4,
             effect:
               "This Cog is vulnerable to bludgeoning attacks. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  bludgeoning_damage_resistance: -1,
+                },
+              },
+            },
           },
           {
             name: "Physical Vulnerability",
             cost: -10,
             effect:
               "This Cog is vulnerable to all physical normal damage. [NYI] This cannot be taken with the respective resistance or immunity.",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  physical_damage_resistance: -1,
+                },
+              },
+            },
           },
         ],
       },

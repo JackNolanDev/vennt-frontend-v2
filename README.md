@@ -17,7 +17,7 @@ pnpm install
 
 ### Steps to run locally without server
 
-Copy the `.env.example` file to `.env`. This sets the environment variable for which API_URL to use by default. In order to use a local backend, either remove this or set the variable to the backend url: `http://localhost:5000`
+Copy the `.env.example` file to `.env`. This sets the environment variable for which API_URL to use by default. In order to use a local backend, either remove this or set the variable to the backend url: `http://localhost:5001`
 
 ## Local Development
 

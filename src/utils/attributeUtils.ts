@@ -5,6 +5,7 @@ import {
   validAttributes,
   type CollectedEntity,
   type DiceSettings,
+  type EntityAbility,
   type EntityAttribute,
   type EntityItem,
   type FullCollectedEntity,
@@ -12,6 +13,7 @@ import {
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
   type UseAttrMap,
+  type Entity,
 } from "./backendTypes";
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
@@ -30,6 +32,21 @@ export const MIN_ZEROS = new Set([
   "xp",
   "armor",
   "speed",
+  "alerts",
+  "max_alerts",
+  "burning",
+  "bleeding",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
 ]);
 
 const attrMaxMap: { [attr in EntityAttribute]?: EntityAttribute } = {
@@ -37,6 +54,8 @@ const attrMaxMap: { [attr in EntityAttribute]?: EntityAttribute } = {
   mp: "max_mp",
   vim: "max_vim",
   hero: "max_hero",
+  trii: "max_trii",
+  alerts: "max_alerts",
 };
 
 const attrBaseMap: { [attr in EntityAttribute]?: EntityAttribute } = {
@@ -44,6 +63,8 @@ const attrBaseMap: { [attr in EntityAttribute]?: EntityAttribute } = {
   max_mp: "mp",
   max_vim: "vim",
   max_hero: "hero",
+  max_trii: "trii",
+  max_alerts: "alerts",
 };
 
 export const getMaxAttr = (
@@ -105,6 +126,9 @@ export const attrShortName = (attr: EntityAttribute): string => {
   if (baseAttr !== undefined) {
     return "Max " + attrShortName(baseAttr);
   }
+  if (/^[a-z]{3}_dmg$/u.exec(attr)) {
+    return `${attrShortName(attr.substring(0, 3))} Damage`;
+  }
   return titleText(attr);
 };
 
@@ -163,9 +187,11 @@ export const generateDefaultAdjustMsg = (
 };
 
 export const adjustAttrsObject = (
+  entity: Entity,
   entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
-  enforceMaximums = false
+  enforceMaximums = false,
+  propagateChanges = true
 ): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
   const defaultVal = (
@@ -188,13 +214,28 @@ export const adjustAttrsObject = (
   // 1. get resulting effects
   Object.entries(adjustAttrs).forEach(([attrIn, adjustment]) => {
     const attr = attrIn as EntityAttribute;
-    const newVal = currentVal(attr) + adjustment;
+    const attrVal = currentVal(attr);
+    const newVal = attrVal + adjustment;
     attrs[attr] = newVal;
+
+    // Special case logic
+    if (propagateChanges) {
+      const bleedingVal = currentVal("bleeding");
+      if (attr === "hp" && adjustment > 0 && bleedingVal > 0) {
+        const bleedingDiff = bleedingVal - adjustment;
+        if (bleedingDiff >= 0) {
+          attrs.bleeding = bleedingDiff;
+          attrs.hp = attrVal;
+        } else {
+          attrs.bleeding = 0;
+          attrs.hp = newVal - bleedingVal;
+        }
+      }
+    }
   });
 
   // 2. enforce zero minimums
-  Object.entries(attrs).forEach(([attrIn, val]) => {
-    const attr = attrIn as EntityAttribute;
+  Object.entries(attrs).forEach(([attr, val]) => {
     if (MIN_ZEROS.has(attr) && val < 0) {
       attrs[attr] = 0;
     }
@@ -202,8 +243,7 @@ export const adjustAttrsObject = (
 
   // 3. enforce maximums
   if (enforceMaximums) {
-    Object.entries(attrs).forEach(([attrIn, val]) => {
-      const attr = attrIn as EntityAttribute;
+    Object.entries(attrs).forEach(([attr, val]) => {
       const maxAttr = getMaxAttr(attr);
       if (!maxAttr) {
         return;
@@ -213,6 +253,16 @@ export const adjustAttrsObject = (
         attrs[attr] = maxAttrCurrentVal;
       }
     });
+  }
+
+  // 4. only allow changes to actions / reactions when in combat
+  if (propagateChanges && !entity.other_fields.in_combat) {
+    if (attrs.actions) {
+      attrs.actions = 0;
+    }
+    if (attrs.reactions) {
+      attrs.reactions = 0;
+    }
   }
 
   return attrs;
@@ -226,7 +276,12 @@ export const adjustAttrsAPI = async (
   propagateChanges = true,
   enforceMaximums = false
 ): Promise<boolean> => {
-  const attrs = adjustAttrsObject(entityAttrs, adjustAttrs, enforceMaximums);
+  const attrs = adjustAttrsObject(
+    entity.entity,
+    entityAttrs,
+    adjustAttrs,
+    enforceMaximums
+  );
 
   if (Object.keys(attrs).length === 0) {
     return false;
@@ -239,13 +294,17 @@ export const adjustAttrsAPI = async (
       entityStore.levelsToProcess = levelDiff;
     }
   }
-  const request: UpdateEntityAttributes = { attributes: attrs };
-  if (msg) {
-    request.message = msg;
-  }
+  const request: UpdateEntityAttributes = {
+    attributes: attrs,
+    ...(msg && { message: msg }),
+  };
   await entityStore.updateEntityAttributes(entity.entity.id, request);
   return true;
 };
+
+// TODO: Need to add a way to change the order adjustments / equations / criteria checks are completed
+// E.g. if I want to check that the entity is at full health, I would like to use a criteria check
+// but this is impossible since max_hp is a calculated attribute
 
 export const entityAttributesMap = (
   entity: CollectedEntity
@@ -272,15 +331,21 @@ export const entityAttributesMap = (
       attrMap.val += adjust;
       if (attrMap.reason) {
         attrMap.reason.push(reason);
+      } else {
+        attrMap.reason = [reason];
       }
     }
   };
 
-  const appendAdjustItem = (attr: EntityAttribute, item: EntityItem) => {
+  const ensureDefaultAttrVal = (attr: EntityAttribute) => {
     const attrCheck = attrs[attr];
     if (attrCheck === undefined) {
       attrs[attr] = { val: 0 };
     }
+  };
+
+  const appendAdjustItem = (attr: EntityAttribute, item: EntityItem) => {
+    ensureDefaultAttrVal(attr);
     const attrMap = attrs[attr]!;
     if (!attrMap.items) {
       attrMap.items = [item];
@@ -289,11 +354,21 @@ export const entityAttributesMap = (
     }
   };
 
-  const appendDiceAdjust = (attr: EntityAttribute, dice: DiceSettings) => {
-    const attrCheck = attrs[attr];
-    if (attrCheck === undefined) {
-      attrs[attr] = { val: 0 };
+  const appendAdjustAbility = (
+    attr: EntityAttribute,
+    ability: EntityAbility
+  ) => {
+    ensureDefaultAttrVal(attr);
+    const attrMap = attrs[attr]!;
+    if (!attrMap.abilities) {
+      attrMap.abilities = [ability];
+    } else {
+      attrMap.abilities.push(ability);
     }
+  };
+
+  const appendDiceAdjust = (attr: EntityAttribute, dice: DiceSettings) => {
+    ensureDefaultAttrVal(attr);
     const attrMap = attrs[attr]!;
     if (!attrMap.dice) {
       attrMap.dice = dice;
@@ -347,22 +422,25 @@ export const entityAttributesMap = (
         .map((criteria) => criteria.adjust) ?? [];
     adjusts.push(ability.uses?.adjust);
     adjusts.forEach((adjust) => {
-      if (adjust?.attr) {
-        Object.entries(adjust.attr).forEach(([attr, val]) => {
-          if (typeof val === "string") {
-            equations.push([attr, val]);
-          } else {
-            const reason = `${ability.name} ${
-              val > 0 ? "adds" : "subtracts"
-            } ${val} to ${attrShortName(attr)}`;
-            alterAttrs(attr, val, reason);
-          }
-        });
-      }
-      if (adjust?.dice) {
-        Object.entries(adjust.dice).forEach(([attr, dice]) => {
-          appendDiceAdjust(attr, dice);
-        });
+      if (adjust && (adjust.time === "permanent" || ability.active)) {
+        if (adjust?.attr) {
+          Object.entries(adjust.attr).forEach(([attr, val]) => {
+            if (typeof val === "string") {
+              equations.push([attr, val]);
+            } else {
+              const reason = `${ability.name} ${
+                val > 0 ? "adds" : "subtracts"
+              } ${val} to ${attrShortName(attr)}`;
+              alterAttrs(attr, val, reason);
+            }
+            appendAdjustAbility(attr, ability);
+          });
+        }
+        if (adjust?.dice) {
+          Object.entries(adjust.dice).forEach(([attr, dice]) => {
+            appendDiceAdjust(attr, dice);
+          });
+        }
       }
     });
   });
@@ -419,7 +497,7 @@ export const attrsRegexStr = (attrs: UpdatedEntityAttributes): string => {
   const attributes = Array.from(
     new Set([...validAttributes, ...Object.keys(attrs)])
   );
-  return `\\b${attributes.join("|")}\\b`;
+  return attributes.map((attr) => `\\b${attr}\\b`).join("|");
 };
 
 const attrsRegex = (attrs: UpdatedEntityAttributes): RegExp =>
@@ -486,6 +564,7 @@ export const solveEquation = (
       );
     }
   }
+  // console.log(`Couldn't solve equation: ${cleanedEquation}`);
   return undefined;
 };
 

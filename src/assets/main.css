@@ -10,6 +10,14 @@
 
 /* ---------------------------------- STYLES  ----------------------------------*/
 
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 30
+}
+
 :root {
   --app-font: "Raleway", sans-serif;
   --logo-font: Copperplate, "Raleway", sans-serif;
@@ -125,7 +133,8 @@
   --table-contrast: var(--gray-200);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Dark color scheme is only color scheme for now, I don't need to support multiple tbh */
+/* @media (prefers-color-scheme: dark) { */
   :root {
     --background: var(--purple-950);
     --background-highlight: var(--purple-900);
@@ -162,7 +171,7 @@
 
     --table-contrast: var(--purple-925);
   }
-}
+/* } */
 
 body {
   margin: 0 !important;
@@ -491,16 +500,16 @@ a.basicBtn {
 }
 
 /* Override material icons size definition as button icon */
-.material-icons:not(.defaultSize) {
+.material-symbols-outlined:not(.defaultSize) {
   font-size: 30px;
 }
-.basicBtn .material-icons.selected {
+.basicBtn .material-symbols-outlined.selected {
   color: var(--main-button);
 }
-.basicBtn:disabled .material-icons.selected {
+.basicBtn:disabled .material-symbols-outlined.selected {
   color: var(--basic-button-disabled);
 }
-.material-icons.space {
+.material-symbols-outlined.space {
   margin-right: 8px;
 }
 

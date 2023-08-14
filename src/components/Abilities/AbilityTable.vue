@@ -32,7 +32,7 @@
       </div>
       <router-link :to="abilityLink(ability)" class="btn basicBtn link">
         <div class="basicBtnContents">
-          <span class="material-icons">{{
+          <span class="material-symbols-outlined">{{
             abilityOpened(ability)
               ? "keyboard_arrow_left"
               : "keyboard_arrow_right"

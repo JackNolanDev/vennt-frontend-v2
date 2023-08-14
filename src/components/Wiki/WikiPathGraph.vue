@@ -7,17 +7,16 @@
   ></ForceDirectedGraph>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import router, { WIKI_PATHS_SPECIFIC_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { stringToLinkID } from "@/utils/textUtils";
-import type { ChartOptions } from "chart.js";
 import { Tree, ForceDirectedGraph } from "../Charts/graphs";
 
 // TODO: Add toggle option, figure out how to make chart fit better vertically maybe figure out how to zoom in?
 // figure out how to push route on clicking on data point
 
-defineProps<{ showTree: boolean }>();
+defineProps({ showTree: Boolean });
 const jsonStorage = useJsonStore();
 
 const serialized = jsonStorage.pathGraph.serialize();
@@ -49,7 +48,8 @@ const chartData = {
   ],
 };
 
-const chartOptions: ChartOptions = {
+// output type: ChartOptions
+const chartOptions = {
   aspectRatio: 1.6,
   // maintainAspectRatio: false,
   onClick: (_event, elements) => {

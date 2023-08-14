@@ -16,10 +16,10 @@
       <p class="textBlock">
         Current version: v0.14,
         <a
-          href="https://vennt.fandom.com/wiki/Character_Creation?oldid=5973"
+          href="https://vennt.fandom.com/wiki/Character_Creation?oldid=6533"
           target="_blank"
         >
-          Revision as of 19:32, 27 March 2023
+          Revision as of 15:25, 6 August 2023
         </a>
       </p>
       <h2 class="step">Choose a name</h2>

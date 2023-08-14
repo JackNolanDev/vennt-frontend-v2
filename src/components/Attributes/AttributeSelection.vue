@@ -7,10 +7,12 @@
       :disabled="buttonDisabled(attr)"
       class="skinny"
     >
-      <span v-if="isSelected(attr)" class="material-icons space">
+      <span v-if="isSelected(attr)" class="material-symbols-outlined space">
         radio_button_checked
       </span>
-      <span v-else class="material-icons space">radio_button_unchecked</span>
+      <span v-else class="material-symbols-outlined space"
+        >radio_button_unchecked</span
+      >
       <span
         >{{ attr.toUpperCase() }}
         <span v-if="attrs && attr in attrs"

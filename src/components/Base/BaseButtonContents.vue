@@ -1,6 +1,6 @@
 <template>
   <div class="basicBtnContents">
-    <span v-if="icon" class="material-icons space">
+    <span v-if="icon" class="material-symbols-outlined space">
       {{ icon }}
     </span>
     <slot name="customIcon"></slot>
@@ -15,10 +15,10 @@ defineProps<{ icon?: string }>();
 </script>
 
 <style scoped>
-.selected .material-icons {
+.selected .material-symbols-outlined {
   color: var(--main-button);
 }
-.selected.basicBtn:disabled .material-icons {
+.selected.basicBtn:disabled .material-symbols-outlined {
   color: var(--basic-button-disabled);
 }
 

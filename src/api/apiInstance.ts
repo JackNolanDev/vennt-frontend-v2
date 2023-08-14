@@ -3,7 +3,7 @@ import axios from "axios";
 const url =
   import.meta.env.VITE_API_URL ??
   (process.env.NODE_ENV === "development"
-    ? "http://localhost:5000" // local server
+    ? "http://localhost:5001" // local server
     : "https://vennt.up.railway.app"); // railway deployment of backend
 
 const instance = axios.create({

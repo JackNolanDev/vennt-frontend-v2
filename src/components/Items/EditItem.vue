@@ -266,15 +266,15 @@ interface NewItemState {
   inStorage: boolean;
 }
 
-const initialState: NewItemState = {
+const initialState = (): NewItemState => ({
   name: props.givenItem?.name ?? "",
   desc: props.givenItem?.desc ?? "",
   bulk: props.givenItem?.bulk.toString() ?? "0",
   type: props.givenItem?.type ?? "equipment",
-  armorArmor: props.givenItem?.uses?.adjust?.attr.armor?.toString() ?? "",
-  armorBurden: props.givenItem?.uses?.adjust?.attr.burden?.toString() ?? "",
-  shieldShield: props.givenItem?.uses?.adjust?.attr.shield?.toString() ?? "",
-  shieldBurden: props.givenItem?.uses?.adjust?.attr.burden?.toString() ?? "",
+  armorArmor: props.givenItem?.uses?.adjust?.attr?.armor?.toString() ?? "",
+  armorBurden: props.givenItem?.uses?.adjust?.attr?.burden?.toString() ?? "",
+  shieldShield: props.givenItem?.uses?.adjust?.attr?.shield?.toString() ?? "",
+  shieldBurden: props.givenItem?.uses?.adjust?.attr?.burden?.toString() ?? "",
   weaponAttr: props.givenItem?.custom_fields?.attr ?? "",
   weaponDmg: props.givenItem?.custom_fields?.dmg ?? "",
   weaponRange: props.givenItem?.custom_fields?.range ?? "",
@@ -287,9 +287,9 @@ const initialState: NewItemState = {
   defineActive: false,
   active: props.givenItem?.active ?? false,
   inStorage: props.givenItem?.custom_fields?.in_storage ?? false,
-};
+});
 
-const state = reactive({ ...initialState });
+const state = reactive(initialState());
 const emit = defineEmits<{ (e: "submitted"): void }>();
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
@@ -394,7 +394,7 @@ const addItemButton = () => {
     entityStore.addItems([newItem.value], true);
   }
   emit("submitted");
-  Object.entries(initialState).forEach(([key, val]) => {
+  Object.entries(initialState()).forEach(([key, val]) => {
     // @ts-ignore
     state[key] = val;
   });

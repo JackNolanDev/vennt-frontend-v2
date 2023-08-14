@@ -172,7 +172,7 @@ export const useEntityStore = defineStore("entity", {
       }
       // 1. Run updates optimistically
       if (request.message) {
-        Object.keys(this.entity.entity.attributes).forEach((attr) => {
+        Object.keys(request.attributes).forEach((attr) => {
           const row: FullEntityChangelog = {
             id: "mock",
             attr,
@@ -314,7 +314,6 @@ export const useEntityStore = defineStore("entity", {
       }
     },
     deleteItem(item: ConsolidatedItem, closeSidebar?: boolean) {
-      if (!this.entity) return;
       const itemId = item.ids[item.ids.length - 1];
       if (closeSidebar && router.currentRoute.value.params.detail === itemId) {
         const routeParams = { ...router.currentRoute.value.params };
@@ -325,6 +324,10 @@ export const useEntityStore = defineStore("entity", {
           query: router.currentRoute.value.query,
         });
       }
+      this.deleteItemById(itemId);
+    },
+    deleteItemById(itemId: string) {
+      if (!this.entity) return;
       this.entity.items = this.entity.items.filter(
         (item) => item.id !== itemId
       );

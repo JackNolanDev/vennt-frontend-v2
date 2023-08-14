@@ -1,5 +1,5 @@
 <template>
-  <div class="panel ml-16 mr-16 mb-64">
+  <div class="combat-stats-panel ml-16 mr-16 mb-64">
     <div class="centeredText">
       <h2>{{ entity.entity.name }}</h2>
     </div>
@@ -38,7 +38,7 @@
             class="card diceDropDown"
             v-bind:class="dropdownClass(j, attrRow.length)"
           >
-            <div class="margin">
+            <div class="combat-stats-margin">
               <div v-if="showUpdateDropdown">
                 <AdjustAttributeVal
                   :attr="attr"
@@ -56,6 +56,17 @@
         </div>
       </div>
     </div>
+    <div class="mb-24"></div>
+    <CombatStatsSingleRowAttributes
+      :single-row-attrs="combatSingleRowAttributes"
+      :attrs="attrs"
+      :custom-attrs="customAttrs"
+      :entity="entity"
+      :selected-attr="state.selectedAttr"
+      :show-update-dropdown="showUpdateDropdown"
+      :use-copyable-dice="useCopyableDice"
+      @select-attr="selectAttr"
+    ></CombatStatsSingleRowAttributes>
     <!-- ATTRIBUTES -->
     <div class="alignRow">
       <BulletPointVue :entity="entity.entity"></BulletPointVue>
@@ -82,7 +93,7 @@
           class="card diceDropDown"
           v-bind:class="dropdownClass(j, attrRow.length)"
         >
-          <div class="margin">
+          <div class="combat-stats-margin">
             <CombatStatsDiceSection
               :attrs="attrs"
               :attr="attr"
@@ -154,74 +165,16 @@
       ></CogTypeDescription>
     </div>
     <!-- SINGLE LINE STATS -->
-    <div v-for="attr in singleRowAttrs" v-bind:key="attr">
-      <div v-if="attr in attrs">
-        <button
-          v-on:click="selectAttr(attr)"
-          class="btn basicBtn attrButton noSelect"
-          v-bind:class="attrButtonClass(attr)"
-        >
-          <div
-            v-if="fractionMap[attr]"
-            class="basicBtnContents attrButtonContents alignRow wide"
-          >
-            <div class="attrLabelWide">{{ attrShortName(attr) }}:</div>
-            <BaseFraction
-              :top="fractionMap[attr].top"
-              :bottom="fractionMap[attr].bottom"
-            ></BaseFraction>
-          </div>
-          <div v-else class="basicBtnContents attrButtonContents cols-2 wide">
-            <div class="alignRow">
-              <div class="attrLabelWide nowrap title-case">
-                {{ attrShortName(attr) }}:
-              </div>
-              <div class="number">{{ attrDisplayVal(attr) }}</div>
-            </div>
-            <div v-if="singleSecondaryMap[attr]" class="alignRow">
-              <div class="attrLabelWide">
-                {{
-                  attrShortName(singleSecondaryMap[attr] as EntityAttribute)
-                }}:
-              </div>
-              <div class="number">
-                {{
-                  attrDisplayVal(singleSecondaryMap[attr] as EntityAttribute)
-                }}
-              </div>
-            </div>
-          </div>
-        </button>
-        <div v-if="showDropDown(attr)" class="card diceDropDown left right">
-          <div class="margin">
-            <div v-if="showUpdateDropdown">
-              <AdjustAttributeVal
-                v-if="ADJUST_SINGLE.has(attr) || customAttrs.includes(attr)"
-                :attr="attr"
-                loc="combat-stats"
-              ></AdjustAttributeVal>
-              <CombatStatsDiceSection
-                v-else-if="SHOW_DICE_SINGLE.has(attr)"
-                :attrs="attrs"
-                :attr="attr"
-                :use-copyable-dice="useCopyableDice"
-              ></CombatStatsDiceSection>
-              <CombatStatsArmorSection
-                v-else-if="attr === 'armor'"
-                :attrs="attrs"
-              ></CombatStatsArmorSection>
-              <AttributeHelp v-else :attr="attr"></AttributeHelp>
-              <div class="separator mt-8 mb-8"></div>
-              <AdjustAttributeLink
-                :attr="attr"
-                class="wide"
-              ></AdjustAttributeLink>
-            </div>
-            <AttributeHelp v-else :attr="attr"></AttributeHelp>
-          </div>
-        </div>
-      </div>
-    </div>
+    <CombatStatsSingleRowAttributes
+      :single-row-attrs="singleRowAttrs"
+      :attrs="attrs"
+      :custom-attrs="customAttrs"
+      :entity="entity"
+      :selected-attr="state.selectedAttr"
+      :show-update-dropdown="showUpdateDropdown"
+      :use-copyable-dice="useCopyableDice"
+      @select-attr="selectAttr"
+    ></CombatStatsSingleRowAttributes>
     <!-- ITEMS -->
     <CombatStatsItemSection
       v-if="showItems && entity.items.length > 0"
@@ -261,10 +214,9 @@ import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
 import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
 import { useAccountInfoStore } from "@/stores/accountInfo";
-import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
 import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
 import CogTypeDescription from "../Cog/CogTypeDescription.vue";
-import { totalDC } from "@/utils/itemUtils";
+import CombatStatsSingleRowAttributes from "./CombatStatsSingleRowAttributes.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -335,6 +287,30 @@ const ATTRIBUTE_ROWS: EntityAttribute[][] = [
   ["str", "wis", "cha"],
 ];
 
+const COMBAT_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
+  "alerts",
+  "burning",
+  "bleeding",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
+];
+
+const combatSingleRowAttributes = computed(() => {
+  if (props.entity.entity.other_fields.in_combat) {
+    return ["actions", "reactions", ...COMBAT_SINGLE_ROW_ATTRIBUTES];
+  }
+  return COMBAT_SINGLE_ROW_ATTRIBUTES;
+});
+
 const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "L",
   "init",
@@ -363,17 +339,6 @@ const singleRowAttrs = computed(() =>
   )
 );
 
-const ADJUST_SINGLE: Set<EntityAttribute> = new Set(["xp", "sp", "trii"]);
-const SHOW_DICE_SINGLE: Set<EntityAttribute> = new Set(["init", "casting"]);
-
-const singleSecondaryMap = computed(() => {
-  const map: Record<EntityAttribute, EntityAttribute> = {};
-  if (attrs.value.burden) {
-    map.armor = "burden";
-  }
-  return map;
-});
-
 const showUpdateDropdown = computed(() => {
   const fullEntity = props.entity.entity as FullEntity;
   return (
@@ -382,24 +347,11 @@ const showUpdateDropdown = computed(() => {
     fullEntity.owner === accountInfoStore.accountInfo.id
   );
 });
-
-const fractionMap = computed(
-  (): Record<EntityAttribute, { top?: number; bottom?: number }> => ({
-    bluespace: {
-      top: totalDC(props.entity.items),
-      bottom: attrDisplayVal("bluespace"),
-    },
-    trii: {
-      top: attrDisplayVal("trii"),
-      bottom: attrDisplayVal("max_trii"),
-    },
-  })
-);
 </script>
 
-<style scoped>
-/* used for non-opennable stats */
-.stat {
+<style>
+/* used for non-openable stats */
+.combat-stat {
   font-size: 16pt;
   display: flex;
   align-items: center;
@@ -424,7 +376,7 @@ const fractionMap = computed(
   text-align: left;
 }
 
-.margin {
+.combat-stats-margin {
   margin: 8px;
   width: 100%;
 }
@@ -452,7 +404,7 @@ const fractionMap = computed(
 
 /* Mobile Styles */
 @media screen and (max-width: 396px) {
-  .panel {
+  .combat-stats-panel {
     margin-left: 0px;
     margin-right: 0px;
   }

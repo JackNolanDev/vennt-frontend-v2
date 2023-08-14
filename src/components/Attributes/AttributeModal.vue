@@ -36,6 +36,12 @@
           >)</span
         >
       </div>
+      <BaseButton
+        v-if="isRemovableCustomAttr"
+        @click="removeCustomAttr"
+        icon="delete_outline"
+        >Delete Custom Attribute</BaseButton
+      >
       <AdjustAttributeLink
         v-if="maxAttr"
         :attr="maxAttr"
@@ -88,7 +94,10 @@
           @update-complete="refetchChangelog"
           class="mb-16"
         ></AdjustAttributeVal>
-        <AttributeLineGraph :attr="attr"></AttributeLineGraph>
+        <AttributeLineGraph
+          v-if="changelog && changelog.length > 0"
+          :attr="attr"
+        ></AttributeLineGraph>
       </div>
     </div>
   </BaseModal>
@@ -103,7 +112,7 @@ import {
   getBaseAttr,
   getMaxAttr,
 } from "@/utils/attributeUtils";
-import type { EntityAttribute } from "@/utils/backendTypes";
+import { validAttributes, type EntityAttribute } from "@/utils/backendTypes";
 import { computed, onBeforeMount } from "vue";
 import BaseFraction from "../Base/BaseFraction.vue";
 import BaseModal from "../Base/BaseModal.vue";
@@ -127,6 +136,17 @@ const relatedAttrs: Partial<Record<EntityAttribute, EntityAttribute>> = {
   armor: "burden",
   burden: "armor",
   shield: "burden",
+  agi_dmg: "agi",
+  cha_dmg: "cha",
+  dex_dmg: "dex",
+  int_dmg: "int",
+  per_dmg: "per",
+  spi_dmg: "spi",
+  str_dmg: "str",
+  tek_dmg: "tek",
+  wis_dmg: "wis",
+  actions: "actions_on_turn",
+  reactions: "reactions_on_turn",
 };
 
 const relatedAttr = computed(() => relatedAttrs[props.attr]);
@@ -140,6 +160,12 @@ const showResetButton = computed(
 );
 const showClearHistoryButton = computed(
   () => changelog.value && changelog.value.length > 0
+);
+const isRemovableCustomAttr = computed(
+  () =>
+    !validAttributes.includes(props.attr) &&
+    !showClearHistoryButton.value &&
+    typeof entityStore.entity?.entity.attributes[props.attr] === "number"
 );
 
 const closeModal = () => {
@@ -166,6 +192,15 @@ const resetButton = () => {
 };
 const clearHistoryButton = () => {
   entityStore.clearChangelog([props.attr]);
+};
+const removeCustomAttr = async () => {
+  if (!entityStore.entity) {
+    return;
+  }
+  const attributes = entityStore.entity.entity.attributes;
+  delete attributes[props.attr];
+  await entityStore.updateEntity({ attributes });
+  closeModal();
 };
 
 const refetchChangelog = async (attr?: EntityAttribute) => {
