@@ -13,6 +13,7 @@ import {
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
   type UseAttrMap,
+  type Entity,
 } from "./backendTypes";
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
@@ -186,6 +187,7 @@ export const generateDefaultAdjustMsg = (
 };
 
 export const adjustAttrsObject = (
+  entity: Entity,
   entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
   enforceMaximums = false,
@@ -253,6 +255,16 @@ export const adjustAttrsObject = (
     });
   }
 
+  // 4. only allow changes to actions / reactions when in combat
+  if (propagateChanges && !entity.other_fields.in_combat) {
+    if (attrs.actions) {
+      attrs.actions = 0;
+    }
+    if (attrs.reactions) {
+      attrs.reactions = 0;
+    }
+  }
+
   return attrs;
 };
 
@@ -264,7 +276,12 @@ export const adjustAttrsAPI = async (
   propagateChanges = true,
   enforceMaximums = false
 ): Promise<boolean> => {
-  const attrs = adjustAttrsObject(entityAttrs, adjustAttrs, enforceMaximums);
+  const attrs = adjustAttrsObject(
+    entity.entity,
+    entityAttrs,
+    adjustAttrs,
+    enforceMaximums
+  );
 
   if (Object.keys(attrs).length === 0) {
     return false;
@@ -277,10 +294,10 @@ export const adjustAttrsAPI = async (
       entityStore.levelsToProcess = levelDiff;
     }
   }
-  const request: UpdateEntityAttributes = { attributes: attrs };
-  if (msg) {
-    request.message = msg;
-  }
+  const request: UpdateEntityAttributes = {
+    attributes: attrs,
+    ...(msg && { message: msg }),
+  };
   await entityStore.updateEntityAttributes(entity.entity.id, request);
   return true;
 };

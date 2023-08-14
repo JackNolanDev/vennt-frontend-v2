@@ -10,6 +10,14 @@
 
 /* ---------------------------------- STYLES  ----------------------------------*/
 
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 30
+}
+
 :root {
   --app-font: "Raleway", sans-serif;
   --logo-font: Copperplate, "Raleway", sans-serif;
@@ -492,16 +500,16 @@ a.basicBtn {
 }
 
 /* Override material icons size definition as button icon */
-.material-icons:not(.defaultSize) {
+.material-symbols-outlined:not(.defaultSize) {
   font-size: 30px;
 }
-.basicBtn .material-icons.selected {
+.basicBtn .material-symbols-outlined.selected {
   color: var(--main-button);
 }
-.basicBtn:disabled .material-icons.selected {
+.basicBtn:disabled .material-symbols-outlined.selected {
   color: var(--basic-button-disabled);
 }
-.material-icons.space {
+.material-symbols-outlined.space {
   margin-right: 8px;
 }
 

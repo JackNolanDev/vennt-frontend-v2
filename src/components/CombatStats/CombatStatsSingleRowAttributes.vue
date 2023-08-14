@@ -128,6 +128,8 @@ const ADJUST_SINGLE: Set<EntityAttribute> = new Set([
   "sp",
   "trii",
   "alerts",
+  "actions",
+  "reactions",
   "paralysis",
   "stun",
   "agi_dmg",
@@ -173,6 +175,14 @@ const fractionMap = computed(
     trii: {
       top: props.attrs.trii?.val,
       bottom: props.attrs.max_trii?.val,
+    },
+    actions: {
+      top: props.attrs.actions?.val,
+      bottom: props.attrs.actions_on_turn?.val,
+    },
+    reactions: {
+      top: props.attrs.reactions?.val,
+      bottom: props.attrs.reactions_on_turn?.val,
     },
   })
 );

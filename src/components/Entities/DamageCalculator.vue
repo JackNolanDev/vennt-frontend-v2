@@ -236,11 +236,17 @@ const canDodge = computed(
     entityStore.entityAttributes.vim.val * 10 >=
       (typeof state.accuracy === "number"
         ? state.accuracy
-        : parseInt(state.accuracy))
+        : parseInt(state.accuracy)) &&
+    (!entityStore.entity?.entity.other_fields.in_combat ||
+      (entityStore.entityAttributes.reactions?.val ?? 0) > 0)
 );
 const hasBlock = computed(() => entityStore.abilityNames.includes("Block"));
 const canBlock = computed(
-  () => !(canDodge.value && state.useDodge) && normalDamage.includes(state.type)
+  () =>
+    !(canDodge.value && state.useDodge) &&
+    normalDamage.includes(state.type) &&
+    (!entityStore.entity?.entity.other_fields.in_combat ||
+      (entityStore.entityAttributes.reactions?.val ?? 0) > 0)
 );
 const hasShieldBlock = computed(() =>
   entityStore.abilityNames.includes("Shield Block")
@@ -299,7 +305,7 @@ const calculatorResult = computed(() => {
   if (hasDodge.value && canDodge.value && state.useDodge) {
     reasons.push("evaded attack using Dodge");
     return {
-      adjustAttrs: { vim: -Math.floor(acc / 10) },
+      adjustAttrs: { vim: -Math.floor(acc / 10), reactions: -1 },
       hpDamage: 0,
       reasons,
     };
@@ -371,6 +377,8 @@ const calculatorResult = computed(() => {
 
   // 4. Modifiers that apply to "incoming damage after Armor reduction"
 
+  let reactions_used = 0;
+
   if (
     hasBlock.value &&
     state.useBlock &&
@@ -394,6 +402,7 @@ const calculatorResult = computed(() => {
       vimCost += fullBlockVimCost;
       reasons.push(`Block - full damage blocked`);
     }
+    reactions_used += 1;
   }
 
   // Organize damage
@@ -439,6 +448,7 @@ const calculatorResult = computed(() => {
     ...(burning > 0 && { burning }),
     ...(paralysis > 0 && { paralysis }),
     ...(stun > 0 && { stun }),
+    ...(reactions_used > 0 && { reactions: -reactions_used }),
   };
 
   if (state.type === DamageType.ATTRIBUTE && damage > 0) {

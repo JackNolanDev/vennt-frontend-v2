@@ -53,7 +53,7 @@
         name: ENTITY_WEAPON_SHOP_ROUTE,
         params: { id: entityStore.entity?.entity.id },
       }"
-      icon="sports_martial_arts"
+      icon="swords"
       class="wide"
       >Weapon Shop</BaseButton
     >

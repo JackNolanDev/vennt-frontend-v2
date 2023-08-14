@@ -1,7 +1,6 @@
 import isEqual from "lodash.isequal";
 import {
   abilityFieldsNameValidator,
-  validAttributes,
   type AbilityCostMap,
   type AbilityCostMapNumber,
   type CharacterGift,
@@ -108,7 +107,6 @@ export const actualXPCost = (
 };
 
 export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;
-export const abilityCostAttrsIgnore = ["actions", "reactions"];
 
 export const abilityUseAdjustments = (
   ability: EntityAbility,
@@ -119,25 +117,6 @@ export const abilityUseAdjustments = (
     ...additionalAdjustments,
   };
 
-  const insertVal = (attr: EntityAttribute, val: number | string | boolean) => {
-    if (
-      abilityCostAttrsIgnore.includes(attr) ||
-      // For now, only allow predefined attributes here, this can maybe change in the future
-      !validAttributes.includes(attr)
-    ) {
-      return;
-    }
-
-    if (typeof val === "number") {
-      insertNumberIntoMap(attr, val);
-    } else if (typeof val === "string") {
-      const solved = solveEquation(val, attrs);
-      if (solved) {
-        insertNumberIntoMap(attr, solved);
-      }
-    }
-  };
-
   const insertNumberIntoMap = (attr: EntityAttribute, val: number) => {
     if (adjustMap[attr]) {
       adjustMap[attr] = adjustMap[attr] + val;
@@ -146,9 +125,24 @@ export const abilityUseAdjustments = (
     }
   };
 
+  const insertVal = (
+    attr: EntityAttribute,
+    val: number | string | boolean,
+    cost?: boolean
+  ) => {
+    if (typeof val === "number") {
+      insertNumberIntoMap(attr, cost ? -val : val);
+    } else if (typeof val === "string") {
+      const solved = solveEquation(val, attrs);
+      if (solved) {
+        insertNumberIntoMap(attr, cost ? -solved : solved);
+      }
+    }
+  };
+
   if (ability.custom_fields?.cost) {
     Object.entries(ability.custom_fields.cost).forEach(([attr, val]) => {
-      insertVal(attr, val);
+      insertVal(attr, val, true);
     });
   }
   if (ability.uses?.heal?.attr) {
@@ -162,9 +156,13 @@ export const abilityUseAdjustments = (
 
 export const canAffordAdjustments = (
   adjustments: Record<EntityAttribute, number>,
-  attrs: UpdatedEntityAttributes
+  attrs: UpdatedEntityAttributes,
+  in_combat?: boolean
 ): boolean => {
   return Object.entries(adjustments).every(([attr, adjust]) => {
+    if (!in_combat && ["actions", "reactions"].includes(attr)) {
+      return true;
+    }
     const attrMap = attrs[attr];
     if (!attrMap) {
       return adjust > 0;

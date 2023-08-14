@@ -50,7 +50,11 @@ const abilityAdjustments = computed(() =>
 const useButtonDisabled = computed(
   () =>
     !abilityUsable(props.ability) ||
-    !canAffordAdjustments(abilityAdjustments.value, extendedAttributes.value)
+    !canAffordAdjustments(
+      abilityAdjustments.value,
+      extendedAttributes.value,
+      entityStore.entity?.entity.other_fields.in_combat
+    )
 );
 const useButtonTitle = computed(() => {
   const costs: string[] = [];

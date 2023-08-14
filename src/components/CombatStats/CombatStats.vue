@@ -58,7 +58,7 @@
     </div>
     <div class="mb-24"></div>
     <CombatStatsSingleRowAttributes
-      :single-row-attrs="COMBAT_SINGLE_ROW_ATTRIBUTES"
+      :single-row-attrs="combatSingleRowAttributes"
       :attrs="attrs"
       :custom-attrs="customAttrs"
       :entity="entity"
@@ -303,6 +303,13 @@ const COMBAT_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "tek_dmg",
   "wis_dmg",
 ];
+
+const combatSingleRowAttributes = computed(() => {
+  if (props.entity.entity.other_fields.in_combat) {
+    return ["actions", "reactions", ...COMBAT_SINGLE_ROW_ATTRIBUTES];
+  }
+  return COMBAT_SINGLE_ROW_ATTRIBUTES;
+});
 
 const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "L",
