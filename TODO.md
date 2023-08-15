@@ -18,3 +18,6 @@
 ### abilities
 
 - [ ] Add basic 4 abilities to combat page
+
+
+- [ ] Add support for Recovery Shock
