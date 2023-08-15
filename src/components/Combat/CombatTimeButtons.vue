@@ -9,7 +9,7 @@
     <BaseButton @click="startTurn" icon="sports_martial_arts" class="wide"
       >Start Turn</BaseButton
     >
-    <BaseButton @click="toggleInCombat" icon="close" class="wide"
+    <BaseButton @click="toggleInCombat" icon="flag" class="wide"
       >End Combat</BaseButton
     >
   </div>

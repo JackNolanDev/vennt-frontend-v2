@@ -9,6 +9,18 @@
   <p v-if="damageString" class="mt-16 mb-0">
     <b>Damage:</b> {{ damageString }}
   </p>
+  <BaseButton
+    v-if="showDamageDice && entityStore.entity?.entity.other_fields.in_combat"
+    :disabled="
+      entityStore.entityAttributes.actions &&
+      entityStore.entityAttributes.actions.val < 2
+    "
+    @click="useWeapon"
+    class="primary wide mt-8"
+    ><template #customIcon
+      ><WeaponIcon :item="item" class="mr-8"></WeaponIcon></template
+    >Use 2 Actions</BaseButton
+  >
   <div v-if="damageDice && showDamageDice" class="card mt-8 padded thin column">
     <ToggleableDiceSectionCopyable
       :dice="damageDice"
@@ -51,6 +63,9 @@ import { computed } from "vue";
 import SimpleAbilityTable from "../Abilities/SimpleAbilityTable.vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
 import SimpleItemTable from "./SimpleItemTable.vue";
+import BaseButton from "../Base/BaseButton.vue";
+import WeaponIcon from "./WeaponIcon.vue";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
 
 const props = defineProps<{ item: EntityItem }>();
 const entityStore = useEntityStore();
@@ -95,7 +110,10 @@ const damageDice = computed(
     )
 );
 const showDamageDice = computed(
-  () => props.item.active && !props.item.custom_fields?.in_storage
+  () =>
+    props.item.active &&
+    !props.item.custom_fields?.in_storage &&
+    props.item.type === "weapon"
 );
 const onAttackAbilities = computed(() =>
   entityStore.sortedAbilities.filter(
@@ -114,4 +132,15 @@ const ammoItems = computed(() => {
     ["Ammunition", "Ammo"].some((indicator) => item.name.includes(indicator))
   );
 });
+const useWeapon = () => {
+  if (!entityStore.entity) {
+    return;
+  }
+  adjustAttrsAPI(
+    entityStore.entity,
+    entityStore.entityAttributes,
+    { actions: -2 },
+    `Made attack with ${props.item.name}`
+  );
+};
 </script>

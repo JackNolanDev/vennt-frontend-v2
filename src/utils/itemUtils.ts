@@ -242,7 +242,7 @@ export const getDefaultWeapons = (weaponTypesList: ShopItem[]) =>
       return {
         ...unsafeEnsureFullEntityItem(shopItemToEntityItem(found)),
         name,
-        id: name,
+        id: name.toLowerCase().replaceAll(" ", "_"),
         ids: [name],
       };
     })

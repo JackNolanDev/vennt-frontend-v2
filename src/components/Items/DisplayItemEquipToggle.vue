@@ -12,13 +12,25 @@
     </p>
     <BaseButton v-if="item.active" @click="toggleActive" class="wide mt-16">
       <template #customIcon>
-        <DropWeapon class="mr-8"></DropWeapon>
+        <img
+          src="/images/actions/drop-weapon.light.svg"
+          alt=""
+          width="40"
+          height="40"
+          class="mr-8"
+        />
       </template>
       Unequip
     </BaseButton>
     <BaseButton v-else @click="toggleActive" class="wide mt-16">
       <template #customIcon>
-        <SwordBrandish class="mr-8"></SwordBrandish>
+        <img
+          src="/images/actions/sword-brandish.light.svg"
+          alt=""
+          width="40"
+          height="40"
+          class="mr-8"
+        />
       </template>
       Equip
     </BaseButton>
@@ -29,8 +41,6 @@
 import type { ConsolidatedItem } from "@/utils/backendTypes";
 import { itemEquippable } from "@/utils/itemUtils";
 import BaseButton from "../Base/BaseButton.vue";
-import DropWeapon from "../SVG/DropWeapon.vue";
-import SwordBrandish from "../SVG/SwordBrandish.vue";
 import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{ item: ConsolidatedItem }>();

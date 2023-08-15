@@ -15,7 +15,8 @@ import BaseStealthTextEditor from "../Base/BaseStealthTextEditor.vue";
 import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{ ability: FullEntityAbility }>();
-const state = reactive({ comment: props.ability.comment ?? "" });
+const defaultState = props.ability.comment ?? "";
+const state = reactive({ comment: defaultState });
 const entityStore = useEntityStore();
 
 watch(
