@@ -147,6 +147,7 @@ Button styles:
   color: var(--text-contrast);
 }
 
+/* TODO: Would be cool if this faded out https://vuejs.org/guide/built-ins/transition.html#the-transition-component */
 .btn-temp-note {
   position: absolute;
   bottom: 100%;

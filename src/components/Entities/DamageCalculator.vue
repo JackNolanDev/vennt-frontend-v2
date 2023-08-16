@@ -160,6 +160,7 @@ import { ATTRIBUTES, type EntityAttribute } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
+import { numberFieldVal } from "@/utils/inputType";
 
 enum Fields {
   DAMAGE = "damage-calculator-damage",
@@ -254,14 +255,6 @@ const hasShieldBlock = computed(() =>
 const hasImprovedShieldBlock = computed(() =>
   entityStore.abilityNames.includes("Improved Shield Block")
 );
-
-const numberFieldVal = (val: number | string, allowNaN?: boolean): number => {
-  const parsedVal = typeof val === "number" ? val : parseInt(val);
-  if (isNaN(parsedVal) && !allowNaN) {
-    return 0;
-  }
-  return parsedVal;
-};
 
 const calculatorResult = computed(() => {
   let damage = numberFieldVal(state.damage);
