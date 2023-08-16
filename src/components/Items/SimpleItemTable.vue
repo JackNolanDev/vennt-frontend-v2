@@ -24,10 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import router, { ENTITY_ITEMS_ROUTE } from "@/router";
+import router, { ENTITY_COMBAT_ROUTE, ENTITY_ITEMS_ROUTE } from "@/router";
 import type { EntityItem, FullEntityItem } from "@/utils/backendTypes";
 import { improveTextForDisplay } from "@/utils/textUtils";
-import { type RouteLocationRaw, RouterLink } from "vue-router";
+import {
+  type RouteLocationRaw,
+  RouterLink,
+  type RouteRecordName,
+} from "vue-router";
 import ItemDesc from "./ItemDesc.vue";
 
 defineProps<{
@@ -37,10 +41,17 @@ defineProps<{
 }>();
 
 const itemRoute = (item: FullEntityItem): RouteLocationRaw => {
-  return {
-    name: ENTITY_ITEMS_ROUTE,
+  const to: RouteLocationRaw = {
     params: { detail: item.id },
     query: router.currentRoute.value.query,
   };
+  const safeRouteNames: RouteRecordName[] = [
+    ENTITY_ITEMS_ROUTE,
+    ENTITY_COMBAT_ROUTE,
+  ];
+  if (!safeRouteNames.includes(router.currentRoute.value.name ?? "")) {
+    to.name = ENTITY_ITEMS_ROUTE;
+  }
+  return to;
 };
 </script>
