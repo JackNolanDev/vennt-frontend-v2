@@ -2,40 +2,55 @@
   <nav class="nav alignRow split main-entity-nav">
     <div class="alignRow gap ml-8 desktop-only">
       <BaseButton
-        :to="{ name: ENTITY_DESCRIPTION_ROUTE, params: { id: entity.id } }"
+        :to="{ name: ENTITY_DESCRIPTION_ROUTE }"
         title="Main & Flux (f)"
         icon="person"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        :to="{ name: ENTITY_ABILITIES_ROUTE, params: { id: entity.id } }"
+        :to="{ name: ENTITY_ABILITIES_ROUTE }"
         title="Abilities (a)"
         icon="hiking"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        :to="{ name: ENTITY_ITEMS_ROUTE, params: { id: entity.id } }"
+        :to="{ name: ENTITY_ITEMS_ROUTE }"
         title="Inventory (i)"
         icon="backpack"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        :to="{ name: ENTITY_COMBAT_ROUTE, params: { id: entity.id } }"
+        :to="{ name: ENTITY_COMBAT_ROUTE }"
         title="Combat (c)"
         icon="sports_kabaddi"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        v-if="entityState.canEdit"
-        :to="{ name: ENTITY_SETTINGS_ROUTE, params: { id: entity.id } }"
+        v-if="entityStore.canEdit"
+        :to="{ name: ENTITY_SETTINGS_ROUTE }"
         title="Character Settings (h)"
         icon="settings"
         class="skinny"
       ></BaseButton>
     </div>
+    <div class="mobile-only ml-8 mobile-header-text">
+      <span v-if="entityStore.entity?.entity.other_fields.in_combat"
+        >Actions:
+        <span class="number">{{
+          entityStore.entityAttributes.actions?.val
+        }}</span>
+        / Reactions:
+        <span class="number">{{
+          entityStore.entityAttributes.reactions?.val
+        }}</span></span
+      >
+      <span v-else class="nowrap hide-extra ellipsis">{{
+        entityStore.entity?.entity.name
+      }}</span>
+    </div>
     <div class="alignRow gap mr-8">
       <BaseButton
-        v-if="entityState.canEdit"
+        v-if="entityStore.canEdit"
         @click="entityNotesStore.toggleNotes"
         title="Show Character notes (n)"
         icon="edit_note"
@@ -53,46 +68,46 @@
     <nav class="mt-8 mb-8 ml-8 mr-8">
       <div>
         <BaseButton
-          :to="{ name: ENTITY_STATS_ROUTE, params: { id: entity.id } }"
+          :to="{ name: ENTITY_STATS_ROUTE }"
           title="Character stats"
           icon="bar_chart"
           class="skinny bold wide mobile-only"
           >Entity Stats</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_DESCRIPTION_ROUTE, params: { id: entity.id } }"
+          :to="{ name: ENTITY_DESCRIPTION_ROUTE }"
           icon="person"
           class="skinny bold wide mobile-only"
           >Description</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_ABILITIES_ROUTE, params: { id: entity.id } }"
+          :to="{ name: ENTITY_ABILITIES_ROUTE }"
           icon="hiking"
           class="skinny bold wide mobile-only"
           >Abilities</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_ITEMS_ROUTE, params: { id: entity.id } }"
+          :to="{ name: ENTITY_ITEMS_ROUTE }"
           icon="backpack"
           class="skinny bold wide mobile-only"
           >Inventory</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_COMBAT_ROUTE, params: { id: entity.id } }"
+          :to="{ name: ENTITY_COMBAT_ROUTE }"
           icon="sports_kabaddi"
           class="skinny bold wide mobile-only"
           >Combat</BaseButton
         >
         <BaseButton
-          v-if="entityState.canEdit"
-          :to="{ name: ENTITY_NOTES_ROUTE, params: { id: entity.id } }"
+          v-if="entityStore.canEdit"
+          :to="{ name: ENTITY_NOTES_ROUTE }"
           icon="edit_note"
           class="skinny bold wide mobile-only"
           >Notes</BaseButton
         >
         <BaseButton
-          v-if="entityState.canEdit"
-          :to="{ name: ENTITY_SETTINGS_ROUTE, params: { id: entity.id } }"
+          v-if="entityStore.canEdit"
+          :to="{ name: ENTITY_SETTINGS_ROUTE }"
           title="Character Settings (h)"
           icon="settings"
           class="skinny bold wide mobile-only"
@@ -151,14 +166,12 @@ import {
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";
 import { useEntityNotesStore } from "@/stores/entityNotes";
-import type { FullEntity } from "@/utils/backendTypes";
 import { reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 
 const state = reactive({ dropdownOpen: false });
-defineProps<{ entity: FullEntity }>();
 const accountInfoStore = useAccountInfoStore();
-const entityState = useEntityStore();
+const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
 
 const toggleDropdown = () => {
@@ -170,15 +183,15 @@ const toggleDropdown = () => {
 .mobile-only {
   display: none;
 }
+.mobile-header-text {
+  max-width: calc(100vw - 38px - 16px);
+}
 @media screen and (max-width: 760px) {
   .mobile-only {
     display: flex;
   }
   .desktop-only {
     display: none;
-  }
-  .main-entity-nav {
-    flex-direction: row-reverse;
   }
   .nav-dropdown {
     width: 100%;

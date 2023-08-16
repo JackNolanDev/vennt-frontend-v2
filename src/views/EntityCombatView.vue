@@ -3,7 +3,7 @@
   <BaseButton
     :to="{ params: { detail: 'damage' } }"
     icon="calculate"
-    class="wide mb-16"
+    class="wide"
     >Damage Calculator</BaseButton
   >
   <CombatTimeButtons></CombatTimeButtons>

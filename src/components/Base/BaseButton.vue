@@ -1,11 +1,14 @@
 <template>
-  <RouterLink v-if="props.to" :to="props.to" class="btn basicBtn">
+  <RouterLink v-if="to" :to="to" class="btn basicBtn">
     <BaseButtonContents :icon="icon">
       <template #customIcon><slot name="customIcon"></slot></template>
       <template #default><slot></slot></template>
     </BaseButtonContents>
   </RouterLink>
-  <button v-else type="button" class="btn basicBtn">
+  <button v-else type="button" class="btn basicBtn" @click="btnClicked">
+    <div v-if="clickedNote && state.clicked" class="btn-temp-note">
+      {{ clickedNote }}
+    </div>
     <BaseButtonContents :icon="icon">
       <template #customIcon><slot name="customIcon"></slot></template>
       <template #default><slot></slot></template>
@@ -16,11 +19,24 @@
 <script setup lang="ts">
 import { type RouteLocationRaw, RouterLink } from "vue-router";
 import BaseButtonContents from "./BaseButtonContents.vue";
+import { reactive } from "vue";
 
+const state = reactive({ clicked: false });
 const props = defineProps<{
   icon?: string;
   to?: RouteLocationRaw;
+  clickedNote?: string;
 }>();
+
+const btnClicked = () => {
+  if (!props.clickedNote) {
+    return;
+  }
+  state.clicked = true;
+  setTimeout(() => {
+    state.clicked = false;
+  }, 3_000);
+};
 </script>
 
 <style scoped>
@@ -63,6 +79,7 @@ Button styles:
 }
 .btn {
   border: solid var(--button-border-width) transparent;
+  position: relative;
 }
 .btn.wide {
   width: calc(100% - 2 * var(--button-border-width));
@@ -128,5 +145,27 @@ Button styles:
   background-color: var(--main-button-active);
   border: solid var(--button-border-width) var(--main-button-active);
   color: var(--text-contrast);
+}
+
+.btn-temp-note {
+  position: absolute;
+  bottom: 100%;
+  padding: 8px;
+  background: var(--background-high-contrast);
+  border-radius: var(--border-radius);
+  --btn-temp-note-width: 80px;
+  width: var(--btn-temp-note-width);
+  margin-left: calc((100% / 2) - ((var(--btn-temp-note-width) + 16px) / 2));
+}
+.btn-temp-note::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--background-high-contrast) transparent transparent
+    transparent;
 }
 </style>
