@@ -16,3 +16,14 @@ export const fieldValidator = <T extends z.ZodTypeAny>(
     ? valid.error.message
     : valid.error.issues[0].message;
 };
+
+export const numberFieldVal = (
+  val: number | string,
+  allowNaN?: boolean
+): number => {
+  const parsedVal = typeof val === "number" ? val : parseInt(val);
+  if (isNaN(parsedVal) && !allowNaN) {
+    return 0;
+  }
+  return Math.floor(parsedVal);
+};

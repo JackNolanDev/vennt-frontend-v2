@@ -1,6 +1,6 @@
 <template>
   <p v-if="header" class="mt-0 mb-0 labelText text-center">
-    <b>{{ defaultText ? defaultText : dice.roll20 }}</b>
+    <b>{{ defaultText && !useDiceAsHeader ? defaultText : dice.roll20 }}</b>
   </p>
   <DiceCopy
     :dice="dice"
@@ -43,6 +43,7 @@ const props = defineProps<{
   header?: boolean;
   comment?: string;
   skipKey?: string;
+  useDiceAsHeader?: boolean;
 }>();
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();

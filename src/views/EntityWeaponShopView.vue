@@ -19,7 +19,11 @@
       class="btn card column padded selectable"
       :class="{ selected: weaponOpenned(weaponType) }"
     >
-      <h3 class="centeredText mt-0 mb-0">{{ weaponType.category }}</h3>
+      <div class="alignRow gap">
+        <WeaponIcon :item="weaponType"></WeaponIcon>
+        <h3 class="mt-0 mb-0">{{ weaponType.category }}</h3>
+      </div>
+
       <DisplayShopItem :item="weaponType"></DisplayShopItem>
     </router-link>
   </div>
@@ -27,6 +31,7 @@
 
 <script setup lang="ts">
 import DisplayShopItem from "@/components/Items/DisplayShopItem.vue";
+import WeaponIcon from "@/components/Items/WeaponIcon.vue";
 import router, { ENTITY_WEAPON_SHOP_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
 import type { ShopItem } from "@/utils/backendTypes";

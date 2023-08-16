@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="entityStore.entity?.entity.other_fields.in_combat"
-    class="alignRow gap wide mb-16 time-buttons"
+    class="alignRow wide mb-16 time-buttons"
   >
     <BaseButton @click="startRound" icon="refresh" class="wide"
       >Start Round</BaseButton
@@ -9,11 +9,11 @@
     <BaseButton @click="startTurn" icon="sports_martial_arts" class="wide"
       >Start Turn</BaseButton
     >
-    <BaseButton @click="toggleInCombat" icon="close" class="wide"
+    <BaseButton @click="toggleInCombat" icon="flag" class="wide"
       >End Combat</BaseButton
     >
   </div>
-  <div v-else class="alignRow gap wide mb-16 time-buttons">
+  <div v-else class="alignRow wide mb-16 time-buttons">
     <BaseButton @click="toggleInCombat" icon="swords" class="wide"
       >Start Combat</BaseButton
     >

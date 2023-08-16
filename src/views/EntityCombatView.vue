@@ -3,15 +3,18 @@
   <BaseButton
     :to="{ params: { detail: 'damage' } }"
     icon="calculate"
-    class="wide mb-16"
+    class="wide"
     >Damage Calculator</BaseButton
   >
   <CombatTimeButtons></CombatTimeButtons>
+  <h2>Basic Actions</h2>
+  <BasicActionsTable></BasicActionsTable>
+  <h2>Usable Actions</h2>
   <AbilityTable
     :abilities="useableAbilities"
     :attrs="entityStore.entityAttributes"
   ></AbilityTable>
-  <h2>Usable weapons</h2>
+  <h2>Usable Weapons</h2>
   <ItemTable
     :items="useableWeapons"
     :hide-count="true"
@@ -29,6 +32,7 @@ import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { canUseAbility } from "@/utils/abilityUtils";
 import { computed } from "vue";
+import BasicActionsTable from "@/components/Combat/BasicActions/BasicActionsTable.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();

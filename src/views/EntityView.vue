@@ -4,10 +4,7 @@
     class="nav sidebar"
   >
     <template #nav>
-      <EntityNav
-        v-if="entityStore.entity"
-        :entity="entityStore.entity.entity"
-      ></EntityNav>
+      <EntityNav v-if="entityStore.entity"></EntityNav>
       <BaseNav v-else></BaseNav>
     </template>
     <template #sidebar>
