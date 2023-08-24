@@ -24,6 +24,7 @@ export const ENTITY_SETTINGS_ROUTE = "entitySettings";
 export const WIKI_ROUTE = "wiki";
 export const WIKI_PATHS_ROUTE = "wikiPaths";
 export const WIKI_PATHS_SPECIFIC_ROUTE = "wikiPathsSpecific";
+export const CAMPAIGN_TEXT = "campaignTest";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -160,6 +161,11 @@ const router = createRouter({
       path: "/style",
       name: "style",
       component: () => import("../views/StyleView.vue"),
+    },
+    {
+      path: "/campaign/test",
+      name: "style",
+      component: () => import("../views/CampaignTest.vue"),
     },
     {
       path: "/:pathMatch(.*)",

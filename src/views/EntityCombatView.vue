@@ -9,7 +9,7 @@
   <CombatTimeButtons></CombatTimeButtons>
   <h2>Basic Actions</h2>
   <BasicActionsTable></BasicActionsTable>
-  <h2>Usable Actions</h2>
+  <h2>Usable Abilities</h2>
   <AbilityTable
     :abilities="useableAbilities"
     :attrs="entityStore.entityAttributes"

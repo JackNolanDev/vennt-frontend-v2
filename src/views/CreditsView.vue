@@ -28,6 +28,21 @@
         </a>
         license.
       </p>
+      <p>
+        Some art by
+        <a href="https://2minutetabletop.com/" target="_blank" class="link">
+          2minutetabletop.com
+        </a>
+        were used under the
+        <a
+          href="https://creativecommons.org/licenses/by-nc/4.0/"
+          target="_blank"
+          class="link"
+        >
+          CC BY-NC 4.0
+        </a>
+        license.
+      </p>
     </PageLayout>
   </BaseLayout>
 </template>

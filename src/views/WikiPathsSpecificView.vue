@@ -100,7 +100,7 @@ onBeforeMount(() => {
   }
 });
 
-// Implements the jump to element logic for after abilities arrive to browser
+// Implements the jump to element logic for after abilities are delivered browser
 watch(
   () => [jsonStorage.abilities],
   () => {

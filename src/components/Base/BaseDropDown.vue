@@ -37,7 +37,8 @@ const props = defineProps<{
   disabled?: boolean;
   title?: string;
 }>();
-const state = reactive({ closed: !props.defaultOpen });
+const defaultState = () => ({ closed: !props.defaultOpen });
+const state = reactive(defaultState());
 
 const emit = defineEmits<{ (e: "change", state: boolean): void }>();
 

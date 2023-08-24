@@ -4,7 +4,7 @@
     <div class="sub-nav-body"><slot name="sub-nav"></slot></div>
     <div class="sidebar-body"><slot name="sidebar"></slot></div>
     <div class="sidebar-right-body"><slot name="sidebar-right"></slot></div>
-    <div class="main-body"><slot></slot></div>
+    <div class="main-body" id="main-body"><slot></slot></div>
   </div>
 </template>
 

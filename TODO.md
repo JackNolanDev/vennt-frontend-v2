@@ -9,7 +9,7 @@
 
 ### abilities
 
-- [ ] Add basic 4 abilities to combat page
+- [x] Add basic 4 abilities to combat page
 - [ ] Add support for Recovery Shock
 - [ ] Add resting modal
 
