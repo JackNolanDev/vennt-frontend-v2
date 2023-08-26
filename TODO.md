@@ -1,5 +1,11 @@
 # TODO list
 
+## BUGS
+
+- [x] Damage Calculator: equal acc / vim goes to attacker, not damage receiver
+- [x] Damage Calculator: cannot use alerts / Holy Shield on special damage
+- [x] Damage Calculator: fix glancing blow for attribute damage (NOT A BUG - WORKING AS INTENDED)
+
 ### notes
 
 - [ ] Make full page notes view

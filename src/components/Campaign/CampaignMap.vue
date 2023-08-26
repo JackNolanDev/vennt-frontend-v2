@@ -3,17 +3,34 @@
 </template>
 
 <script setup lang="ts">
-import { Application, Graphics, Polygon, type ICanvas } from "pixi.js";
+import {
+  Application,
+  Graphics,
+  Polygon,
+  type ICanvas,
+  Sprite,
+  FederatedPointerEvent,
+  Container,
+} from "pixi.js";
 import { onBeforeMount, onMounted, onUnmounted, watch } from "vue";
 import { defineHex, Grid, rectangle, Hex } from "honeycomb-grid";
 import { Viewport } from "pixi-viewport";
 import { useMapBuilder } from "@/stores/mapBuilder";
 import { validate } from "uuid";
+import { BACKGROUNDS } from "@/utils/map/backgrounds";
 
 const mapBuilder = useMapBuilder();
 
 let app: Application<ICanvas> | null = null;
+let viewport: Viewport | null = null;
+let baseContainer: Container | null = null;
 let backgroundGraphics: Graphics | null = null;
+let backgroundMaskGraphics: Graphics | null = null;
+let backgroundsContainer: Container | null = null;
+let backgroundsDetailsContainer: Container | null = null;
+let hexGridGraphics: Graphics | null = null;
+let entitiesContainer: Container | null = null;
+
 let draggedImageId: string | null = null;
 
 onBeforeMount(() => {
@@ -41,16 +58,13 @@ onMounted(() => {
   // @ts-expect-error app.view is valid apparently
   document.getElementById("campaign-map-wrapper")?.appendChild(app.view);
 
-  // create viewport
-  const viewport = new Viewport({
+  viewport = new Viewport({
     screenWidth: window.innerWidth,
     screenHeight: window.innerHeight,
     worldWidth: bodyDetails?.width,
     worldHeight: bodyDetails?.height,
     events: app.renderer.events,
   });
-
-  // add the viewport to the stage
   app.stage.addChild(viewport);
 
   // activate plugins
@@ -58,12 +72,30 @@ onMounted(() => {
   // need to add clamp & zoomClamp
   // https://davidfig.github.io/pixi-viewport/jsdoc/Viewport.html#clampZoom
 
+  baseContainer = new Container();
+  backgroundMaskGraphics = new Graphics();
   backgroundGraphics = new Graphics();
-  drawBackgroundHexGrid(backgroundGraphics, {
+  hexGridGraphics = new Graphics();
+  backgroundsContainer = new Container();
+  backgroundsDetailsContainer = new Container();
+  entitiesContainer = new Container();
+
+  drawBackgroundHexGrid({
     width: mapBuilder.width,
     height: mapBuilder.height,
   });
-  viewport.addChild(backgroundGraphics);
+
+  baseContainer.addChild(backgroundGraphics);
+  baseContainer.addChild(backgroundsContainer);
+  baseContainer.addChild(backgroundsDetailsContainer);
+  baseContainer.addChild(hexGridGraphics);
+  baseContainer.addChild(entitiesContainer);
+
+  // need to add as child to mask is relative
+  baseContainer.addChild(backgroundMaskGraphics);
+  baseContainer.mask = backgroundMaskGraphics;
+
+  viewport.addChild(baseContainer);
 });
 
 onUnmounted(() => {
@@ -83,7 +115,7 @@ watch(
       return;
     }
     backgroundGraphics.clear();
-    drawBackgroundHexGrid(backgroundGraphics, {
+    drawBackgroundHexGrid({
       width: mapBuilder.width,
       height: mapBuilder.height,
     });
@@ -110,45 +142,79 @@ const dragoverListener = (event: DragEvent) => {
   }
 };
 
-const dropListener = (event: DragEvent) => {
+const dropListener = async (event: DragEvent) => {
   event.preventDefault();
   event.stopPropagation();
   if (draggedImageId) {
-    console.log(draggedImageId);
+    const background = BACKGROUNDS.find(
+      (background) => background.id === draggedImageId
+    );
+    if (
+      !viewport ||
+      !backgroundGraphics ||
+      !backgroundsContainer ||
+      !backgroundMaskGraphics ||
+      !background
+    ) {
+      return;
+    }
+    const { x, y } = viewport.toWorld(event.offsetX, event.offsetY);
+    const backgroundSprite = Sprite.from(background.url);
+    backgroundSprite.mask = backgroundMaskGraphics;
+    backgroundSprite.x = x;
+    backgroundSprite.y = y;
+    if (background.width) {
+      backgroundSprite.width = background.width;
+    }
+    if (background.height) {
+      backgroundSprite.height = background.height;
+    }
+    backgroundsContainer.addChild(backgroundSprite);
+
+    // TODO: in real map this should only be TRUE for GMs
+    backgroundSprite.eventMode = "static";
+    backgroundSprite.on("click", (event: FederatedPointerEvent) => {
+      console.log(event);
+    });
+    console.log(backgroundSprite);
   } else {
     // files has content when new item is dragged in, and no content otherwise
     console.log("drop", event.dataTransfer?.files);
   }
 };
 
-const drawBackgroundHexGrid = (
-  graphics: Graphics,
-  hexGridOptions: { width: number; height: number }
-) => {
+const drawBackgroundHexGrid = (hexGridOptions: {
+  width: number;
+  height: number;
+}) => {
   const Tile = defineHex({ dimensions: 30, origin: "topLeft" });
   const grid = new Grid(Tile, rectangle(hexGridOptions));
 
-  drawBackground(graphics, {
+  drawBackground({
     width: grid.pixelWidth,
     height: grid.pixelHeight,
   });
-  drawHexagonsGrid(graphics, grid);
+  drawHexagonsGrid(grid);
 };
 
-const drawBackground = (
-  graphics: Graphics,
-  backgroundOptions: { width: number; height: number }
-) => {
+const drawBackground = (backgroundOptions: {
+  width: number;
+  height: number;
+}) => {
   const { width, height } = backgroundOptions;
-  graphics.beginFill("#303030");
-  graphics.drawRect(0, 0, width, height);
-  graphics.endFill();
+  backgroundGraphics?.beginFill("#303030");
+  backgroundGraphics?.drawRect(0, 0, width, height);
+  backgroundGraphics?.endFill();
+
+  backgroundMaskGraphics?.beginFill("#ffffff");
+  backgroundMaskGraphics?.drawRect(0, 0, width, height);
+  backgroundMaskGraphics?.endFill();
 };
 
-const drawHexagonsGrid = (graphics: Graphics, grid: Grid<Hex>) => {
-  graphics.lineStyle(1, 0x999999);
+const drawHexagonsGrid = (grid: Grid<Hex>) => {
+  hexGridGraphics?.lineStyle(1, 0x999999, 0.8);
   grid.forEach((hex) => {
-    graphics.drawShape(new Polygon(hex.corners));
+    hexGridGraphics?.drawShape(new Polygon(hex.corners));
   });
 };
 </script>

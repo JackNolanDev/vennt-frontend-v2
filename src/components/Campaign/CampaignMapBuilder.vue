@@ -17,21 +17,21 @@
         </option>
       </select>
     </div>
-    <BaseDropDown title="Backgrounds">
+    <BaseDropDown title="Backgrounds" class="mt-8">
       <div
-        v-for="(data, id) in BACKGROUNDS"
-        :key="id"
-        :id="id"
+        v-for="background in BACKGROUNDS"
+        :key="background.id"
+        :id="background.id"
         draggable="true"
         class="alignRow top gap grabbable mt-8"
       >
         <img
-          :src="data.url"
-          :alt="data.name"
+          :src="background.url"
+          :alt="background.name"
           draggable="false"
           class="background-img"
         />
-        <p>{{ data.name }}</p>
+        <p>{{ background.name }}</p>
       </div>
     </BaseDropDown>
   </form>
@@ -68,6 +68,7 @@ const sizeSelectorUpdated = () => {
 
 .grabbable {
   cursor: grab;
+  background-color: var(--background-highlight);
 }
 .grabbable:active {
   cursor: grabbing;

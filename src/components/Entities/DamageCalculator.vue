@@ -57,9 +57,9 @@
         </option>
       </select>
     </div>
-    <div class="alignRow mt-4">
-      <label :for="Fields.NUMBER" class="nowrap label-text label-min">
-        Number:
+    <div class="alignRow gap mt-4">
+      <label :for="Fields.NUMBER" class="nowrap label-text">
+        Number of Attacks:
       </label>
       <input
         type="number"
@@ -89,6 +89,7 @@
       :checked="state.holyShield"
       :useToggle="true"
       :highlight="true"
+      :disabled="!canUseAlerts"
       @click="state.holyShield = !state.holyShield"
       class="wide"
       >In range of Holy Shield</BaseCheckBox
@@ -104,6 +105,7 @@
         v-model.number="state.alerts"
         min="0"
         :max="alerts"
+        :disabled="!canUseAlerts"
         placeholder="0"
         title="Number of alerts you want to use to reduce damage"
         :id="Fields.ALERTS"
@@ -255,6 +257,7 @@ const hasShieldBlock = computed(() =>
 const hasImprovedShieldBlock = computed(() =>
   entityStore.abilityNames.includes("Improved Shield Block")
 );
+const canUseAlerts = computed(() => normalDamage.includes(state.type));
 
 const calculatorResult = computed(() => {
   let damage = numberFieldVal(state.damage);
@@ -307,7 +310,7 @@ const calculatorResult = computed(() => {
   let isGlancingBlow = false;
 
   // 1. glancing blow
-  if (vim >= acc) {
+  if (vim > acc) {
     damage /= 2;
     isGlancingBlow = true;
     reasons.push("glancing blow");
