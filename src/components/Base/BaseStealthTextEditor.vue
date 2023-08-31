@@ -19,7 +19,7 @@
       </p>
       <div v-if="renderPreview" v-html="renderMarkdown(modelValue)"></div>
       <p v-else-if="!placeholder && !renderPreview">
-        <b>Click to edit</b>
+        <b>Double click to edit</b>
       </p>
     </div>
     <div v-else>

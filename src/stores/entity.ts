@@ -60,7 +60,7 @@ const setInitialNotes = (entity: FullCollectedEntity) => {
   }
 };
 
-type EntityState = {
+interface EntityState {
   entity: undefined | FullCollectedEntity;
   levelsToProcess: number;
   apisInFlight: Record<string, boolean>;
@@ -68,13 +68,13 @@ type EntityState = {
     EntityAttribute,
     { fetched: boolean; changelog: FullEntityChangelog[] }
   >;
-};
+}
 
-type AddCollectedEntityOptions = {
+interface AddCollectedEntityOptions {
   redirectName: string;
   clearCharacterCreation: boolean;
   clearCogCreation: boolean;
-};
+}
 
 export const useEntityStore = defineStore("entity", {
   state: (): EntityState => {

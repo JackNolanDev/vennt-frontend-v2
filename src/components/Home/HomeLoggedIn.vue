@@ -2,8 +2,8 @@
   <PageLayout>
     <h3>Your Characters</h3>
     <BaseButton
-      v-for="(character, idx) in entityListStore.characters"
-      :key="idx"
+      v-for="character in homeState.characters"
+      :key="character.id"
       :to="{ name: ENTITY_ROUTE, params: { id: character.id } }"
     >
       <template #customIcon>
@@ -16,10 +16,25 @@
       Create or Import a new character
     </BaseButton>
     <h3>Your Campaigns</h3>
+    <BaseButton
+      v-for="campaign in homeState.campaigns"
+      :key="campaign.id"
+      :to="{ name: CAMPAIGN_ROUTE, params: { id: campaign.id } }"
+    >
+      <template #customIcon><BulletPoint></BulletPoint></template>
+      {{ campaign.name }} ({{ campaign.role }})
+    </BaseButton>
+    <BaseButton :to="{ name: CAMPAIGN_CREATE_ROUTE }">
+      <template #customIcon><BulletPoint></BulletPoint></template>
+      Create a new Campaign
+    </BaseButton>
+    <PendingCampaignInvitationsSection
+      v-if="homeState.campaignInvitations.length > 0"
+    ></PendingCampaignInvitationsSection>
     <h3>Your Cogs</h3>
     <BaseButton
-      v-for="(cog, idx) in entityListStore.cogs"
-      :key="idx"
+      v-for="cog in homeState.cogs"
+      :key="cog.id"
       :to="{ name: ENTITY_ROUTE, params: { id: cog.id } }"
     >
       <template #customIcon>
@@ -35,16 +50,20 @@
 </template>
 
 <script setup lang="ts">
-import { CREATE_COG_ROUTE, CREATE_ROUTE, ENTITY_ROUTE } from "@/router";
-import { useEntityListStore } from "@/stores/entityList";
+import {
+  CAMPAIGN_CREATE_ROUTE,
+  CAMPAIGN_ROUTE,
+  CREATE_COG_ROUTE,
+  CREATE_ROUTE,
+  ENTITY_ROUTE,
+} from "@/router";
 import BaseButton from "../Base/BaseButton.vue";
 import PageLayout from "../Base/PageLayout.vue";
 import { xp2Level } from "@/utils/attributeUtils";
-import { onBeforeMount } from "vue";
 import BulletPoint from "../Base/BulletPoint.vue";
+import PendingCampaignInvitationsSection from "./PendingCampaignInvitationsSection.vue";
+import { useHomeState } from "@/stores/home";
 
-const entityListStore = useEntityListStore();
-onBeforeMount(() => {
-  entityListStore.fetchEntities();
-});
+const homeState = useHomeState();
+homeState.fetchHomeData();
 </script>

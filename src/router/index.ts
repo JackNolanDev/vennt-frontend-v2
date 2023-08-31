@@ -24,7 +24,9 @@ export const ENTITY_SETTINGS_ROUTE = "entitySettings";
 export const WIKI_ROUTE = "wiki";
 export const WIKI_PATHS_ROUTE = "wikiPaths";
 export const WIKI_PATHS_SPECIFIC_ROUTE = "wikiPathsSpecific";
-export const CAMPAIGN_TEXT = "campaignTest";
+export const CAMPAIGN_ROUTE = "campaign";
+export const CAMPAIGN_CREATE_ROUTE = "campaignCreate";
+export const CAMPAIGN_TEST_ROUTE = "campaignTest";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -147,6 +149,21 @@ const router = createRouter({
       ],
     },
     {
+      path: "/campaign/:id",
+      name: CAMPAIGN_ROUTE,
+      component: () => import("../views/CampaignView.vue"),
+    },
+    {
+      path: "/campaign/create",
+      name: CAMPAIGN_CREATE_ROUTE,
+      component: () => import("../views/CampaignCreateView.vue"),
+    },
+    {
+      path: "/campaign/test",
+      name: CAMPAIGN_TEST_ROUTE,
+      component: () => import("../views/CampaignTestView.vue"),
+    },
+    {
       path: "/credits",
       name: CREDITS_ROUTE,
       component: () => import("../views/CreditsView.vue"),
@@ -161,11 +178,6 @@ const router = createRouter({
       path: "/style",
       name: "style",
       component: () => import("../views/StyleView.vue"),
-    },
-    {
-      path: "/campaign/test",
-      name: "style",
-      component: () => import("../views/CampaignTest.vue"),
     },
     {
       path: "/:pathMatch(.*)",

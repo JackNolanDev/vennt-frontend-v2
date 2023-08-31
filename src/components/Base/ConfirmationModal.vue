@@ -35,12 +35,14 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{
   (e: "mainButton"): void;
+  (e: "openModal"): void;
   (e: "exitModal"): void;
 }>();
 
 const openDialog = () => {
   const dialog = document.getElementById(props.id) as HTMLDialogElement | null;
   dialog?.showModal();
+  emit("openModal");
 };
 
 const mainButton = () => {

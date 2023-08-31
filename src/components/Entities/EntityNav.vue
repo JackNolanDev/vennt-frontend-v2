@@ -2,32 +2,32 @@
   <nav class="nav alignRow split main-entity-nav">
     <div class="alignRow gap ml-8 desktop-only">
       <BaseButton
-        :to="{ name: ENTITY_DESCRIPTION_ROUTE }"
+        :to="{ name: ENTITY_DESCRIPTION_ROUTE, query }"
         title="Main & Flux (f)"
         icon="person"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        :to="{ name: ENTITY_ABILITIES_ROUTE }"
+        :to="{ name: ENTITY_ABILITIES_ROUTE, query }"
         title="Abilities (a)"
         icon="hiking"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        :to="{ name: ENTITY_ITEMS_ROUTE }"
+        :to="{ name: ENTITY_ITEMS_ROUTE, query }"
         title="Inventory (i)"
         icon="backpack"
         class="skinny"
       ></BaseButton>
       <BaseButton
-        :to="{ name: ENTITY_COMBAT_ROUTE }"
+        :to="{ name: ENTITY_COMBAT_ROUTE, query }"
         title="Combat (c)"
         icon="sports_kabaddi"
         class="skinny"
       ></BaseButton>
       <BaseButton
         v-if="entityStore.canEdit"
-        :to="{ name: ENTITY_SETTINGS_ROUTE }"
+        :to="{ name: ENTITY_SETTINGS_ROUTE, query }"
         title="Character Settings (h)"
         icon="settings"
         class="skinny"
@@ -68,46 +68,46 @@
     <nav class="mt-8 mb-8 ml-8 mr-8">
       <div>
         <BaseButton
-          :to="{ name: ENTITY_STATS_ROUTE }"
+          :to="{ name: ENTITY_STATS_ROUTE, query }"
           title="Character stats"
           icon="bar_chart"
           class="skinny bold wide mobile-only"
           >Entity Stats</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_DESCRIPTION_ROUTE }"
+          :to="{ name: ENTITY_DESCRIPTION_ROUTE, query }"
           icon="person"
           class="skinny bold wide mobile-only"
           >Description</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_ABILITIES_ROUTE }"
+          :to="{ name: ENTITY_ABILITIES_ROUTE, query }"
           icon="hiking"
           class="skinny bold wide mobile-only"
           >Abilities</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_ITEMS_ROUTE }"
+          :to="{ name: ENTITY_ITEMS_ROUTE, query }"
           icon="backpack"
           class="skinny bold wide mobile-only"
           >Inventory</BaseButton
         >
         <BaseButton
-          :to="{ name: ENTITY_COMBAT_ROUTE }"
+          :to="{ name: ENTITY_COMBAT_ROUTE, query }"
           icon="sports_kabaddi"
           class="skinny bold wide mobile-only"
           >Combat</BaseButton
         >
         <BaseButton
           v-if="entityStore.canEdit"
-          :to="{ name: ENTITY_NOTES_ROUTE }"
+          :to="{ name: ENTITY_NOTES_ROUTE, query }"
           icon="edit_note"
           class="skinny bold wide mobile-only"
           >Notes</BaseButton
         >
         <BaseButton
           v-if="entityStore.canEdit"
-          :to="{ name: ENTITY_SETTINGS_ROUTE }"
+          :to="{ name: ENTITY_SETTINGS_ROUTE, query }"
           title="Character Settings (h)"
           icon="settings"
           class="skinny bold wide mobile-only"
@@ -151,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import {
+import router, {
   ENTITY_ABILITIES_ROUTE,
   ENTITY_COMBAT_ROUTE,
   ENTITY_ITEMS_ROUTE,
@@ -166,13 +166,15 @@ import {
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";
 import { useEntityNotesStore } from "@/stores/entityNotes";
-import { reactive } from "vue";
+import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 
 const state = reactive({ dropdownOpen: false });
 const accountInfoStore = useAccountInfoStore();
 const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
+
+const query = computed(() => router.currentRoute.value.query);
 
 const toggleDropdown = () => {
   state.dropdownOpen = !state.dropdownOpen;
