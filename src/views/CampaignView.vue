@@ -41,7 +41,7 @@
       <div v-else>
         <p>Campaign Loading</p>
       </div>
-      <div v-if="true" class="mt-64">
+      <div v-if="debug" class="mt-64">
         <pre><code>{{ campaignStore.details }}</code></pre>
       </div>
     </PageLayout>
@@ -85,4 +85,6 @@ const entitiesForAccount = (accountId: string): CampaignEntity[] =>
   campaignStore.details?.entities.filter(
     (entity) => entity.owner === accountId
   ) ?? [];
+
+const debug = process.env.NODE_ENV === "development";
 </script>

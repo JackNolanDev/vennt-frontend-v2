@@ -213,10 +213,10 @@ import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
 import CombatStatsItemSection from "./CombatStatsItemSection.vue";
 import AdjustAttributeVal from "../Attributes/AdjustAttributeVal.vue";
 import AdjustAttributeLink from "../Attributes/AdjustAttributeLink.vue";
-import { useAccountInfoStore } from "@/stores/accountInfo";
 import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
 import CogTypeDescription from "../Cog/CogTypeDescription.vue";
 import CombatStatsSingleRowAttributes from "./CombatStatsSingleRowAttributes.vue";
+import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -231,8 +231,7 @@ interface CombatStatsState {
   selectedAttr: string | undefined;
 }
 const state: CombatStatsState = reactive({ selectedAttr: undefined });
-
-const accountInfoStore = useAccountInfoStore();
+const entityStore = useEntityStore();
 
 const attrs = computed(() => {
   if (props.entityAttrs) {
@@ -341,11 +340,7 @@ const singleRowAttrs = computed(() =>
 
 const showUpdateDropdown = computed(() => {
   const fullEntity = props.entity.entity as FullEntity;
-  return (
-    fullEntity.id !== undefined &&
-    accountInfoStore.accountInfo &&
-    fullEntity.owner === accountInfoStore.accountInfo.id
-  );
+  return fullEntity.id !== undefined && entityStore.canEdit;
 });
 </script>
 

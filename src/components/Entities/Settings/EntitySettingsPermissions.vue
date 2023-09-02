@@ -1,5 +1,8 @@
 <template>
-  <BaseDropDown v-if="entityStore.entity" title="Permissions Settings">
+  <BaseDropDown
+    v-if="entityStore.entity && entityStore.isOwner"
+    title="Permissions Settings"
+  >
     <div class="mt-8 mb-8 ml-8 mr-8">
       <div class="alignRow gap">
         <BaseCheckBox

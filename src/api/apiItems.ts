@@ -8,14 +8,22 @@ import { authConfig, wrapAPI } from "./utils";
 
 export const updateItemApi = (
   itemId: string,
-  item: PartialEntityItem
+  item: PartialEntityItem,
+  campaign_id?: string
 ): Promise<FullEntityItem> => {
   return wrapAPI(
-    () => api.patch(`/item/${itemId}`, item, authConfig()),
+    () =>
+      api.patch(
+        `/item/${itemId}`,
+        item,
+        authConfig({ params: { campaign_id } })
+      ),
     fullItemValidator
   );
 };
 
-export const deleteItemApi = (itemId: string) => {
-  wrapAPI(() => api.delete(`/item/${itemId}`, authConfig()));
+export const deleteItemApi = (itemId: string, campaign_id?: string) => {
+  wrapAPI(() =>
+    api.delete(`/item/${itemId}`, authConfig({ params: { campaign_id } }))
+  );
 };

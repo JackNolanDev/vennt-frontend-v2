@@ -32,6 +32,8 @@
         icon="settings"
         class="skinny"
       ></BaseButton>
+      <div v-if="!entityStore.canEdit">(Viewer view)</div>
+      <div v-else-if="campaignStore.role === 'GM'">(GM view)</div>
     </div>
     <div class="mobile-only ml-8 mobile-header-text">
       <span v-if="entityStore.entity?.entity.other_fields.in_combat"
@@ -128,14 +130,14 @@
           icon="login"
           class="skinny bold wide"
         >
-          Login
+          Log in
         </BaseButton>
         <BaseButton
           :to="{ name: SIGNUP_ROUTE }"
           icon="person_add"
           class="skinny bold wide"
         >
-          Signup
+          Sign up
         </BaseButton>
       </div>
       <BaseButton
@@ -145,6 +147,17 @@
         class="skinny bold wide"
       >
         Log out
+      </BaseButton>
+      <BaseButton
+        v-if="campaignStore.details"
+        :to="{
+          name: CAMPAIGN_ROUTE,
+          params: { id: campaignStore.details.campaign.id },
+        }"
+        icon="group"
+        class="skinny bold wide"
+      >
+        Return to Campaign
       </BaseButton>
     </nav>
   </div>
@@ -162,15 +175,18 @@ import router, {
   SIGNUP_ROUTE,
   ENTITY_DESCRIPTION_ROUTE,
   ENTITY_NOTES_ROUTE,
+  CAMPAIGN_ROUTE,
 } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";
 import { useEntityNotesStore } from "@/stores/entityNotes";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
+import { useCampaignStore } from "@/stores/campaign";
 
 const state = reactive({ dropdownOpen: false });
 const accountInfoStore = useAccountInfoStore();
+const campaignStore = useCampaignStore();
 const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
 

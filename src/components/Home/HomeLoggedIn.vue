@@ -62,8 +62,8 @@ import PageLayout from "../Base/PageLayout.vue";
 import { xp2Level } from "@/utils/attributeUtils";
 import BulletPoint from "../Base/BulletPoint.vue";
 import PendingCampaignInvitationsSection from "./PendingCampaignInvitationsSection.vue";
-import { useHomeState } from "@/stores/home";
+import { useHomeStore } from "@/stores/home";
 
-const homeState = useHomeState();
+const homeState = useHomeStore();
 homeState.fetchHomeData();
 </script>

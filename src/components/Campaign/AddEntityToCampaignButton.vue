@@ -34,12 +34,12 @@ import { computed, reactive } from "vue";
 import type { HTMLString } from "@/utils/backendTypes";
 import { xp2Level } from "@/utils/attributeUtils";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
-import { useHomeState } from "@/stores/home";
+import { useHomeStore } from "@/stores/home";
 
 const state = reactive<{ selected: string }>({
   selected: "",
 });
-const homeState = useHomeState();
+const homeState = useHomeStore();
 const campaignStore = useCampaignStore();
 
 const fetchEntityList = async () => {

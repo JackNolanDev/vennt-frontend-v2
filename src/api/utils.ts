@@ -4,16 +4,17 @@ import { TOKEN_LOCAL_STORAGE } from "@/utils/constants";
 import { AxiosError, type AxiosRequestConfig, type AxiosResponse } from "axios";
 import type { z } from "zod";
 
-export const authConfig = (): AxiosRequestConfig => {
+export const authConfig = (config?: AxiosRequestConfig): AxiosRequestConfig => {
   const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
   if (token) {
     return {
+      ...config,
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
   }
-  return {};
+  return { ...config };
 };
 
 export const wrapAPI = async <T extends z.ZodTypeAny>(

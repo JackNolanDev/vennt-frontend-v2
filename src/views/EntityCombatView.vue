@@ -1,7 +1,10 @@
 <template>
   <h1>Combat</h1>
   <BaseButton
-    :to="{ params: { detail: 'damage' } }"
+    :to="{
+      params: { detail: 'damage' },
+      query: $router.currentRoute.value.query,
+    }"
     icon="calculate"
     class="wide"
     >Damage Calculator</BaseButton

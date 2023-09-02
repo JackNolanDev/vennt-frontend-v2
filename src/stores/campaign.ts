@@ -48,7 +48,10 @@ export const useCampaignStore = defineStore("campaign", {
         });
       }
     },
-    async fetchCampaign(campaignId: string) {
+    async fetchCampaign(campaignId: string, doNotRefetch?: boolean) {
+      if (doNotRefetch && campaignId === this.details?.campaign.id) {
+        return;
+      }
       this.details = await fetchCampaignDetailsApi(campaignId);
     },
     async addEntityToCampaign(request: PostCampaignEntity) {
@@ -78,6 +81,9 @@ export const useCampaignStore = defineStore("campaign", {
         );
       }
       await declineCampaignInviteApi(inviteId);
+    },
+    reset() {
+      this.details = undefined;
     },
   },
 });

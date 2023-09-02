@@ -19,7 +19,7 @@ interface HomeState {
   campaignInvitations: CampaignInviteWithDetails[];
 }
 
-export const useHomeState = defineStore("home", {
+export const useHomeStore = defineStore("home", {
   state: (): HomeState => ({
     entities: [],
     campaigns: [],
@@ -54,6 +54,11 @@ export const useHomeState = defineStore("home", {
         (invitation) => invitation.id !== invite.id
       );
       declineCampaignInviteApi(invite.id);
+    },
+    reset() {
+      this.entities = [];
+      this.campaigns = [];
+      this.campaignInvitations = [];
     },
   },
 });

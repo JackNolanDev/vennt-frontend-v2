@@ -17,26 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
-import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import { idValidator } from "@/utils/backendTypes";
-import { onBeforeMount, reactive } from "vue";
 import WikiPathGraph from "@/components/Wiki/WikiPathGraph.vue";
 import BaseCheckBox from "@/components/Base/BaseCheckBox.vue";
+import { reactive } from "vue";
 
 const state = reactive({ showTree: true });
-const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
-
-onBeforeMount(() => {
-  const id = idValidator.safeParse(router.currentRoute.value.query.entity);
-  if (!id.success) {
-    return;
-  }
-  if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
-    entityStore.clearLocalEntity();
-    entityStore.fetchCollectedEntity(id.data);
-  }
-});
 </script>

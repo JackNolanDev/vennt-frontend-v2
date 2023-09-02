@@ -32,11 +32,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHomeState } from "@/stores/home";
+import { useHomeStore } from "@/stores/home";
 import BaseButton from "../Base/BaseButton.vue";
 import DOMPurify from "dompurify";
 
-const homeState = useHomeState();
+const homeState = useHomeStore();
 </script>
 
 <style scoped>

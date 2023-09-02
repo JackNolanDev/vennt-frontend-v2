@@ -52,6 +52,7 @@ import {
 import { useEntityNotesStore } from "./entityNotes";
 import { useCogCreateStore } from "./cogCreate";
 import { diceTogglesForEntity } from "@/utils/diceUtils";
+import { useCampaignStore } from "./campaign";
 
 const setInitialNotes = (entity: FullCollectedEntity) => {
   const foundNotes = getEntityText("NOTES", entity);
@@ -94,12 +95,22 @@ export const useEntityStore = defineStore("entity", {
       state.entity ? sortAbilities(state.entity.abilities) : [],
     abilityNames: (state) =>
       state.entity ? state.entity.abilities.map((ability) => ability.name) : [],
-    canEdit: (state) => {
+    isOwner: (state) => {
       const accountInfoStore = useAccountInfoStore();
       return (
         state.entity &&
         accountInfoStore.accountInfo &&
         state.entity.entity.owner === accountInfoStore.accountInfo.id
+      );
+    },
+    canEdit: (state) => {
+      const accountInfoStore = useAccountInfoStore();
+      const campaignStore = useCampaignStore();
+      return (
+        state.entity &&
+        accountInfoStore.accountInfo &&
+        (state.entity.entity.owner === accountInfoStore.accountInfo.id ||
+          campaignStore.role === "GM")
       );
     },
     backstory: (state) => getEntityText("BACKSTORY", state.entity),
@@ -147,8 +158,11 @@ export const useEntityStore = defineStore("entity", {
       }
       setInitialNotes(this.entity);
     },
-    async fetchCollectedEntity(id: string) {
-      this.entity = await fetchCollectedEntityApi(id);
+    async fetchCollectedEntity(id: string, campaignId?: string) {
+      if (campaignId) {
+        useCampaignStore().fetchCampaign(campaignId, true);
+      }
+      this.entity = await fetchCollectedEntityApi(id, campaignId);
       setInitialNotes(this.entity);
     },
     async updateEntity(request: PartialEntity) {
@@ -194,7 +208,12 @@ export const useEntityStore = defineStore("entity", {
         ...request.attributes,
       };
       // 2. Get real results & use proper values
-      const updatedBaseEntity = await updateEntityAttributesApi(id, request);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      const updatedBaseEntity = await updateEntityAttributesApi(
+        id,
+        request,
+        campaignId
+      );
       this.entity = { ...this.entity, entity: updatedBaseEntity };
     },
     async fetchChangelog(attr: EntityAttribute, force?: boolean) {
@@ -207,9 +226,11 @@ export const useEntityStore = defineStore("entity", {
         return;
       }
       this.apisInFlight[key] = true;
+      const campaignId = useCampaignStore().details?.campaign.id;
       const changelog = await fetchEntityChangelogApi(
         this.entity.entity.id,
-        attr
+        attr,
+        campaignId
       );
       this.changelogs[attr] = { fetched: true, changelog };
       this.apisInFlight[key] = false;
@@ -221,16 +242,23 @@ export const useEntityStore = defineStore("entity", {
       attrs.forEach((attr) => {
         this.changelogs[attr] = { fetched: false, changelog: [] };
       });
-      filterEntityChangelogApi(this.entity.entity.id, { attributes: attrs });
+      const campaignId = useCampaignStore().details?.campaign.id;
+      filterEntityChangelogApi(
+        this.entity.entity.id,
+        { attributes: attrs },
+        campaignId
+      );
     },
     async addAbilities(
       abilities: UncompleteEntityAbility[],
       redirectToAbilities?: boolean
     ) {
       if (!this.entity || abilities.length <= 0) return;
+      const campaignId = useCampaignStore().details?.campaign.id;
       const newAbilities = await addAbilitiesApi(
         this.entity.entity.id,
-        abilities
+        abilities,
+        campaignId
       );
       this.entity.abilities.push(...newAbilities);
       if (redirectToAbilities && newAbilities.length > 0) {
@@ -254,9 +282,11 @@ export const useEntityStore = defineStore("entity", {
           (search) => search.id === abilityId
         );
         if (currentAbilityIdx >= 0) {
+          const campaignId = useCampaignStore().details?.campaign.id;
           this.entity.abilities[currentAbilityIdx] = await updateAbilityApi(
             abilityId,
-            ability
+            ability,
+            campaignId
           );
         }
       }
@@ -280,14 +310,20 @@ export const useEntityStore = defineStore("entity", {
           (ability) => ability.id !== abilityId
         );
       }
-      deleteAbilityApi(abilityId);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      deleteAbilityApi(abilityId, campaignId);
     },
     async addItems(
       items: UncompleteEntityItem[],
       redirectToInventory?: boolean
     ) {
       if (!this.entity || items.length <= 0) return;
-      const newItems = await addItemsApi(this.entity.entity.id, items);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      const newItems = await addItemsApi(
+        this.entity.entity.id,
+        items,
+        campaignId
+      );
       this.entity.items.push(...newItems);
       if (redirectToInventory && newItems.length > 0) {
         const query = { ...router.currentRoute.value.query };
@@ -310,7 +346,12 @@ export const useEntityStore = defineStore("entity", {
         (search) => search.id === itemId
       );
       if (currentItemIdx >= 0) {
-        this.entity.items[currentItemIdx] = await updateItemApi(itemId, item);
+        const campaignId = useCampaignStore().details?.campaign.id;
+        this.entity.items[currentItemIdx] = await updateItemApi(
+          itemId,
+          item,
+          campaignId
+        );
       }
     },
     deleteItem(item: ConsolidatedItem, closeSidebar?: boolean) {
@@ -331,7 +372,8 @@ export const useEntityStore = defineStore("entity", {
       this.entity.items = this.entity.items.filter(
         (item) => item.id !== itemId
       );
-      deleteItemApi(itemId);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      deleteItemApi(itemId, campaignId);
     },
     async saveText(key: EntityTextKey, text: string) {
       if (!this.entity) return;
@@ -352,7 +394,13 @@ export const useEntityStore = defineStore("entity", {
         if (this.entity.text[foundIdx].text !== text) {
           this.entity.text[foundIdx].text = text;
           this.apisInFlight[key] = true;
-          await updateEntityTextApi(this.entity.entity.id, key, text);
+          const campaignId = useCampaignStore().details?.campaign.id;
+          await updateEntityTextApi(
+            this.entity.entity.id,
+            key,
+            text,
+            campaignId
+          );
           this.apisInFlight[key] = false;
         }
       }
@@ -373,7 +421,12 @@ export const useEntityStore = defineStore("entity", {
     },
     async saveFlux(request: UncompleteEntityFlux) {
       if (!this.entity) return;
-      const newFlux = await addFluxApi(this.entity.entity.id, request);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      const newFlux = await addFluxApi(
+        this.entity.entity.id,
+        request,
+        campaignId
+      );
       this.entity.flux.push(newFlux);
     },
     updateFlux(fluxId: string, request: PartialEntityFlux) {
@@ -385,12 +438,14 @@ export const useEntityStore = defineStore("entity", {
           ...request,
         };
       }
-      updateFluxApi(this.entity.entity.id, fluxId, request);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      updateFluxApi(this.entity.entity.id, fluxId, request, campaignId);
     },
     deleteFlux(fluxId: string) {
       if (!this.entity) return;
       this.entity.flux = this.entity.flux.filter((flux) => flux.id !== fluxId);
-      deleteFluxApi(this.entity.entity.id, fluxId);
+      const campaignId = useCampaignStore().details?.campaign.id;
+      deleteFluxApi(this.entity.entity.id, fluxId, campaignId);
     },
   },
 });
