@@ -7,9 +7,11 @@ import {
   type PostCampaignEntity,
   type CampaignEntity,
   campaignEntityValidator,
+  type CampaignDesc,
 } from "@/utils/backendTypes";
 import { wrapAPI, authConfig } from "./utils";
 import api from "./apiInstance";
+import { z } from "zod";
 
 export const addCampaignApi = (
   request: PostCampaign
@@ -33,6 +35,16 @@ export const fetchCampaignDetailsApi = (
   return wrapAPI(
     () => api.get(`/campaign/${campaignId}`, authConfig()),
     fullCampaignDetailsValidator
+  );
+};
+
+export const putCampaignDescApi = (
+  campaignId: string,
+  request: CampaignDesc
+): Promise<boolean> => {
+  return wrapAPI(
+    () => api.put(`/campaign/${campaignId}/desc`, request, authConfig()),
+    z.boolean()
   );
 };
 

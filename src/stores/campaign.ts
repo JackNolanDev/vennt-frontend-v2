@@ -2,9 +2,11 @@ import {
   addCampaignApi,
   addCampaignEntityApi,
   fetchCampaignDetailsApi,
+  putCampaignDescApi,
 } from "@/api/apiCampaigns";
 import router, { CAMPAIGN_ROUTE } from "@/router";
 import type {
+  CampaignDesc,
   CampaignRole,
   FullCampaignDetails,
   PostCampaign,
@@ -53,6 +55,13 @@ export const useCampaignStore = defineStore("campaign", {
         return;
       }
       this.details = await fetchCampaignDetailsApi(campaignId);
+    },
+    async putCampaignDesc(request: CampaignDesc) {
+      if (!this.details) {
+        return;
+      }
+      this.details.campaign.desc = request.desc;
+      await putCampaignDescApi(this.details.campaign.id, request);
     },
     async addEntityToCampaign(request: PostCampaignEntity) {
       if (!this.details) {
