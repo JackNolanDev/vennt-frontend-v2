@@ -6,7 +6,7 @@
     :attrs="entityStore.entityAttributes"
   ></AbilityTable>
   <BaseButton
-    v-if="entityStore.entity?.entity.id"
+    v-if="entityStore.entity?.entity.id && entityStore.canEdit"
     :to="{
       name: ENTITY_ABILITIES_ROUTE,
       params: router.currentRoute.value.params,
@@ -17,7 +17,7 @@
     >Add custom ability</BaseButton
   >
   <BaseButton
-    v-if="entityStore.entity?.entity.id"
+    v-if="entityStore.entity?.entity.id && entityStore.canEdit"
     :to="{
       name: WIKI_PATHS_ROUTE,
       query: {

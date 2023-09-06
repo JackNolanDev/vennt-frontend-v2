@@ -32,7 +32,7 @@
         icon="settings"
         class="skinny"
       ></BaseButton>
-      <div v-if="!entityStore.canEdit">(Viewer view)</div>
+      <div v-if="!entityStore.canEdit">(Non-editor view)</div>
       <div v-else-if="campaignStore.role === 'GM'">(GM view)</div>
     </div>
     <div class="mobile-only ml-8 mobile-header-text">
