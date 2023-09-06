@@ -1,12 +1,16 @@
 <template>
   <h1>Combat</h1>
   <BaseButton
-    :to="{ params: { detail: 'damage' } }"
+    v-if="entityStore.canEdit"
+    :to="{
+      params: { detail: 'damage' },
+      query: $router.currentRoute.value.query,
+    }"
     icon="calculate"
     class="wide"
     >Damage Calculator</BaseButton
   >
-  <CombatTimeButtons></CombatTimeButtons>
+  <CombatTimeButtons v-if="entityStore.canEdit"></CombatTimeButtons>
   <h2>Basic Actions</h2>
   <BasicActionsTable></BasicActionsTable>
   <h2>Usable Abilities</h2>

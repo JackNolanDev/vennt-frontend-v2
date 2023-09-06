@@ -43,6 +43,12 @@ All code lives in the `/src` folder.
 - `/src/utils` - This is where all complex logic on the site exists.
 - `/src/utils/copy` - This is where most copy / code based configuration for the site exists
 
+### Credits
+
+Icons by [game-icons.net](https://game-icons.net/) used under a [CC BY 3.0 License](https://creativecommons.org/licenses/by/3.0/) in the `/public/images/actions` and `/public/images/weapons` folders.
+
+Art by [2minutetabletop.com](https://2minutetabletop.com/) used under a [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) in the `/public/images/map` folder.
+
 ---
 ## Default README
 

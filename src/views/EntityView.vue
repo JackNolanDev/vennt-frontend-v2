@@ -28,7 +28,7 @@ import PageLayout from "@/components/Base/PageLayout.vue";
 import { useEntityStore } from "@/stores/entity";
 import { computed, onBeforeMount, onUnmounted } from "vue";
 import { RouterView, useRoute } from "vue-router";
-import { idValidator } from "@/utils/backendTypes";
+import { idValidator, optionalIdValidator } from "@/utils/backendTypes";
 import router, {
   ENTITY_ABILITIES_ROUTE,
   ENTITY_COMBAT_ROUTE,
@@ -45,9 +45,11 @@ import RouteBasedRightSideBar from "@/components/Base/RouteBasedRightSideBar.vue
 import EntityRightSidebar from "@/components/Entities/EntityRightSidebar.vue";
 import EntityLeftSidebar from "@/components/Entities/EntityLeftSidebar.vue";
 import { useEntityNotesStore } from "@/stores/entityNotes";
+import { useCampaignStore } from "@/stores/campaign";
 
 const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
+const campaignStore = useCampaignStore();
 const route = useRoute();
 
 onBeforeMount(() => {
@@ -56,9 +58,14 @@ onBeforeMount(() => {
     router.push({ name: HOME_ROUTE });
     return;
   }
+  const campaignIdCheck = optionalIdValidator.safeParse(route.query.campaign);
+  const campaignId = campaignIdCheck.success ? campaignIdCheck.data : undefined;
   if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
     entityStore.clearLocalEntity();
-    entityStore.fetchCollectedEntity(id.data);
+    entityStore.fetchCollectedEntity(id.data, campaignId);
+  }
+  if (!campaignId) {
+    campaignStore.reset();
   }
 
   window.addEventListener("keydown", keyMapper);

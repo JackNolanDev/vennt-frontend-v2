@@ -2,13 +2,20 @@
   <div v-if="entity" class="ml-16">
     <h2>
       <RouterLink
-        :to="{ name: WIKI_PATHS_ROUTE, query: { entity: entity.id } }"
+        :to="{
+          name: WIKI_PATHS_ROUTE,
+          query: { entity: entity.id, campaign: $route.query.campaign },
+        }"
         class="stealth"
         >Paths</RouterLink
       >
       for
       <RouterLink
-        :to="{ name: ENTITY_ABILITIES_ROUTE, params: { id: entity.id } }"
+        :to="{
+          name: ENTITY_ABILITIES_ROUTE,
+          params: { id: entity.id },
+          query: { campaign: $route.query.campaign },
+        }"
         class="stealth"
         >{{ entity.name }}</RouterLink
       >

@@ -3,11 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Entity } from "@/utils/backendTypes";
+import type { CampaignEntity, Entity } from "@/utils/backendTypes";
 import { entityColor } from "@/utils/entityUtils";
 import { computed } from "vue";
 
-const props = defineProps<{ entity?: Entity }>();
+const props = defineProps<{ entity?: Entity | CampaignEntity }>();
 const charColor = computed(() => {
   return entityColor(props.entity);
 });

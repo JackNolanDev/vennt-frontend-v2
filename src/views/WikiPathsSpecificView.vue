@@ -82,23 +82,12 @@ import WikiLinksSingleLine from "@/components/Wiki/WikiLinksSingleLine.vue";
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import { idValidator, type EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility } from "@/utils/backendTypes";
 import { renderMarkdown, stringToLinkID } from "@/utils/textUtils";
-import { computed, onBeforeMount, watch } from "vue";
+import { computed, watch } from "vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
-
-onBeforeMount(() => {
-  const id = idValidator.safeParse(router.currentRoute.value.query.entity);
-  if (!id.success) {
-    return;
-  }
-  if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
-    entityStore.clearLocalEntity();
-    entityStore.fetchCollectedEntity(id.data);
-  }
-});
 
 // Implements the jump to element logic for after abilities are delivered browser
 watch(

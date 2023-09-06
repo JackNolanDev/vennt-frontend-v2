@@ -1,5 +1,6 @@
 import {
   ATTRIBUTES,
+  type CampaignEntity,
   type CollectedEntity,
   type Entity,
   type EntityAttribute,
@@ -12,7 +13,7 @@ import TurndownService from "turndown";
 import { attrFullName, attrShortName, getMaxAttr } from "./attributeUtils";
 import { renderMarkdown } from "./textUtils";
 
-export const entityColor = (entity?: Entity): string => {
+export const entityColor = (entity?: Entity | CampaignEntity): string => {
   if (!entity) {
     return "var(--red-600)";
   }

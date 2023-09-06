@@ -18,21 +18,25 @@ import WikiSidePanel from "@/components/Wiki/WikiSidePanel.vue";
 import router, { WIKI_PATHS_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import { idValidator } from "@/utils/backendTypes";
+import { idValidator, optionalIdValidator } from "@/utils/backendTypes";
 import { computed, onBeforeMount } from "vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
-jsonStorage.fetchAbilities();
 
 onBeforeMount(() => {
+  jsonStorage.fetchAbilities();
   const id = idValidator.safeParse(router.currentRoute.value.query.entity);
   if (!id.success) {
     return;
   }
+  const campaignIdCheck = optionalIdValidator.safeParse(
+    router.currentRoute.value.query.campaign
+  );
+  const campaignId = campaignIdCheck.success ? campaignIdCheck.data : undefined;
   if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
     entityStore.clearLocalEntity();
-    entityStore.fetchCollectedEntity(id.data);
+    entityStore.fetchCollectedEntity(id.data, campaignId);
   }
 });
 
