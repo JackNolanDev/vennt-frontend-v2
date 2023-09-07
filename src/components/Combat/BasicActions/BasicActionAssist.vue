@@ -10,7 +10,7 @@
     intensity of how much Vim/MP you spend on the assist.)
   </p>
   <div class="separator mt-8 mb-8"></div>
-  <form>
+  <form v-if="entityStore.canEdit">
     <div class="alignRow">
       <label for="basic-action-assist-attr" class="nowrap label-text label-min">
         Check Attribute:

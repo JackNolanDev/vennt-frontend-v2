@@ -54,6 +54,11 @@
                   (owned) => owned.name === ability.name
                 )?.id,
               },
+              query: {
+                ...($route.query.campaign && {
+                  campaign: $route.query.campaign,
+                }),
+              },
             }"
             icon="person"
             class="secondary wide mt-24"

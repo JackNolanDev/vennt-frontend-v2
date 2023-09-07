@@ -1,7 +1,7 @@
 <template>
   <BaseButton
     v-if="HANDLED_ABILITIES.includes(ability.name)"
-    :to="{ params: { detail: 'damage' } }"
+    :to="{ params: { detail: 'damage' }, query: $route.query }"
     icon="calculate"
     class="wide mt-8"
     >Damage Calculator</BaseButton

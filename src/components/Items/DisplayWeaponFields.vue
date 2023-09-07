@@ -10,7 +10,7 @@
     <b>Damage:</b> {{ damageString }}
   </p>
   <BaseButton
-    v-if="showDamageDice && entityStore.entity?.entity.other_fields.in_combat"
+    v-if="showDamageDice && entityStore.inCombat"
     :disabled="
       entityStore.entityAttributes.actions &&
       entityStore.entityAttributes.actions.val < 2

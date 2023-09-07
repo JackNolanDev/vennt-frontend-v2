@@ -113,6 +113,13 @@ export const useEntityStore = defineStore("entity", {
           campaignStore.role === "GM")
       );
     },
+    inCombat: (state) => {
+      const campaignStore = useCampaignStore();
+      return (
+        state.entity?.entity.other_fields.in_combat ||
+        campaignStore.details?.campaign.in_combat
+      );
+    },
     backstory: (state) => getEntityText("BACKSTORY", state.entity),
     description: (state) => getEntityText("DESC", state.entity),
     diceToggles(): DiceToggles {
@@ -167,9 +174,11 @@ export const useEntityStore = defineStore("entity", {
     },
     async updateEntity(request: PartialEntity) {
       if (this.entity) {
+        const campaignId = useCampaignStore().details?.campaign.id;
         this.entity.entity = await updateEntityApi(
           this.entity.entity.id,
-          request
+          request,
+          campaignId
         );
       }
     },

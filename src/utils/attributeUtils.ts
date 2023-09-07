@@ -13,7 +13,6 @@ import {
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
   type UseAttrMap,
-  type Entity,
 } from "./backendTypes";
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
@@ -187,11 +186,11 @@ export const generateDefaultAdjustMsg = (
 };
 
 export const adjustAttrsObject = (
-  entity: Entity,
   entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
   enforceMaximums = false,
-  propagateChanges = true
+  propagateChanges = true,
+  inCombat = false
 ): PartialEntityAttributes => {
   const attrs: PartialEntityAttributes = {};
   const defaultVal = (
@@ -256,7 +255,7 @@ export const adjustAttrsObject = (
   }
 
   // 4. only allow changes to actions / reactions when in combat
-  if (propagateChanges && !entity.other_fields.in_combat) {
+  if (propagateChanges && inCombat) {
     if (attrs.actions) {
       attrs.actions = 0;
     }
@@ -276,18 +275,18 @@ export const adjustAttrsAPI = async (
   propagateChanges = true,
   enforceMaximums = false
 ): Promise<boolean> => {
+  const entityStore = useEntityStore();
   const attrs = adjustAttrsObject(
-    entity.entity,
     entityAttrs,
     adjustAttrs,
-    enforceMaximums
+    enforceMaximums,
+    entityStore.inCombat
   );
 
   if (Object.keys(attrs).length === 0) {
     return false;
   }
 
-  const entityStore = useEntityStore();
   if (propagateChanges && attrs.xp) {
     const levelDiff = calcLevelDiffEntity(attrs.xp, entity);
     if (levelDiff > 0) {

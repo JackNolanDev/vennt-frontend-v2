@@ -240,7 +240,7 @@ const canDodge = computed(
       (typeof state.accuracy === "number"
         ? state.accuracy
         : parseInt(state.accuracy)) &&
-    (!entityStore.entity?.entity.other_fields.in_combat ||
+    (!entityStore.inCombat ||
       (entityStore.entityAttributes.reactions?.val ?? 0) > 0)
 );
 const hasBlock = computed(() => entityStore.abilityNames.includes("Block"));
@@ -248,7 +248,7 @@ const canBlock = computed(
   () =>
     !(canDodge.value && state.useDodge) &&
     normalDamage.includes(state.type) &&
-    (!entityStore.entity?.entity.other_fields.in_combat ||
+    (!entityStore.inCombat ||
       (entityStore.entityAttributes.reactions?.val ?? 0) > 0)
 );
 const hasShieldBlock = computed(() =>

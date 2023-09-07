@@ -304,7 +304,7 @@ const COMBAT_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
 ];
 
 const combatSingleRowAttributes = computed(() => {
-  if (props.entity.entity.other_fields.in_combat) {
+  if (props.entity.entity.other_fields.in_combat || entityStore.inCombat) {
     return ["actions", "reactions", ...COMBAT_SINGLE_ROW_ATTRIBUTES];
   }
   return COMBAT_SINGLE_ROW_ATTRIBUTES;

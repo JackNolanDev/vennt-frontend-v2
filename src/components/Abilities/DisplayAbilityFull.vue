@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import router, { WIKI_PATHS_SPECIFIC_ROUTE } from "@/router";
+import router, { WIKI_PATHS_ROUTE, WIKI_PATHS_SPECIFIC_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import type {
@@ -61,23 +61,29 @@ const pathLink = computed((): RouteLocationRaw => {
   const pathAbility = jsonStorage.abilities.abilities.find(
     (pathAbility) => pathAbility.name === props.ability.name
   );
+  const campaign = router.currentRoute.value.query.campaign;
+  const query = entityStore.entity
+    ? {
+        entity: entityStore.entity.entity.id,
+        ...(campaign && { campaign }),
+      }
+    : router.currentRoute.value.query;
   if (pathAbility && pathAbility.custom_fields?.path) {
     return {
       name: WIKI_PATHS_SPECIFIC_ROUTE,
       params: { path: stringToLinkID(pathAbility.custom_fields.path) },
-      query: entityStore.entity
-        ? { entity: entityStore.entity.entity.id }
-        : router.currentRoute.value.query,
+      query,
       hash: "#" + stringToLinkID(pathAbility.name),
     };
   }
-  return {
-    name: WIKI_PATHS_SPECIFIC_ROUTE,
-    params: { path: stringToLinkID(props.ability.custom_fields!.path!) },
-    query: entityStore.entity
-      ? { entity: entityStore.entity.entity.id }
-      : router.currentRoute.value.query,
-    hash: "#top",
-  };
+  if (props.ability.custom_fields?.path) {
+    return {
+      name: WIKI_PATHS_SPECIFIC_ROUTE,
+      params: { path: stringToLinkID(props.ability.custom_fields.path) },
+      query,
+      hash: "#top",
+    };
+  }
+  return { name: WIKI_PATHS_ROUTE, query };
 });
 </script>

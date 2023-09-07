@@ -9,7 +9,7 @@ export const handleEndTimePeriod = (period: "turn" | "encounter" | "rest") => {
     if (
       ability.active &&
       ability.uses?.adjust &&
-      compTimePeriod(ability.uses?.adjust?.time, period) >= 0
+      compTimePeriod(ability.uses.adjust.time, period) >= 0
     ) {
       entityStore.updateAbility(ability.id, { active: false });
     }
@@ -18,7 +18,7 @@ export const handleEndTimePeriod = (period: "turn" | "encounter" | "rest") => {
     if (
       item.active &&
       item.uses?.adjust &&
-      compTimePeriod(item.uses?.adjust?.time, period) >= 0
+      compTimePeriod(item.uses.adjust.time, period) >= 0
     ) {
       if (item.type === "consumable") {
         entityStore.deleteItemById(item.id);

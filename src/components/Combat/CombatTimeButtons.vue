@@ -1,15 +1,16 @@
 <template>
-  <div
-    v-if="entityStore.entity?.entity.other_fields.in_combat"
-    class="alignRow wide mb-16 time-buttons"
-  >
+  <div v-if="entityStore.inCombat" class="alignRow wide mb-16 time-buttons">
     <BaseButton @click="startRound" icon="refresh" class="wide"
       >Start Round</BaseButton
     >
     <BaseButton @click="startTurn" icon="sports_martial_arts" class="wide"
       >Start Turn</BaseButton
     >
-    <BaseButton @click="toggleInCombat" icon="flag" class="wide"
+    <BaseButton
+      @click="toggleInCombat"
+      icon="flag"
+      class="wide"
+      :disabled="!entityStore.entity?.entity.other_fields.in_combat"
       >End Combat</BaseButton
     >
   </div>
@@ -34,6 +35,10 @@ import { useEntityStore } from "@/stores/entity";
 import BaseButton from "../Base/BaseButton.vue";
 import { handleEndTimePeriod } from "@/utils/combatUtils";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
+import type {
+  EntityAttribute,
+  PartialEntityAttributes,
+} from "@/utils/backendTypes";
 
 const entityStore = useEntityStore();
 
@@ -62,18 +67,54 @@ const startTurn = () => {
   if (!entityStore.entity) {
     return;
   }
+  const attrGenerator = (
+    key: EntityAttribute,
+    currentVal: number,
+    valOnTurn: number,
+    damageKey: EntityAttribute,
+    damageAmount?: number
+  ): PartialEntityAttributes => {
+    const attrs: PartialEntityAttributes = {};
+    let baseAdjust = Math.max(Math.min(valOnTurn - currentVal, valOnTurn), 0);
+    if (damageAmount && damageAmount !== 0) {
+      let damageAdjust = 0;
+      if (damageAmount >= baseAdjust) {
+        damageAdjust = -baseAdjust;
+        baseAdjust = 0;
+      } else {
+        damageAdjust = -damageAmount;
+        baseAdjust -= damageAmount;
+      }
+      if (damageAdjust !== 0) {
+        attrs[damageKey] = damageAdjust;
+      }
+    }
+    if (baseAdjust !== 0) {
+      attrs[key] = baseAdjust;
+    }
+    return attrs;
+  };
+
   const currentActions = entityStore.entityAttributes.actions?.val ?? 0;
-  const currentReactions = entityStore.entityAttributes.reactions?.val ?? 0;
   const actionsOnTurn = entityStore.entityAttributes.actions_on_turn?.val ?? 3;
+  const stun = entityStore.entityAttributes.stun?.val;
+
+  const currentReactions = entityStore.entityAttributes.reactions?.val ?? 0;
   const reactionsOnTurn =
     entityStore.entityAttributes.reactions_on_turn?.val ?? 1;
+  const paralysis = entityStore.entityAttributes.paralysis?.val;
 
-  const actions = actionsOnTurn - currentActions;
-  const reactions = reactionsOnTurn - currentReactions;
   const attrs = {
-    ...(actions !== 0 && { actions }),
-    ...(reactions !== 0 && { reactions }),
+    ...attrGenerator("actions", currentActions, actionsOnTurn, "stun", stun),
+    ...attrGenerator(
+      "reactions",
+      currentReactions,
+      reactionsOnTurn,
+      "stun",
+      paralysis
+    ),
   };
+
   handleEndTimePeriod("turn");
   adjustAttrsAPI(
     entityStore.entity,
@@ -99,21 +140,7 @@ const toggleInCombat = () => {
   };
   entityStore.updateEntity({ other_fields, attributes });
   entityStore.clearChangelog(["actions", "reactions"]);
-
-  /*
-  const reset_actions = entityStore.entityAttributes.actions?.base;
-  const reset_reactions = entityStore.entityAttributes.reactions?.base;
-  const attrs = {
-    ...(reset_actions && { actions: -reset_actions }),
-    ...(reset_reactions && { reactions: -reset_reactions }),
-  };
-  adjustAttrsAPI(
-    entityStore.entity,
-    entityStore.entityAttributes,
-    attrs,
-    "Reset actions / reactions for combat"
-  );
-  */
+  handleEndTimePeriod("encounter");
 };
 </script>
 

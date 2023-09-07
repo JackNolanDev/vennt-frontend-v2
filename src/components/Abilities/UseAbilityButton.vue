@@ -53,7 +53,7 @@ const useButtonDisabled = computed(
     !canAffordAdjustments(
       abilityAdjustments.value,
       extendedAttributes.value,
-      entityStore.entity?.entity.other_fields.in_combat
+      entityStore.inCombat
     )
 );
 const useButtonTitle = computed(() => {
@@ -87,5 +87,11 @@ const useButton = () => {
     true,
     true
   );
+  if (
+    props.ability.uses?.adjust &&
+    props.ability.uses.adjust.time !== "permanent"
+  ) {
+    entityStore.updateAbility(props.ability.id, { active: true });
+  }
 };
 </script>

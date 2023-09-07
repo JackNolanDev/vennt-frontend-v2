@@ -36,7 +36,7 @@
       <div v-else-if="campaignStore.role === 'GM'">(GM view)</div>
     </div>
     <div class="mobile-only ml-8 mobile-header-text">
-      <span v-if="entityStore.entity?.entity.other_fields.in_combat"
+      <span v-if="entityStore.inCombat"
         >Actions:
         <span class="number">{{
           entityStore.entityAttributes.actions?.val
