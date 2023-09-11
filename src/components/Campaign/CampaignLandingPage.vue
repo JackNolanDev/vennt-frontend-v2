@@ -20,19 +20,33 @@
         <strong>{{ member.username }}</strong> ({{ member.role }})
       </td>
       <td v-if="entitiesForAccount(member.account_id).length > 0">
-        <BaseButton
+        <div
           v-for="entity in entitiesForAccount(member.account_id)"
           :key="entity.entity_id"
-          :to="{
-            name: ENTITY_ROUTE,
-            params: { id: entity.entity_id },
-            query: { campaign: campaignStore.details?.campaign.id },
-          }"
-          class="wide"
-          ><template #customIcon>
-            <BulletPoint :entity="entity"></BulletPoint> </template
-          >{{ entity.name }}</BaseButton
+          class="alignRow"
         >
+          <BaseButton
+            :to="{
+              name: ENTITY_ROUTE,
+              params: { id: entity.entity_id },
+              query: { campaign: campaignStore.details?.campaign.id },
+            }"
+            class="wide"
+            ><template #customIcon>
+              <BulletPoint :entity="entity"></BulletPoint></template
+            >{{
+              `${entity.name} ${entity.gm_only ? " (Hidden)" : ""}`
+            }}</BaseButton
+          >
+          <RemoveCampaignEntityButton
+            v-if="
+              campaignStore.role === CAMPAIGN_ROLE_GM ||
+              (accountInfoStore.accountInfo &&
+                entity.owner === accountInfoStore.accountInfo.id)
+            "
+            :entity="entity"
+          ></RemoveCampaignEntityButton>
+        </div>
       </td>
       <td v-else>(No entities added)</td>
     </tr>
@@ -43,13 +57,20 @@
 <script setup lang="ts">
 import router, { ENTITY_ROUTE, HOME_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
-import { idValidator, type CampaignEntity } from "@/utils/backendTypes";
+import {
+  idValidator,
+  type CampaignEntity,
+  CAMPAIGN_ROLE_GM,
+} from "@/utils/backendTypes";
 import { onBeforeMount, reactive } from "vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import AddEntityToCampaignButton from "@/components/Campaign/AddEntityToCampaignButton.vue";
 import BulletPoint from "@/components/Base/BulletPoint.vue";
 import BaseStealthTextEditor from "@/components/Base/BaseStealthTextEditor.vue";
+import RemoveCampaignEntityButton from "./RemoveCampaignEntityButton.vue";
+import { useAccountInfoStore } from "@/stores/accountInfo";
 
+const accountInfoStore = useAccountInfoStore();
 const campaignStore = useCampaignStore();
 const defaultState = { desc: campaignStore.details?.campaign.desc ?? "" };
 const state = reactive({ ...defaultState });

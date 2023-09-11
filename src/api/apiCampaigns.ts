@@ -8,6 +8,8 @@ import {
   type CampaignEntity,
   campaignEntityValidator,
   type CampaignDesc,
+  type CampaignRole,
+  campaignRoleValidator,
 } from "@/utils/backendTypes";
 import { wrapAPI, authConfig } from "./utils";
 import api from "./apiInstance";
@@ -55,5 +57,43 @@ export const addCampaignEntityApi = (
   return wrapAPI(
     () => api.post(`/campaign/${campaignId}/entity`, request, authConfig()),
     campaignEntityValidator
+  );
+};
+
+export const removeCampaignEntityApi = (
+  campaignId: string,
+  entityId: string
+): Promise<boolean> => {
+  return wrapAPI(
+    () =>
+      api.delete(`/campaign/${campaignId}/entity/${entityId}`, authConfig()),
+    z.boolean()
+  );
+};
+
+export const updateCampaignMemberRoleApi = (
+  campaignId: string,
+  memberId: string,
+  role: CampaignRole
+): Promise<CampaignRole> => {
+  return wrapAPI(
+    () =>
+      api.put(
+        `/campaign/${campaignId}/entity/${memberId}/role`,
+        role,
+        authConfig()
+      ),
+    campaignRoleValidator
+  );
+};
+
+export const removeCampaignMemberApi = (
+  campaignId: string,
+  memberId: string
+): Promise<boolean> => {
+  return wrapAPI(
+    () =>
+      api.delete(`/campaign/${campaignId}/member/${memberId}`, authConfig()),
+    z.boolean()
   );
 };

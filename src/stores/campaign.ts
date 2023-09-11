@@ -3,6 +3,7 @@ import {
   addCampaignEntityApi,
   fetchCampaignDetailsApi,
   putCampaignDescApi,
+  removeCampaignEntityApi,
 } from "@/api/apiCampaigns";
 import router, { CAMPAIGN_ROUTE } from "@/router";
 import type {
@@ -72,6 +73,15 @@ export const useCampaignStore = defineStore("campaign", {
         request
       );
       this.details.entities.push(addedEntity);
+    },
+    async removeEntityFromCampaign(entityId: string) {
+      if (!this.details) {
+        return;
+      }
+      this.details.entities = this.details.entities.filter(
+        (entity) => entity.entity_id !== entityId
+      );
+      await removeCampaignEntityApi(this.details.campaign.id, entityId);
     },
     async adminSendInvite(request: Omit<PostCampaignInvite, "campaign_id">) {
       if (!this.details) {
