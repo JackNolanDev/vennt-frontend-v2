@@ -20,7 +20,14 @@
         class="mb-64"
       >
         <div class="alignRow gap copy-reveal">
-          <h2 :id="stringToLinkID(ability.name)">{{ ability.name }}</h2>
+          <h2 :id="stringToLinkID(ability.name)">
+            <AbilityName
+              v-if="ability.entityAbility"
+              :ability="ability.entityAbility"
+              :show-highlight="true"
+            ></AbilityName>
+            <AbilityName v-else :ability="ability"></AbilityName>
+          </h2>
           <BaseCopyButton
             :text="copyLink(ability)"
             :link="true"
@@ -41,18 +48,12 @@
         ></DisplayAbilityEffect>
         <div v-if="entityStore.entity">
           <BaseButton
-            v-if="
-              entityStore.entity.abilities.some(
-                (owned) => owned.name === ability.name
-              )
-            "
+            v-if="ability.entityAbility"
             :to="{
               name: ENTITY_ABILITIES_ROUTE,
               params: {
                 id: entityStore.entity.entity.id,
-                detail: entityStore.entity.abilities.find(
-                  (owned) => owned.name === ability.name
-                )?.id,
+                detail: ability.entityAbility.id,
               },
               query: {
                 ...($route.query.campaign && {
@@ -87,9 +88,10 @@ import WikiLinksSingleLine from "@/components/Wiki/WikiLinksSingleLine.vue";
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility, FullEntityAbility } from "@/utils/backendTypes";
 import { renderMarkdown, stringToLinkID } from "@/utils/textUtils";
 import { computed, watch } from "vue";
+import AbilityName from "@/components/Abilities/AbilityName.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
@@ -124,9 +126,22 @@ const pathAndAbilities = computed(() => {
     return null;
   }
 
-  const abilities = jsonStorage.abilities.abilities.filter(
-    (ability) => ability.custom_fields?.path === path.name
-  );
+  let abilities: Array<EntityAbility & { entityAbility?: FullEntityAbility }> =
+    jsonStorage.abilities.abilities.filter(
+      (ability) => ability.custom_fields?.path === path.name
+    );
+
+  if (entityStore.entity) {
+    abilities = abilities.map((ability) => {
+      const found = entityStore.entity?.abilities.find(
+        (owned) => owned.name === ability.name
+      );
+      if (found) {
+        ability.entityAbility = found;
+      }
+      return ability;
+    });
+  }
 
   return { path, abilities };
 });

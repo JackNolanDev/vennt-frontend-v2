@@ -1,46 +1,53 @@
 <template>
-  <div v-if="abilities.length > 0" class="card column">
-    <div class="alignRow tableData tableHeader">
-      <div class="abilityName headerFont">
-        <b>Ability</b>
-      </div>
-      <div class="abilityActivation headerFont">
-        <b>Activation</b>
-      </div>
-      <div class="abilityEffect headerFont">
-        <b>Effect</b>
-      </div>
-    </div>
-    <div
-      v-for="(ability, index) in abilities"
-      v-bind:key="index"
-      v-bind:id="stringToLinkID(ability.id)"
-      v-bind:class="abilityOpened(ability) ? 'selected' : ''"
-      class="alignRow tableItems"
-    >
-      <div class="tableData">
-        <div class="abilityName">{{ improveTextForDisplay(ability.name) }}</div>
-        <div class="abilityActivation">
-          {{ ability.custom_fields?.activation }}
-        </div>
-        <div class="abilityEffect condense-child-text">
+  <table v-if="abilities.length > 0" class="no-border">
+    <thead class="main-table">
+      <tr>
+        <th>Ability</th>
+        <th>Activation</th>
+        <th class="ability-effect">Effect</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        v-for="(ability, index) in abilities"
+        v-bind:key="index"
+        v-bind:id="stringToLinkID(ability.id)"
+        v-bind:class="abilityOpened(ability) ? 'selected' : ''"
+      >
+        <td
+          :class="{
+            highlight: ability.custom_fields?.highlight,
+            [ability.custom_fields?.highlight ?? 'red']: true,
+          }"
+          class="ability-name"
+        >
+          <AbilityName :ability="ability"></AbilityName>
+        </td>
+        <td>{{ ability.custom_fields?.activation }}</td>
+        <td class="ability-effect condense-child-text">
           <DisplayAbilityEffect
             :ability="ability"
             :attrs="attrs"
           ></DisplayAbilityEffect>
-        </div>
-      </div>
-      <router-link :to="abilityLink(ability)" class="btn basicBtn link">
-        <div class="basicBtnContents">
-          <span class="material-symbols-outlined">{{
-            abilityOpened(ability)
-              ? "keyboard_arrow_left"
-              : "keyboard_arrow_right"
-          }}</span>
-        </div>
-      </router-link>
-    </div>
-  </div>
+        </td>
+        <td class="no-padding action-button">
+          <BaseButton
+            v-if="abilityOpened(ability)"
+            :to="abilityLink(ability)"
+            icon="keyboard_arrow_left"
+            title="Close ability details"
+          ></BaseButton>
+          <BaseButton
+            v-else
+            :to="abilityLink(ability)"
+            icon="keyboard_arrow_right"
+            title="Open ability details"
+          ></BaseButton>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 
 <script setup lang="ts">
@@ -49,9 +56,11 @@ import type {
   FullEntityAbility,
   UpdatedEntityAttributes,
 } from "@/utils/backendTypes";
-import { stringToLinkID, improveTextForDisplay } from "@/utils/textUtils";
-import { type RouteLocationRaw, RouterLink } from "vue-router";
+import { stringToLinkID } from "@/utils/textUtils";
+import type { RouteLocationRaw } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
+import BaseButton from "../Base/BaseButton.vue";
+import AbilityName from "./AbilityName.vue";
 
 defineProps<{
   abilities: FullEntityAbility[];
@@ -79,30 +88,28 @@ const abilityLink = (ability: FullEntityAbility): RouteLocationRaw => {
 </script>
 
 <style scoped>
-.abilityName {
-  width: 20%;
+thead.main-table {
+  font-size: 15pt;
+  text-align: left;
+}
+
+td.no-padding {
+  padding: 0;
+}
+.action-button {
+  width: 42px;
+}
+.ability-name {
   font-size: 14pt;
-}
-.abilityActivation {
-  width: 15%;
-}
-.abilityEffect {
-  width: 65%;
 }
 
 /* skip tables in the ability table so it doesn't get too messy */
-.abilityEffect :deep(table) {
+.ability-effect :deep(table) {
   display: none;
 }
 
 @container page (max-width: 750px) {
-  .abilityName {
-    width: 50%;
-  }
-  .abilityActivation {
-    width: 50%;
-  }
-  .abilityEffect {
+  .ability-effect {
     display: none;
   }
 }

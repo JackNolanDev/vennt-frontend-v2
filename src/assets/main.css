@@ -18,6 +18,11 @@
     'opsz' 30
 }
 
+.no-fill .material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0
+}
+
 :root {
   --app-font: "Raleway", sans-serif;
   --logo-font: Copperplate, "Raleway", sans-serif;
@@ -80,9 +85,31 @@
   --gray-650: #636466;
   --gray-700: #4d4e50;
   --gray-750: #3c3d3f;
+  --gray-775: #38393B;
   --gray-800: #2a2a2a;
   --gray-900: #303030;
+  --gray-925: #212121;
   --gray-950: #1d1d1d;
+
+  --forest-green-500: #1D2B1B;
+  --forest-green-550: #1B291A;
+  --forest-green-700: #151F13;
+  --forest-green-750: #131C11;
+
+  --tomato-500: #823222;
+  --tomato-550: #782E1F;
+  --tomato-700: #45110C;
+  --tomato-750: #40100B;
+
+  --orange-500: #7D4524;
+  --orange-550: #733F21;
+  --orange-700: #381F10;
+  --orange-750: #361E10;
+
+  --blue-500: #1A3265;
+  --blue-550: #192F5E;
+  --blue-700: #112041;
+  --blue-750: #0F1D3B;
 
   /* THEME SETTINGS */
   --background: var(--gray-250);
@@ -778,6 +805,9 @@ table {
   border-spacing: 0;
   background-color: var(--background-highlight);
 }
+table.no-border {
+  border: 0px;
+}
 thead {
   border-bottom: 1px solid var(--border);
 }
@@ -803,6 +833,111 @@ tbody > tr:last-child > td:first-child {
   border-bottom-left-radius: var(--border-radius);
 }
 tbody > tr:last-child > td:last-child {
+  border-bottom-right-radius: var(--border-radius);
+}
+tr.selected {
+  border-radius: 2px;
+  outline-style: solid;
+  outline-color: var(--border-focus);
+  outline-width: 3px;
+  z-index: 2;
+}
+/* start table highlight color logic */
+.highlight.green {
+  background-color: var(--forest-green-500);
+}
+.highlight.dark_green {
+  background-color: var(--forest-green-700);
+}
+.highlight.orange {
+  background-color: var(--orange-500);
+}
+.highlight.dark_orange {
+  background-color: var(--orange-700);
+}
+.highlight.red {
+  background-color: var(--tomato-500);
+}
+.highlight.dark_red {
+  background-color: var(--tomato-700);
+}
+.highlight.blue {
+  background-color: var(--blue-500);
+}
+.highlight.dark_blue {
+  background-color: var(--blue-700);
+}
+.highlight.gray {
+  background-color: var(--gray-750);
+}
+.highlight.dark_gray {
+  background-color: var(--gray-925);
+}
+
+tr:nth-child(even) > td.highlight.green {
+  background-color: var(--forest-green-500);
+}
+tr:nth-child(odd) > td.highlight.green {
+  background-color: var(--forest-green-550);
+}
+tr:nth-child(even) > td.highlight.dark_green {
+  background-color: var(--forest-green-700);
+}
+tr:nth-child(odd) > td.highlight.dark_green {
+  background-color: var(--forest-green-750);
+}
+tr:nth-child(even) > td.highlight.orange {
+  background-color: var(--orange-500);
+}
+tr:nth-child(odd) > td.highlight.orange {
+  background-color: var(--orange-550);
+}
+tr:nth-child(even) > td.highlight.dark_orange {
+  background-color: var(--orange-700);
+}
+tr:nth-child(odd) > td.highlight.dark_orange {
+  background-color: var(--orange-750);
+}
+tr:nth-child(even) > td.highlight.red {
+  background-color: var(--tomato-500);
+}
+tr:nth-child(odd) > td.highlight.red {
+  background-color: var(--tomato-550);
+}
+tr:nth-child(even) > td.highlight.dark_red {
+  background-color: var(--tomato-700);
+}
+tr:nth-child(odd) > td.highlight.dark_red {
+  background-color: var(--tomato-750);
+}
+tr:nth-child(even) > td.highlight.blue {
+  background-color: var(--blue-500);
+}
+tr:nth-child(odd) > td.highlight.blue {
+  background-color: var(--blue-550);
+}
+tr:nth-child(even) > td.highlight.dark_blue {
+  background-color: var(--blue-700);
+}
+tr:nth-child(odd) > td.highlight.dark_blue {
+  background-color: var(--blue-750);
+}
+tr:nth-child(even) > td.highlight.gray {
+  background-color: var(--gray-750);
+}
+tr:nth-child(odd) > td.highlight.gray {
+  background-color: var(--gray-775);
+}
+tr:nth-child(even) > td.highlight.dark_gray {
+  background-color: var(--gray-925);
+}
+tr:nth-child(odd) > td.highlight.dark_gray {
+  background-color: var(--gray-950);
+}
+tr:not(:first-child) > td.highlight {
+  border-top-right-radius: var(--border-radius);
+}
+tr:not(:last-child) > td.highlight {
   border-bottom-right-radius: var(--border-radius);
 }
 

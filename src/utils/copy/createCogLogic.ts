@@ -228,7 +228,7 @@ const cogAbilityUses = (
 ): UsesMap | undefined => {
   const { uses: originalUses, name } = cogAbility;
   // need to make a deep copy so we can modify values without effecting base abilities
-  const uses: UsesMap = structuredClone(originalUses);
+  const uses: UsesMap | undefined = structuredClone(originalUses);
   if (!uses?.adjust) {
     return uses;
   }

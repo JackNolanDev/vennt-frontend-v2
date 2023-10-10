@@ -147,6 +147,14 @@ Button styles:
   color: var(--text-contrast);
 }
 
+.outline-on-hover:hover {
+  border-radius: 2px;
+  outline-style: solid;
+  outline-color: var(--border-focus);
+  outline-width: 3px;
+  z-index: 2;
+}
+
 /* TODO: Would be cool if this faded out https://vuejs.org/guide/built-ins/transition.html#the-transition-component */
 .btn-temp-note {
   position: absolute;

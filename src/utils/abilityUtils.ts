@@ -216,6 +216,12 @@ export function sortAbilities(
     (ability) => ability !== undefined && ability.name
   );
   return abilitiesCopy.sort((a1, a2) => {
+    // 0. put abilities with stars at the top of the list
+    const a1Stars = a1.custom_fields?.stars ?? 0;
+    const a2Stars = a2.custom_fields?.stars ?? 0;
+    if ((a1Stars > 0 || a2Stars > 0) && a1Stars !== a2Stars) {
+      return a2Stars - a1Stars;
+    }
     // 1. put Passive abilities at the end of the list
     const a1Passive =
       a1.custom_fields?.cost?.passive ||
@@ -304,7 +310,9 @@ export const sortPaths = (abilities: EntityAbility[]): string[] => {
 
 const abilityUpdatableFields = (
   Object.keys(abilityFieldsNameValidator.Values) as EntityAbilityFields[]
-).filter((field) => !["keys", "times_taken"].includes(field));
+).filter(
+  (field) => !["keys", "times_taken", "stars", "highlight"].includes(field)
+);
 
 const diffExistsBetweenAbilityFields = (
   a: EntityAbility,
@@ -346,6 +354,8 @@ export const findNewAbilityVersion = (
         ...found.custom_fields,
         keys: ability.custom_fields?.keys,
         times_taken: ability.custom_fields?.times_taken,
+        stars: ability.custom_fields?.stars,
+        highlight: ability.custom_fields?.highlight,
       },
     };
   }

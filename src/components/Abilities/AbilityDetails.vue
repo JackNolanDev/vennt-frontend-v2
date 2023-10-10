@@ -13,7 +13,9 @@
     </BaseButton>
   </div>
   <div v-else>
-    <h2>{{ ability.name }}</h2>
+    <h2>
+      <AbilityName :ability="ability" :show-highlight="true"></AbilityName>
+    </h2>
     <DisplayAbilityFull :ability="ability" :attrs="attrs"></DisplayAbilityFull>
     <AbilityAdditionalDetailDropdown
       :ability="ability"
@@ -42,6 +44,7 @@ import AbilityDetailsInteractive from "./AbilityDetailsInteractive.vue";
 import { reactive } from "vue";
 import EditAbility from "./EditAbility.vue";
 import BaseButton from "../Base/BaseButton.vue";
+import AbilityName from "./AbilityName.vue";
 
 defineProps<{ ability: FullEntityAbility; attrs?: UpdatedEntityAttributes }>();
 const state = reactive({ editAbility: false });
