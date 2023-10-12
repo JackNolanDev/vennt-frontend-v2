@@ -4,6 +4,10 @@
     :ability="ability"
     :inputs="ability.uses.inputs"
   ></AbilityInputsUse>
+  <AbilityOptionalHealUse
+    v-if="ability.uses?.optional_heal"
+    :ability="ability"
+  ></AbilityOptionalHealUse>
   <AbilityWeaponsUse
     v-if="ability.uses?.weapons"
     :ability="ability"
@@ -22,6 +26,7 @@ import AbilityInputsUse from "./AbilityInputsUse.vue";
 import AbilityRollUse from "./AbilityRollUse.vue";
 import AbilityWeaponsUse from "./AbilityWeaponsUse.vue";
 import CheckUse from "./CheckUse.vue";
+import AbilityOptionalHealUse from "./AbilityOptionalHealUse.vue";
 
 defineProps<{ ability: FullEntityAbility }>();
 </script>

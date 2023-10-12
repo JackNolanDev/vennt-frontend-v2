@@ -111,7 +111,8 @@ export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;
 export const abilityUseAdjustments = (
   ability: EntityAbility,
   attrs: UpdatedEntityAttributes,
-  additionalAdjustments?: Record<EntityAttribute, number>
+  additionalAdjustments?: Record<EntityAttribute, number>,
+  optionalHeal?: boolean
 ): Record<EntityAttribute, number> => {
   const adjustMap: Record<EntityAttribute, number> = {
     ...additionalAdjustments,
@@ -147,6 +148,11 @@ export const abilityUseAdjustments = (
   }
   if (ability.uses?.heal?.attr) {
     Object.entries(ability.uses.heal.attr).forEach(([attr, val]) => {
+      insertVal(attr, val);
+    });
+  }
+  if (optionalHeal && ability.uses?.optional_heal?.attr) {
+    Object.entries(ability.uses.optional_heal.attr).forEach(([attr, val]) => {
       insertVal(attr, val);
     });
   }

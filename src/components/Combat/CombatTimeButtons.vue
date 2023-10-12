@@ -52,8 +52,7 @@ const startRound = () => {
   const hp_diff = -(burning ?? 0) - (bleeding ?? 0);
   const attrs = {
     ...(hp_diff && { hp: hp_diff }),
-    ...(burning && { burning: -burning }),
-    ...(bleeding && { bleeding: -bleeding }),
+    ...(burning && { burning: -Math.min(burning, 3) }),
   };
   adjustAttrsAPI(
     entityStore.entity,
@@ -110,7 +109,7 @@ const startTurn = () => {
       "reactions",
       currentReactions,
       reactionsOnTurn,
-      "stun",
+      "paralysis",
       paralysis
     ),
   };

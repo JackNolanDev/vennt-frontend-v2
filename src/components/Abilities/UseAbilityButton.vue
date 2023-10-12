@@ -21,14 +21,22 @@ import type { FullEntityAbility } from "@/utils/backendTypes";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 
-const props = defineProps<{ ability: FullEntityAbility; spellIdx?: number }>();
+const props = defineProps<{
+  ability: FullEntityAbility;
+  spellIdx?: number;
+  optionalHeal?: boolean;
+}>();
 const entityStore = useEntityStore();
 
 const useButtonText = computed(() => {
+  const optionalHealText = props.optionalHeal ? " (With Optional Heal)" : "";
   if (props.spellIdx === undefined) {
-    return "Use Ability";
+    return "Use Ability" + optionalHealText;
   }
-  return ["Half Cast", "Regular Cast", "Double Cast"][props.spellIdx];
+  return (
+    ["Half Cast", "Regular Cast", "Double Cast"][props.spellIdx] +
+    optionalHealText
+  );
 });
 const additionalAdjustments = computed((): Record<string, number> => {
   if (props.spellIdx === undefined || !props.ability.custom_fields?.mp_cost) {
@@ -43,7 +51,8 @@ const abilityAdjustments = computed(() =>
   abilityUseAdjustments(
     props.ability,
     extendedAttributes.value,
-    additionalAdjustments.value
+    additionalAdjustments.value,
+    props.optionalHeal
   )
 );
 

@@ -64,6 +64,7 @@ const setInitialNotes = (entity: FullCollectedEntity) => {
 interface EntityState {
   entity: undefined | FullCollectedEntity;
   levelsToProcess: number;
+  recoveryShockSrc?: string[];
   apisInFlight: Record<string, boolean>;
   changelogs: Record<
     EntityAttribute,

@@ -1,12 +1,24 @@
 <template>
   <div v-if="hasHistory" class="card column border history-table">
-    <div class="alignRow tableData tableHeader sticky noBtn">
+    <div class="alignRow tableData tableHeader sticky noBtn skip-padding">
       <div class="logPrev headerFont">
         <b v-if="showDiff">Change</b>
         <b v-else>Prev Val</b>
       </div>
-      <div class="logMsg headerFont">
+      <div class="logMsg headerFont alignRow split">
         <b>Message</b>
+        <BaseButton
+          v-if="state.chronologicalSort"
+          @click="clickSortButton"
+          icon="arrow_downward"
+          title="Sorted chronologically, click so the most recent changes are at the top"
+        ></BaseButton>
+        <BaseButton
+          v-else
+          @click="clickSortButton"
+          icon="arrow_upward"
+          title="Sorted chronologically, click so the most recent changes are at the bottom"
+        ></BaseButton>
       </div>
     </div>
     <div
@@ -36,13 +48,23 @@ import type {
   EntityChangelog,
   FullEntityChangelog,
 } from "@/utils/backendTypes";
-import { computed } from "vue";
+import { computed, reactive } from "vue";
+import BaseButton from "../Base/BaseButton.vue";
+import { CHANGELOG_SORT_LOCAL_STORAGE } from "@/utils/constants";
+
+const initialState = (): { chronologicalSort: boolean } => {
+  const sort = localStorage.getItem(CHANGELOG_SORT_LOCAL_STORAGE);
+  return { chronologicalSort: sort !== "inverse" };
+};
 
 const props = defineProps<{
   entity: CollectedEntity;
   changelog: EntityChangelog[];
   attr: EntityAttribute;
 }>();
+const state = reactive(initialState());
+
+// TODO: Storing chronologicalSort in local storage for now, switch to save to backend
 
 type FullEntityChangelogWithDiff = FullEntityChangelog & {
   diff: number;
@@ -63,6 +85,8 @@ const parsedChangelog = computed(() => {
     const timeLog = log as FullEntityChangelogWithDiff;
     if (!timeLog.time) {
       timeLog.time = new Date().toLocaleString();
+    } else {
+      timeLog.time = new Date(timeLog.time).toLocaleString();
     }
     return timeLog;
   });
@@ -74,9 +98,20 @@ const parsedChangelog = computed(() => {
       return newPrev;
     }, props.entity.entity.attributes[props.attr]);
   }
+  if (!state.chronologicalSort) {
+    changelog.reverse();
+  }
   return changelog;
 });
 const hasHistory = computed(() => parsedChangelog.value.length > 0);
+
+const clickSortButton = () => {
+  state.chronologicalSort = !state.chronologicalSort;
+  localStorage.setItem(
+    CHANGELOG_SORT_LOCAL_STORAGE,
+    state.chronologicalSort ? "regular" : "inverse"
+  );
+};
 </script>
 
 <style scoped>

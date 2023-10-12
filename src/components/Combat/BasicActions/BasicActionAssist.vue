@@ -54,7 +54,7 @@
         :use-dice-as-header="true"
       ></ToggleableDiceSectionCopyable>
     </div>
-    <BaseButton @click="spendAssistResources" class="primary wide mt-8"
+    <BaseButton @click="spendAssistResources" class="primary center wide mt-8"
       >Spend
       {{
         bonusDiceAmount
