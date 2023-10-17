@@ -77,12 +77,9 @@ const selectedUpdated = (selected: BaseEntityAttribute[]) => {
 const levelUpButton = () => {
   if (entityStore.entity && state.selected.length > 0) {
     const attrs = { [state.selected[0]]: 1 };
-    adjustAttrsAPI(
-      entityStore.entity,
-      entityStore.entityAttributes,
-      attrs,
-      `Level up bonus for level ${attrLevelToProcess.value}`
-    );
+    adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, attrs, {
+      msg: `Level up bonus for level ${attrLevelToProcess.value}`,
+    });
     closeModal();
   }
 };

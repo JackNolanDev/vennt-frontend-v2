@@ -140,7 +140,7 @@ const useWeapon = () => {
     entityStore.entity,
     entityStore.entityAttributes,
     { actions: -2 },
-    `Made attack with ${props.item.name}`
+    { msg: `Made attack with ${props.item.name}` }
   );
 };
 </script>

@@ -1,6 +1,11 @@
 <template>
   <BaseButton
     @click="useItem"
+    :disabled="
+      ((entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
+        item.name
+      ]?.length ?? 0) > 0
+    "
     title="Activates the item's use"
     class="primary wide mb-8"
     >Consume Item</BaseButton

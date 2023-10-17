@@ -134,7 +134,7 @@ const adjustAttrFromAdjustField = async () => {
       entityStore.entity,
       entityStore.entityAttributes,
       attrs,
-      reason
+      { msg: reason }
     );
     emit("updateComplete");
   }

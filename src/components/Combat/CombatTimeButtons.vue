@@ -54,12 +54,12 @@ const startRound = () => {
     ...(hp_diff && { hp: hp_diff }),
     ...(burning && { burning: -Math.min(burning, 3) }),
   };
-  adjustAttrsAPI(
-    entityStore.entity,
-    entityStore.entityAttributes,
-    attrs,
-    "Start combat round (applied burning & bleeding)"
-  );
+  if (Object.keys(attrs).length === 0) {
+    return;
+  }
+  adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, attrs, {
+    msg: "Start combat round (applied burning & bleeding)",
+  });
 };
 
 const startTurn = () => {
@@ -115,12 +115,9 @@ const startTurn = () => {
   };
 
   handleEndTimePeriod("turn");
-  adjustAttrsAPI(
-    entityStore.entity,
-    entityStore.entityAttributes,
-    attrs,
-    "Start combat turn"
-  );
+  adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, attrs, {
+    msg: "Start combat turn",
+  });
 };
 
 const toggleInCombat = () => {

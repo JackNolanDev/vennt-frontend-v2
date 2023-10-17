@@ -64,7 +64,13 @@ const adjust = computed(() => {
   const parsedValue = parseInt(state.rollValue);
   return isNaN(parsedValue) ? 0 : parsedValue;
 });
-const buttonDisabled = computed(() => adjust.value === 0);
+const buttonDisabled = computed(
+  () =>
+    adjust.value === 0 ||
+    ((entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
+      props.ability.name
+    ]?.length ?? 0) > 0
+);
 
 const rollValue = (value: number) => {
   state.rollValue = value.toString();
@@ -95,9 +101,11 @@ const useAbility = () => {
     entityStore.entity,
     entityStore.entityAttributes,
     adjustAttrs,
-    `Used ${props.ability.name}`,
-    true,
-    true
+    {
+      msg: `Used ${props.ability.name}`,
+      enforceMaximums: true,
+      src: props.ability.name,
+    }
   );
 };
 </script>

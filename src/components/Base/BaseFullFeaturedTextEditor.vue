@@ -85,6 +85,8 @@ if (props.editorId) {
   editorProps.attributes = { id: props.editorId };
 }
 
+// TODO: fix this using initialState function
+/* eslint-disable vue/no-setup-props-destructure */
 const editor = useEditor({
   extensions: [
     Document,

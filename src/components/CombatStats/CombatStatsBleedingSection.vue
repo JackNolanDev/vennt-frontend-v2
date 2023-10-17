@@ -21,10 +21,8 @@ const applyBleeding = () => {
     adjustAttrsAPI(
       entityStore.entity,
       entityStore.entityAttributes,
-      {
-        hp: -bleeding,
-      },
-      `Took ${bleeding} bleeding damage`
+      { hp: -bleeding },
+      { msg: `Took ${bleeding} bleeding damage` }
     );
   }
 };

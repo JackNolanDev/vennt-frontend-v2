@@ -21,11 +21,8 @@ const applyBurning = () => {
     adjustAttrsAPI(
       entityStore.entity,
       entityStore.entityAttributes,
-      {
-        hp: -burning,
-        burning: -Math.min(burning, 3),
-      },
-      `Took ${burning} burning damage`
+      { hp: -burning, burning: -Math.min(burning, 3) },
+      { msg: `Took ${burning} burning damage` }
     );
   }
 };

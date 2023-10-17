@@ -1,4 +1,5 @@
 <template>
+  <ActionDisabledWarning :action="item.name"></ActionDisabledWarning>
   <ItemUses v-if="showItemUses && !item.active" :item="item"></ItemUses>
   <ItemComment :item="item"></ItemComment>
   <div class="separator mt-24 mb-24"></div>
@@ -9,11 +10,22 @@
     <BaseButton @click="sellItem" class="primary wide center">
       Sell Item for {{ sellValue }} SP
     </BaseButton>
-    <div class="pt-10 mutedText mt-4">
+    <p class="pt-10 mutedText mt-4 mb-0">
       Note: This does not currently take into account any benefits your
       character may have to get a better (or worse) price. The shop value of
       this item is {{ shopValue }} SP.
-    </div>
+    </p>
+    <p v-if="shopItem?.name" class="mt-4 mb-0">
+      <RouterLink
+        :to="{
+          name: ENTITY_ITEM_SHOP_ROUTE,
+          params: { detail: shopItem.name },
+          query: $route.query,
+        }"
+        class="stealth"
+        >Visit the item shop</RouterLink
+      >
+    </p>
   </div>
   <BaseButton @click="emit('editButton')" icon="edit" class="wide mt-24">
     Edit item
@@ -38,6 +50,8 @@ import ItemUses from "../Uses/ItemUses.vue";
 import DisplayItemStorageToggle from "./DisplayItemStorageToggle.vue";
 import DisplayUseLatestItem from "./DisplayUseLatestItem.vue";
 import ItemComment from "./ItemComment.vue";
+import { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
+import ActionDisabledWarning from "../Entities/ActionDisabledWarning.vue";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
 const emit = defineEmits<{ (e: "editButton"): void }>();
@@ -68,7 +82,7 @@ const sellItem = () => {
     entityStore.entity,
     entityStore.entityAttributes,
     { sp: sellValue.value },
-    prefixName(props.item.name, "Sold", false)
+    { msg: prefixName(props.item.name, "Sold", false) }
   );
   entityStore.deleteItem(props.item, true);
 };

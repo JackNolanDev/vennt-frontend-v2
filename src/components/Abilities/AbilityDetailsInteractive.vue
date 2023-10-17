@@ -1,4 +1,5 @@
 <template>
+  <ActionDisabledWarning :action="ability.name"></ActionDisabledWarning>
   <UseAbilitySection :ability="ability"></UseAbilitySection>
   <AbilityUses :ability="ability"></AbilityUses>
   <AbilityShowDamageCalculator :ability="ability"></AbilityShowDamageCalculator>
@@ -28,6 +29,7 @@ import AbilityRepeatableSection from "./AbilityRepeatableSection.vue";
 import AbilityShowDamageCalculator from "./AbilityShowDamageCalculator.vue";
 import StarAbilityButton from "./StarAbilityButton.vue";
 import HighlightAbilityButton from "./HighlightAbilityButton.vue";
+import ActionDisabledWarning from "../Entities/ActionDisabledWarning.vue";
 
 defineProps<{ ability: FullEntityAbility }>();
 const emit = defineEmits<{ (e: "editButton"): void }>();

@@ -41,6 +41,7 @@ const show = computed(() => {
     "alerts",
     "actions",
     "reactions",
+    "recovery_shock",
   ]
     .concat(ATTRIBUTES)
     .includes(props.attr);

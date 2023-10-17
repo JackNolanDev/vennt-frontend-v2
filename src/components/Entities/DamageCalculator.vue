@@ -191,7 +191,9 @@ const applyResult = () => {
     entityStore.entity,
     entityStore.entityAttributes,
     calculatorResult.value.adjustAttrs,
-    `${mainAction} ${state.attack.damages[0].type} attack for ${state.attack.damages[0].damage} damage`
+    {
+      msg: `${mainAction} ${state.attack.damages[0].type} attack for ${state.attack.damages[0].damage} damage`,
+    }
   );
 
   const attacksNumber = numberFieldVal(state.attack.numberOfAttacks ?? 0);

@@ -3,8 +3,17 @@
   <DisplayShopItem :item="item"></DisplayShopItem>
   <div class="separator thin mt-8 mb-8"></div>
   <form class="mb-64">
-    <p v-if="countOwned > 0">
-      You already have {{ pluralizeName(newItem.name, true, countOwned) }}
+    <p v-if="ownedItem && countOwned > 0">
+      You already have
+      <RouterLink
+        :to="{
+          name: ENTITY_ITEMS_ROUTE,
+          params: { detail: ownedItem.id },
+          query: $route.query,
+        }"
+        class="stealth"
+        >{{ pluralizeName(newItem.name, true, countOwned) }}</RouterLink
+      >
     </p>
     <p v-else>You don't have any {{ pluralizeName(newItem.name, true) }} yet</p>
     <div class="alignRow gap">
@@ -55,23 +64,21 @@ import { computed, reactive } from "vue";
 import { useEntityStore } from "@/stores/entity";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import BaseButton from "../Base/BaseButton.vue";
+import { ENTITY_ITEMS_ROUTE } from "@/router";
 
 const props = defineProps<{ item: ShopItem }>();
 const state = reactive({ count: "1" });
 const entityStore = useEntityStore();
 
-const countOwned = computed(() => {
-  const found = entityStore.consolidatedItems.find(
+const ownedItem = computed(() => {
+  return entityStore.consolidatedItems.find(
     (it) =>
       it.name === props.item.name &&
       it.bulk === props.item.bulk &&
       it.desc === props.item.desc
   );
-  if (!found || !found.ids) {
-    return 0;
-  }
-  return found.ids.length;
 });
+const countOwned = computed(() => ownedItem.value?.ids.length ?? 0);
 const newItem = computed(
   (): EntityItem =>
     shopItemToEntityItem(
@@ -99,7 +106,14 @@ const buyItem = () => {
       entityStore.entity,
       entityStore.entityAttributes,
       { sp: -cost.value },
-      pluralizeName(newItem.value.name, false, parsedCount.value, "Purchased")
+      {
+        msg: pluralizeName(
+          newItem.value.name,
+          false,
+          parsedCount.value,
+          "Purchased"
+        ),
+      }
     );
   }
   addItem();

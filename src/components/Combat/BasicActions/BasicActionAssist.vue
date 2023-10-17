@@ -130,12 +130,9 @@ const spendAssistResources = () => {
   } else {
     adjust.mp = -bonusDiceAmount.value;
   }
-  adjustAttrsAPI(
-    entityStore.entity,
-    entityStore.entityAttributes,
-    adjust,
-    `${bonusDiceAmount.value} bonus dice for ${comment.value}`
-  );
+  adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, adjust, {
+    msg: `${bonusDiceAmount.value} bonus dice for ${comment.value}`,
+  });
 };
 </script>
 

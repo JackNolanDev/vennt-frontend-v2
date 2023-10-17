@@ -64,7 +64,13 @@ const adjust = computed(() => {
   const parsedValue = parseInt(state.rollValue);
   return isNaN(parsedValue) ? 0 : parsedValue;
 });
-const buttonDisabled = computed(() => adjust.value === 0);
+const buttonDisabled = computed(
+  () =>
+    adjust.value === 0 ||
+    ((entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
+      props.item.name
+    ]?.length ?? 0) > 0
+);
 
 const rollValue = (value: number) => {
   state.rollValue = value.toString();
@@ -89,9 +95,11 @@ const consumeItem = () => {
     entityStore.entity,
     entityStore.entityAttributes,
     adjustAttrs,
-    prefixName(props.item.name, "consumed", false),
-    true,
-    true
+    {
+      msg: prefixName(props.item.name, "consumed", false),
+      enforceMaximums: true,
+      src: props.item.name,
+    }
   );
   entityStore.deleteItem(props.item, true);
 };

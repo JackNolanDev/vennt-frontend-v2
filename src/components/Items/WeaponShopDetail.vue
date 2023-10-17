@@ -61,7 +61,8 @@ import { useEntityStore } from "@/stores/entity";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
 
 const props = defineProps<{ item: ShopItem }>();
-const state = reactive({ weaponName: "", weaponDesc: props.item.desc });
+const initialState = () => ({ weaponName: "", weaponDesc: props.item.desc });
+const state = reactive(initialState());
 const entityStore = useEntityStore();
 
 const newItem = computed(
@@ -89,7 +90,7 @@ const buyItem = () => {
       entityStore.entity,
       entityStore.entityAttributes,
       { sp: -props.item.sp },
-      `Purchased "${state.weaponName}"`
+      { msg: `Purchased "${state.weaponName}"` }
     );
   }
   addItem();

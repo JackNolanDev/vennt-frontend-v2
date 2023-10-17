@@ -45,9 +45,10 @@ const entityStore = useEntityStore();
 interface EntitySettingsGiftState {
   gift: CharacterGift | "";
 }
-const state = reactive<EntitySettingsGiftState>({
+const initialState = (): EntitySettingsGiftState => ({
   gift: entityStore.entity?.entity.other_fields[props.field] ?? "",
 });
+const state = reactive<EntitySettingsGiftState>(initialState());
 
 const giftOptions: Partial<Record<CharacterGift, HTMLString>> = {};
 CHARACTER_GIFTS.forEach((gift) => {

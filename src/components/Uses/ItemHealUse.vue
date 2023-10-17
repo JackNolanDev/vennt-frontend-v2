@@ -1,6 +1,11 @@
 <template>
   <BaseButton
     @click="useItem"
+    :disabled="
+      ((entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
+        item.name
+      ]?.length ?? 0) > 0
+    "
     title="Removes the item from your inventory and heals you by the given amount"
     class="primary wide mb-8"
     >Consume Item</BaseButton
@@ -26,9 +31,11 @@ const useItem = () => {
         props.item.uses.heal.attr,
         entityStore.entityAttributes
       ),
-      prefixName(props.item.name, "consumed", false),
-      true,
-      true
+      {
+        msg: prefixName(props.item.name, "consumed", false),
+        enforceMaximums: true,
+        src: props.item.name,
+      }
     );
     entityStore.deleteItem(props.item, true);
   }

@@ -37,6 +37,8 @@ export const MIN_ZEROS = new Set([
   "bleeding",
   "paralysis",
   "stun",
+  "actions",
+  "reactions",
   "agi_dmg",
   "cha_dmg",
   "dex_dmg",
@@ -271,10 +273,18 @@ export const adjustAttrsAPI = async (
   entity: FullCollectedEntity,
   entityAttrs: UpdatedEntityAttributes,
   adjustAttrs: PartialEntityAttributes,
-  msg?: string,
-  propagateChanges = true,
-  enforceMaximums = false
+  options?: {
+    msg?: string;
+    propagateChanges?: boolean;
+    enforceMaximums?: boolean;
+    src?: string;
+  }
 ): Promise<boolean> => {
+  const { msg, propagateChanges, enforceMaximums, src } = {
+    propagateChanges: true,
+    enforceMaximums: false,
+    ...options,
+  };
   const entityStore = useEntityStore();
   const attrs = adjustAttrsObject(
     entityAttrs,
@@ -287,10 +297,24 @@ export const adjustAttrsAPI = async (
     return false;
   }
 
-  if (propagateChanges && attrs.xp) {
-    const levelDiff = calcLevelDiffEntity(attrs.xp, entity);
-    if (levelDiff > 0) {
-      entityStore.levelsToProcess = levelDiff;
+  if (propagateChanges) {
+    if (attrs.xp) {
+      const levelDiff = calcLevelDiffEntity(attrs.xp, entity);
+      if (levelDiff > 0) {
+        entityStore.levelsToProcess = levelDiff;
+      }
+    }
+
+    if (
+      src &&
+      attrs.recovery_shock &&
+      attrs.recovery_shock > (entity.entity.attributes.recovery_shock ?? 0)
+    ) {
+      if (entityStore.recoveryShockSrc) {
+        entityStore.recoveryShockSrc.push(src);
+      } else {
+        entityStore.recoveryShockSrc = [src];
+      }
     }
   }
   const request: UpdateEntityAttributes = {

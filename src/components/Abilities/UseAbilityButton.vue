@@ -58,6 +58,9 @@ const abilityAdjustments = computed(() =>
 
 const useButtonDisabled = computed(
   () =>
+    ((entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
+      props.ability.name
+    ]?.length ?? 0) > 0 ||
     !abilityUsable(props.ability) ||
     !canAffordAdjustments(
       abilityAdjustments.value,
@@ -92,9 +95,11 @@ const useButton = () => {
     entityStore.entity,
     entityStore.entityAttributes,
     abilityAdjustments.value,
-    `${prefix} ${props.ability.name}`,
-    true,
-    true
+    {
+      msg: `${prefix} ${props.ability.name}`,
+      enforceMaximums: true,
+      src: props.ability.name,
+    }
   );
   if (
     props.ability.uses?.adjust &&

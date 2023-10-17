@@ -37,7 +37,7 @@ const heroButton = () => {
       entityStore.entity,
       entityStore.entityAttributes,
       { hero: -1 },
-      msg
+      { msg }
     );
   }
 };
