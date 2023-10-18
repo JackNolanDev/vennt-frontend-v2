@@ -1,15 +1,6 @@
 <template>
   <h1>Combat</h1>
-  <BaseButton
-    v-if="entityStore.canEdit"
-    :to="{
-      params: { detail: 'damage' },
-      query: $router.currentRoute.value.query,
-    }"
-    icon="calculate"
-    class="wide"
-    >Damage Calculator</BaseButton
-  >
+  <DamageCalculatorLink v-if="entityStore.canEdit"></DamageCalculatorLink>
   <CombatTimeButtons v-if="entityStore.canEdit"></CombatTimeButtons>
   <h2>Basic Actions</h2>
   <BasicActionsTable></BasicActionsTable>
@@ -29,7 +20,6 @@
 
 <script setup lang="ts">
 import AbilityTable from "@/components/Abilities/AbilityTable.vue";
-import BaseButton from "@/components/Base/BaseButton.vue";
 import ItemTable from "@/components/Items/ItemTable.vue";
 import CombatTimeButtons from "@/components/Combat/CombatTimeButtons.vue";
 import { useEntityStore } from "@/stores/entity";
@@ -37,6 +27,7 @@ import { useJsonStore } from "@/stores/jsonStorage";
 import { canUseAbility } from "@/utils/abilityUtils";
 import { computed } from "vue";
 import BasicActionsTable from "@/components/Combat/BasicActions/BasicActionsTable.vue";
+import DamageCalculatorLink from "@/components/Entities/DamageCalculatorLink.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();

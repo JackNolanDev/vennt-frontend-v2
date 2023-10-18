@@ -36,18 +36,35 @@
       class="wide"
       >Re-roll 1s</BaseCheckBox
     >
+    <BaseCheckBox
+      :checked="!!diceStore.defaultDiceSettings.heroic_creativity_bonus"
+      :highlight="true"
+      @click="toggleHeroicCreativityBonus"
+      class="wide"
+      >Heroic Creativity</BaseCheckBox
+    >
   </div>
 </template>
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
+import { useEntityStore } from "@/stores/entity";
 
 const diceStore = useDiceStore();
+const entityStore = useEntityStore();
 
 // Use this to ensure ids are always unique
 const unique = Math.random().toString().substring(2);
 
 const toggleRr1s = () => {
   diceStore.defaultDiceSettings.rr1s = !diceStore.defaultDiceSettings.rr1s;
+};
+const toggleHeroicCreativityBonus = () => {
+  if (diceStore.defaultDiceSettings.heroic_creativity_bonus) {
+    diceStore.defaultDiceSettings.heroic_creativity_bonus = 0;
+  } else {
+    diceStore.defaultDiceSettings.heroic_creativity_bonus =
+      entityStore.entityAttributes.heroic_creativity_bonus?.val ?? 3;
+  }
 };
 </script>

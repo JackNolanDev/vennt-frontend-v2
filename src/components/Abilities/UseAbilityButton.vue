@@ -4,7 +4,7 @@
     :title="useButtonTitle"
     @click="useButton"
     class="primary center wide mt-8"
-    >{{ useButtonText }}</BaseButton
+    ><div class="wrap text-center">{{ useButtonText }}</div></BaseButton
   >
 </template>
 
@@ -24,12 +24,22 @@ import BaseButton from "../Base/BaseButton.vue";
 const props = defineProps<{
   ability: FullEntityAbility;
   spellIdx?: number;
-  optionalHeal?: boolean;
+  optionalHealIdx?: number;
 }>();
 const entityStore = useEntityStore();
 
 const useButtonText = computed(() => {
-  const optionalHealText = props.optionalHeal ? " (With Optional Heal)" : "";
+  let optionalHealText = "";
+  if (
+    typeof props.optionalHealIdx === "number" &&
+    props.ability.uses?.optional_heal &&
+    props.ability.uses.optional_heal[props.optionalHealIdx]
+  ) {
+    const healText =
+      props.ability.uses.optional_heal[props.optionalHealIdx].label ??
+      "With Optional Heal";
+    optionalHealText = ` - ${healText}`;
+  }
   if (props.spellIdx === undefined) {
     return "Use Ability" + optionalHealText;
   }
@@ -52,7 +62,7 @@ const abilityAdjustments = computed(() =>
     props.ability,
     extendedAttributes.value,
     additionalAdjustments.value,
-    props.optionalHeal
+    props.optionalHealIdx
   )
 );
 

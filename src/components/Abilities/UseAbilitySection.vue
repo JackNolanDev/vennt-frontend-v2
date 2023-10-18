@@ -1,10 +1,6 @@
 <template>
-  <div
-    v-if="castingDice && ability.custom_fields?.cast_dl"
-    class="card mt-8 padded thin column"
-  >
+  <div v-if="castingDice" class="card mt-8 padded thin column">
     <ToggleableDiceSectionCopyable
-      v-if="ability.custom_fields?.cast_dl"
       :dice="castingDice"
       :attr="'casting'"
       :header="true"
@@ -42,6 +38,9 @@ const diceStore = useDiceStore();
 
 const diceComment = computed(() => `Casting ${props.ability.name}`);
 const castingDice = computed(() => {
+  if (!props.ability.custom_fields?.cast_dl) {
+    return false;
+  }
   return defaultDice(
     entityStore.entityAttributes,
     "casting",

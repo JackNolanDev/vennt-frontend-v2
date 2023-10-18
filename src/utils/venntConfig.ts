@@ -5,6 +5,7 @@ export const LEVEL_UPS_TO_INCREASE_ATTR = 2;
 
 export const DEFAULT_ATTRS_MAP: UpdatedEntityAttributes = {
   free_hands: { val: 2, reason: ["Default: 2"] },
+  heroic_creativity_bonus: { val: 3, reason: ["Default: 3"] },
   actions_on_turn: { val: 3, reason: ["Default: 3"] },
   reactions_on_turn: { val: 1, reason: ["Default: 1"] },
 };

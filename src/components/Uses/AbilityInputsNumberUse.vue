@@ -5,8 +5,8 @@
       type="number"
       v-model="state.input"
       :id="id"
-      :min="input.min"
-      :max="input.max"
+      :min="solveVal(input.min)"
+      :max="solveVal(input.max)"
       class="input wide mt-4"
     />
     <BaseButton
@@ -23,6 +23,7 @@ import { useEntityStore } from "@/stores/entity";
 import type { FullEntityAbility, UseNumberInput } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
+import { solveEquation } from "@/utils/attributeUtils";
 
 const props = defineProps<{
   ability: FullEntityAbility;
@@ -43,6 +44,12 @@ const defaultState = computed(() => {
 const state = reactive({ input: defaultState.value });
 
 const saveButtonDisabled = computed(() => defaultState.value === state.input);
+
+const solveVal = (val?: string | number) => {
+  return typeof val === "string"
+    ? solveEquation(val, entityStore.entityAttributes)
+    : val;
+};
 
 const saveButton = () => {
   const custom_fields = props.ability.custom_fields ?? {};

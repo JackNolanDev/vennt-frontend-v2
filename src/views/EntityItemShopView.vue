@@ -73,6 +73,9 @@ import type { EntityItemType, ShopItem } from "@/utils/backendTypes";
 import { computed, reactive } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
+// TODO: Speed up local version of this - live build seems to go fine.
+// The slow thing locally seems to be the rendering, the filter logic is pretty quick
+
 const state = reactive({
   itemSearchField: "",
   showSearchSettings: false,

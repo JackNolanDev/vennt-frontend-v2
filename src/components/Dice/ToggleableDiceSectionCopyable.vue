@@ -6,7 +6,10 @@
     :dice="dice"
     :text="header && defaultText ? dice.roll20 : defaultText"
   ></DiceCopy>
-  <DiceToggles :attr="attr" :skip-key="skipKey"></DiceToggles>
+  <DiceToggles
+    :attrs="attrs ?? (attr ? [attr] : undefined)"
+    :skip-key="skipKey"
+  ></DiceToggles>
   <BaseDropDown
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
@@ -40,6 +43,7 @@ import DiceToggles from "./DiceToggles.vue";
 const props = defineProps<{
   dice: DiceCommands;
   attr?: EntityAttribute;
+  attrs?: EntityAttribute[];
   header?: boolean;
   comment?: string;
   skipKey?: string;

@@ -26,6 +26,7 @@
       :dice="damageDice"
       :header="true"
       :comment="diceReason"
+      :attrs="relatedDmgAttrs"
     ></ToggleableDiceSectionCopyable>
   </div>
   <SimpleAbilityTable
@@ -96,6 +97,9 @@ const diceReason = computed(
       acc.value ? `, Accuracy: ${acc.value.result}` : ""
     }`
 );
+const relatedDmgAttrs = computed(() =>
+  relatedAttrsForWeapon(props.item, "dmg")
+);
 const damageDice = computed(
   () =>
     damageDiceString.value &&
@@ -103,10 +107,13 @@ const damageDice = computed(
       damageDiceString.value,
       buildSettingsForAttrList(
         diceStore.defaultDiceSettings,
-        relatedAttrsForWeapon(props.item, "dmg"),
+        relatedDmgAttrs.value,
         entityStore.entityAttributes
       ),
-      diceReason.value
+      diceReason.value,
+      entityStore.diceToggles,
+      entityStore.entityAttributes,
+      relatedDmgAttrs.value
     )
 );
 const showDamageDice = computed(

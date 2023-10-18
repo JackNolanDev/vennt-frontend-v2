@@ -18,6 +18,8 @@ export const buildDice = (
   settings: DiceSettings = {},
   comment = ""
 ): DiceCommands => {
+  // console.log(settings, comment);
+
   let adjustStr = "";
   if (typeof adjust === "string") {
     adjustStr = adjust;
@@ -27,6 +29,13 @@ export const buildDice = (
     } else if (adjust < 0) {
       adjustStr = adjust.toString();
     }
+  }
+
+  let heroicCreativityStr = "";
+  if (settings.heroic_creativity_bonus) {
+    heroicCreativityStr =
+      (settings.heroic_creativity_bonus > 0 ? "+" : "") +
+      settings.heroic_creativity_bonus.toString();
   }
 
   let dropLowest = 0;
@@ -98,6 +107,7 @@ export const buildDice = (
       " " +
       adjustStr +
       fatiguedStr +
+      heroicCreativityStr +
       endStr +
       commentFields.discord,
     roll20:
@@ -110,6 +120,7 @@ export const buildDice = (
       dropHighestFields.roll20 +
       adjustStr +
       fatiguedStr +
+      heroicCreativityStr +
       endStr +
       commentFields.roll20,
     web:
@@ -122,6 +133,7 @@ export const buildDice = (
       dropHighestFields.web +
       adjustStr +
       fatiguedStr +
+      heroicCreativityStr +
       endStr +
       commentFields.web,
     settings: { ...settings, adjust, count, sides },
@@ -139,19 +151,14 @@ export const defaultDice = (
   const attrMap = attrs[attr];
   const adjust = attrMap ? attrMap.val : 0;
 
-  let settings = {
-    ...givenSettings,
-  };
-  Object.entries(diceToggles).forEach(([key, toggle]) => {
-    if (
-      settings.otherToggles &&
-      (settings.otherToggles[key]?.toggled ?? toggle.default) &&
-      toggle.attr === attr &&
-      skipKey !== key
-    ) {
-      settings = combineDiceSettings(settings, toggle.setting, attrs);
-    }
-  });
+  let settings = { ...givenSettings };
+  settings = combineEnabledTogglesSettings(
+    settings,
+    diceToggles,
+    attrs,
+    [attr],
+    skipKey
+  );
   return buildDice(
     settings.count ?? 3,
     settings.sides ?? 6,
@@ -163,8 +170,11 @@ export const defaultDice = (
 
 export const diceParseFromString = (
   diceStr: string,
-  settings: DiceSettings = {},
-  comment = ""
+  givenSettings: DiceSettings = {},
+  comment = "",
+  diceToggles: DiceToggles = {},
+  attrs?: UpdatedEntityAttributes,
+  relevantAttrs?: EntityAttribute[]
 ): DiceCommands | undefined => {
   const match = diceStr.match(/(\d+)d(\d+)/);
   if (!match || match.length < 3) {
@@ -176,7 +186,39 @@ export const diceParseFromString = (
     return undefined;
   }
   const adjust = diceStr.substring(match[0].length);
+
+  let settings = { ...givenSettings };
+  if (attrs && relevantAttrs) {
+    settings = combineEnabledTogglesSettings(
+      settings,
+      diceToggles,
+      attrs,
+      relevantAttrs
+    );
+  }
+
   return buildDice(count, sides, adjust, settings, comment);
+};
+
+const combineEnabledTogglesSettings = (
+  settings: DiceSettings,
+  diceToggles: DiceToggles,
+  attrs: UpdatedEntityAttributes,
+  relevantAttrs: EntityAttribute[],
+  skipKey = ""
+): DiceSettings => {
+  Object.entries(diceToggles).forEach(([key, toggle]) => {
+    if (
+      settings.otherToggles &&
+      (settings.otherToggles[key]?.toggled ?? toggle.default) &&
+      toggle.attr &&
+      relevantAttrs.includes(toggle.attr) &&
+      skipKey !== key
+    ) {
+      settings = combineDiceSettings(settings, toggle.setting, attrs);
+    }
+  });
+  return settings;
 };
 
 export const buildSettingsForAttrList = (
@@ -237,6 +279,8 @@ export const diceTogglesForEntity = (
     .forEach((item) => {
       saveSettingToToggle(item.name, item.uses?.check);
     });
+
+  // console.log(toggles);
 
   return toggles;
 };

@@ -151,6 +151,15 @@ const hasImprovedShieldBlock = computed(() =>
 const hasEnhancedBlock = computed(() =>
   entityStore.abilityNames.includes("Enhanced Block")
 );
+const hasShieldMastery = computed(() =>
+  entityStore.abilityNames.includes("Shield Mastery")
+);
+const hasDiamondBlock = computed(() =>
+  entityStore.abilityNames.includes("Diamond Block")
+);
+const hasNotAScratch = computed(() =>
+  entityStore.abilityNames.includes("Not A Scratch")
+);
 const canUseAlerts = computed(() =>
   state.attack.damages.some((detail) => NORMAL_DAMAGES.includes(detail.type))
 );
@@ -163,6 +172,9 @@ const calculatorResult = computed(() => {
     hasShieldBlock: hasShieldBlock.value,
     hasImprovedShieldBlock: hasImprovedShieldBlock.value,
     hasEnhancedBlock: hasEnhancedBlock.value,
+    hasShieldMaster: hasShieldMastery.value,
+    hasDiamondBlock: hasDiamondBlock.value,
+    hasNotAScratch: hasNotAScratch.value,
   };
 
   return handleDamageCalculator(

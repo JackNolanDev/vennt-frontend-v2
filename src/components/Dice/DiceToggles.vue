@@ -5,9 +5,12 @@
     :checked="toggle.toggled"
     :use-toggle="true"
     :highlight="true"
+    :title="`From ${toggle.name}`"
     @click="optionToggled(toggle)"
     class="wide"
-    >{{ toggle.label ?? `Use ${toggle.name}` }}</BaseCheckBox
+    ><div class="wrap">
+      {{ `(${toggle.name}) ${toggle.label}` ?? `Use ${toggle.name}` }}
+    </div></BaseCheckBox
   >
 </template>
 
@@ -18,7 +21,7 @@ import type { DiceToggle, EntityAttribute } from "@/utils/backendTypes";
 import { computed } from "vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 
-const props = defineProps<{ attr?: EntityAttribute; skipKey?: string }>();
+const props = defineProps<{ attrs?: EntityAttribute[]; skipKey?: string }>();
 
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
@@ -26,14 +29,14 @@ const diceStore = useDiceStore();
 type Toggle = DiceToggle & { name: string; toggled: boolean };
 
 const relevantToggles = computed(() => {
-  if (!props.attr) {
+  if (!props.attrs) {
     return [];
   }
   return Object.entries(entityStore.diceToggles).reduce<Toggle[]>(
     (acc, [key, toggle]) => {
       if (
         key !== props.skipKey &&
-        (!toggle.attr || toggle.attr === props.attr)
+        (!toggle.attr || props.attrs?.includes(toggle.attr))
       ) {
         const toggled = Boolean(
           (diceStore.defaultDiceSettings.otherToggles ?? {})[key]?.toggled ||

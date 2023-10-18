@@ -112,7 +112,7 @@ export const abilityUseAdjustments = (
   ability: EntityAbility,
   attrs: UpdatedEntityAttributes,
   additionalAdjustments?: Record<EntityAttribute, number>,
-  optionalHeal?: boolean
+  optionalHealIdx?: number
 ): Record<EntityAttribute, number> => {
   const adjustMap: Record<EntityAttribute, number> = {
     ...additionalAdjustments,
@@ -151,10 +151,16 @@ export const abilityUseAdjustments = (
       insertVal(attr, val);
     });
   }
-  if (optionalHeal && ability.uses?.optional_heal?.attr) {
-    Object.entries(ability.uses.optional_heal.attr).forEach(([attr, val]) => {
-      insertVal(attr, val);
-    });
+  if (
+    typeof optionalHealIdx === "number" &&
+    ability.uses?.optional_heal &&
+    ability.uses.optional_heal[optionalHealIdx]
+  ) {
+    Object.entries(ability.uses.optional_heal[optionalHealIdx].attr).forEach(
+      ([attr, val]) => {
+        insertVal(attr, val);
+      }
+    );
   }
 
   return adjustMap;
@@ -180,8 +186,9 @@ export const canAffordAdjustments = (
 export const abilityUsable = (ability: EntityAbility): boolean => {
   return !(
     ability.active ||
-    ability.custom_fields?.cost?.passive ||
-    ability.custom_fields?.activation?.toLowerCase().includes("passive")
+    ((ability.custom_fields?.cost?.passive ||
+      ability.custom_fields?.activation?.toLowerCase().includes("passive")) &&
+      !(ability.uses?.heal || ability.uses?.optional_heal))
   );
 };
 

@@ -237,7 +237,7 @@ h1 {
 a {
   color: var(--text);
 }
-.mutedText > a {
+.mutedText > a, .muted-text > a {
   color: var(--text-muted);
 }
 a:hover {

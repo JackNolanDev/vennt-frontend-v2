@@ -44,6 +44,9 @@
                   :attr="attr"
                   loc="combat-stats"
                 ></AdjustAttributeVal>
+                <DamageCalculatorLink
+                  v-if="attr === 'hp'"
+                ></DamageCalculatorLink>
                 <div class="separator mt-8 mb-8"></div>
                 <AdjustAttributeLink
                   :attr="attr"
@@ -217,6 +220,7 @@ import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
 import CogTypeDescription from "../Cog/CogTypeDescription.vue";
 import CombatStatsSingleRowAttributes from "./CombatStatsSingleRowAttributes.vue";
 import { useEntityStore } from "@/stores/entity";
+import DamageCalculatorLink from "../Entities/DamageCalculatorLink.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;

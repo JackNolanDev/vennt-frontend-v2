@@ -121,7 +121,7 @@ export const relatedAttrsForWeapon = (
   weapon: EntityItem,
   type: "acc" | "dmg"
 ): EntityAttribute[] => {
-  const attrList: EntityAttribute[] = ["dmg"];
+  const attrList: EntityAttribute[] = [type];
   if (weapon.custom_fields?.category) {
     attrList.push(`${weapon.custom_fields.category.toLowerCase()}_${type}`);
   }

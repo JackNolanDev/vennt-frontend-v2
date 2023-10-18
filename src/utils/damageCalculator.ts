@@ -18,6 +18,15 @@ export const handleDamageCalculator = (
   const reasons: string[] = [];
 
   // 0. exit early if evading attack
+  if (
+    response.hasNotAScratch &&
+    (attrs.vim?.val ?? 0) >= 20 &&
+    attack.accuracy <= 5
+  ) {
+    reasons.push("evaded attack using Not a Scratch");
+    return { adjustAttrs: {}, reasons };
+  }
+
   if (response.dodge) {
     reasons.push("evaded attack using Dodge");
     return {
@@ -56,8 +65,20 @@ export const handleDamageCalculator = (
   for (const detail of attack.damages) {
     let damage = detail.damage;
     let vimCost = 0;
-
     const vim = attrs.vim?.val ?? 0;
+
+    // 0. Handle damage immunity
+    if (
+      response.block &&
+      response.hasDiamondBlock &&
+      [DamageType.PARALYSIS, DamageType.STUN].includes(detail.type)
+    ) {
+      damage = 0;
+      reasons.push(
+        `Immune to ${detail.type} damage while Blocking due to Diamond Block`
+      );
+      continue;
+    }
 
     // 1. Handle damage resistance
     const resistanceAttr = `${detail.type}_damage_resistance`;
@@ -131,7 +152,7 @@ export const handleDamageCalculator = (
       // Support for Shields
       if (
         response.block &&
-        isGlancingBlow &&
+        !isGlancingBlow &&
         response.hasShieldBlock &&
         attrs.shield &&
         attrs.shield.val > 0
@@ -143,6 +164,14 @@ export const handleDamageCalculator = (
           armor += attrs.str.val;
           additionalReason += ` and ${attrs.str.val} from Improved Shield Blocking`;
         }
+      } else if (
+        response.block &&
+        isGlancingBlow &&
+        response.hasShieldBlock &&
+        response.hasShieldMaster &&
+        attrs.str
+      ) {
+        armor += attrs.str.val;
       }
 
       armor = Math.min(armor, damage);

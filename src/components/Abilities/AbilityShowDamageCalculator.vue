@@ -1,16 +1,13 @@
 <template>
-  <BaseButton
+  <DamageCalculatorLink
     v-if="HANDLED_ABILITIES.includes(ability.name)"
-    :to="{ params: { detail: 'damage' }, query: $route.query }"
-    icon="calculate"
-    class="wide mt-8"
-    >Damage Calculator</BaseButton
-  >
+    class="mt-8"
+  ></DamageCalculatorLink>
 </template>
 
 <script setup lang="ts">
 import type { EntityAbility } from "@/utils/backendTypes";
-import BaseButton from "../Base/BaseButton.vue";
+import DamageCalculatorLink from "../Entities/DamageCalculatorLink.vue";
 
 defineProps<{ ability: EntityAbility }>();
 

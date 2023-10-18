@@ -22,6 +22,7 @@
     >
       Roll {{ attrShortName(attr) }}
     </BaseButton>
+    <div v-else class="muted-text">{{ computedDice.roll20 }}</div>
   </div>
   <div v-if="!useCopyableDice" class="diceSection">
     <div v-if="latestRoll">

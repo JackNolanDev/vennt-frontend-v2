@@ -18,6 +18,7 @@ import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
 import { DEFAULT_ATTRS_MAP, DEFAULT_CHARACTER_EQUATIONS } from "./venntConfig";
 import { combineDiceSettings } from "./diceUtils";
+import { abilityExtendEntityAttributes } from "./abilityUtils";
 
 export const MIN_ZEROS = new Set([
   "hp",
@@ -30,6 +31,7 @@ export const MIN_ZEROS = new Set([
   "max_hero",
   "xp",
   "armor",
+  "burden",
   "speed",
   "alerts",
   "max_alerts",
@@ -401,9 +403,18 @@ export const entityAttributesMap = (
   };
 
   const defaultEquations =
-    entity.entity.type === "CHARACTER" ? DEFAULT_CHARACTER_EQUATIONS : [];
+    entity.entity.type === "CHARACTER"
+      ? DEFAULT_CHARACTER_EQUATIONS.map((eq) => ({
+          attr: eq[0],
+          equation: eq[1],
+        }))
+      : [];
 
-  const equations: Array<[EntityAttribute, string]> = [...defaultEquations];
+  const equations: Array<{
+    attr: EntityAttribute;
+    equation: string;
+    contextAbility?: EntityAbility;
+  }> = [...defaultEquations];
 
   // 2. Fetch effects from items
   entity.items.forEach((item) => {
@@ -415,7 +426,7 @@ export const entityAttributesMap = (
       if (item.uses.adjust.attr) {
         Object.entries(item.uses.adjust.attr).forEach(([attr, val]) => {
           if (typeof val === "string") {
-            equations.push([attr, val]);
+            equations.push({ attr, equation: val });
           } else {
             const reason = `active ${item.name} ${
               val > 0 ? "adds" : "subtracts"
@@ -449,7 +460,7 @@ export const entityAttributesMap = (
         if (adjust?.attr) {
           Object.entries(adjust.attr).forEach(([attr, val]) => {
             if (typeof val === "string") {
-              equations.push([attr, val]);
+              equations.push({ attr, equation: val, contextAbility: ability });
             } else {
               const reason = `${ability.name} ${
                 val > 0 ? "adds" : "subtracts"
@@ -469,8 +480,13 @@ export const entityAttributesMap = (
   });
 
   // 4. Apply pending equations
-  equations.forEach(([attr, equation]) => {
-    const parsed = solveEquation(equation, attrs);
+  equations.forEach(({ attr, equation, contextAbility }) => {
+    const parsed = solveEquation(
+      equation,
+      contextAbility
+        ? abilityExtendEntityAttributes(contextAbility, attrs)
+        : attrs
+    ); // TODO: Need attrs from context of ability
     if (parsed !== undefined) {
       const attrMap = attrs[attr];
       const reason = `Set ${attrShortName(attr)} to "${equation}" -> ${parsed}`;
