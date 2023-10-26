@@ -20,6 +20,18 @@ import { DEFAULT_ATTRS_MAP, DEFAULT_CHARACTER_EQUATIONS } from "./venntConfig";
 import { combineDiceSettings } from "./diceUtils";
 import { abilityExtendEntityAttributes } from "./abilityUtils";
 
+export const ATTRIBUTE_DAMAGES = [
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
+];
+
 export const MIN_ZEROS = new Set([
   "hp",
   "max_hp",
@@ -41,15 +53,7 @@ export const MIN_ZEROS = new Set([
   "stun",
   "actions",
   "reactions",
-  "agi_dmg",
-  "cha_dmg",
-  "dex_dmg",
-  "int_dmg",
-  "per_dmg",
-  "spi_dmg",
-  "str_dmg",
-  "tek_dmg",
-  "wis_dmg",
+  ...ATTRIBUTE_DAMAGES,
 ]);
 
 const attrMaxMap: { [attr in EntityAttribute]?: EntityAttribute } = {

@@ -4,13 +4,25 @@
       <tr>
         <th>Ability</th>
         <th>Activation</th>
-        <th class="ability-effect">Effect</th>
+        <th class="ability-effect">
+          <div class="alignRow gap">
+            Effect<input
+              v-if="searchId"
+              placeholder="Ability Search"
+              type="text"
+              inputmode="search"
+              v-model="state.search"
+              :id="searchId"
+              class="input"
+            />
+          </div>
+        </th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="(ability, index) in abilities"
+        v-for="(ability, index) in filteredAbilities"
         v-bind:key="index"
         v-bind:id="stringToLinkID(ability.id)"
         v-bind:class="abilityOpened(ability) ? 'selected' : ''"
@@ -61,11 +73,25 @@ import type { RouteLocationRaw } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import AbilityName from "./AbilityName.vue";
+import { computed, reactive } from "vue";
 
-defineProps<{
+const props = defineProps<{
   abilities: FullEntityAbility[];
   attrs?: UpdatedEntityAttributes;
+  searchId?: string;
 }>();
+
+const state = reactive({ search: "" });
+
+const filteredAbilities = computed(() => {
+  if (!state.search || !props.searchId) {
+    return props.abilities;
+  }
+  const searchStr = state.search.toLowerCase();
+  return props.abilities.filter((ability) =>
+    ability.name.toLowerCase().includes(searchStr)
+  );
+});
 
 const abilityOpened = (ability: FullEntityAbility): boolean =>
   router.currentRoute.value.params.detail === ability.id;

@@ -3,9 +3,11 @@
     v-if="entityStore.canEdit"
     @click="heroButton"
     :disabled="!enabled"
+    clicked-note="Used a Hero Point"
     title="Use a hero point"
     icon="auto_awesome"
     class="selected"
+    ><slot></slot
   ></BaseButton>
 </template>
 
@@ -17,8 +19,12 @@ import {
 } from "@/utils/attributeUtils";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
+import type { PartialEntityAttributes } from "@/utils/backendTypes";
 
-const props = defineProps<{ reason?: string }>();
+const props = defineProps<{
+  reason?: string;
+  additionalAdjust?: PartialEntityAttributes;
+}>();
 const entityStore = useEntityStore();
 
 const enabled = computed(
@@ -36,7 +42,7 @@ const heroButton = () => {
     adjustAttrsAPI(
       entityStore.entity,
       entityStore.entityAttributes,
-      { hero: -1 },
+      { hero: -1, ...props.additionalAdjust },
       { msg }
     );
   }

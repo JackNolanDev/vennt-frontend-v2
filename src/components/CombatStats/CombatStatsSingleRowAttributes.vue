@@ -14,6 +14,7 @@
           <BaseFraction
             :top="fractionMap[attr].top"
             :bottom="fractionMap[attr].bottom"
+            :success-when-over="true"
           ></BaseFraction>
         </div>
         <div v-else class="basicBtnContents attrButtonContents cols-2 wide">
@@ -61,6 +62,15 @@
               v-else-if="attr === 'recovery_shock'"
             ></CombatStatsRecoveryShockSection>
             <AttributeHelp v-else :attr="attr"></AttributeHelp>
+            <CombatStatsActionsSection
+              v-if="attr === 'actions'"
+            ></CombatStatsActionsSection>
+            <CombatStatsReactionsSection
+              v-else-if="attr === 'reactions'"
+            ></CombatStatsReactionsSection>
+            <CombatStatsXPSection
+              v-else-if="attr === 'xp'"
+            ></CombatStatsXPSection>
             <div class="separator mt-8 mb-8"></div>
             <AdjustAttributeLink
               :attr="attr"
@@ -82,7 +92,7 @@ import type {
 } from "@/utils/backendTypes";
 import { totalDC } from "@/utils/itemUtils";
 import { computed } from "vue";
-import { attrShortName } from "@/utils/attributeUtils";
+import { ATTRIBUTE_DAMAGES, attrShortName } from "@/utils/attributeUtils";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
@@ -92,6 +102,9 @@ import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
 import CombatStatsBleedingSection from "./CombatStatsBleedingSection.vue";
 import CombatStatsBurningSection from "./CombatStatsBurningSection.vue";
 import CombatStatsRecoveryShockSection from "./CombatStatsRecoveryShockSection.vue";
+import CombatStatsXPSection from "./CombatStatsXPSection.vue";
+import CombatStatsActionsSection from "./CombatStatsActionsSection.vue";
+import CombatStatsReactionsSection from "./CombatStatsReactionsSection.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
@@ -112,15 +125,7 @@ const HIDE_ZERO_ATTRIBUTES = new Set([
   "bleeding",
   "paralysis",
   "stun",
-  "agi_dmg",
-  "cha_dmg",
-  "dex_dmg",
-  "int_dmg",
-  "per_dmg",
-  "spi_dmg",
-  "str_dmg",
-  "tek_dmg",
-  "wis_dmg",
+  ...ATTRIBUTE_DAMAGES,
 ]);
 
 const ADJUST_SINGLE: Set<EntityAttribute> = new Set([
@@ -132,15 +137,7 @@ const ADJUST_SINGLE: Set<EntityAttribute> = new Set([
   "reactions",
   "paralysis",
   "stun",
-  "agi_dmg",
-  "cha_dmg",
-  "dex_dmg",
-  "int_dmg",
-  "per_dmg",
-  "spi_dmg",
-  "str_dmg",
-  "tek_dmg",
-  "wis_dmg",
+  ...ATTRIBUTE_DAMAGES,
 ]);
 
 const showDice = computed(() => {

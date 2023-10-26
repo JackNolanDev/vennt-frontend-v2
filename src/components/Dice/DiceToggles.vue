@@ -9,7 +9,9 @@
     @click="optionToggled(toggle)"
     class="wide"
     ><div class="wrap">
-      {{ `(${toggle.name}) ${toggle.label}` ?? `Use ${toggle.name}` }}
+      {{
+        toggle.label ? `(${toggle.name}) ${toggle.label}` : `Use ${toggle.name}`
+      }}
     </div></BaseCheckBox
   >
 </template>

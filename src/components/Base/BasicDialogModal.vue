@@ -1,5 +1,5 @@
 <template>
-  <dialog :id="id" @click="modalClick">
+  <dialog :id="id" @click="modalClick" :class="{ lg: isLarge }">
     <div class="dialogue-content">
       <div class="alignRow split dialogue-title">
         <h2 class="mt-16 mb-16"><slot name="title"></slot></h2>
@@ -24,7 +24,7 @@
 <script setup lang="ts">
 import BaseButton from "./BaseButton.vue";
 
-const props = defineProps<{ id: string }>();
+const props = defineProps<{ id: string; isLarge?: boolean }>();
 const emit = defineEmits<{ (e: "closeModal"): void }>();
 
 const closeModal = () => {
@@ -54,7 +54,26 @@ dialog::backdrop {
   background: rgba(0, 0, 0, 0.7);
 }
 .dialogue-details-wrapper {
-  max-height: 540px;
+  max-height: 560px;
   overflow-y: auto;
+}
+
+.dialogue-details-wrapper.lg {
+  max-height: 720px;
+}
+
+dialog.lg {
+  width: 800px;
+}
+
+/* Fullscreen Modal when lg */
+@media screen and (max-width: 500px), screen and (max-height: 400px) {
+  dialog.lg {
+    min-width: 100vw;
+    min-height: 100vh;
+    margin: 0px;
+    border: 0px;
+    border-radius: 0px;
+  }
 }
 </style>

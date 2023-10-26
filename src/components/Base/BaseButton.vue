@@ -160,6 +160,7 @@ Button styles:
   position: absolute;
   bottom: 100%;
   padding: 8px;
+  color: var(--text);
   background: var(--background-high-contrast);
   border-radius: var(--border-radius);
   --btn-temp-note-width: 80px;

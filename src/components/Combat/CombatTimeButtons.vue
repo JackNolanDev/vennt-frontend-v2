@@ -24,9 +24,7 @@
       class="wide"
       >End Scene</BaseButton
     >
-    <BaseButton @click="handleEndTimePeriod('rest')" icon="bed" class="wide"
-      >Rest</BaseButton
-    >
+    <EntityRestModal></EntityRestModal>
   </div>
 </template>
 
@@ -39,6 +37,7 @@ import type {
   EntityAttribute,
   PartialEntityAttributes,
 } from "@/utils/backendTypes";
+import EntityRestModal from "./EntityRestModal.vue";
 
 const entityStore = useEntityStore();
 

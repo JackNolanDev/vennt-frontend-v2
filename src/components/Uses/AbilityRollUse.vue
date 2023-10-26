@@ -3,7 +3,7 @@
     <ToggleableDiceSection
       :dice="dice"
       :comment="diceComment"
-      @roll-value="rollValue"
+      @roll-value="(value) => (state.rollValue = value.toString())"
     ></ToggleableDiceSection>
     <div class="separator thin mt-8"></div>
     <div class="mt-8 mb-8 ml-8 mr-8">
@@ -72,9 +72,6 @@ const buttonDisabled = computed(
     ]?.length ?? 0) > 0
 );
 
-const rollValue = (value: number) => {
-  state.rollValue = value.toString();
-};
 const useAbility = () => {
   if (!entityStore.entity || !props.ability.uses?.roll?.attr) {
     return;

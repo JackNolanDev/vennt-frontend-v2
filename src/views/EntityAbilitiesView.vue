@@ -4,6 +4,7 @@
   <AbilityTable
     :abilities="entityStore.sortedAbilities"
     :attrs="entityStore.entityAttributes"
+    :search-id="ENTITY_ABILITIES_SEARCH_OVERRIDE"
   ></AbilityTable>
   <BaseButton
     v-if="entityStore.entity?.entity.id && entityStore.canEdit"
@@ -40,6 +41,7 @@ import EntitySpentXP from "@/components/Entities/EntitySpentXP.vue";
 import router, { ENTITY_ABILITIES_ROUTE, WIKI_PATHS_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
 import { useEntityStore } from "@/stores/entity";
+import { ENTITY_ABILITIES_SEARCH_OVERRIDE } from "@/utils/constants";
 import { computed } from "vue";
 
 const entityStore = useEntityStore();

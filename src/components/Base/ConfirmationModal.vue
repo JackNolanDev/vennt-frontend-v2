@@ -2,7 +2,11 @@
   <BaseButton @click="openDialog" :icon="triggerIcon" :class="triggerClass">
     <slot name="triggerButton"></slot>
   </BaseButton>
-  <BasicDialogModal @close-modal="emit('exitModal')" :id="id">
+  <BasicDialogModal
+    @close-modal="emit('exitModal')"
+    :id="id"
+    :is-large="isLarge"
+  >
     <template #title>
       <slot name="title"></slot>
     </template>
@@ -32,6 +36,7 @@ const props = defineProps<{
   triggerIcon?: string;
   noMainButton?: boolean;
   mainButtonDisabled?: boolean;
+  isLarge?: boolean;
 }>();
 const emit = defineEmits<{
   (e: "mainButton"): void;

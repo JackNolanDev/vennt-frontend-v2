@@ -46,11 +46,14 @@ import EntityRightSidebar from "@/components/Entities/EntityRightSidebar.vue";
 import EntityLeftSidebar from "@/components/Entities/EntityLeftSidebar.vue";
 import { useEntityNotesStore } from "@/stores/entityNotes";
 import { useCampaignStore } from "@/stores/campaign";
+import { ENTITY_ABILITIES_SEARCH_OVERRIDE } from "@/utils/constants";
 
 const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
 const campaignStore = useCampaignStore();
 const route = useRoute();
+
+let overrideCmdF = true;
 
 onBeforeMount(() => {
   const id = idValidator.safeParse(route.params.id);
@@ -76,9 +79,18 @@ onUnmounted(() => {
 });
 
 const keyMapper = (e: KeyboardEvent) => {
-  if ((e.metaKey || e.ctrlKey) && e.key === "f") {
+  if ((e.metaKey || e.ctrlKey) && e.key === "f" && overrideCmdF) {
+    switch (router.currentRoute.value.name) {
+      case ENTITY_ABILITIES_ROUTE: {
+        overrideCmdF = false;
+        e.preventDefault();
+        document.getElementById(ENTITY_ABILITIES_SEARCH_OVERRIDE)?.focus();
+        return;
+      }
+    }
     console.log("should override search");
   }
+  overrideCmdF = true;
   if (!e.target || e.metaKey || e.ctrlKey) {
     return;
   }

@@ -71,6 +71,7 @@
   --yellow-500: #e6af2e;
   --yellow-600: #e0a51b;
 
+  --green-300: #62D745;
   --green-500: #3a8029;
   --green-600: #47663f;
 
@@ -144,6 +145,7 @@
   --link-hover: var(--red-500);
   --link-active: var(--red-700);
   --text-muted: var(--gray-650);
+  --text-success: var(--green-300);
   --text-contrast: white;
   --link-contrast-hover: var(--red-300);
   --link-contrast-active: var(--red-500);
@@ -306,6 +308,9 @@ ul {
 }
 .contrastText, .contrast-text {
   color: var(--text-contrast);
+}
+.successText, .success-text {
+  color: var(--text-success);
 }
 
 .labelText, .label-text {

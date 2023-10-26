@@ -28,6 +28,7 @@
                     : attrMaxDisplayVal(attr)
                 "
                 :bottom="attrMaxDisplayVal(attr)"
+                :success-when-over="true"
               ></BaseFraction>
             </div>
           </button>
@@ -207,6 +208,7 @@ import {
   entityAttributesMap,
   getMaxAttr,
   additionalCombatStatsAttrs,
+  ATTRIBUTE_DAMAGES,
 } from "@/utils/attributeUtils";
 import { cogTypeName } from "@/utils/copy/createCogTypeOptions";
 import BaseFraction from "../Base/BaseFraction.vue";
@@ -296,15 +298,7 @@ const COMBAT_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
   "bleeding",
   "paralysis",
   "stun",
-  "agi_dmg",
-  "cha_dmg",
-  "dex_dmg",
-  "int_dmg",
-  "per_dmg",
-  "spi_dmg",
-  "str_dmg",
-  "tek_dmg",
-  "wis_dmg",
+  ...ATTRIBUTE_DAMAGES,
 ];
 
 const combatSingleRowAttributes = computed(() => {

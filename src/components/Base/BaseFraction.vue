@@ -14,6 +14,7 @@ export default {
     top: { type: Number },
     bottom: { type: Number },
     noWarning: { type: Boolean, default: false },
+    successWhenOver: { type: Boolean, default: false },
   },
   computed: {
     warningClass() {
@@ -21,7 +22,13 @@ export default {
         errorText:
           this.top &&
           this.bottom &&
-          (this.top > this.bottom || this.top < 0) &&
+          ((!this.successWhenOver && this.top > this.bottom) || this.top < 0) &&
+          !this.noWarning,
+        successText:
+          this.top &&
+          this.bottom &&
+          this.successWhenOver &&
+          this.top > this.bottom &&
           !this.noWarning,
       };
     },
