@@ -28,7 +28,7 @@ import PageLayout from "@/components/Base/PageLayout.vue";
 import { useEntityStore } from "@/stores/entity";
 import { computed, onBeforeMount, onUnmounted } from "vue";
 import { RouterView, useRoute } from "vue-router";
-import { idValidator, optionalIdValidator } from "@/utils/backendTypes";
+import { idValidator, optionalIdValidator } from "vennt-library";
 import router, {
   ENTITY_ABILITIES_ROUTE,
   ENTITY_COMBAT_ROUTE,

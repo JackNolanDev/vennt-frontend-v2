@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLString, UpdatedEntityAttributes } from "@/utils/backendTypes";
+import type { HTMLString, UpdatedEntityAttributes } from "vennt-library";
 import { renderMarkdown } from "@/utils/textUtils";
 import BaseButton from "./BaseButton.vue";
 

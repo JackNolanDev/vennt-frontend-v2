@@ -61,7 +61,7 @@ import BaseButton from "../Base/BaseButton.vue";
 import { computed, reactive } from "vue";
 import { defaultDice } from "@/utils/diceUtils";
 import { useDiceStore } from "@/stores/dice";
-import type { DisabledActions } from "@/utils/backendTypes";
+import type { DisabledActions } from "vennt-library";
 
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();

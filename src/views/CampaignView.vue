@@ -22,7 +22,7 @@ import BaseNav from "@/components/Base/BaseNav.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import router, { HOME_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
-import { idValidator } from "@/utils/backendTypes";
+import { idValidator } from "vennt-library";
 import { onBeforeMount } from "vue";
 import CampaignGMSettings from "@/components/Campaign/CampaignGMSettings.vue";
 import CampaignLandingPage from "@/components/Campaign/CampaignLandingPage.vue";

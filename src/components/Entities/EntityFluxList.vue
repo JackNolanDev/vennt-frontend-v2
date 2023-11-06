@@ -58,7 +58,7 @@
 import { useEntityStore } from "@/stores/entity";
 import { editorEmpty, pluralizeName } from "@/utils/textUtils";
 import BaseStealthTextEditor from "../Base/BaseStealthTextEditor.vue";
-import type { EntityFluxType, FullEntityFlux } from "@/utils/backendTypes";
+import type { EntityFluxType, FullEntityFlux } from "vennt-library";
 import { computed, onBeforeMount, reactive, watch } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import BaseFullFeaturedTextEditor from "../Base/BaseFullFeaturedTextEditor.vue";

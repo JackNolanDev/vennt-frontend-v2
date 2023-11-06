@@ -33,10 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  FullEntityAbility,
-  UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+import type { FullEntityAbility, UpdatedEntityAttributes } from "vennt-library";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import AbilityAdditionalDetailDropdown from "./AbilityAdditionalDetailDropdown.vue";
 import { useEntityStore } from "@/stores/entity";

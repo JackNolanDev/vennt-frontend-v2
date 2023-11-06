@@ -28,10 +28,7 @@
 import router, { WIKI_PATHS_ROUTE, WIKI_PATHS_SPECIFIC_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type {
-  EntityAbility,
-  UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+import type { EntityAbility, UpdatedEntityAttributes } from "vennt-library";
 import { stringToLinkID } from "@/utils/textUtils";
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";

@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DiceCommands } from "@/utils/backendTypes";
+import type { DiceCommands } from "vennt-library";
 import ToggleableDiceSection from "./ToggleableDiceSection.vue";
 
 const unique = Math.random().toString().substring(2);

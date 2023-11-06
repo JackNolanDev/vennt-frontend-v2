@@ -72,7 +72,7 @@ import router, {
   ENTITY_WEAPON_SHOP_ROUTE,
 } from "@/router";
 import { computed } from "vue";
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 
 const entityStore = useEntityStore();
 

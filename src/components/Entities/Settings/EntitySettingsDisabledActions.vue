@@ -43,7 +43,7 @@
 import BaseButton from "@/components/Base/BaseButton.vue";
 import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import { useEntityStore } from "@/stores/entity";
-import type { DisabledActions } from "@/utils/backendTypes";
+import type { DisabledActions } from "vennt-library";
 
 const MODAL_ID = "entity-update-disabled-actions";
 

@@ -1,4 +1,4 @@
-import type { CharacterGift, HTMLString } from "../backendTypes";
+import type { CharacterGift, HTMLString } from "vennt-library";
 
 const getGiftedPathLinkSentence = (name: string): string => {
   const linkName = name.replaceAll(" ", "_");

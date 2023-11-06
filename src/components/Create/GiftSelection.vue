@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { CHARACTER_GIFTS, type CharacterGift } from "@/utils/backendTypes";
+import { CHARACTER_GIFTS, type CharacterGift } from "vennt-library";
 import { reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import GiftDescriptionV14 from "./GiftDescriptionV14.vue";

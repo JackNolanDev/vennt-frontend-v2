@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import AbilityInputsUse from "./AbilityInputsUse.vue";
 import AbilityRollUse from "./AbilityRollUse.vue";
 import AbilityWeaponsUse from "./AbilityWeaponsUse.vue";

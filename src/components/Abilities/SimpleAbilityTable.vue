@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { EntityAbility, FullEntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility, FullEntityAbility } from "vennt-library";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 import DisplayAbilityUseCost from "./DisplayAbilityUseCost.vue";
 import AbilityUses from "../Uses/AbilityUses.vue";

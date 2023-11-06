@@ -113,10 +113,7 @@ import { buildDice } from "vennt-library";
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import RollDiceInput from "../Dice/RollDiceInput.vue";
-import type {
-  EntityAttribute,
-  PartialEntityAttributes,
-} from "@/utils/backendTypes";
+import type { EntityAttribute, PartialEntityAttributes } from "vennt-library";
 import { numberFieldVal } from "@/utils/inputType";
 import {
   ATTRIBUTE_DAMAGES,

@@ -200,7 +200,7 @@ import {
   type EntityAttribute,
   type FullEntity,
   type UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import BulletPointVue from "../Base/BulletPoint.vue";
 import {

@@ -4,7 +4,7 @@ import {
   campaignInviteValidator,
   type CampaignInviteWithDetails,
   campaignInviteWithDetailsValidator,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { wrapAPI, authConfig } from "./utils";
 import api from "./apiInstance";
 import { z } from "zod";

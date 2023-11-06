@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import AbilityComment from "./AbilityComment.vue";
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import UseAbilitySection from "./UseAbilitySection.vue";
 import AbilityUses from "../Uses/AbilityUses.vue";
 import AbilityUseLatestButton from "./AbilityUseLatestButton.vue";

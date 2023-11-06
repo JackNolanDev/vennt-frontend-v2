@@ -14,10 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  CollectedEntity,
-  UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+import type { CollectedEntity, UpdatedEntityAttributes } from "vennt-library";
 import DisplayAbilityFull from "../Abilities/DisplayAbilityFull.vue";
 import BulletPoint from "../Base/BulletPoint.vue";
 

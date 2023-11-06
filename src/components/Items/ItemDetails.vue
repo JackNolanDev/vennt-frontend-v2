@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import DisplayItemFull from "./DisplayItemFull.vue";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";

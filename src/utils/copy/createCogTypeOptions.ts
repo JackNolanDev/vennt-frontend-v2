@@ -2,7 +2,7 @@ import type {
   HTMLString,
   BaseEntityAttribute,
   CogAttributeLevel,
-} from "../backendTypes";
+} from "vennt-library";
 
 export const cogTypeOptionsInfo: Record<
   string,

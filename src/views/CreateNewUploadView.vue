@@ -50,7 +50,7 @@ import { entityAttributesMap } from "@/utils/attributeUtils";
 import {
   fullCollectedEntityWithChangelogValidator,
   type FullCollectedEntityWithChangelog,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { getCopyableCogText } from "@/utils/entityUtils";
 import { computed, reactive } from "vue";
 

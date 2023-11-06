@@ -3,7 +3,7 @@ import type {
   EntityAttribute,
   HTMLString,
   UsesMap,
-} from "../backendTypes";
+} from "vennt-library";
 
 type Equation = string | number;
 

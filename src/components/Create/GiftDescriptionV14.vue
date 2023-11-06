@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CharacterGift } from "@/utils/backendTypes";
+import type { CharacterGift } from "vennt-library";
 import { giftCopyV14 } from "@/utils/copy/giftCopy";
 
 defineProps<{ showTitle?: boolean; gift: CharacterGift }>();

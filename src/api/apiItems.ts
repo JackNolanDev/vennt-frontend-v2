@@ -3,7 +3,7 @@ import {
   fullItemValidator,
   type FullEntityItem,
   type PartialEntityItem,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { authConfig, wrapAPI } from "./utils";
 
 export const updateItemApi = (

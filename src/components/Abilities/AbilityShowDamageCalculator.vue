@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility } from "vennt-library";
 import DamageCalculatorLink from "../Entities/DamageCalculatorLink.vue";
 
 defineProps<{ ability: EntityAbility }>();

@@ -11,7 +11,7 @@ import {
   type FullEntityAbility,
   type PathsAndAbilities,
   type UpdatedEntityAttributes,
-} from "./backendTypes";
+} from "vennt-library";
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
 import { solveEquation } from "./attributeUtils";
@@ -200,7 +200,7 @@ export const canUseAbility = (
   if (!abilityUsable(ability)) {
     return false;
   }
-  const costMap = { ...ability.custom_fields?.cost };
+  const costMap: AbilityCostMap = { ...ability.custom_fields?.cost };
   if (additionalCost) {
     Object.entries(additionalCost).forEach(([attrIn, cost]) => {
       const attr = attrIn as keyof AbilityCostMapNumber;

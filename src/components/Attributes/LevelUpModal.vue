@@ -37,7 +37,7 @@
 import { useEntityStore } from "@/stores/entity";
 import BaseModal from "../Base/BaseModal.vue";
 import { computed, reactive } from "vue";
-import { ATTRIBUTES, type BaseEntityAttribute } from "@/utils/backendTypes";
+import { ATTRIBUTES, type BaseEntityAttribute } from "vennt-library";
 import AttributeSelection from "./AttributeSelection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";

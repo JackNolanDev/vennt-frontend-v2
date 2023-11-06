@@ -7,7 +7,7 @@ import type {
   EntityAttribute,
   EntityItem,
   UpdatedEntityAttributes,
-} from "./backendTypes";
+} from "vennt-library";
 
 export type ResultReason<T> = {
   reason: string;

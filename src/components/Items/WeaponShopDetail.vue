@@ -50,7 +50,7 @@ import {
   itemValidator,
   type EntityItem,
   type ShopItem,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import DisplayShopItem from "./DisplayShopItem.vue";
 import { prefixName } from "@/utils/textUtils";
 import { computed, reactive } from "vue";

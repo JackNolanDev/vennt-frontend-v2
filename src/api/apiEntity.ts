@@ -26,7 +26,7 @@ import {
   fullEntityFluxValidator,
   fullCollectedEntityWithChangelogValidator,
   type FullCollectedEntityWithChangelog,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import api from "./apiInstance";
 import { authConfig, wrapAPI } from "./utils";
 import { z } from "zod";

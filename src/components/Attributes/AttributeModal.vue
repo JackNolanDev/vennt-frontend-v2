@@ -112,7 +112,7 @@ import {
   getBaseAttr,
   getMaxAttr,
 } from "@/utils/attributeUtils";
-import { validAttributes, type EntityAttribute } from "@/utils/backendTypes";
+import { validAttributes, type EntityAttribute } from "vennt-library";
 import { computed, onBeforeMount } from "vue";
 import BaseFraction from "../Base/BaseFraction.vue";
 import BaseModal from "../Base/BaseModal.vue";

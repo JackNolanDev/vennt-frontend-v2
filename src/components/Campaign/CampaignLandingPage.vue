@@ -61,7 +61,7 @@ import {
   idValidator,
   type CampaignEntity,
   CAMPAIGN_ROLE_GM,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { onBeforeMount, reactive } from "vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import AddEntityToCampaignButton from "@/components/Campaign/AddEntityToCampaignButton.vue";

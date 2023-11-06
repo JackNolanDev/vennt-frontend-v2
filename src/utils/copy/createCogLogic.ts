@@ -8,7 +8,7 @@ import type {
   UpdatedEntityAttributes,
   UncompleteEntityAbility,
   UsesMap,
-} from "../backendTypes";
+} from "vennt-library";
 import { cogAbilityMap, type CogAbility } from "./createCogAbilityOptions";
 import { cogTypeOptionsInfo } from "./createCogTypeOptions";
 

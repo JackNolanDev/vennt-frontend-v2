@@ -56,7 +56,7 @@ import {
   CHANGELOG_MAX,
   type EntityAttribute,
   type PartialEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 

@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import router, { ENTITY_ROUTE } from "@/router";
-import type { EntityAttribute } from "@/utils/backendTypes";
+import type { EntityAttribute } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
 import { attrFullName } from "@/utils/attributeUtils";
 import { computed } from "vue";

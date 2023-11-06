@@ -33,7 +33,7 @@ import { computed } from "vue";
 import router, { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
 import EditItem from "../Items/EditItem.vue";
-import { idValidator } from "@/utils/backendTypes";
+import { idValidator } from "vennt-library";
 import AbilityDetails from "../Abilities/AbilityDetails.vue";
 import AbilitySearchDetails from "../Abilities/AbilitySearchDetails.vue";
 import EditAbility from "../Abilities/EditAbility.vue";

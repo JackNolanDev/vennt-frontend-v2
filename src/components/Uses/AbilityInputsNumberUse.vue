@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility, UseNumberInput } from "@/utils/backendTypes";
+import type { FullEntityAbility, UseNumberInput } from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { solveEquation } from "@/utils/attributeUtils";

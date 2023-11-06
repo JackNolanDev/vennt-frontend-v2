@@ -88,7 +88,7 @@ import WikiLinksSingleLine from "@/components/Wiki/WikiLinksSingleLine.vue";
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { EntityAbility, FullEntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility, FullEntityAbility } from "vennt-library";
 import { renderMarkdown, stringToLinkID } from "@/utils/textUtils";
 import { computed, watch } from "vue";
 import AbilityName from "@/components/Abilities/AbilityName.vue";

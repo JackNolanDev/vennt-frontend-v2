@@ -34,7 +34,7 @@ import DisplayShopItem from "@/components/Items/DisplayShopItem.vue";
 import WeaponIcon from "@/components/Items/WeaponIcon.vue";
 import router, { ENTITY_WEAPON_SHOP_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { ShopItem } from "@/utils/backendTypes";
+import type { ShopItem } from "vennt-library";
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 

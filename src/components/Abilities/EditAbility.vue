@@ -219,7 +219,7 @@ import {
   type AbilityCostMap,
   type FullEntityAbility,
   type UncompleteEntityAbility,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { editorEmpty } from "@/utils/textUtils";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";

@@ -9,10 +9,7 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type {
-  FullEntityAbility,
-  UncompleteEntityItem,
-} from "@/utils/backendTypes";
+import type { FullEntityAbility, UncompleteEntityItem } from "vennt-library";
 import { prefixName } from "@/utils/textUtils";
 import BaseButton from "../Base/BaseButton.vue";
 

@@ -5,7 +5,7 @@ import {
   type UncompleteEntityText,
   type UpdatedEntityAttributes,
   type CogCreateOptions,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import {
   cogBaseAttribute,
   cogAcc,

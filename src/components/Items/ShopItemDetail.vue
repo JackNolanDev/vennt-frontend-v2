@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ShopItem, EntityItem } from "@/utils/backendTypes";
+import type { ShopItem, EntityItem } from "vennt-library";
 import { prefixName, pluralizeName } from "@/utils/textUtils";
 import DisplayShopItem from "./DisplayShopItem.vue";
 import { shopItemToEntityItem, shopItemActive } from "@/utils/itemUtils";

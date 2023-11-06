@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
-import type { EntityItem } from "@/utils/backendTypes";
+import type { EntityItem } from "vennt-library";
 import {
   buildSettingsForAttrList,
   diceParseFromString,

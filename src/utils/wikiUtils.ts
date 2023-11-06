@@ -1,9 +1,6 @@
 import { useJsonStore } from "@/stores/jsonStorage";
 import Graph from "graph-data-structure";
-import type {
-  PathsAndAbilities,
-  UncompleteEntityAbility,
-} from "./backendTypes";
+import type { PathsAndAbilities, UncompleteEntityAbility } from "vennt-library";
 import { stringToLinkID } from "./textUtils";
 
 export const buildPathGraph = (abilities: PathsAndAbilities) => {

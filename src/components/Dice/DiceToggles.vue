@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
-import type { DiceToggle, EntityAttribute } from "@/utils/backendTypes";
+import type { DiceToggle, EntityAttribute } from "vennt-library";
 import { computed } from "vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 

@@ -18,7 +18,7 @@ import type {
   FullEntityAbility,
   HTMLString,
   UseRadioInput,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { computed } from "vue";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
 import AbilityInputsUses from "./AbilityInputsUse.vue";

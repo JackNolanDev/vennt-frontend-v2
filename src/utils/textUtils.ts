@@ -2,7 +2,7 @@ import indefinite from "indefinite";
 import pluralize from "pluralize";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import type { HTMLString, UpdatedEntityAttributes } from "./backendTypes";
+import type { HTMLString, UpdatedEntityAttributes } from "vennt-library";
 import { solveEquation } from "./attributeUtils";
 
 export const improveTextForDisplay = (text: string): string => {

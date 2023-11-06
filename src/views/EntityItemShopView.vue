@@ -69,7 +69,7 @@ import SetBasedCheckBoxArray from "@/components/Base/SetBasedCheckBoxArray.vue";
 import DisplayShopItemDesc from "@/components/Items/DisplayShopItemDesc.vue";
 import router, { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { EntityItemType, ShopItem } from "@/utils/backendTypes";
+import type { EntityItemType, ShopItem } from "vennt-library";
 import { computed, reactive } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 

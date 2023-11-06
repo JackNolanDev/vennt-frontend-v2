@@ -9,7 +9,7 @@ import {
   type HTMLString,
   type UncompleteEntityAbility,
   type UncompleteEntityItem,
-} from "../backendTypes";
+} from "vennt-library";
 import { namesToItems } from "../itemUtils";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { giftBoonCopy } from "./giftBoonsCopy";

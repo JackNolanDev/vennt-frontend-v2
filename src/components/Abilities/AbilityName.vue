@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
-import type { EntityAbility, FullEntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility, FullEntityAbility } from "vennt-library";
 import { improveTextForDisplay } from "@/utils/textUtils";
 import type { RouteLocationRaw } from "vue-router";
 

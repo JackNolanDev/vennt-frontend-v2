@@ -47,10 +47,7 @@
 
 <script setup lang="ts">
 import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
-import {
-  attributeNameValidator,
-  attributeValValidator,
-} from "@/utils/backendTypes";
+import { attributeNameValidator, attributeValValidator } from "vennt-library";
 import { fieldValidator } from "@/utils/inputType";
 import { attrFullName } from "@/utils/attributeUtils";
 import { computed, reactive } from "vue";

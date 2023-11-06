@@ -11,10 +11,7 @@
 
 <script setup lang="ts">
 import router from "@/router";
-import {
-  attributeNameValidator,
-  type EntityAttribute,
-} from "@/utils/backendTypes";
+import { attributeNameValidator, type EntityAttribute } from "vennt-library";
 import { computed } from "vue";
 import AttributeModal from "../Attributes/AttributeModal.vue";
 import LevelUpModal from "../Attributes/LevelUpModal.vue";

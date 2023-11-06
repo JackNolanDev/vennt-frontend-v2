@@ -227,7 +227,7 @@ import {
   ITEM_TYPE_WEAPON,
   type UsesMap,
   type FullEntityItem,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";

@@ -35,7 +35,7 @@
 import BaseCheckBox from "@/components/Base/BaseCheckBox.vue";
 import BaseCopyButton from "@/components/Base/BaseCopyButton.vue";
 import { useEntityStore } from "@/stores/entity";
-import type { EntityTextKey } from "@/utils/backendTypes";
+import type { EntityTextKey } from "vennt-library";
 import { computed } from "vue";
 import BaseDropDown from "../../Base/BaseDropDown.vue";
 

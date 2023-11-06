@@ -16,10 +16,7 @@
 
 <script setup lang="ts">
 import { useJsonStore } from "@/stores/jsonStorage";
-import type {
-  FullEntityAbility,
-  UncompleteEntityItem,
-} from "@/utils/backendTypes";
+import type { FullEntityAbility, UncompleteEntityItem } from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import DisplayWeaponFields from "../Items/DisplayWeaponFields.vue";

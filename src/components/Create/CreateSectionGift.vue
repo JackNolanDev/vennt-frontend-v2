@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { useCharacterCreateStore } from "@/stores/characterCreate";
-import type { CharacterGift } from "@/utils/backendTypes";
+import type { CharacterGift } from "vennt-library";
 import {
   ATTR_FILTERS_ON_GIFT_SELECTION,
   ATTR_RESET_ON_GIFT_SELECTION,

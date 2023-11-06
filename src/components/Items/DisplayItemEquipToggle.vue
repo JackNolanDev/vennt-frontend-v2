@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import { itemEquippable } from "@/utils/itemUtils";
 import BaseButton from "../Base/BaseButton.vue";
 import { useEntityStore } from "@/stores/entity";

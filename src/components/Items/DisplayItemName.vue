@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityItem } from "@/utils/backendTypes";
+import type { EntityItem } from "vennt-library";
 import { prefixName } from "@/utils/textUtils";
 import { computed } from "vue";
 

@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import AbilityInputsRadioUse from "./AbilityInputsRadioUse.vue";
 import AbilityInputsTextUse from "./AbilityInputsTextUse.vue";
-import type { FullEntityAbility, UseInputs } from "@/utils/backendTypes";
+import type { FullEntityAbility, UseInputs } from "vennt-library";
 import AbilityInputsNumberUse from "./AbilityInputsNumberUse.vue";
 
 defineProps<{ ability: FullEntityAbility; inputs?: UseInputs }>();

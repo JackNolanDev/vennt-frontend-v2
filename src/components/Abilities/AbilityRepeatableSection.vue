@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
 
 const props = defineProps<{ ability: FullEntityAbility }>();

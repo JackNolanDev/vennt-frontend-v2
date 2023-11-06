@@ -64,10 +64,7 @@
 
 <script setup lang="ts">
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
-import type {
-  FullEntityAbility,
-  UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+import type { FullEntityAbility, UpdatedEntityAttributes } from "vennt-library";
 import { stringToLinkID } from "@/utils/textUtils";
 import type { RouteLocationRaw } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";

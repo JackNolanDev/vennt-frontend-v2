@@ -13,7 +13,7 @@ import {
   ITEM_TYPE_WEAPON,
   type EntityItemType,
   type FullCollectedEntity,
-} from "./backendTypes";
+} from "vennt-library";
 import isEmpty from "lodash.isempty";
 import isEqual from "lodash.isequal";
 

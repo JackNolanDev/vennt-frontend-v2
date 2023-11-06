@@ -13,7 +13,7 @@ import type {
   PostCampaign,
   PostCampaignEntity,
   PostCampaignInvite,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { defineStore } from "pinia";
 import { useAccountInfoStore } from "./accountInfo";
 import {

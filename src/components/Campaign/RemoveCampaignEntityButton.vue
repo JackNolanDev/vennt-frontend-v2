@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CampaignEntity } from "@/utils/backendTypes";
+import type { CampaignEntity } from "vennt-library";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { useCampaignStore } from "@/stores/campaign";
 

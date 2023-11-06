@@ -1,4 +1,4 @@
-import type { FullEntityAbility } from "../backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 
 export const BASIC_ACTION_MOVE: FullEntityAbility = {
   id: "move",

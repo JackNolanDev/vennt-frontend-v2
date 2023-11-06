@@ -17,7 +17,7 @@
 import type {
   CharacterGift,
   UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { giftBoonCopy } from "@/utils/copy/giftBoonsCopy";
 import { computed } from "vue";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";

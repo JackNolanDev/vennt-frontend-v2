@@ -3,7 +3,7 @@ import {
   fetchShopItemsApi,
   fetchWeaponTypesApi,
 } from "@/api/apiStorage";
-import type { PathsAndAbilities, ShopItem } from "@/utils/backendTypes";
+import type { PathsAndAbilities, ShopItem } from "vennt-library";
 import { getDefaultWeapons } from "@/utils/itemUtils";
 import { buildPathGraph, buildAbilityMap } from "@/utils/wikiUtils";
 import { defineStore } from "pinia";

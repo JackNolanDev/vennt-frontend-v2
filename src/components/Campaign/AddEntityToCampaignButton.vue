@@ -31,7 +31,7 @@
 import { useCampaignStore } from "@/stores/campaign";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { computed, reactive } from "vue";
-import type { HTMLString } from "@/utils/backendTypes";
+import type { HTMLString } from "vennt-library";
 import { xp2Level } from "@/utils/attributeUtils";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
 import { useHomeStore } from "@/stores/home";

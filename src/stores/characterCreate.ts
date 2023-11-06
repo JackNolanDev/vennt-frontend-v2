@@ -4,7 +4,7 @@ import type {
   UncompleteEntityFlux,
   UncompleteEntityText,
   UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import {
   calculateAttribute,
   DEFAULT_HERO,

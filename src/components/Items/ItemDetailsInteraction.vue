@@ -41,7 +41,7 @@
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import { findShopItem } from "@/utils/itemUtils";
 import { prefixName } from "@/utils/textUtils";
 import { computed } from "vue";

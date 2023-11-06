@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import { actualXPCost, defaultXPCost } from "@/utils/abilityUtils";
-import type { EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility } from "vennt-library";
 import { computed } from "vue";
 import WikiLinksSingleLine from "../Wiki/WikiLinksSingleLine.vue";
 

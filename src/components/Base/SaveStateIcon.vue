@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SaveState } from "@/utils/backendTypes";
+import type { SaveState } from "vennt-library";
 
 defineProps<{ state: SaveState; subject: string }>();
 </script>

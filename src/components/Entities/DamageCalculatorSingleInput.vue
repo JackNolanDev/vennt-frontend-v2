@@ -70,11 +70,7 @@
 
 <script setup lang="ts">
 import { attrFullName } from "@/utils/attributeUtils";
-import {
-  ATTRIBUTES,
-  type AttackDamage,
-  DamageType,
-} from "@/utils/backendTypes";
+import { ATTRIBUTES, type AttackDamage, DamageType } from "vennt-library";
 import { numberFieldVal } from "@/utils/inputType";
 import { computed } from "vue";
 

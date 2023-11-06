@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility } from "vennt-library";
 
 defineProps<{ ability: EntityAbility }>();
 

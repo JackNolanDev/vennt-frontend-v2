@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import { reactive, watch } from "vue";
 import BaseStealthTextEditor from "../Base/BaseStealthTextEditor.vue";
 import { useEntityStore } from "@/stores/entity";

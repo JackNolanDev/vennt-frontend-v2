@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CollectedEntity } from "@/utils/backendTypes";
+import type { CollectedEntity } from "vennt-library";
 import {
   consolidateItemList,
   unsafeEnsureFullEntityItems,

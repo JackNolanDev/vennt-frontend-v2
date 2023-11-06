@@ -29,7 +29,7 @@ import { useEntityStore } from "@/stores/entity";
 import { computed, onBeforeMount, onMounted, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import SaveStateIcon from "../Base/SaveStateIcon.vue";
-import type { SaveState } from "@/utils/backendTypes";
+import type { SaveState } from "vennt-library";
 import EntityNotesTextEditor from "./EntityNotesTextEditor.vue";
 import { useEntityNotesStore } from "@/stores/entityNotes";
 

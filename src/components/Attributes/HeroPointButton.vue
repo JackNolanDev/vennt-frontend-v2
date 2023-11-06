@@ -19,7 +19,7 @@ import {
 } from "@/utils/attributeUtils";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
-import type { PartialEntityAttributes } from "@/utils/backendTypes";
+import type { PartialEntityAttributes } from "vennt-library";
 
 const props = defineProps<{
   reason?: string;

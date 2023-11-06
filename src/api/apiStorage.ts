@@ -6,7 +6,7 @@ import {
   pathsAndAbilitiesValidator,
   ABILITIES_KEY,
   type PathsAndAbilities,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import axios from "axios";
 
 const JSON_STORAGE_PUBLIC_URL =

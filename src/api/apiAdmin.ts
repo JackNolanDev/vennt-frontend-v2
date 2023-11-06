@@ -1,6 +1,6 @@
 import { authConfig, wrapAPI } from "./utils";
 import api from "./apiInstance";
-import type { JsonStorageKey } from "@/utils/backendTypes";
+import type { JsonStorageKey } from "vennt-library";
 
 export const triggerWebscraperApi = (key: JsonStorageKey) => {
   wrapAPI(() => api.post(`/admin/storage/${key}`, undefined, authConfig()));

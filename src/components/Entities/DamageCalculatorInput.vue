@@ -89,7 +89,7 @@ import {
   DamageType,
   type AttackDamage,
   type AttackDetails,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { numberFieldVal } from "@/utils/inputType";
 import DamageCalculatorSingleInput from "./DamageCalculatorSingleInput.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";

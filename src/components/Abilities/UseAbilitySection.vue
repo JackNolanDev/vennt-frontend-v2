@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import { defaultDice } from "@/utils/diceUtils";
 import { computed } from "vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";

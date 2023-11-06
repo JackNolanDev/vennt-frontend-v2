@@ -1,5 +1,5 @@
 import { useEntityStore } from "./entity";
-import type { SaveState } from "@/utils/backendTypes";
+import type { SaveState } from "vennt-library";
 import { defineStore } from "pinia";
 
 interface EntityNotesStore {

@@ -9,7 +9,7 @@ import type {
   UseCriteriaCompField,
   UseCriteriaComp,
   UseCriteriaCompFieldAbilityField,
-} from "./backendTypes";
+} from "vennt-library";
 
 const criteriaFieldOperator = (
   operator: CriteriaFieldOperator

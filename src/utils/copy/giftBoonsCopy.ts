@@ -1,4 +1,4 @@
-import type { CharacterGift, EntityAbility } from "../backendTypes";
+import type { CharacterGift, EntityAbility } from "vennt-library";
 
 type GiftBoonCopy = Record<
   string,

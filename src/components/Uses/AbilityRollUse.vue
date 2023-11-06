@@ -33,10 +33,7 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type {
-  FullEntityAbility,
-  PartialEntityAttributes,
-} from "@/utils/backendTypes";
+import type { FullEntityAbility, PartialEntityAttributes } from "vennt-library";
 import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";

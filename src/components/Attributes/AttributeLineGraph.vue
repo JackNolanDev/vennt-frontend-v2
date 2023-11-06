@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import { getMaxAttr } from "@/utils/attributeUtils";
-import { ATTRIBUTES, type EntityAttribute } from "@/utils/backendTypes";
+import { ATTRIBUTES, type EntityAttribute } from "vennt-library";
 import { computed, onBeforeMount } from "vue";
 import AttributeLineGraphDiscrete from "./AttributeLineGraphDiscrete.vue";
 

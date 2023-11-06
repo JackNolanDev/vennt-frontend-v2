@@ -1,4 +1,4 @@
-import type { EntityAttribute, UpdatedEntityAttributes } from "./backendTypes";
+import type { EntityAttribute, UpdatedEntityAttributes } from "vennt-library";
 
 // TODO: For v0.14 increase to 2000
 export const LEVEL_UPS_TO_INCREASE_ATTR = 2;

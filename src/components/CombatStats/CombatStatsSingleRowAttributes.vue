@@ -89,7 +89,7 @@ import type {
   CollectedEntity,
   EntityAttribute,
   UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { totalDC } from "@/utils/itemUtils";
 import { computed } from "vue";
 import { ATTRIBUTE_DAMAGES, attrShortName } from "@/utils/attributeUtils";

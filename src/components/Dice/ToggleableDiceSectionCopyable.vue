@@ -31,7 +31,7 @@
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import { attrFullName, attrShortName } from "@/utils/attributeUtils";
-import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
+import type { DiceCommands, EntityAttribute } from "vennt-library";
 import { combineDiceSettings } from "@/utils/diceUtils";
 import { buildDice } from "vennt-library";
 import { computed } from "vue";

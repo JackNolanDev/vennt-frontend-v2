@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityAttribute } from "@/utils/backendTypes";
+import type { EntityAttribute } from "vennt-library";
 import { attrHelpHTML } from "@/utils/copy/attributeHelpCopy";
 
 defineProps<{ attr: EntityAttribute }>();

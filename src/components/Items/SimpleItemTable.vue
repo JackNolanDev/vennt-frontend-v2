@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import router, { ENTITY_COMBAT_ROUTE, ENTITY_ITEMS_ROUTE } from "@/router";
-import type { EntityItem, FullEntityItem } from "@/utils/backendTypes";
+import type { EntityItem, FullEntityItem } from "vennt-library";
 import { improveTextForDisplay } from "@/utils/textUtils";
 import {
   type RouteLocationRaw,

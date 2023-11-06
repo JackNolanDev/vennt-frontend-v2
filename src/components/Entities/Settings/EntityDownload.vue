@@ -19,7 +19,7 @@
 import { fetchCollectedEntityFullApi } from "@/api/apiEntity";
 import BaseDropDown from "@/components/Base/BaseDropDown.vue";
 import { useEntityStore } from "@/stores/entity";
-import type { FullCollectedEntityWithChangelog } from "@/utils/backendTypes";
+import type { FullCollectedEntityWithChangelog } from "vennt-library";
 import { computed, reactive } from "vue";
 
 const state = reactive<{ entity?: FullCollectedEntityWithChangelog }>({});

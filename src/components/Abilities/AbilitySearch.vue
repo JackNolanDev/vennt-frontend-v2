@@ -29,7 +29,7 @@ import { stringToLinkID, improveTextForDisplay } from "@/utils/textUtils";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
-import type { EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility } from "vennt-library";
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
 import type { RouteLocationRaw } from "vue-router";
 import { useEntityStore } from "@/stores/entity";

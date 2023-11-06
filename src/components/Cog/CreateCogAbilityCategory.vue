@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { useCogCreateStore } from "@/stores/cogCreate";
 import { solveEquation } from "@/utils/attributeUtils";
-import type { HTMLString } from "@/utils/backendTypes";
+import type { HTMLString } from "vennt-library";
 import {
   cogAbilityMap,
   type CogAbilityCategory,

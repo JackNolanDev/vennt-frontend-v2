@@ -14,7 +14,7 @@
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import { attrShortName } from "@/utils/attributeUtils";
-import type { UsesCheck } from "@/utils/backendTypes";
+import type { UsesCheck } from "vennt-library";
 import { defaultDice, combineDiceSettings } from "@/utils/diceUtils";
 import { computed } from "vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";

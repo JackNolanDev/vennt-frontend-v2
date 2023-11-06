@@ -2,7 +2,7 @@ import {
   fullAbilityValidator,
   type FullEntityAbility,
   type PartialEntityAbility,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import api from "./apiInstance";
 import { authConfig, wrapAPI } from "./utils";
 

@@ -6,10 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  EntityAbility,
-  UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+import type { EntityAbility, UpdatedEntityAttributes } from "vennt-library";
 import { renderMarkdown, improveTextForDisplay } from "@/utils/textUtils";
 import { computed } from "vue";
 

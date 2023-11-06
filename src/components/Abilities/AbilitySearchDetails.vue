@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UncompleteEntityAbility } from "@/utils/backendTypes";
+import type { UncompleteEntityAbility } from "vennt-library";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import DisplayAbilityAdditionalDetails from "./DisplayAbilityAdditionalDetails.vue";
 import AddSearchAbilityButton from "./AddSearchAbilityButton.vue";

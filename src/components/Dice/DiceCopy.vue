@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DiceCommands } from "@/utils/backendTypes";
+import type { DiceCommands } from "vennt-library";
 import DiceCopyButton from "./DiceCopyButton.vue";
 
 defineProps<{ dice: DiceCommands; text?: string }>();

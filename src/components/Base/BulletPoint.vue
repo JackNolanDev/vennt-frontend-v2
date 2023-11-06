@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CampaignEntity, Entity } from "@/utils/backendTypes";
+import type { CampaignEntity, Entity } from "vennt-library";
 import { entityColor } from "@/utils/entityUtils";
 import { computed } from "vue";
 

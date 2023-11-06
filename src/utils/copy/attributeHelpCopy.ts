@@ -1,4 +1,4 @@
-import type { EntityAttribute, HTMLString } from "@/utils/backendTypes";
+import type { EntityAttribute, HTMLString } from "vennt-library";
 import { getBaseAttr } from "../attributeUtils";
 
 type HelpMap = {

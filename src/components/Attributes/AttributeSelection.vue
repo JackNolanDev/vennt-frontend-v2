@@ -29,7 +29,7 @@ import {
   ATTRIBUTES,
   type BaseEntityAttribute,
   type UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
 
 interface AttributeSelectionProps {

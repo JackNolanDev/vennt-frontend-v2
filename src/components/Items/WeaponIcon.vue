@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityItem, ShopItem } from "@/utils/backendTypes";
+import type { EntityItem, ShopItem } from "vennt-library";
 import { computed } from "vue";
 
 const props = defineProps<{ item: EntityItem | ShopItem }>();

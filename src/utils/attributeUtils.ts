@@ -13,7 +13,7 @@ import {
   type UpdatedEntityAttributes,
   type UpdateEntityAttributes,
   type UseAttrMap,
-} from "./backendTypes";
+} from "vennt-library";
 import { titleText } from "./textUtils";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
 import { DEFAULT_ATTRS_MAP, DEFAULT_CHARACTER_EQUATIONS } from "./venntConfig";

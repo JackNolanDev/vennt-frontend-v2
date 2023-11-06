@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ShopItem } from "@/utils/backendTypes";
+import type { ShopItem } from "vennt-library";
 import { renderMarkdown } from "@/utils/textUtils";
 import { computed } from "vue";
 

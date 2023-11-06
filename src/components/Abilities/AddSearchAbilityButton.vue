@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UncompleteEntityAbility } from "@/utils/backendTypes";
+import type { UncompleteEntityAbility } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
 import { useEntityStore } from "@/stores/entity";
 

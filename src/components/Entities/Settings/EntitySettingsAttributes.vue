@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { type EntityAttribute, validAttributes } from "@/utils/backendTypes";
+import { type EntityAttribute, validAttributes } from "vennt-library";
 import { reactive } from "vue";
 import { attrFullName } from "@/utils/attributeUtils";
 import AttributeHelp from "../../Attributes/AttributeHelp.vue";

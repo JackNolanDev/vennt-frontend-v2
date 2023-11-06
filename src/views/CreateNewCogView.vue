@@ -128,7 +128,7 @@ import BaseFullFeaturedTextEditor from "@/components/Base/BaseFullFeaturedTextEd
 import CreateCogAbilitySection from "@/components/Cog/CreateCogAbilitySection.vue";
 import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import router, { CREATE_COG_ROUTE, ENTITY_ROUTE } from "@/router";
-import { idValidator } from "@/utils/backendTypes";
+import { idValidator } from "vennt-library";
 import BaseCopyableCode from "@/components/Base/BaseCopyableCode.vue";
 import { entityCreationFullyHealed } from "@/utils/entityUtils";
 

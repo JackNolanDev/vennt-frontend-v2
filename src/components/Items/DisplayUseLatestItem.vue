@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import { findNewItemVersion } from "@/utils/itemUtils";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";

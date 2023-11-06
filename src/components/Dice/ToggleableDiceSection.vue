@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import ToggleableDiceSectionRollable from "./ToggleableDiceSectionRollable.vue";
-import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
+import type { DiceCommands, EntityAttribute } from "vennt-library";
 import ToggleableDiceSectionCopyable from "./ToggleableDiceSectionCopyable.vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
 

@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI, solvePendingEquations } from "@/utils/attributeUtils";
 import { useEntityStore } from "@/stores/entity";

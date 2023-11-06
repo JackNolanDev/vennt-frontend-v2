@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
-import type { UpdatedEntityAttributes } from "@/utils/backendTypes";
+import type { UpdatedEntityAttributes } from "vennt-library";
 import { computed } from "vue";
 import SimpleAbilityTable from "../Abilities/SimpleAbilityTable.vue";
 import BaseButton from "../Base/BaseButton.vue";

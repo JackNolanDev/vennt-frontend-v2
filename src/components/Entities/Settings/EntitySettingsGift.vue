@@ -29,7 +29,7 @@ import {
   type CharacterGift,
   type EntityFields,
   type HTMLString,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { giftCopy } from "@/utils/copy/giftCopy";
 import { reactive } from "vue";
 import BaseRadioButtons from "../../Base/BaseRadioButtons.vue";

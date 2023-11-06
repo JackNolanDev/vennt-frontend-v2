@@ -84,7 +84,7 @@ import {
   NORMAL_DAMAGES,
   type AttackDetails,
   type AttackResponse,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";

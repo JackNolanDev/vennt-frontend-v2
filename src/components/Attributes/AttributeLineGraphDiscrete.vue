@@ -6,7 +6,7 @@
 import { useEntityStore } from "@/stores/entity";
 import { attrShortName, getMaxAttr } from "@/utils/attributeUtils";
 import { entityColor } from "@/utils/entityUtils";
-import type { EntityAttribute } from "@/utils/backendTypes";
+import type { EntityAttribute } from "vennt-library";
 import {
   Filler,
   type ChartData,

@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { stringToLinkID, improveTextForDisplay } from "@/utils/textUtils";
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
 import router, { ENTITY_ITEMS_ROUTE } from "@/router";
 import type { RouteLocationRaw } from "vue-router";

@@ -65,7 +65,7 @@ import {
   ABILITIES_KEY_OLD,
   SHOP_ITEMS_KEY,
   WEAPON_TYPES_KEY,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 
 const scrapeWeaponTypes = () => triggerWebscraperApi(WEAPON_TYPES_KEY);
 const scrapeItemShop = () => triggerWebscraperApi(SHOP_ITEMS_KEY);

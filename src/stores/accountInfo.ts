@@ -5,7 +5,7 @@ import {
   type AccountInfo,
   type LoginRequest,
   type SignupRequest,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { TOKEN_LOCAL_STORAGE } from "@/utils/constants";
 import { AxiosError } from "axios";
 import { defineStore } from "pinia";

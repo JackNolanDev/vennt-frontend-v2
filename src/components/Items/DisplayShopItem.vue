@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ShopItem } from "@/utils/backendTypes";
+import type { ShopItem } from "vennt-library";
 import DisplayShopItemDesc from "./DisplayShopItemDesc.vue";
 
 defineProps<{ item: ShopItem }>();

@@ -36,7 +36,7 @@ import type {
   UncompleteEntityFlux,
   UncompleteEntityItem,
   UpdateEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { sortAbilities, actualXPCost } from "@/utils/abilityUtils";
 import { consolidateItemList } from "@/utils/itemUtils";
 import { entityAttributesMap } from "@/utils/attributeUtils";

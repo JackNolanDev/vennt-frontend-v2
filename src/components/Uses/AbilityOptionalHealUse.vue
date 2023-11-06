@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import UseAbilityButton from "../Abilities/UseAbilityButton.vue";
 
 defineProps<{ ability: FullEntityAbility }>();

@@ -83,7 +83,7 @@ import {
   ATTRIBUTES,
   type EntityAttribute,
   type PartialEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { defaultDice, combineDiceSettings } from "@/utils/diceUtils";
 import { numberFieldVal } from "@/utils/inputType";
 import { computed, reactive } from "vue";

@@ -39,7 +39,7 @@
 import { useCampaignStore } from "@/stores/campaign";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { computed, reactive } from "vue";
-import { type CampaignRole, CAMPAIGN_ROLES } from "@/utils/backendTypes";
+import { type CampaignRole, CAMPAIGN_ROLES } from "vennt-library";
 
 const state = reactive<{ toUser: string; role: CampaignRole }>({
   toUser: "",

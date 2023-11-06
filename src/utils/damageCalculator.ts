@@ -5,7 +5,7 @@ import {
   type EntityAttribute,
   type UpdatedEntityAttributes,
   type AttackResponse,
-} from "./backendTypes";
+} from "vennt-library";
 
 export const handleDamageCalculator = (
   attack: AttackDetails,

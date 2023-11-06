@@ -7,7 +7,7 @@ import {
   type EntityTextKey,
   type UncompleteCollectedEntityWithChangelog,
   type UpdatedEntityAttributes,
-} from "./backendTypes";
+} from "vennt-library";
 import { cogTypeName } from "./copy/createCogTypeOptions";
 import TurndownService from "turndown";
 import { attrFullName, attrShortName, getMaxAttr } from "./attributeUtils";

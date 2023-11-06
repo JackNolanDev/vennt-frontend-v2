@@ -38,7 +38,7 @@ import {
   DARK_BLUE_HIGHLIGHT,
   GRAY_HIGHLIGHT,
   DARK_GRAY_HIGHLIGHT,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import BaseButton from "../Base/BaseButton.vue";
 

@@ -13,7 +13,7 @@
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { findNewAbilityVersion } from "@/utils/abilityUtils";
-import type { FullEntityAbility } from "@/utils/backendTypes";
+import type { FullEntityAbility } from "vennt-library";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 

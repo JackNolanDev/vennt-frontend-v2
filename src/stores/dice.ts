@@ -1,4 +1,4 @@
-import type { DiceSettings, EntityAttribute } from "@/utils/backendTypes";
+import type { DiceSettings, EntityAttribute } from "vennt-library";
 import type { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { defineStore } from "pinia";
 

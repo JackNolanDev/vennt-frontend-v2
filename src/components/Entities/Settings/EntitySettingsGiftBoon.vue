@@ -20,7 +20,7 @@
 import BaseButton from "@/components/Base/BaseButton.vue";
 import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import { useEntityStore } from "@/stores/entity";
-import type { EntityAbility } from "@/utils/backendTypes";
+import type { EntityAbility } from "vennt-library";
 import { giftBoonCopy } from "@/utils/copy/giftBoonsCopy";
 
 const entityStore = useEntityStore();

@@ -52,7 +52,7 @@ import {
   ATTRIBUTES_SET,
   type EntityAttribute,
   type UpdatedEntityAttributes,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { defaultDice } from "@/utils/diceUtils";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";

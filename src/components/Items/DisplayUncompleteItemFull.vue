@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UncompleteEntityItem } from "@/utils/backendTypes";
+import type { UncompleteEntityItem } from "vennt-library";
 import ItemDesc from "./ItemDesc.vue";
 import DisplayItemName from "./DisplayItemName.vue";
 import DisplayItemBulk from "./DisplayItemBulk.vue";

@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ConsolidatedItem } from "@/utils/backendTypes";
+import type { ConsolidatedItem } from "vennt-library";
 import ItemHealUse from "./ItemHealUse.vue";
 import CheckUse from "./CheckUse.vue";
 import ItemRollUse from "./ItemRollUse.vue";

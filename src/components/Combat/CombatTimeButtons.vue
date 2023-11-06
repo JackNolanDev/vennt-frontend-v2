@@ -33,10 +33,7 @@ import { useEntityStore } from "@/stores/entity";
 import BaseButton from "../Base/BaseButton.vue";
 import { handleEndTimePeriod } from "@/utils/combatUtils";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
-import type {
-  EntityAttribute,
-  PartialEntityAttributes,
-} from "@/utils/backendTypes";
+import type { EntityAttribute, PartialEntityAttributes } from "vennt-library";
 import EntityRestModal from "./EntityRestModal.vue";
 
 const entityStore = useEntityStore();

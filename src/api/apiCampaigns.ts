@@ -10,7 +10,7 @@ import {
   type CampaignDesc,
   type CampaignRole,
   campaignRoleValidator,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { wrapAPI, authConfig } from "./utils";
 import api from "./apiInstance";
 import { z } from "zod";

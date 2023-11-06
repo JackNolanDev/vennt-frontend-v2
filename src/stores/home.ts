@@ -10,7 +10,7 @@ import type {
   FullEntity,
   CampaignWithRole,
   CampaignInviteWithDetails,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { defineStore } from "pinia";
 
 interface HomeState {

@@ -47,7 +47,7 @@ import type {
   EntityAttribute,
   EntityChangelog,
   FullEntityChangelog,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { CHANGELOG_SORT_LOCAL_STORAGE } from "@/utils/constants";

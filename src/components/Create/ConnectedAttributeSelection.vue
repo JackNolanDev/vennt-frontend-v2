@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { useCharacterCreateStore } from "@/stores/characterCreate";
-import type { BaseEntityAttribute } from "@/utils/backendTypes";
+import type { BaseEntityAttribute } from "vennt-library";
 import {
   ATTR_OPTIONS,
   type AttributeSelections,

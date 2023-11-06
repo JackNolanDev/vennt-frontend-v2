@@ -1,5 +1,5 @@
-import { accountTokenValidator, type AccountToken } from "@/utils/backendTypes";
-import type { SignupRequest, LoginRequest } from "@/utils/backendTypes";
+import { accountTokenValidator, type AccountToken } from "vennt-library";
+import type { SignupRequest, LoginRequest } from "vennt-library";
 import api from "./apiInstance";
 import { wrapAPI } from "./utils";
 
