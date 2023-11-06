@@ -2,7 +2,7 @@
   <p v-if="item.custom_fields?.attr" class="mt-16 mb-0">
     <b>Attribute:</b> {{ item.custom_fields.attr }}
   </p>
-  <p v-if="item.custom_fields?.attr && acc" class="mt-16 mb-0">
+  <p v-if="acc" class="mt-16 mb-0">
     <b>Accuracy:</b> {{ acc.result }}
     <span class="mutedText">({{ acc.reason }})</span>
   </p>

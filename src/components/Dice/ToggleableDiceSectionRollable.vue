@@ -28,7 +28,8 @@
 import { useDiceStore } from "@/stores/dice";
 import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import type { DiceCommands, EntityAttribute } from "@/utils/backendTypes";
-import { buildDice, combineDiceSettings } from "@/utils/diceUtils";
+import { combineDiceSettings } from "@/utils/diceUtils";
+import { buildDice } from "vennt-library";
 import { computed, reactive } from "vue";
 import HeroPointButton from "../Attributes/HeroPointButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";

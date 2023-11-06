@@ -1,144 +1,16 @@
 import { replaceVariablesInEquation } from "./attributeUtils";
-import type {
-  CollectedEntity,
-  DiceCommands,
-  DiceSettings,
-  DiceToggle,
-  DiceToggles,
-  EntityAttribute,
-  UpdatedEntityAttributes,
-  UsesCheck,
-} from "./backendTypes";
 import { abilityPassCriteriaCheck } from "./criteriaUtils";
-
-export const buildDice = (
-  count: number,
-  sides: number,
-  adjust: number | string = 0,
-  settings: DiceSettings = {},
-  comment = ""
-): DiceCommands => {
-  // console.log(settings, comment);
-
-  let adjustStr = "";
-  if (typeof adjust === "string") {
-    adjustStr = adjust;
-  } else {
-    if (adjust > 0) {
-      adjustStr = `+${adjust}`;
-    } else if (adjust < 0) {
-      adjustStr = adjust.toString();
-    }
-  }
-
-  let heroicCreativityStr = "";
-  if (settings.heroic_creativity_bonus) {
-    heroicCreativityStr =
-      (settings.heroic_creativity_bonus > 0 ? "+" : "") +
-      settings.heroic_creativity_bonus.toString();
-  }
-
-  let dropLowest = 0;
-  let dropHighest = 0;
-
-  const explodeFields = { discord: "", roll20: "", web: "" };
-  if (settings.explodes) {
-    explodeFields.discord = " ie6";
-    explodeFields.roll20 = "!";
-    explodeFields.web = "!";
-  }
-  const rerollFields = { discord: "", roll20: "", web: "" };
-  if (settings.rr1s) {
-    rerollFields.discord = " ir1";
-    rerollFields.roll20 = "r";
-    rerollFields.web = "r";
-  }
-  let fatiguedStr = "";
-  if (settings.fatigued) {
-    fatiguedStr = "-1";
-  }
-  let endStr = "";
-  if (settings.end) {
-    endStr = settings.end;
-  }
-  if (settings.flow) {
-    count += settings.flow;
-    dropLowest += settings.flow;
-  }
-  if (settings.ebb) {
-    count += settings.ebb;
-    dropHighest += settings.ebb;
-  }
-  if (settings.drop) {
-    dropLowest += settings.drop;
-  }
-  const dropLowestFields =
-    dropLowest === 0
-      ? { discord: "", roll20: "", web: "" }
-      : {
-          discord: ` d${dropLowest}`,
-          roll20: `dl${dropLowest}`,
-          web: `dl${dropLowest}`,
-        };
-  const dropHighestFields =
-    dropHighest === 0
-      ? { discord: "", roll20: "", web: "" }
-      : {
-          discord: ` kl${count - dropHighest}`,
-          roll20: `dh${dropHighest}`,
-          web: `dh${dropHighest}`,
-        };
-  const commentFields = !comment
-    ? { discord: "", roll20: "", web: "" }
-    : {
-        discord: ` ! ${comment}`,
-        roll20: ` [${comment}]`,
-        web: "",
-      };
-  return {
-    discord:
-      count +
-      "d" +
-      sides +
-      explodeFields.discord +
-      rerollFields.discord +
-      dropLowestFields.discord +
-      dropHighestFields.discord +
-      " " +
-      adjustStr +
-      fatiguedStr +
-      heroicCreativityStr +
-      endStr +
-      commentFields.discord,
-    roll20:
-      count +
-      "d" +
-      sides +
-      explodeFields.roll20 +
-      rerollFields.roll20 +
-      dropLowestFields.roll20 +
-      dropHighestFields.roll20 +
-      adjustStr +
-      fatiguedStr +
-      heroicCreativityStr +
-      endStr +
-      commentFields.roll20,
-    web:
-      count +
-      "d" +
-      sides +
-      explodeFields.web +
-      rerollFields.web +
-      dropLowestFields.web +
-      dropHighestFields.web +
-      adjustStr +
-      fatiguedStr +
-      heroicCreativityStr +
-      endStr +
-      commentFields.web,
-    settings: { ...settings, adjust, count, sides },
-  };
-};
+import {
+  type CollectedEntity,
+  type DiceCommands,
+  type DiceSettings,
+  type DiceToggle,
+  type DiceToggles,
+  type EntityAttribute,
+  type UpdatedEntityAttributes,
+  type UsesCheck,
+  buildDice,
+} from "vennt-library";
 
 export const defaultDice = (
   attrs: UpdatedEntityAttributes,
@@ -176,7 +48,7 @@ export const diceParseFromString = (
   attrs?: UpdatedEntityAttributes,
   relevantAttrs?: EntityAttribute[]
 ): DiceCommands | undefined => {
-  const match = diceStr.match(/(\d+)d(\d+)/);
+  const match = diceStr.match(/\(?(\d+)\)?d(\d+)/u);
   if (!match || match.length < 3) {
     return undefined;
   }

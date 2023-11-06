@@ -1,5 +1,8 @@
 <template>
-  <div v-if="entityStore.entity" class="card column padded">
+  <div
+    v-if="entityStore.entity && (entityStore.canEdit || state.flux.length > 0)"
+    class="card column padded"
+  >
     <h3 class="mt-0 mb-16">{{ pluralizeName(typeLabel) }}</h3>
     <div v-for="(flux, idx) in state.flux" :key="type + idx">
       <BaseStealthTextEditor

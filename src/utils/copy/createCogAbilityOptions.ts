@@ -130,6 +130,9 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect:
               "This Cog can spend 2 Actions to make a melee basic attack that deals Ld6 damage.",
             useCost: { actions: 2 },
+            uses: {
+              weapons: [{ dmg: "(L)d6", weapon_type: "Melee", range: "1m" }],
+            },
           },
           {
             name: "Fast Melee",
@@ -137,13 +140,21 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect:
               "This Cog can spend 2 Actions to make {{L/4}} melee basic attacks that each deal 1d6+L damage.",
             useCost: { actions: 2 },
+            uses: {
+              weapons: [{ dmg: "1d6+L", weapon_type: "Melee", range: "1m" }],
+            },
           },
           {
             name: "Powerful Ranged",
             cost: "L/2",
             effect:
-              "This Cog can spend 2 Actions to make a ranged basic attack anywhere within line of sight that deals Ld6 - L damage.",
+              "This Cog can spend 2 Actions to make a ranged basic attack anywhere within line of sight that deals Ld6-L damage.",
             useCost: { actions: 2 },
+            uses: {
+              weapons: [
+                { dmg: "(L)d6-L", weapon_type: "Ranged", range: "60m" },
+              ],
+            },
           },
           {
             name: "Fast Ranged",
@@ -151,6 +162,9 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect:
               "This Cog can spend 2 Actions to make {{L/3}} ranged basic attacks anywhere within line of sight that each deal 1d6 damage.",
             useCost: { actions: 2 },
+            uses: {
+              weapons: [{ dmg: "1d6", weapon_type: "Ranged", range: "60m" }],
+            },
           },
           {
             name: "Thousand Cuts",
@@ -178,6 +192,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "L/2",
             effect: "This Cog can spend 1 Action to gain {{L/5}} Alerts.",
             useCost: { actions: 1 },
+            uses: { heal: { attr: { alerts: "L/5" } } },
           },
           {
             name: "Breach",
@@ -192,6 +207,9 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect:
               "Once per turn, this Cog can spend 1 Action to make a melee basic attack that deals 1d6+L damage.",
             useCost: { actions: 1 },
+            uses: {
+              weapons: [{ dmg: "1d6+L", weapon_type: "Melee", range: "1m" }],
+            },
           },
           {
             name: "Secondary Ranged",
@@ -199,6 +217,11 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             effect:
               "Once per turn, this Cog can spend 1 Action to make a ranged basic attack anywhere within line of sight that deals 1d6 + L/2 damage.",
             useCost: { actions: 1 },
+            uses: {
+              weapons: [
+                { dmg: "1d6 + (L/2)", weapon_type: "Ranged", range: "60m" },
+              ],
+            },
           },
         ],
       },
@@ -342,6 +365,23 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             maxCost: "L",
             effect:
               "When this Cog is below half HP, the first attack it deals each turn deals an additional +[[X]] damage, up to +{{L}}.",
+            uses: {
+              criteria_benefits: [
+                {
+                  criteria: {
+                    type: "comp",
+                    left: { type: "attr", attr: "hp" },
+                    right: { type: "equation", equation: "max_hp/2" },
+                    operator: "lt",
+                  },
+                  adjust: {
+                    time: "permanent",
+                    // TODO: This needs to reflect X somehow here - maybe insert X into keys??
+                    dice: { dmg: { adjust: "+L" } },
+                  },
+                },
+              ],
+            },
           },
           {
             name: "Armor Protection",
@@ -381,6 +421,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             maxCost: "L",
             effect:
               "When this Cog directly hits, it also moves the target [[X]] meters away (up to {{L}} meters).",
+            useCost: { attack: true },
           },
           {
             name: "Exhaust",
@@ -388,6 +429,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             maxCost: "L",
             effect:
               "When this Cog directly hits, the target also loses [[X]] Vim, up to {{L}}.",
+            useCost: { attack: true },
           },
           {
             name: "Drain",
@@ -395,28 +437,33 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             maxCost: "L/2",
             effect:
               "When this Cog directly hits, the target also loses [[X]] MP, up to {{L/2}}.",
+            useCost: { attack: true },
           },
           {
             name: "Homing",
             cost: "L",
             effect: "This Cog's attacks cannot be Evaded.",
+            useCost: { attack: true },
           },
           {
             name: "Piercing",
             cost: "X",
             effect: "This Cog's attacks ignore [[2*X]] Armor.",
+            useCost: { attack: true },
           },
           {
             name: "Radial",
             cost: "L/2",
             effect:
               "This Cog's ranged attacks target a radius of {{L/4}} meters, or smaller if the Cog chooses.",
+            useCost: { attack: true },
           },
           {
             name: "Line",
             cost: "L/2",
             effect:
               "This Cog's melee attacks target a line of {{L}} meters, or shorter if the Cog chooses.",
+            useCost: { attack: true },
           },
         ],
       },
@@ -452,8 +499,17 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Shield",
             cost: "X",
+            maxCost: "L/3",
             effect:
               "This Cog has a Shield Bonus of [[3*X]] (up to {{L}}) and can Shield Block (Fighter).",
+            uses: {
+              adjust: {
+                time: "permanent",
+                attr: {
+                  shield: "shield + (3*X)",
+                },
+              },
+            },
           },
           {
             name: "Shell",

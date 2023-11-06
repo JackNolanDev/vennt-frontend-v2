@@ -218,6 +218,7 @@ export const canUseAbility = (
       const statCost = costMap[attr];
       return !statCost || statCost <= statCurrent.val;
     }
+    return true;
   });
 };
 
@@ -405,6 +406,6 @@ export const abilityExtendEntityAttributes = (
       }
       return acc;
     },
-    attrs
+    { ...attrs }
   );
 };

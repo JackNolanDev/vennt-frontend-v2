@@ -109,7 +109,7 @@ import { computed, reactive } from "vue";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { handleEndTimePeriod } from "@/utils/combatUtils";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
-import { buildDice } from "@/utils/diceUtils";
+import { buildDice } from "vennt-library";
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import RollDiceInput from "../Dice/RollDiceInput.vue";

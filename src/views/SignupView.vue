@@ -104,7 +104,7 @@ import {
   passwordValidator,
   signupRequestValidator,
   nameValidator,
-} from "@/utils/backendTypes";
+} from "vennt-library";
 import { fieldValidator } from "@/utils/inputType";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import BaseButton from "@/components/Base/BaseButton.vue";

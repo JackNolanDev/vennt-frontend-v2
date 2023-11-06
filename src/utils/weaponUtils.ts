@@ -69,7 +69,7 @@ export const weaponAccuracy = (
 const baseDiceRegex = (attrs: UpdatedEntityAttributes) => {
   const attrsRegexString = attrsRegexStr(attrs);
   return new RegExp(
-    `^\\d*d\\d+(?: ?[+\\-*\\/]\\(?(?:\\d*d\\d+|\\d+|${attrsRegexString})\\)?)*`,
+    `^(?:\\d*|\\(\\w+\\))d\\d+(?: ?[+\\-*\\/] ?\\(?(?:\\d*d\\d+|\\d+|${attrsRegexString})\\)?)*`,
     "u"
   );
 };

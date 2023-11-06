@@ -338,6 +338,7 @@ export const adjustAttrsAPI = async (
 export const entityAttributesMap = (
   entity: CollectedEntity
 ): UpdatedEntityAttributes => {
+  // console.time("entityAttrs");
   const attrs: UpdatedEntityAttributes = structuredClone(DEFAULT_ATTRS_MAP);
   // 1. Directly copy over base attribute values from the character object
   Object.entries(entity.entity.attributes).forEach(([attr, val]) => {
@@ -514,6 +515,7 @@ export const entityAttributesMap = (
   });
 
   // console.log(attrs);
+  // console.timeEnd("entityAttrs");
 
   return attrs;
 };

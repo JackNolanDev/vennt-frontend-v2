@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityAbility, EntityAbilityFields } from "@/utils/backendTypes";
+import type { EntityAbility, EntityAbilityFields } from "vennt-library";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import DisplayAbilityAdditionalDetails from "./DisplayAbilityAdditionalDetails.vue";
 import { computed } from "vue";
