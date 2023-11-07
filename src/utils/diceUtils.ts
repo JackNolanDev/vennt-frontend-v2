@@ -18,7 +18,7 @@ export const defaultDice = (
   givenSettings: DiceSettings = {},
   diceToggles: DiceToggles = {},
   comment = "",
-  skipKey = ""
+  skipKey = "",
 ): DiceCommands => {
   const attrMap = attrs[attr];
   const adjust = attrMap ? attrMap.val : 0;
@@ -29,14 +29,14 @@ export const defaultDice = (
     diceToggles,
     attrs,
     [attr],
-    skipKey
+    skipKey,
   );
   return buildDice(
     settings.count ?? 3,
     settings.sides ?? 6,
     adjust,
     settings,
-    comment
+    comment,
   );
 };
 
@@ -46,7 +46,7 @@ export const diceParseFromString = (
   comment = "",
   diceToggles: DiceToggles = {},
   attrs?: UpdatedEntityAttributes,
-  relevantAttrs?: EntityAttribute[]
+  relevantAttrs?: EntityAttribute[],
 ): DiceCommands | undefined => {
   const match = diceStr.match(/\(?(\d+)\)?d(\d+)/u);
   if (!match || match.length < 3) {
@@ -65,7 +65,7 @@ export const diceParseFromString = (
       settings,
       diceToggles,
       attrs,
-      relevantAttrs
+      relevantAttrs,
     );
   }
 
@@ -77,7 +77,7 @@ const combineEnabledTogglesSettings = (
   diceToggles: DiceToggles,
   attrs: UpdatedEntityAttributes,
   relevantAttrs: EntityAttribute[],
-  skipKey = ""
+  skipKey = "",
 ): DiceSettings => {
   Object.entries(diceToggles).forEach(([key, toggle]) => {
     if (
@@ -96,7 +96,7 @@ const combineEnabledTogglesSettings = (
 export const buildSettingsForAttrList = (
   baseSettings: DiceSettings,
   relatedAttrs: EntityAttribute[],
-  attrs: UpdatedEntityAttributes
+  attrs: UpdatedEntityAttributes,
 ): DiceSettings =>
   relatedAttrs.reduce((settings, attr) => {
     const attrMap = attrs[attr];
@@ -108,7 +108,7 @@ export const buildSettingsForAttrList = (
 
 export const diceTogglesForEntity = (
   entity: CollectedEntity,
-  attrs: UpdatedEntityAttributes
+  attrs: UpdatedEntityAttributes,
 ): DiceToggles => {
   const toggles: DiceToggles = {};
 
@@ -133,7 +133,7 @@ export const diceTogglesForEntity = (
         ?.filter(
           (criteria) =>
             criteria.check &&
-            abilityPassCriteriaCheck(criteria.criteria, ability, null, attrs)
+            abilityPassCriteriaCheck(criteria.criteria, ability, null, attrs),
         )
         .map((criteria) => criteria.check) ?? [];
     checks.push(ability.uses?.check);
@@ -146,7 +146,7 @@ export const diceTogglesForEntity = (
     .filter(
       (item) =>
         (item.active || item.type === "equipment") &&
-        !item.custom_fields?.in_storage
+        !item.custom_fields?.in_storage,
     )
     .forEach((item) => {
       saveSettingToToggle(item.name, item.uses?.check);
@@ -160,7 +160,7 @@ export const diceTogglesForEntity = (
 export const combineDiceSettings = (
   baseSettings: DiceSettings,
   newSettings: DiceSettings,
-  attrs: UpdatedEntityAttributes
+  attrs: UpdatedEntityAttributes,
 ): DiceSettings => {
   const settings = {
     ...baseSettings,
@@ -183,7 +183,7 @@ export const combineDiceSettings = (
   if (newSettings.end) {
     settings.end = replaceVariablesInEquation(
       `${settings.end ?? ""}${newSettings.end}`,
-      attrs
+      attrs,
     ).cleanedEquation;
   }
   if (newSettings.explodes) {

@@ -79,7 +79,7 @@ const props = withDefaults(
   {
     modelValue: "",
     placeholder: "",
-  }
+  },
 );
 const state = reactive({ editorOpen: false, editorFocus: 0 });
 const emits = defineEmits<{
