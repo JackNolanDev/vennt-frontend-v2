@@ -225,6 +225,7 @@ export const useEntityStore = defineStore("entity", {
         ...this.entity.entity.attributes,
         ...request.attributes,
       };
+      this.entity.entity.computed_attributes = computeAttributes(this.entity);
       // 2. Get real results & use proper values
       const campaignId = useCampaignStore().details?.campaign.id;
       const updatedBaseEntity = await updateEntityAttributesApi(
