@@ -86,7 +86,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
             max_vim: cogVim(this.options),
             init: cogInit(this.options),
             speed: cogSpeed(this.options),
-            L: this.LStat,
+            l: this.LStat,
             acc: cogAcc(this.options),
           },
           other_fields: {

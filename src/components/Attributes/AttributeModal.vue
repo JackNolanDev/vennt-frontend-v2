@@ -8,10 +8,7 @@
     <template #title>Edit {{ attrFullName(attr) }}</template>
     <div class="alignRow split wrap mb-16">
       <!-- TODO: Fix this using improved reason, probably could do better UI then just seeing this on hover -->
-      <div
-        class="alignRow labelText"
-        :title="entityStore.computedAttributes[attr]?.reason?.join('\n')"
-      >
+      <div class="alignRow labelText" :title="reasonTitle">
         Base {{ shortName }}:
         <span v-if="attr in entityStore.entity.entity.attributes" class="ml-8">
           <BaseFraction
@@ -149,6 +146,8 @@ const relatedAttrs: Partial<Record<EntityAttribute, EntityAttribute>> = {
   wis_dmg: "wis",
   actions: "actions_on_turn",
   reactions: "reactions_on_turn",
+  actions_on_turn: "actions",
+  reactions_on_turn: "reactions",
 };
 
 const relatedAttr = computed(() => relatedAttrs[props.attr]);
@@ -168,6 +167,12 @@ const isRemovableCustomAttr = computed(
     !validAttributes.includes(props.attr) &&
     !showClearHistoryButton.value &&
     typeof entityStore.entity?.entity.attributes[props.attr] === "number",
+);
+const reasonTitle = computed(
+  () =>
+    entityStore.computedAttributes[props.attr].reason
+      ?.map((reason) => `${reason.val} = ${reason.src}`)
+      .join("\n"),
 );
 
 const closeModal = () => {

@@ -49,11 +49,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
-import {
-  type EntityItem,
-  buildSettingsForAttrList,
-  diceParseFromString,
-} from "vennt-library";
+import { type EntityItem, diceParseFromString } from "vennt-library";
 import {
   weaponAccuracy,
   enhancedBaseDiceString,
@@ -105,11 +101,7 @@ const damageDice = computed(
     damageDiceString.value &&
     diceParseFromString(
       damageDiceString.value,
-      buildSettingsForAttrList(
-        diceStore.defaultDiceSettings,
-        relatedDmgAttrs.value,
-        entityStore.computedAttributes,
-      ),
+      diceStore.defaultDiceSettings,
       diceReason.value,
       entityStore.diceToggles,
       entityStore.computedAttributes,

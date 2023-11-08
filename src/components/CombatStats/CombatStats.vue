@@ -307,7 +307,7 @@ const combatSingleRowAttributes = computed(() => {
 });
 
 const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
-  "L",
+  "l",
   "init",
   "speed",
   "armor",

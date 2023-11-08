@@ -62,7 +62,7 @@
     "prosemirror-view": "^1.31.7",
     "turndown": "^7.1.2",
     "uuid": "^9.0.0",
-    "vennt-library": "https://github.com/JackNolanDev/vennt-library#fc8ecdc6d982695b28026277601f354b71303934",
+    "vennt-library": "https://github.com/JackNolanDev/vennt-library#d6815ffe353605b774642ac0dd9f575e44c7d6a0",
     "vue": "^3.3.8",
     "vue-chartjs": "^5.2.0",
     "vue-router": "^4.2.5",

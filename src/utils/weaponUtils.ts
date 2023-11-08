@@ -56,7 +56,9 @@ export const weaponAccuracy = (
   const baseAdjust = attrs.acc;
   if (baseAdjust) {
     acc += baseAdjust.val;
-    reason += ` + ${baseAdjust.reason?.join(", ") ?? ""}`;
+    reason += ` + ${
+      baseAdjust.reason?.map((reason) => reason.src).join(", ") ?? ""
+    }`;
   }
   if (acc < 0) {
     acc = 0;
@@ -79,7 +81,8 @@ export const baseDiceString = (
   if (!weapon.custom_fields?.dmg) {
     return "";
   }
-  const [first] = weapon.custom_fields.dmg.match(baseDiceRegex(attrs)) || [];
+  const [first] =
+    weapon.custom_fields.dmg.toLowerCase().match(baseDiceRegex(attrs)) || [];
   return first ? first : "";
 };
 

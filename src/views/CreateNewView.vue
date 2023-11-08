@@ -61,7 +61,11 @@
         >
           <template #triggerButton>Create Character</template>
           <template #mainButton>Create Character</template>
-          <template #title>Continue with Character Creation?</template>
+          <template #title
+            >Create "{{
+              characterCreateStore.collectedCharacter.entity.name
+            }}"?</template
+          >
           <p class="mt-0 mb-0">
             Are you sure you are done editing this character? Most fields will
             still be editable once you save this character to the server.
@@ -74,7 +78,11 @@
         >
           <template #triggerButton>Clear Character</template>
           <template #mainButton>Delete Character</template>
-          <template #title>Delete your progress on this character?</template>
+          <template #title
+            >Delete "{{
+              characterCreateStore.collectedCharacter.entity.name
+            }}"?</template
+          >
           <p class="mt-0 mb-0">
             Are you sure you want to delete your progress on this character?
             Your selections will not be saved or recoverable.
