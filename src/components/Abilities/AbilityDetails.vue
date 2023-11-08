@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FullEntityAbility, UpdatedEntityAttributes } from "vennt-library";
+import type { ComputedAttributes, FullEntityAbility } from "vennt-library";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import AbilityAdditionalDetailDropdown from "./AbilityAdditionalDetailDropdown.vue";
 import { useEntityStore } from "@/stores/entity";
@@ -43,7 +43,7 @@ import EditAbility from "./EditAbility.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import AbilityName from "./AbilityName.vue";
 
-defineProps<{ ability: FullEntityAbility; attrs?: UpdatedEntityAttributes }>();
+defineProps<{ ability: FullEntityAbility; attrs?: ComputedAttributes }>();
 const state = reactive({ editAbility: false });
 const entityStore = useEntityStore();
 

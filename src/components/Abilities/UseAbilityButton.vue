@@ -11,13 +11,16 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import {
-  abilityExtendEntityAttributes,
   abilityUseAdjustments,
   abilityUsable,
   canAffordAdjustments,
 } from "@/utils/abilityUtils";
-import { adjustAttrsAPI, attrShortName } from "@/utils/attributeUtils";
-import type { FullEntityAbility } from "vennt-library";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
+import {
+  abilityExtendEntityAttributes,
+  attrShortName,
+  type FullEntityAbility,
+} from "vennt-library";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 
@@ -55,15 +58,15 @@ const additionalAdjustments = computed((): Record<string, number> => {
   return { mp: -props.ability.custom_fields.mp_cost[props.spellIdx] };
 });
 const extendedAttributes = computed(() =>
-  abilityExtendEntityAttributes(props.ability, entityStore.entityAttributes)
+  abilityExtendEntityAttributes(props.ability, entityStore.computedAttributes),
 );
 const abilityAdjustments = computed(() =>
   abilityUseAdjustments(
     props.ability,
     extendedAttributes.value,
     additionalAdjustments.value,
-    props.optionalHealIdx
-  )
+    props.optionalHealIdx,
+  ),
 );
 
 const useButtonDisabled = computed(
@@ -75,8 +78,8 @@ const useButtonDisabled = computed(
     !canAffordAdjustments(
       abilityAdjustments.value,
       extendedAttributes.value,
-      entityStore.inCombat
-    )
+      entityStore.inCombat,
+    ),
 );
 const useButtonTitle = computed(() => {
   const costs: string[] = [];
@@ -103,13 +106,13 @@ const useButton = () => {
     : "Used";
   adjustAttrsAPI(
     entityStore.entity,
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     abilityAdjustments.value,
     {
       msg: `${prefix} ${props.ability.name}`,
       enforceMaximums: true,
       src: props.ability.name,
-    }
+    },
   );
   if (
     props.ability.uses?.adjust &&

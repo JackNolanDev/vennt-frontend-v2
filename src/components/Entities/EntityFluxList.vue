@@ -96,18 +96,18 @@ watch(
       .filter(
         (entityFlux) =>
           entityFlux.type === props.type &&
-          state.flux.every((flux) => entityFlux.id !== flux.id)
+          state.flux.every((flux) => entityFlux.id !== flux.id),
       )
       .map((newFlux) => ({ ...newFlux, open: false }));
     state.flux = state.flux
       .filter(
         (flux) =>
           !entityStore.entity?.flux.every(
-            (entityFlux) => entityFlux.id !== flux.id
-          )
+            (entityFlux) => entityFlux.id !== flux.id,
+          ),
       )
       .concat(newFlux);
-  }
+  },
 );
 
 const typeLabel = computed(() => {
@@ -119,7 +119,7 @@ const saveFluxDisabled = computed(() => editorEmpty(state.newFluxText));
 
 const cancelEditFlux = (flux: FullEntityFlux, idx: number) => {
   const currentFlux = entityStore.entity?.flux.find(
-    (searchFlux) => searchFlux.id === flux.id
+    (searchFlux) => searchFlux.id === flux.id,
   );
   if (currentFlux) {
     state.flux[idx] = currentFlux;

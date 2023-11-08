@@ -114,7 +114,7 @@ jsonStore.fetchShopItems();
 const createCharacter = () => {
   const character = entityCreationFullyHealed(
     characterCreateStore.collectedCharacter,
-    characterCreateStore.characterAttrs
+    characterCreateStore.characterAttrs,
   );
   entityStore.addCollectedEntity(character, {
     redirectName: ENTITY_ROUTE,

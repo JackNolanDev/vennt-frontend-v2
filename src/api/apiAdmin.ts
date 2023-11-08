@@ -8,12 +8,12 @@ export const triggerWebscraperApi = (key: JsonStorageKey) => {
 
 export const triggerUpdateUses = (key: JsonStorageKey) => {
   wrapAPI(() =>
-    api.post(`/admin/storage/${key}/uses`, undefined, authConfig())
+    api.post(`/admin/storage/${key}/uses`, undefined, authConfig()),
   );
 };
 
 export const configureStorageBucketApi = () => {
   wrapAPI(() =>
-    api.post(`admin/bucket/configure/storage`, undefined, authConfig())
+    api.post(`admin/bucket/configure/storage`, undefined, authConfig()),
   );
 };

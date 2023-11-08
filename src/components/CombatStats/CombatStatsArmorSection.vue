@@ -4,14 +4,14 @@
       Armor: <span class="number ml-8">{{ attrs.armor.val }}</span>
     </div>
     <SimpleItemTable
-      v-if="attrs.armor.items"
-      :items="attrs.armor.items"
+      v-if="armorItems"
+      :items="armorItems"
       :link-on-name="true"
       class="mb-8"
     ></SimpleItemTable>
     <SimpleAbilityTable
-      v-if="attrs.armor.abilities"
-      :abilities="attrs.armor.abilities"
+      v-if="armorAbilities"
+      :abilities="armorAbilities"
       :link-on-name="true"
       class="mb-8"
     ></SimpleAbilityTable>
@@ -21,14 +21,14 @@
       Shield Bonus: <span class="number ml-8">{{ attrs.shield.val }}</span>
     </div>
     <SimpleItemTable
-      v-if="attrs.shield.items"
-      :items="attrs.shield.items"
+      v-if="shieldItems"
+      :items="shieldItems"
       :link-on-name="true"
       class="mb-8"
     ></SimpleItemTable>
     <SimpleAbilityTable
-      v-if="attrs.shield.abilities"
-      :abilities="attrs.shield.abilities"
+      v-if="shieldAbilities"
+      :abilities="shieldAbilities"
       :link-on-name="true"
       class="mb-8"
     ></SimpleAbilityTable>
@@ -43,7 +43,12 @@
 <script setup lang="ts">
 import { ENTITY_ITEM_SHOP_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
-import type { UpdatedEntityAttributes } from "vennt-library";
+import type {
+  ComputedAttributes,
+  EntityAttribute,
+  FullEntityAbility,
+  FullEntityItem,
+} from "vennt-library";
 import { computed } from "vue";
 import SimpleAbilityTable from "../Abilities/SimpleAbilityTable.vue";
 import BaseButton from "../Base/BaseButton.vue";
@@ -52,17 +57,52 @@ import SimpleItemTable from "../Items/SimpleItemTable.vue";
 const entityStore = useEntityStore();
 
 const props = defineProps<{
-  attrs: UpdatedEntityAttributes;
+  attrs: ComputedAttributes;
 }>();
 
+const fetchAbilitiesAndItemsForAttr = (attr: EntityAttribute) => {
+  const abilityIds: string[] = [];
+  const itemIds: string[] = [];
+  props.attrs[attr].reason?.forEach((reason) => {
+    if (reason.abilityId) {
+      abilityIds.push(reason.abilityId);
+    }
+    if (reason.itemId) {
+      itemIds.push(reason.itemId);
+    }
+  });
+  const abilities = abilityIds
+    .map(
+      (abilityId) =>
+        entityStore.entity?.abilities.find(
+          (ability) => ability.id === abilityId,
+        ),
+    )
+    .filter((ability) => ability) as FullEntityAbility[];
+  const items = itemIds
+    .map(
+      (itemId) => entityStore.entity?.items.find((item) => item.id === itemId),
+    )
+    .filter((item) => item) as FullEntityItem[];
+  return { abilities, items };
+};
+
+const armorAbilitiesAndItems = computed(() => {
+  return fetchAbilitiesAndItemsForAttr("armor");
+});
+const armorAbilities = computed(() => armorAbilitiesAndItems.value.abilities);
+const armorItems = computed(() => armorAbilitiesAndItems.value.items);
+
+const shieldAbilitiesAndItems = computed(() => {
+  return fetchAbilitiesAndItemsForAttr("shield");
+});
+const shieldAbilities = computed(() => shieldAbilitiesAndItems.value.abilities);
+const shieldItems = computed(() => shieldAbilitiesAndItems.value.items);
+
 const showArmor = computed(
-  () =>
-    (props.attrs.armor?.items && props.attrs.armor.items.length > 0) ||
-    (props.attrs.armor?.abilities && props.attrs.armor.abilities.length)
+  () => armorAbilities.value.length > 0 || armorItems.value.length > 0,
 );
 const showShields = computed(
-  () =>
-    (props.attrs.shield?.items && props.attrs.shield.items.length > 0) ||
-    (props.attrs.shield?.abilities && props.attrs.shield.abilities.length)
+  () => shieldAbilities.value.length > 0 || shieldItems.value.length > 0,
 );
 </script>

@@ -14,7 +14,7 @@
     <div class="card column padded thin">
       <p class="mt-0 mb-8">
         Roll a Strength check! If the result is less than your Recovery Shock
-        ({{ entityStore.entityAttributes.recovery_shock?.val ?? 0 }}), you
+        ({{ entityStore.computedAttributes.recovery_shock?.val ?? 0 }}), you
         become permanently immune to the benefits of the spell or potion which
         just affected you!
       </p>
@@ -59,9 +59,8 @@ import BaseModal from "../Base/BaseModal.vue";
 import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { computed, reactive } from "vue";
-import { defaultDice } from "@/utils/diceUtils";
 import { useDiceStore } from "@/stores/dice";
-import type { DisabledActions } from "vennt-library";
+import { type DisabledActions, defaultDice } from "vennt-library";
 
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
@@ -71,21 +70,21 @@ const diceComment = computed(
   () =>
     `STR check for handling recovery shock from ${
       entityStore.recoveryShockSrc && entityStore.recoveryShockSrc[0]
-    }`
+    }`,
 );
 const dice = computed(() =>
   defaultDice(
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     "str",
     diceStore.defaultDiceSettings,
     entityStore.diceToggles,
-    diceComment.value
-  )
+    diceComment.value,
+  ),
 );
 const checkSuccess = computed(() => {
   const parsedValue = parseInt(state.rollValue);
   const roll = isNaN(parsedValue) ? 0 : parsedValue;
-  return roll >= (entityStore.entityAttributes.recovery_shock?.val ?? 0);
+  return roll >= (entityStore.computedAttributes.recovery_shock?.val ?? 0);
 });
 const buttonDisabled = computed(() => !state.rollValue);
 

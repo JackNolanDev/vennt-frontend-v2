@@ -49,7 +49,7 @@ const searchResults = computed(() => {
     .filter(
       (ability) =>
         ability.name.toLowerCase().includes(lowercaseSearch.value) &&
-        !entityStore.abilityNames.includes(ability.name)
+        !entityStore.abilityNames.includes(ability.name),
     )
     .slice(0, 15);
 });

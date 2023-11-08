@@ -51,7 +51,7 @@ const fetchEntityList = async () => {
 const entityOptions = computed(() =>
   homeState.entities
     .filter(
-      (entity) => campaignStore.role !== "GM" && entity.type === "CHARACTER"
+      (entity) => campaignStore.role !== "GM" && entity.type === "CHARACTER",
     )
     .reduce<Record<string, HTMLString>>((acc, entity) => {
       acc[entity.id] = `${entity.name} - Level: ${
@@ -60,19 +60,19 @@ const entityOptions = computed(() =>
           : xp2Level(entity.attributes.xp)
       }`;
       return acc;
-    }, {})
+    }, {}),
 );
 
 const mainButtonText = computed(() => {
   const found = homeState.entities.find(
-    (entity) => entity.id === state.selected
+    (entity) => entity.id === state.selected,
   );
   return found ? `Add ${found.name}` : "Choose entity";
 });
 
 const addSelected = () => {
   const found = homeState.entities.find(
-    (entity) => entity.id === state.selected
+    (entity) => entity.id === state.selected,
   );
   if (!found) {
     return;

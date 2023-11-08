@@ -1,7 +1,11 @@
 import {
   ATTRIBUTES,
+  attrFullName,
+  attrShortName,
+  getMaxAttr,
   type CampaignEntity,
   type CollectedEntity,
+  type ComputedAttributes,
   type Entity,
   type EntityAttribute,
   type EntityTextKey,
@@ -10,7 +14,6 @@ import {
 } from "vennt-library";
 import { cogTypeName } from "./copy/createCogTypeOptions";
 import TurndownService from "turndown";
-import { attrFullName, attrShortName, getMaxAttr } from "./attributeUtils";
 import { renderMarkdown } from "./textUtils";
 
 export const entityColor = (entity?: Entity | CampaignEntity): string => {
@@ -50,7 +53,7 @@ const hexColorComponent = (component: number, sum: number): string => {
 
 export const getEntityText = (
   key: EntityTextKey,
-  entity?: CollectedEntity
+  entity?: CollectedEntity,
 ): string | undefined => {
   if (!entity) {
     return undefined;
@@ -70,7 +73,7 @@ export const defaultEntityTextPermission = (key: EntityTextKey): boolean => {
 
 export const getCopyableCogText = (
   entity: CollectedEntity,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): string => {
   const attrStr = (attr: EntityAttribute): string[] => {
     const attrVal = attrs[attr]?.val;
@@ -86,13 +89,13 @@ export const getCopyableCogText = (
   const description = getEntityText("DESC", entity);
   const descLine = description ? [turndownService.turndown(description)] : [];
   const basicAttrs = ATTRIBUTES.map(
-    (attr) => `${attrShortName(attr)}: ${attrs[attr]?.val}`
+    (attr) => `${attrShortName(attr)}: ${attrs[attr]?.val}`,
   ).join(", ");
   const abilities = entity.abilities.map(
     (ability) =>
       `${ability.name}: ${turndownService.turndown(
-        renderMarkdown(ability.effect, attrs)
-      )}`
+        renderMarkdown(ability.effect, attrs),
+      )}`,
   );
   const statBlock = [
     entity.entity.name,
@@ -113,7 +116,7 @@ export const getCopyableCogText = (
 
 export const entityCreationFullyHealed = (
   entity: UncompleteCollectedEntityWithChangelog,
-  attrs: UpdatedEntityAttributes
+  attrs: UpdatedEntityAttributes | ComputedAttributes,
 ): UncompleteCollectedEntityWithChangelog => {
   const keepEqual: Record<EntityAttribute, EntityAttribute> = {
     hp: "max_hp",

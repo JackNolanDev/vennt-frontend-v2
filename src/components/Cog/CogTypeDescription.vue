@@ -10,6 +10,6 @@ import { computed } from "vue";
 const props = defineProps<{ cog_type?: string }>();
 
 const desc = computed(() =>
-  renderMarkdown(cogTypeOptions[props.cog_type ?? ""] ?? "")
+  renderMarkdown(cogTypeOptions[props.cog_type ?? ""] ?? ""),
 );
 </script>

@@ -25,6 +25,6 @@ const disabledAction = computed(
   () =>
     (entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
       props.action
-    ]
+    ],
 );
 </script>

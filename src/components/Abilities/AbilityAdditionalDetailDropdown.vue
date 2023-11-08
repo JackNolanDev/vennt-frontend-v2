@@ -28,7 +28,8 @@ const visible = computed(
   () =>
     props.ability.custom_fields &&
     additionalDetailsKeys.some(
-      (key) => props.ability.custom_fields && key in props.ability.custom_fields
-    )
+      (key) =>
+        props.ability.custom_fields && key in props.ability.custom_fields,
+    ),
 );
 </script>

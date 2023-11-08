@@ -161,7 +161,7 @@ const searchResults = computed((): SearchResult[] => {
       .filter(
         (ability) =>
           ability.name.toLowerCase().includes(lowerCaseSearch) &&
-          ability.custom_fields?.path
+          ability.custom_fields?.path,
       )
       .map((ability) => ({
         text: ability.name,
@@ -171,7 +171,7 @@ const searchResults = computed((): SearchResult[] => {
           query: router.currentRoute.value.query,
           hash: "#" + stringToLinkID(ability.name),
         },
-      }))
+      })),
   );
   return results.slice(0, 15);
 });

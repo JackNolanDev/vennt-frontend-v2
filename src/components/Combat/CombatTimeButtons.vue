@@ -43,8 +43,8 @@ const startRound = () => {
   if (!entityStore.entity) {
     return;
   }
-  const burning = entityStore.entityAttributes.burning?.val;
-  const bleeding = entityStore.entityAttributes.bleeding?.val;
+  const burning = entityStore.computedAttributes.burning?.val;
+  const bleeding = entityStore.computedAttributes.bleeding?.val;
   const hp_diff = -(burning ?? 0) - (bleeding ?? 0);
   const attrs = {
     ...(hp_diff && { hp: hp_diff }),
@@ -53,7 +53,7 @@ const startRound = () => {
   if (Object.keys(attrs).length === 0) {
     return;
   }
-  adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, attrs, {
+  adjustAttrsAPI(entityStore.entity, entityStore.computedAttributes, attrs, {
     msg: "Start combat round (applied burning & bleeding)",
   });
 };
@@ -67,7 +67,7 @@ const startTurn = () => {
     currentVal: number,
     valOnTurn: number,
     damageKey: EntityAttribute,
-    damageAmount?: number
+    damageAmount?: number,
   ): PartialEntityAttributes => {
     const attrs: PartialEntityAttributes = {};
     let baseAdjust = Math.max(Math.min(valOnTurn - currentVal, valOnTurn), 0);
@@ -90,14 +90,15 @@ const startTurn = () => {
     return attrs;
   };
 
-  const currentActions = entityStore.entityAttributes.actions?.val ?? 0;
-  const actionsOnTurn = entityStore.entityAttributes.actions_on_turn?.val ?? 3;
-  const stun = entityStore.entityAttributes.stun?.val;
+  const currentActions = entityStore.computedAttributes.actions?.val ?? 0;
+  const actionsOnTurn =
+    entityStore.computedAttributes.actions_on_turn?.val ?? 3;
+  const stun = entityStore.computedAttributes.stun?.val;
 
-  const currentReactions = entityStore.entityAttributes.reactions?.val ?? 0;
+  const currentReactions = entityStore.computedAttributes.reactions?.val ?? 0;
   const reactionsOnTurn =
-    entityStore.entityAttributes.reactions_on_turn?.val ?? 1;
-  const paralysis = entityStore.entityAttributes.paralysis?.val;
+    entityStore.computedAttributes.reactions_on_turn?.val ?? 1;
+  const paralysis = entityStore.computedAttributes.paralysis?.val;
 
   const attrs = {
     ...attrGenerator("actions", currentActions, actionsOnTurn, "stun", stun),
@@ -106,12 +107,12 @@ const startTurn = () => {
       currentReactions,
       reactionsOnTurn,
       "paralysis",
-      paralysis
+      paralysis,
     ),
   };
 
   handleEndTimePeriod("turn");
-  adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, attrs, {
+  adjustAttrsAPI(entityStore.entity, entityStore.computedAttributes, attrs, {
     msg: "Start combat turn",
   });
 };

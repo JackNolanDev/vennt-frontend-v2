@@ -109,7 +109,7 @@ const clickSortButton = () => {
   state.chronologicalSort = !state.chronologicalSort;
   localStorage.setItem(
     CHANGELOG_SORT_LOCAL_STORAGE,
-    state.chronologicalSort ? "regular" : "inverse"
+    state.chronologicalSort ? "regular" : "inverse",
   );
 };
 </script>

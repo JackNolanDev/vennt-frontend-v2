@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { HTMLString, UpdatedEntityAttributes } from "vennt-library";
+import type { ComputedAttributes, HTMLString } from "vennt-library";
 import { renderMarkdown } from "@/utils/textUtils";
 import BaseButton from "./BaseButton.vue";
 
@@ -23,7 +23,7 @@ const props = defineProps<{
   options: Record<string, HTMLString>;
   selected: string;
   unselectable?: boolean;
-  attrs?: UpdatedEntityAttributes;
+  attrs?: ComputedAttributes;
   disabledOptions?: string[];
 }>();
 const emit = defineEmits<{

@@ -42,7 +42,7 @@ import BaseDropDown from "../../Base/BaseDropDown.vue";
 const entityStore = useEntityStore();
 
 const link = computed(
-  () => `${window.location.origin}/entity/${entityStore.entity?.entity.id}`
+  () => `${window.location.origin}/entity/${entityStore.entity?.entity.id}`,
 );
 
 const toggleEntityPublic = () => {

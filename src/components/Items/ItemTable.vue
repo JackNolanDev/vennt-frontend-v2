@@ -49,7 +49,7 @@ withDefaults(
     itemLabel?: string;
     hideCount?: boolean;
   }>(),
-  { itemLabel: "Item", hideCount: false }
+  { itemLabel: "Item", hideCount: false },
 );
 
 const itemOpened = (item: ConsolidatedItem): boolean =>

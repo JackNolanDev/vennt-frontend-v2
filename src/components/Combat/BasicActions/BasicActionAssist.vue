@@ -74,17 +74,16 @@ import BaseCheckBox from "@/components/Base/BaseCheckBox.vue";
 import ToggleableDiceSectionCopyable from "@/components/Dice/ToggleableDiceSectionCopyable.vue";
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
-import {
-  adjustAttrsAPI,
-  attrFullName,
-  attrShortName,
-} from "@/utils/attributeUtils";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import {
   ATTRIBUTES,
+  defaultDice,
+  combineDiceSettings,
+  attrFullName,
+  attrShortName,
   type EntityAttribute,
   type PartialEntityAttributes,
 } from "vennt-library";
-import { defaultDice, combineDiceSettings } from "@/utils/diceUtils";
 import { numberFieldVal } from "@/utils/inputType";
 import { computed, reactive } from "vue";
 
@@ -99,25 +98,25 @@ const diceStore = useDiceStore();
 const bonusDiceMax = computed(
   () =>
     (state.useVim
-      ? Math.floor((entityStore.entityAttributes.vim?.val ?? 0) / 2)
-      : entityStore.entityAttributes.mp?.val) ?? 1000
+      ? Math.floor((entityStore.computedAttributes.vim?.val ?? 0) / 2)
+      : entityStore.computedAttributes.mp?.val) ?? 1000,
 );
 const comment = computed(() => `${attrShortName(state.attr)} assist`);
 const bonusDiceAmount = computed(() =>
-  Math.max(Math.min(numberFieldVal(state.bonusDice), bonusDiceMax.value), 0)
+  Math.max(Math.min(numberFieldVal(state.bonusDice), bonusDiceMax.value), 0),
 );
 const dice = computed(() =>
   defaultDice(
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     state.attr,
     combineDiceSettings(
       diceStore.defaultDiceSettings,
       { count: bonusDiceAmount.value },
-      entityStore.entityAttributes
+      entityStore.computedAttributes,
     ),
     entityStore.diceToggles,
-    comment.value
-  )
+    comment.value,
+  ),
 );
 
 const spendAssistResources = () => {
@@ -130,7 +129,7 @@ const spendAssistResources = () => {
   } else {
     adjust.mp = -bonusDiceAmount.value;
   }
-  adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, adjust, {
+  adjustAttrsAPI(entityStore.entity, entityStore.computedAttributes, adjust, {
     msg: `${bonusDiceAmount.value} bonus dice for ${comment.value}`,
   });
 };

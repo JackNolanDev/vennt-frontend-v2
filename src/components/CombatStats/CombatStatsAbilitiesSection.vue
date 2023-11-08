@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
-import type { CollectedEntity, UpdatedEntityAttributes } from "vennt-library";
+import type { CollectedEntity, ComputedAttributes } from "vennt-library";
 import DisplayAbilityFull from "../Abilities/DisplayAbilityFull.vue";
 import BulletPoint from "../Base/BulletPoint.vue";
 
-defineProps<{ entity: CollectedEntity; attrs?: UpdatedEntityAttributes }>();
+defineProps<{ entity: CollectedEntity; attrs?: ComputedAttributes }>();
 </script>

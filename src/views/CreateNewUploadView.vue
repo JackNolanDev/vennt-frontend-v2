@@ -46,10 +46,10 @@ import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
 import PageLayout from "@/components/Base/PageLayout.vue";
 import { ENTITY_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
-import { entityAttributesMap } from "@/utils/attributeUtils";
 import {
   fullCollectedEntityWithChangelogValidator,
   type FullCollectedEntityWithChangelog,
+  computeAttributes,
 } from "vennt-library";
 import { getCopyableCogText } from "@/utils/entityUtils";
 import { computed, reactive } from "vue";
@@ -104,7 +104,7 @@ const entityText = computed(() => {
   if (!state.entity) {
     return "";
   }
-  const entityAttrs = entityAttributesMap(state.entity);
+  const entityAttrs = computeAttributes(state.entity);
   return getCopyableCogText(state.entity, entityAttrs);
 });
 

@@ -5,6 +5,7 @@
     <label for="new-item-name" class="labelText">Name:</label>
     <input
       type="text"
+      autocomplete="off"
       v-model="state.name"
       placeholder="Donut"
       title="Enter the name of your item"
@@ -307,7 +308,7 @@ const itemTypeOptions: Record<EntityItemType, string> = {
 const weaponCategoryOptions = computed(() =>
   jsonStorage.weaponTypes
     .map((type) => type.category)
-    .filter((category) => category)
+    .filter((category) => category),
 );
 
 const itemActive = computed(() =>
@@ -316,8 +317,8 @@ const itemActive = computed(() =>
     : itemActiveDirectFields(
         state.type,
         state.weaponCategory,
-        entityStore.entity
-      )
+        entityStore.entity,
+      ),
 );
 
 const specialPlaceholder = computed(() => {
@@ -383,7 +384,7 @@ const newItem = computed((): UncompleteEntityItem => {
   return item;
 });
 const buttonDisabled = computed(
-  () => !itemValidator.safeParse(newItem.value).success
+  () => !itemValidator.safeParse(newItem.value).success,
 );
 const showPreview = computed(() => !editorEmpty(state.name));
 

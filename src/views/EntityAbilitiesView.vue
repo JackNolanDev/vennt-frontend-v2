@@ -3,7 +3,7 @@
   <EntitySpentXP></EntitySpentXP>
   <AbilityTable
     :abilities="entityStore.sortedAbilities"
-    :attrs="entityStore.entityAttributes"
+    :attrs="entityStore.computedAttributes"
     :search-id="ENTITY_ABILITIES_SEARCH_OVERRIDE"
   ></AbilityTable>
   <BaseButton
@@ -48,6 +48,6 @@ const entityStore = useEntityStore();
 const campaignStore = useCampaignStore();
 
 const showEditSection = computed(
-  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"
+  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER",
 );
 </script>

@@ -6,8 +6,8 @@ import { stringToLinkID } from "./textUtils";
 export const buildPathGraph = (abilities: PathsAndAbilities) => {
   const filteredPaths = abilities.paths.filter((path) =>
     abilities.abilities.some(
-      (ability) => ability.custom_fields?.path === path.name
-    )
+      (ability) => ability.custom_fields?.path === path.name,
+    ),
   );
   const validPaths = new Set(filteredPaths.map((path) => path.name));
 
@@ -48,7 +48,7 @@ export const buildAbilityMap = (abilities: PathsAndAbilities) => {
       acc[ability.name] = ability;
       return acc;
     },
-    {}
+    {},
   );
 };
 
@@ -69,8 +69,8 @@ export const addWikiLinks = (text: string): string => {
         return match;
       }
       return `[${match}](/wiki/paths/${stringToLinkID(
-        `Path of the ${path}`
+        `Path of the ${path}`,
       )}#${stringToLinkID(ability)})`;
-    }
+    },
   );
 };

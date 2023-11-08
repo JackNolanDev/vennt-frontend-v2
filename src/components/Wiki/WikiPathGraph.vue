@@ -25,7 +25,7 @@ const labels = serialized.nodes
   .filter(
     (node) =>
       jsonStorage.pathGraph.indegree(node) > 0 ||
-      jsonStorage.pathGraph.outdegree(node) > 0
+      jsonStorage.pathGraph.outdegree(node) > 0,
   );
 const edges = serialized.links.map(({ source, target }) => ({
   source: labels.indexOf(source),

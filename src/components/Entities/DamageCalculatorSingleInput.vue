@@ -69,8 +69,12 @@
 </template>
 
 <script setup lang="ts">
-import { attrFullName } from "@/utils/attributeUtils";
-import { ATTRIBUTES, type AttackDamage, DamageType } from "vennt-library";
+import {
+  ATTRIBUTES,
+  type AttackDamage,
+  DamageType,
+  attrFullName,
+} from "vennt-library";
 import { numberFieldVal } from "@/utils/inputType";
 import { computed } from "vue";
 
@@ -87,6 +91,6 @@ const typeId = `damage-calc-type-${unique}`;
 const attrId = `damage-calc-attr-${unique}`;
 
 const showDamageAttribute = computed(
-  () => props.modelValue.type === DamageType.ATTRIBUTE
+  () => props.modelValue.type === DamageType.ATTRIBUTE,
 );
 </script>

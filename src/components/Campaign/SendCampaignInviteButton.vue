@@ -51,11 +51,11 @@ const sendButtonDisabled = computed(
   () =>
     state.toUser === "" ||
     campaignStore.details?.invites?.some(
-      (invitation) => invitation.to === state.toUser
+      (invitation) => invitation.to === state.toUser,
     ) ||
     campaignStore.details?.members.some(
-      (member) => member.username === state.toUser
-    )
+      (member) => member.username === state.toUser,
+    ),
 );
 
 const sendInvitation = () => {

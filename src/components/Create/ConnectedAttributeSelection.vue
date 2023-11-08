@@ -39,7 +39,7 @@ const selectedUpdated = (list: BaseEntityAttribute[]) => {
     filterLists.forEach((filterKey) => {
       characterCreateStore.options.attributeSelections[filterKey] =
         characterCreateStore.options.attributeSelections[filterKey].filter(
-          (attr) => !list.includes(attr)
+          (attr) => !list.includes(attr),
         );
     });
   }

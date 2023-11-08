@@ -47,7 +47,7 @@ import { computed, reactive } from "vue";
 const campaignStore = useCampaignStore();
 const state = reactive({ name: "", desc: "" });
 const requestInvalid = computed(
-  () => state.name.length === 0 || editorEmpty(state.desc)
+  () => state.name.length === 0 || editorEmpty(state.desc),
 );
 
 const createCampaign = () => {

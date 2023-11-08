@@ -31,7 +31,7 @@ onBeforeMount(() => {
     return;
   }
   const campaignIdCheck = optionalIdValidator.safeParse(
-    router.currentRoute.value.query.campaign
+    router.currentRoute.value.query.campaign,
   );
   const campaignId = campaignIdCheck.success ? campaignIdCheck.data : undefined;
   if (!entityStore.entity || entityStore.entity.entity.id !== id.data) {
@@ -41,6 +41,6 @@ onBeforeMount(() => {
 });
 
 const prefersSidebar = computed(
-  () => router.currentRoute.value.name === WIKI_PATHS_ROUTE
+  () => router.currentRoute.value.name === WIKI_PATHS_ROUTE,
 );
 </script>

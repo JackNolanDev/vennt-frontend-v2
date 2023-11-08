@@ -26,10 +26,13 @@
 
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
-import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import type { DiceCommands, EntityAttribute } from "vennt-library";
-import { combineDiceSettings } from "@/utils/diceUtils";
-import { buildDice } from "vennt-library";
+import {
+  buildDice,
+  combineDiceSettings,
+  attrFullName,
+  attrShortName,
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import HeroPointButton from "../Attributes/HeroPointButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
@@ -54,7 +57,7 @@ const diceStore = useDiceStore();
 const heroDiceReason = computed(() =>
   props.attr
     ? `Boosted ${attrFullName(props.attr)} dice roll`
-    : "Boosted dice roll"
+    : "Boosted dice roll",
 );
 const heroPointDice = computed(() => {
   if (props.dice.settings.count && props.dice.settings.sides) {
@@ -72,9 +75,9 @@ const heroPointDice = computed(() => {
       combineDiceSettings(
         props.dice.settings,
         { drop: 1, end: "+9" },
-        entityStore.entityAttributes
+        entityStore.computedAttributes,
       ),
-      `${baseComment} - Hero Point Boost`
+      `${baseComment} - Hero Point Boost`,
     );
   }
   return false;
@@ -84,7 +87,7 @@ const showDice = computed(
   () =>
     state.roll &&
     heroPointDice.value &&
-    [props.dice.web, heroPointDice.value.web].includes(state.roll.notation)
+    [props.dice.web, heroPointDice.value.web].includes(state.roll.notation),
 );
 
 const rollButton = () => {

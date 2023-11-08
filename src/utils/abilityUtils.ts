@@ -1,6 +1,9 @@
 import isEqual from "lodash.isequal";
 import {
   abilityFieldsNameValidator,
+  abilityPassCriteriaCheck,
+  solveEquation,
+  titleText,
   type AbilityCostMap,
   type AbilityCostMapNumber,
   type CharacterGift,
@@ -10,11 +13,8 @@ import {
   type EntityAttribute,
   type FullEntityAbility,
   type PathsAndAbilities,
-  type UpdatedEntityAttributes,
+  type ComputedAttributes,
 } from "vennt-library";
-import { titleText } from "./textUtils";
-import { abilityPassCriteriaCheck } from "./criteriaUtils";
-import { solveEquation } from "./attributeUtils";
 
 const freeAbilities = new Set(["Alchemist's Training"]); // Alchemist's Training is free with Tinker's Training
 
@@ -32,10 +32,10 @@ export const defaultXPCost = (ability: EntityAbility): number => {
 
 const giftInAbilityExpedited = (
   ability: EntityAbility,
-  gift?: CharacterGift
+  gift?: CharacterGift,
 ): boolean => {
   return Boolean(
-    gift && gift !== "None" && ability.custom_fields?.expedited?.includes(gift)
+    gift && gift !== "None" && ability.custom_fields?.expedited?.includes(gift),
   );
 };
 
@@ -43,7 +43,7 @@ const abilityUsesCostAdjust = (
   cost: number,
   ability: EntityAbility,
   entity: CollectedEntity,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): number => {
   const adjustTotal = (adjustCost: number | string) => {
     if (typeof adjustCost === "number") {
@@ -57,7 +57,7 @@ const abilityUsesCostAdjust = (
     .filter(
       (usesAbility) =>
         usesAbility.uses?.adjust_ability_cost ||
-        usesAbility.uses?.criteria_benefits
+        usesAbility.uses?.criteria_benefits,
     )
     .forEach((usesAbility) => {
       if (usesAbility.uses?.adjust_ability_cost) {
@@ -71,8 +71,8 @@ const abilityUsesCostAdjust = (
               criteria.criteria,
               usesAbility,
               ability,
-              attrs
-            )
+              attrs,
+            ),
         );
         passedCriteria.forEach((criteria) => {
           if (criteria.adjust_ability_cost) {
@@ -86,8 +86,8 @@ const abilityUsesCostAdjust = (
 
 export const actualXPCost = (
   ability: EntityAbility,
-  attrs?: UpdatedEntityAttributes,
-  entity?: CollectedEntity
+  attrs?: ComputedAttributes,
+  entity?: CollectedEntity,
 ): number => {
   let cost = defaultXPCost(ability);
   if (!entity) {
@@ -110,9 +110,9 @@ export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;
 
 export const abilityUseAdjustments = (
   ability: EntityAbility,
-  attrs: UpdatedEntityAttributes,
+  attrs: ComputedAttributes,
   additionalAdjustments?: Record<EntityAttribute, number>,
-  optionalHealIdx?: number
+  optionalHealIdx?: number,
 ): Record<EntityAttribute, number> => {
   const adjustMap: Record<EntityAttribute, number> = {
     ...additionalAdjustments,
@@ -129,7 +129,7 @@ export const abilityUseAdjustments = (
   const insertVal = (
     attr: EntityAttribute,
     val: number | string | boolean,
-    cost?: boolean
+    cost?: boolean,
   ) => {
     if (typeof val === "number") {
       insertNumberIntoMap(attr, cost ? -val : val);
@@ -159,7 +159,7 @@ export const abilityUseAdjustments = (
     Object.entries(ability.uses.optional_heal[optionalHealIdx].attr).forEach(
       ([attr, val]) => {
         insertVal(attr, val);
-      }
+      },
     );
   }
 
@@ -168,8 +168,8 @@ export const abilityUseAdjustments = (
 
 export const canAffordAdjustments = (
   adjustments: Record<EntityAttribute, number>,
-  attrs: UpdatedEntityAttributes,
-  in_combat?: boolean
+  attrs: ComputedAttributes,
+  in_combat?: boolean,
 ): boolean => {
   return Object.entries(adjustments).every(([attr, adjust]) => {
     if (!in_combat && ["actions", "reactions"].includes(attr)) {
@@ -194,8 +194,8 @@ export const abilityUsable = (ability: EntityAbility): boolean => {
 
 export const canUseAbility = (
   ability: EntityAbility,
-  attrs: UpdatedEntityAttributes,
-  additionalCost?: Record<EntityAttribute, number>
+  attrs: ComputedAttributes,
+  additionalCost?: Record<EntityAttribute, number>,
 ): boolean => {
   if (!abilityUsable(ability)) {
     return false;
@@ -223,11 +223,11 @@ export const canUseAbility = (
 };
 
 export function sortAbilities(
-  abilities: FullEntityAbility[]
+  abilities: FullEntityAbility[],
 ): FullEntityAbility[] {
   const paths = sortPaths(abilities);
   const abilitiesCopy = abilities.filter(
-    (ability) => ability !== undefined && ability.name
+    (ability) => ability !== undefined && ability.name,
   );
   return abilitiesCopy.sort((a1, a2) => {
     // 0. put abilities with stars at the top of the list
@@ -311,7 +311,7 @@ export const sortPaths = (abilities: EntityAbility[]): string[] => {
     if (ability.custom_fields.path in pathCostMap) {
       pathCostMap[ability.custom_fields.path] = Math.min(
         cost,
-        pathCostMap[ability.custom_fields.path]
+        pathCostMap[ability.custom_fields.path],
       );
     } else {
       pathCostMap[ability.custom_fields.path] = cost;
@@ -325,12 +325,12 @@ export const sortPaths = (abilities: EntityAbility[]): string[] => {
 const abilityUpdatableFields = (
   Object.keys(abilityFieldsNameValidator.Values) as EntityAbilityFields[]
 ).filter(
-  (field) => !["keys", "times_taken", "stars", "highlight"].includes(field)
+  (field) => !["keys", "times_taken", "stars", "highlight"].includes(field),
 );
 
 const diffExistsBetweenAbilityFields = (
   a: EntityAbility,
-  b: EntityAbility
+  b: EntityAbility,
 ): boolean => {
   if (a.name !== b.name) {
     return true;
@@ -352,7 +352,7 @@ const diffExistsBetweenAbilityFields = (
 
 export const findNewAbilityVersion = (
   ability: EntityAbility,
-  paths: PathsAndAbilities
+  paths: PathsAndAbilities,
 ): EntityAbility | undefined => {
   const found = paths.abilities.find((search) => search.name === ability.name);
   // console.log(found);
@@ -387,25 +387,4 @@ export const generateAbilityActivation = (cost: AbilityCostMap): string => {
     activation = activation ? `${activation}, ${costExtension}` : costExtension;
   });
   return activation;
-};
-
-export const abilityExtendEntityAttributes = (
-  ability: EntityAbility,
-  attrs: UpdatedEntityAttributes
-): UpdatedEntityAttributes => {
-  const keyStorage = ability.custom_fields?.keys;
-  if (!keyStorage) {
-    return attrs;
-  }
-
-  return Object.entries(keyStorage).reduce<UpdatedEntityAttributes>(
-    (acc, [key, val]) => {
-      const parsed = solveEquation(val, acc);
-      if (parsed) {
-        acc[key] = { val: parsed };
-      }
-      return acc;
-    },
-    { ...attrs }
-  );
 };

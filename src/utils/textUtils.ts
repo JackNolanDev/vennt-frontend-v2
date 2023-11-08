@@ -2,8 +2,11 @@ import indefinite from "indefinite";
 import pluralize from "pluralize";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import type { HTMLString, UpdatedEntityAttributes } from "vennt-library";
-import { solveEquation } from "./attributeUtils";
+import {
+  solveEquation,
+  type ComputedAttributes,
+  type HTMLString,
+} from "vennt-library";
 
 export const improveTextForDisplay = (text: string): string => {
   // regex from https://leancrew.com/all-this/2010/11/smart-quotes-in-javascript/
@@ -18,7 +21,7 @@ export const improveTextForDisplay = (text: string): string => {
 export const prefixName = (
   givenName: string,
   action = "",
-  cleanup = true
+  cleanup = true,
 ): string => {
   let name = givenName;
   if (action !== "") {
@@ -50,7 +53,7 @@ export const pluralizeName = (
   givenName: string,
   cleanup = true,
   count = 0,
-  action = ""
+  action = "",
 ): string => {
   let name = givenName;
   if (count !== 1) {
@@ -82,8 +85,8 @@ export const pluralizeName = (
 
 export const renderMarkdown = (
   text: string,
-  attrs?: UpdatedEntityAttributes,
-  inline?: boolean
+  attrs?: ComputedAttributes,
+  inline?: boolean,
 ): HTMLString => {
   const markedOption: marked.MarkedOptions = {
     smartypants: true,
@@ -103,20 +106,20 @@ export const renderMarkdown = (
 const noBreakTrippleDigit = (text: string): string => {
   const tripleDigitRegex = /\[\s\+?-?\w+\s\/\s\+?-?\w+\s\/\s\+?-?\w+\s\]/gm;
   return text.replaceAll(tripleDigitRegex, (match) =>
-    match.replaceAll(/\s/gim, "&nbsp;")
+    match.replaceAll(/\s/gim, "&nbsp;"),
   );
 };
 
 const clearTemplateStrings = (text: string): string => {
   const templateRegex = /\[\[[^\]]+\]\]/gm;
   return text.replaceAll(templateRegex, (match) =>
-    match.substring(2, match.length - 2)
+    match.substring(2, match.length - 2),
   );
 };
 
 export const solveEquationsInText = (
   text: string,
-  attrs?: UpdatedEntityAttributes
+  attrs?: ComputedAttributes,
 ): string => {
   const equationRegex = /{{[^}]+}}/gm;
   return text.replaceAll(equationRegex, (match) => {
@@ -141,9 +144,3 @@ export function stringToLinkID(str: string) {
 
 export const editorEmpty = (text: string): boolean =>
   !text || text === "<p></p>";
-
-export const titleText = (text: string): string =>
-  text
-    .toLowerCase()
-    .replaceAll(/^[a-z]|(?<=_)[a-z]/gm, (match) => match.toUpperCase())
-    .replaceAll("_", " ");

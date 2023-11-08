@@ -83,7 +83,7 @@ const dragHeader = (e: MouseEvent) => {
   const offset = state.startMouseY - e.clientY;
   state.boxHeight = Math.min(
     Math.max(state.startBoxHeight + offset, 80),
-    window.innerHeight
+    window.innerHeight,
   );
 };
 

@@ -1,29 +1,36 @@
 import api from "./apiInstance";
 import {
-  fullItemValidator,
-  type FullEntityItem,
   type PartialEntityItem,
+  type PatchItemResponse,
+  patchItemResponseValidator,
+  optionalComputedAttributesResponseValidator,
+  type OptionalComputedAttributesResponse,
 } from "vennt-library";
 import { authConfig, wrapAPI } from "./utils";
 
 export const updateItemApi = (
   itemId: string,
   item: PartialEntityItem,
-  campaign_id?: string
-): Promise<FullEntityItem> => {
+  campaign_id?: string,
+): Promise<PatchItemResponse> => {
   return wrapAPI(
     () =>
       api.patch(
         `/item/${itemId}`,
         item,
-        authConfig({ params: { campaign_id } })
+        authConfig({ params: { campaign_id } }),
       ),
-    fullItemValidator
+    patchItemResponseValidator,
   );
 };
 
-export const deleteItemApi = (itemId: string, campaign_id?: string) => {
-  wrapAPI(() =>
-    api.delete(`/item/${itemId}`, authConfig({ params: { campaign_id } }))
+export const deleteItemApi = (
+  itemId: string,
+  campaign_id?: string,
+): Promise<OptionalComputedAttributesResponse> => {
+  return wrapAPI(
+    () =>
+      api.delete(`/item/${itemId}`, authConfig({ params: { campaign_id } })),
+    optionalComputedAttributesResponseValidator,
   );
 };

@@ -31,7 +31,7 @@ export const handleEndTimePeriod = (period: "turn" | "encounter" | "rest") => {
 
 export const compTimePeriod = (
   p1: "rest" | "turn" | "encounter" | "permanent",
-  p2: "rest" | "turn" | "encounter" | "permanent"
+  p2: "rest" | "turn" | "encounter" | "permanent",
 ): number => {
   const timeMap = {
     turn: 1,

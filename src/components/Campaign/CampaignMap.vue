@@ -134,7 +134,7 @@ watch(
       width: mapBuilder.width,
       height: mapBuilder.height,
     });
-  }
+  },
 );
 
 const clickListener = () => {
@@ -196,7 +196,7 @@ const dropListener = async (event: DragEvent) => {
   event.stopPropagation();
   if (draggedImageId) {
     const background = BACKGROUNDS.find(
-      (background) => background.id === draggedImageId
+      (background) => background.id === draggedImageId,
     );
     if (
       !viewport ||
@@ -278,7 +278,7 @@ const dropListener = async (event: DragEvent) => {
           backgroundSprite.x - backgroundSprite.width / 2,
           backgroundSprite.y - backgroundSprite.height / 2,
           backgroundSprite.width,
-          backgroundSprite.height
+          backgroundSprite.height,
         );
       }
     });
@@ -323,7 +323,7 @@ const drawResizeUIComponents = (element: Sprite): Graphics[] => {
     element.x - element.width / 2,
     element.y - element.height / 2,
     element.width,
-    element.height
+    element.height,
   );
   const graphics: Graphics[] = [outline];
   for (let idx = 0; idx <= 7; idx++) {
@@ -468,7 +468,7 @@ const drawResizeUIComponent = (element: Sprite, idx: number): Graphics => {
         element.x - element.width / 2,
         element.y - element.height / 2,
         element.width,
-        element.height
+        element.height,
       );
     }
   };
@@ -534,7 +534,7 @@ const uiDragHandlerFun = ({
 
 const resizeUIComponentPoint = (
   element: Sprite,
-  idx: number
+  idx: number,
 ): { x: number; y: number } => {
   let x = element.x;
   let y = element.y;

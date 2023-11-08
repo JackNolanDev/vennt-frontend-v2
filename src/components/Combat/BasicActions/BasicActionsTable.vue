@@ -1,7 +1,7 @@
 <template>
   <AbilityTable
     :abilities="BASIC_ACTIONS"
-    :attrs="entityStore.entityAttributes"
+    :attrs="entityStore.computedAttributes"
   ></AbilityTable>
 </template>
 

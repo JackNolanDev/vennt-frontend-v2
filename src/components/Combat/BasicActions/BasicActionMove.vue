@@ -2,7 +2,7 @@
   <h2>Move</h2>
   <DisplayAbilityFull
     :ability="BASIC_ACTION_MOVE"
-    :attrs="entityStore.entityAttributes"
+    :attrs="entityStore.computedAttributes"
   ></DisplayAbilityFull>
   <UseAbilitySection
     v-if="entityStore.canEdit"

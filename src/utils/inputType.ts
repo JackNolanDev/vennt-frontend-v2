@@ -3,7 +3,7 @@ import type { z } from "zod";
 export const fieldValidator = <T extends z.ZodTypeAny>(
   parser: T,
   any: any,
-  base?: any
+  base?: any,
 ): string | false => {
   if (any === base) {
     return false;
@@ -19,7 +19,7 @@ export const fieldValidator = <T extends z.ZodTypeAny>(
 
 export const numberFieldVal = (
   val: number | string,
-  allowNaN?: boolean
+  allowNaN?: boolean,
 ): number => {
   const parsedVal = typeof val === "number" ? val : parseInt(val);
   if (isNaN(parsedVal) && !allowNaN) {

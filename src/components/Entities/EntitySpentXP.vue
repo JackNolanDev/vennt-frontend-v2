@@ -1,9 +1,12 @@
 <template>
-  <div v-if="entityStore.entityAttributes.xp" class="alignRow labelText mb-16">
+  <div
+    v-if="entityStore.computedAttributes.xp"
+    class="alignRow labelText mb-16"
+  >
     Spent XP:
     <BaseFraction
       :top="entityStore.spentXP"
-      :bottom="entityStore.entityAttributes.xp.val"
+      :bottom="entityStore.computedAttributes.xp.val"
       class="ml-16"
     ></BaseFraction>
   </div>

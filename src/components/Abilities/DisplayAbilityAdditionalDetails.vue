@@ -47,8 +47,8 @@ const entityStore = useEntityStore();
 const actualCost = computed(() => {
   const cost = actualXPCost(
     props.ability,
-    entityStore.entityAttributes,
-    entityStore.entity
+    entityStore.computedAttributes,
+    entityStore.entity,
   );
   if (cost === defaultXPCost(props.ability)) {
     return false;

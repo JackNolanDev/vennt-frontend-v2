@@ -7,7 +7,7 @@
   <h2>Usable Abilities</h2>
   <AbilityTable
     :abilities="useableAbilities"
-    :attrs="entityStore.entityAttributes"
+    :attrs="entityStore.computedAttributes"
   ></AbilityTable>
   <h2>Usable Weapons</h2>
   <ItemTable
@@ -35,8 +35,8 @@ jsonStorage.fetchWeaponTypes();
 
 const useableAbilities = computed(() =>
   entityStore.sortedAbilities.filter((ability) =>
-    canUseAbility(ability, entityStore.entityAttributes)
-  )
+    canUseAbility(ability, entityStore.computedAttributes),
+  ),
 );
 const useableWeapons = computed(() =>
   entityStore.consolidatedItems
@@ -44,8 +44,8 @@ const useableWeapons = computed(() =>
       (item) =>
         !item.custom_fields?.in_storage &&
         item.type === "weapon" &&
-        (item.active || item.custom_fields?.category === "Grenade")
+        (item.active || item.custom_fields?.category === "Grenade"),
     )
-    .concat(jsonStorage.defaultWeapons)
+    .concat(jsonStorage.defaultWeapons),
 );
 </script>

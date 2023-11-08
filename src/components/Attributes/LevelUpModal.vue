@@ -14,7 +14,7 @@
         :selected="state.selected"
         :maxChoices="1"
         :disabledChoices="disabledChoices"
-        :attrs="entityStore.entityAttributes"
+        :attrs="entityStore.computedAttributes"
         @selectedUpdated="selectedUpdated"
       ></AttributeSelection>
       <BaseButton
@@ -37,19 +37,22 @@
 import { useEntityStore } from "@/stores/entity";
 import BaseModal from "../Base/BaseModal.vue";
 import { computed, reactive } from "vue";
-import { ATTRIBUTES, type BaseEntityAttribute } from "vennt-library";
+import {
+  ATTRIBUTES,
+  type BaseEntityAttribute,
+  LEVEL_UPS_TO_INCREASE_ATTR,
+} from "vennt-library";
 import AttributeSelection from "./AttributeSelection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
-import { LEVEL_UPS_TO_INCREASE_ATTR } from "@/utils/venntConfig";
 
 const state = reactive<{ selected: BaseEntityAttribute[] }>({ selected: [] });
 const entityStore = useEntityStore();
 
 const attrLevelToProcess = computed(() => {
-  if (entityStore.entity && entityStore.entityAttributes.xp) {
+  if (entityStore.entity && entityStore.computedAttributes.xp) {
     return (
-      Math.floor(entityStore.entityAttributes.xp.val / 1000) -
+      Math.floor(entityStore.computedAttributes.xp.val / 1000) -
       entityStore.levelsToProcess +
       1
     );
@@ -57,13 +60,13 @@ const attrLevelToProcess = computed(() => {
   return 0;
 });
 const increaseAttrs = computed(
-  () => attrLevelToProcess.value % LEVEL_UPS_TO_INCREASE_ATTR === 0
+  () => attrLevelToProcess.value % LEVEL_UPS_TO_INCREASE_ATTR === 0,
 );
 const disabledChoices = computed(() =>
   ATTRIBUTES.filter((attr) => {
-    const found = entityStore.entityAttributes[attr];
+    const found = entityStore.computedAttributes[attr];
     return found ? found.val > Math.floor(attrLevelToProcess.value / 2) : true;
-  })
+  }),
 );
 const buttonDisabled = computed(() => state.selected.length === 0);
 
@@ -77,7 +80,7 @@ const selectedUpdated = (selected: BaseEntityAttribute[]) => {
 const levelUpButton = () => {
   if (entityStore.entity && state.selected.length > 0) {
     const attrs = { [state.selected[0]]: 1 };
-    adjustAttrsAPI(entityStore.entity, entityStore.entityAttributes, attrs, {
+    adjustAttrsAPI(entityStore.entity, entityStore.computedAttributes, attrs, {
       msg: `Level up bonus for level ${attrLevelToProcess.value}`,
     });
     closeModal();

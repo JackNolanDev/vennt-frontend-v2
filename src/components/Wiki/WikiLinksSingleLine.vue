@@ -2,7 +2,7 @@
   <span v-for="(split, idx) in textSplit" :key="`${idx}-${split.text}`">
     <span
       v-if="split.type === 'md'"
-      v-html="renderMarkdown(split.text, entityStore.entityAttributes, true)"
+      v-html="renderMarkdown(split.text, entityStore.computedAttributes, true)"
     ></span>
     <RouterLink v-else-if="split.type === 'link'" :to="split.to">{{
       split.text
@@ -28,7 +28,7 @@ const textSplit = computed(
     | { type: "md"; text: string }
   > => {
     const split = props.line.split(
-      /([A-Z][a-zA-Z ]+) \([A-Z][a-zA-z ]+\)|(Path of the [A-Z][a-z]+(?: [A-Z][a-z]+)*)/gm
+      /([A-Z][a-zA-Z ]+) \([A-Z][a-zA-z ]+\)|(Path of the [A-Z][a-z]+(?: [A-Z][a-z]+)*)/gm,
     );
     return split.map((text) => {
       if (!text) {
@@ -65,6 +65,6 @@ const textSplit = computed(
       }
       return { type: "md", text };
     });
-  }
+  },
 );
 </script>

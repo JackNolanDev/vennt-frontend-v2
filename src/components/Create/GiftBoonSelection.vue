@@ -14,10 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  CharacterGift,
-  UpdatedEntityAttributes,
-} from "vennt-library";
+import type { CharacterGift, ComputedAttributes } from "vennt-library";
 import { giftBoonCopy } from "@/utils/copy/giftBoonsCopy";
 import { computed } from "vue";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
@@ -25,7 +22,7 @@ import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
 const props = defineProps<{
   gift: CharacterGift;
   boon?: string;
-  attrs?: UpdatedEntityAttributes;
+  attrs?: ComputedAttributes;
 }>();
 const emit = defineEmits<{ (e: "boonSelected", state: string): void }>();
 
@@ -37,7 +34,7 @@ const options = computed(() =>
       }
       return acc;
     },
-    {}
-  )
+    {},
+  ),
 );
 </script>

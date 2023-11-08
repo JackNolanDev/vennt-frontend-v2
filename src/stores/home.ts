@@ -51,7 +51,7 @@ export const useHomeStore = defineStore("home", {
     },
     declineCampaignInvite(invite: CampaignInviteWithDetails) {
       this.campaignInvitations = this.campaignInvitations.filter(
-        (invitation) => invitation.id !== invite.id
+        (invitation) => invitation.id !== invite.id,
       );
       declineCampaignInviteApi(invite.id);
     },

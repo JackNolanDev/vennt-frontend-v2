@@ -33,13 +33,17 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility, PartialEntityAttributes } from "vennt-library";
+import {
+  type FullEntityAbility,
+  type PartialEntityAttributes,
+  diceParseFromString,
+  solvePendingEquations,
+} from "vennt-library";
 import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";
-import { diceParseFromString } from "@/utils/diceUtils";
 import BaseButton from "../Base/BaseButton.vue";
-import { adjustAttrsAPI, solvePendingEquations } from "@/utils/attributeUtils";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import { abilityUsedStats } from "@/utils/abilityUtils";
 
 const props = defineProps<{ ability: FullEntityAbility }>();
@@ -54,8 +58,8 @@ const dice = computed(
     diceParseFromString(
       props.ability.uses.roll.dice,
       diceStore.defaultDiceSettings,
-      diceComment.value
-    )
+      diceComment.value,
+    ),
 );
 const adjust = computed(() => {
   const parsedValue = parseInt(state.rollValue);
@@ -66,7 +70,7 @@ const buttonDisabled = computed(
     adjust.value === 0 ||
     ((entityStore.entity?.entity.other_fields.disabled_actions ?? {})[
       props.ability.name
-    ]?.length ?? 0) > 0
+    ]?.length ?? 0) > 0,
 );
 
 const useAbility = () => {
@@ -87,19 +91,19 @@ const useAbility = () => {
       ...adjustAttrs,
       ...solvePendingEquations(
         props.ability.uses.roll.heal,
-        entityStore.entityAttributes
+        entityStore.computedAttributes,
       ),
     };
   }
   adjustAttrsAPI(
     entityStore.entity,
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     adjustAttrs,
     {
       msg: `Used ${props.ability.name}`,
       enforceMaximums: true,
       src: props.ability.name,
-    }
+    },
   );
 };
 </script>

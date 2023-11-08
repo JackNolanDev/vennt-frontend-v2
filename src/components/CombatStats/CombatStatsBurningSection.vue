@@ -1,6 +1,6 @@
 <template>
   <BaseButton @click="applyBurning" icon="local_fire_department" class="wide"
-    >Apply {{ entityStore.entityAttributes.burning?.val }} Burning
+    >Apply {{ entityStore.computedAttributes.burning?.val }} Burning
     Damage</BaseButton
   >
 </template>
@@ -16,13 +16,13 @@ const applyBurning = () => {
   if (!entityStore.entity) {
     return;
   }
-  const burning = entityStore.entityAttributes.burning?.val;
+  const burning = entityStore.computedAttributes.burning?.val;
   if (burning && burning > 0) {
     adjustAttrsAPI(
       entityStore.entity,
-      entityStore.entityAttributes,
+      entityStore.computedAttributes,
       { hp: -burning, burning: -Math.min(burning, 3) },
-      { msg: `Took ${burning} burning damage` }
+      { msg: `Took ${burning} burning damage` },
     );
   }
 };

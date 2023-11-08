@@ -1,12 +1,10 @@
 import {
   attrsRegexStr,
-  replaceVariablesInEquation,
   solveEquation,
-} from "./attributeUtils";
-import type {
-  EntityAttribute,
-  EntityItem,
-  UpdatedEntityAttributes,
+  type ComputedAttributes,
+  type EntityAttribute,
+  type EntityItem,
+  replaceVariablesInEquation,
 } from "vennt-library";
 
 export type ResultReason<T> = {
@@ -16,8 +14,8 @@ export type ResultReason<T> = {
 
 const weaponCategoryAdjust = (
   weapon: EntityItem,
-  attrs: UpdatedEntityAttributes,
-  type: "acc" | "dmg"
+  attrs: ComputedAttributes,
+  type: "acc" | "dmg",
 ): ResultReason<number> | undefined => {
   if (!weapon.custom_fields?.category) {
     return undefined;
@@ -35,7 +33,7 @@ const weaponCategoryAdjust = (
 
 const attributeBonus = (
   weapon: EntityItem,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): number => {
   if (!weapon.custom_fields?.attr) {
     return 0;
@@ -46,7 +44,7 @@ const attributeBonus = (
 
 export const weaponAccuracy = (
   weapon: EntityItem,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): ResultReason<number> => {
   let acc = attributeBonus(weapon, attrs) * 10;
   let reason = weapon.custom_fields?.attr ?? "";
@@ -66,17 +64,17 @@ export const weaponAccuracy = (
   return { result: acc, reason };
 };
 
-const baseDiceRegex = (attrs: UpdatedEntityAttributes) => {
+const baseDiceRegex = (attrs: ComputedAttributes) => {
   const attrsRegexString = attrsRegexStr(attrs);
   return new RegExp(
     `^(?:\\d*|\\(\\w+\\))d\\d+(?: ?[+\\-*\\/] ?\\(?(?:\\d*d\\d+|\\d+|${attrsRegexString})\\)?)*`,
-    "u"
+    "u",
   );
 };
 
 export const baseDiceString = (
   weapon: EntityItem,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): string => {
   if (!weapon.custom_fields?.dmg) {
     return "";
@@ -90,14 +88,14 @@ const addIfExists = (str: string | number | undefined): string =>
 
 export const enhancedBaseDiceString = (
   weapon: EntityItem,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): string => {
   const baseString = baseDiceString(weapon, attrs);
   const categoryDmgString = weaponCategoryAdjust(weapon, attrs, "dmg")?.result;
   const baseDmg = attrs.dmg?.val;
 
   const diceString = `${baseString}${addIfExists(
-    weapon.custom_fields?.attr
+    weapon.custom_fields?.attr,
   )}${addIfExists(categoryDmgString)}${addIfExists(baseDmg)}`;
 
   return replaceVariablesInEquation(diceString, attrs).cleanedEquation;
@@ -106,20 +104,20 @@ export const enhancedBaseDiceString = (
 export const enhancedDmgString = (
   weapon: EntityItem,
   enhancedBaseDiceString: string,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): string => {
   if (!weapon.custom_fields || !weapon.custom_fields.dmg) {
     return "";
   }
   return weapon.custom_fields.dmg.replace(
     baseDiceString(weapon, attrs),
-    enhancedBaseDiceString
+    enhancedBaseDiceString,
   );
 };
 
 export const relatedAttrsForWeapon = (
   weapon: EntityItem,
-  type: "acc" | "dmg"
+  type: "acc" | "dmg",
 ): EntityAttribute[] => {
   const attrList: EntityAttribute[] = [type];
   if (weapon.custom_fields?.category) {

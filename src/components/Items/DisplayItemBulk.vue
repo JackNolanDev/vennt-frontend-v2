@@ -17,6 +17,6 @@ import { computed } from "vue";
 
 const props = defineProps<{ item: EntityItem }>();
 const bulkLabel = computed(() =>
-  props.item.type === "container" ? "Carrying Capacity" : "Bulk"
+  props.item.type === "container" ? "Carrying Capacity" : "Bulk",
 );
 </script>

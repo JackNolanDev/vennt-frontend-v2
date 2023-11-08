@@ -21,7 +21,7 @@ export const defaultWeaponCategories = ["Unarmed", "Improvised"];
 
 export const shopItemToEntityItem = (
   shopItem: ShopItem,
-  active?: boolean
+  active?: boolean,
 ): UncompleteEntityItem => {
   const item: UncompleteEntityItem = {
     type: shopItem.type,
@@ -62,7 +62,7 @@ export const shopItemToEntityItem = (
 
 export const namesToItems = (
   shopItems: ShopItem[],
-  names: string[]
+  names: string[],
 ): UncompleteEntityItem[] => {
   return names
     .map((name) => shopItems.find((item) => item.name === name))
@@ -73,14 +73,14 @@ export const namesToItems = (
 export const findShopItem = (
   item: EntityItem,
   shopItems: ShopItem[],
-  weaponTypes: ShopItem[]
+  weaponTypes: ShopItem[],
 ): ShopItem | undefined => {
   const found = shopItems.find(
     (it) =>
       it.name === item.name &&
       it.type === item.type &&
       it.bulk === item.bulk &&
-      it.desc === item.desc
+      it.desc === item.desc,
   );
   if (found) {
     return found;
@@ -89,16 +89,16 @@ export const findShopItem = (
     return undefined;
   }
   return weaponTypes.find(
-    (weapon) => weapon.category === item.custom_fields?.category
+    (weapon) => weapon.category === item.custom_fields?.category,
   );
 };
 
 export const findNewItemVersion = (
   item: EntityItem,
-  shopItems: ShopItem[]
+  shopItems: ShopItem[],
 ): EntityItem | undefined => {
   const found = shopItems.find(
-    (it) => it.name === item.name && it.type === item.type
+    (it) => it.name === item.name && it.type === item.type,
   );
   if (found) {
     if (
@@ -136,7 +136,7 @@ export const findNewItemVersion = (
 
 // Warning: data generated here should not be passed to back end
 export const unsafeEnsureFullEntityItem = (
-  item: EntityItem
+  item: EntityItem,
 ): FullEntityItem => {
   const converted = { ...item } as FullEntityItem;
   if (!converted.id) {
@@ -149,13 +149,13 @@ export const unsafeEnsureFullEntityItem = (
 };
 
 export const unsafeEnsureFullEntityItems = (
-  items: EntityItem[]
+  items: EntityItem[],
 ): FullEntityItem[] => {
   return items.map((item) => unsafeEnsureFullEntityItem(item));
 };
 
 export const consolidateItemList = (
-  given: FullEntityItem[]
+  given: FullEntityItem[],
 ): ConsolidatedItem[] => {
   const items: ConsolidatedItem[] = [];
   given.forEach((item) => {
@@ -167,7 +167,7 @@ export const consolidateItemList = (
           search.bulk === item.bulk &&
           search.desc === item.desc &&
           Boolean(search.custom_fields?.in_storage) ===
-            Boolean(item.custom_fields?.in_storage)
+            Boolean(item.custom_fields?.in_storage),
       );
     if (!foundItem) {
       items.push({ ...item, ids: [item.id] });
@@ -233,7 +233,7 @@ export const getDefaultWeapons = (weaponTypesList: ShopItem[]) =>
   defaultWeaponCategories
     .map((category) => {
       const found = weaponTypesList.find(
-        (weapon) => weapon.category === category
+        (weapon) => weapon.category === category,
       );
       if (!found) {
         return found;
@@ -250,18 +250,18 @@ export const getDefaultWeapons = (weaponTypesList: ShopItem[]) =>
 
 export const shopItemDefaultActiveDirectFields = (
   type: EntityItemType,
-  category?: string
+  category?: string,
 ): boolean => equippableItemTypes.has(type) && category !== "Grenade";
 
 export const itemActiveDirectFields = (
   type: EntityItemType,
   category?: string,
-  entity?: FullCollectedEntity
+  entity?: FullCollectedEntity,
 ): boolean => {
   let base = shopItemDefaultActiveDirectFields(type, category);
   if (base && type !== "weapon" && entity && entity.items.length > 0) {
     base = entity.items.some(
-      (existingItem) => existingItem.type === type && existingItem.active
+      (existingItem) => existingItem.type === type && existingItem.active,
     );
   }
   return base;
@@ -272,7 +272,7 @@ export const shopItemDefaultActive = (item: ShopItem): boolean =>
 
 export const shopItemActive = (
   item: ShopItem,
-  entity?: FullCollectedEntity
+  entity?: FullCollectedEntity,
 ): boolean => {
   return itemActiveDirectFields(item.type, item.category, entity);
 };

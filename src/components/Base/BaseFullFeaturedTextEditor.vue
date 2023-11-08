@@ -75,7 +75,7 @@ const props = withDefaults(
     invalid: false,
     saveButton: false,
     displayOnly: false,
-  }
+  },
 );
 const emits = defineEmits<{
   (e: "update:modelValue", state: string): void;
@@ -130,13 +130,13 @@ watch(
       return;
     }
     editor.value?.commands.setContent(props.modelValue, false);
-  }
+  },
 );
 
 watch(
   () => props.focusOnChange,
   () => {
     editor.value?.commands.focus("end");
-  }
+  },
 );
 </script>

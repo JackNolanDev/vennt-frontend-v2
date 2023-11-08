@@ -39,11 +39,11 @@
       <span v-if="entityStore.inCombat"
         >Actions:
         <span class="number">{{
-          entityStore.entityAttributes.actions?.val
+          entityStore.computedAttributes.actions?.val
         }}</span>
         / Reactions:
         <span class="number">{{
-          entityStore.entityAttributes.reactions?.val
+          entityStore.computedAttributes.reactions?.val
         }}</span></span
       >
       <span v-else class="nowrap hide-extra ellipsis">{{

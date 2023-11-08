@@ -24,6 +24,6 @@ import DisplayItemBasic from "../Items/DisplayItemBasic.vue";
 
 const props = defineProps<{ entity: CollectedEntity }>();
 const items = computed(() =>
-  consolidateItemList(unsafeEnsureFullEntityItems(props.entity.items))
+  consolidateItemList(unsafeEnsureFullEntityItems(props.entity.items)),
 );
 </script>

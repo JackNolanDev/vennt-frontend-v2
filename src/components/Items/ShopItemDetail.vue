@@ -32,13 +32,13 @@
     </div>
     <p>
       <b>Cost:</b> {{ cost }} SP
-      <span v-if="entityStore.entityAttributes.sp" class="mutedText">
-        (You have {{ entityStore.entityAttributes.sp.val }} SP)
+      <span v-if="entityStore.computedAttributes.sp" class="mutedText">
+        (You have {{ entityStore.computedAttributes.sp.val }} SP)
       </span>
     </p>
     <BaseButton
-      v-if="entityStore.entityAttributes.sp && item.sp !== undefined"
-      :disabled="!countValid || entityStore.entityAttributes.sp.val < item.sp"
+      v-if="entityStore.computedAttributes.sp && item.sp !== undefined"
+      :disabled="!countValid || entityStore.computedAttributes.sp.val < item.sp"
       @click="buyItem"
       class="primary wide mb-8"
     >
@@ -75,7 +75,7 @@ const ownedItem = computed(() => {
     (it) =>
       it.name === props.item.name &&
       it.bulk === props.item.bulk &&
-      it.desc === props.item.desc
+      it.desc === props.item.desc,
   );
 });
 const countOwned = computed(() => ownedItem.value?.ids.length ?? 0);
@@ -83,15 +83,15 @@ const newItem = computed(
   (): EntityItem =>
     shopItemToEntityItem(
       props.item,
-      shopItemActive(props.item, entityStore.entity)
-    )
+      shopItemActive(props.item, entityStore.entity),
+    ),
 );
 const parsedCount = computed(() => {
   const countInt = parseInt(state.count);
   return isNaN(countInt) ? 0 : countInt;
 });
 const countValid = computed(
-  () => parsedCount.value > 0 && parsedCount.value <= 20
+  () => parsedCount.value > 0 && parsedCount.value <= 20,
 );
 const cost = computed(() => (props.item.sp ?? 0) * parsedCount.value);
 
@@ -104,16 +104,16 @@ const buyItem = () => {
   if (entityStore.entity && props.item.sp) {
     adjustAttrsAPI(
       entityStore.entity,
-      entityStore.entityAttributes,
+      entityStore.computedAttributes,
       { sp: -cost.value },
       {
         msg: pluralizeName(
           newItem.value.name,
           false,
           parsedCount.value,
-          "Purchased"
+          "Purchased",
         ),
-      }
+      },
     );
   }
   addItem();

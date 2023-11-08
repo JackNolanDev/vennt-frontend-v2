@@ -30,7 +30,7 @@ const convertedWeapons = computed(
   () =>
     props.ability.uses?.weapons?.map((weaponFields) => {
       const baseWeapon = jsonStorage.weaponTypes.find(
-        (base) => base.category === weaponFields.category
+        (base) => base.category === weaponFields.category,
       );
 
       const item: UncompleteEntityItem = {
@@ -52,7 +52,7 @@ const convertedWeapons = computed(
         item,
         label: weaponFields.label ?? item.custom_fields?.dmg ?? item.name,
       };
-    }) ?? []
+    }) ?? [],
 );
 
 const switchDropDown = (idx: number) => {

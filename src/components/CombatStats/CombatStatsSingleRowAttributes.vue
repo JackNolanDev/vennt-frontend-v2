@@ -85,14 +85,15 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  CollectedEntity,
-  EntityAttribute,
-  UpdatedEntityAttributes,
+import {
+  type CollectedEntity,
+  type ComputedAttributes,
+  type EntityAttribute,
+  ATTRIBUTE_DAMAGES,
+  attrShortName,
 } from "vennt-library";
 import { totalDC } from "@/utils/itemUtils";
 import { computed } from "vue";
-import { ATTRIBUTE_DAMAGES, attrShortName } from "@/utils/attributeUtils";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
 import CombatStatsDiceSection from "./CombatStatsDiceSection.vue";
@@ -109,7 +110,7 @@ import CombatStatsReactionsSection from "./CombatStatsReactionsSection.vue";
 const props = defineProps<{
   entity: CollectedEntity;
   singleRowAttrs: EntityAttribute[];
-  attrs: UpdatedEntityAttributes;
+  attrs: ComputedAttributes;
   selectedAttr?: EntityAttribute;
   customAttrs: EntityAttribute[];
   showUpdateDropdown?: boolean;
@@ -181,6 +182,6 @@ const fractionMap = computed(
       top: props.attrs.reactions?.val,
       bottom: props.attrs.reactions_on_turn?.val,
     },
-  })
+  }),
 );
 </script>

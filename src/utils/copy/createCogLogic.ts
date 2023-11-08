@@ -1,13 +1,13 @@
 import { generateAbilityActivation } from "../abilityUtils";
-import { solveEquation } from "../attributeUtils";
-import type {
-  CogCreateOptions,
-  EntityAttribute,
-  CogAttributeLevel,
-  BaseEntityAttribute,
-  UpdatedEntityAttributes,
-  UncompleteEntityAbility,
-  UsesMap,
+import {
+  type CogCreateOptions,
+  type EntityAttribute,
+  type CogAttributeLevel,
+  type BaseEntityAttribute,
+  type UncompleteEntityAbility,
+  type UsesMap,
+  solveEquation,
+  type ComputedAttributes,
 } from "vennt-library";
 import { cogAbilityMap, type CogAbility } from "./createCogAbilityOptions";
 import { cogTypeOptionsInfo } from "./createCogTypeOptions";
@@ -22,7 +22,7 @@ export const LStat = (level: string | number) => {
 
 const LStatForAttr = (
   options: CogCreateOptions,
-  attr: EntityAttribute
+  attr: EntityAttribute,
 ): number => {
   let baseLStat = LStat(options.level);
   Object.values(options.abilitySelection).forEach((choice) => {
@@ -68,7 +68,7 @@ const cogAttributeLevelFunctions: Record<
 
 export const cogBaseAttribute = (
   options: CogCreateOptions,
-  attr: BaseEntityAttribute
+  attr: BaseEntityAttribute,
 ): number => {
   const L = LStatForAttr(options, attr);
   let attrLevel: CogAttributeLevel | undefined = options.attrOverrides[attr];
@@ -155,7 +155,7 @@ export const totalAP = (options: CogCreateOptions): number => {
 
 export const spentAP = (
   cogAbilities: CogAbility[],
-  options: CogCreateOptions
+  options: CogCreateOptions,
 ): number => {
   return cogAbilities
     .map((ability) => cogAbilityCost(ability, options))
@@ -164,12 +164,12 @@ export const spentAP = (
 
 export const cogAbilityCost = (
   ability: CogAbility,
-  options: CogCreateOptions
+  options: CogCreateOptions,
 ): number => {
   if (typeof ability.cost === "number") {
     return ability.cost;
   }
-  const attrMap: UpdatedEntityAttributes = { L: { val: LStat(options.level) } };
+  const attrMap: ComputedAttributes = { L: { val: LStat(options.level) } };
   const variableCost = options.variableAbilityCost[ability.name];
   if (typeof variableCost === "number") {
     attrMap.X = { val: variableCost };
@@ -185,7 +185,7 @@ export const keysToCogAbilities = (keys: string[]): CogAbility[] =>
 
 export const entityAbilities = (
   cogAbilities: CogAbility[],
-  options: CogCreateOptions
+  options: CogCreateOptions,
 ): UncompleteEntityAbility[] => {
   return cogAbilities.map((cogAbility) => {
     const cost = cogAbility.useCost ?? { passive: true };
@@ -207,7 +207,7 @@ export const entityAbilities = (
 
 const solveEffectTemplates = (
   cogAbility: CogAbility,
-  options: CogCreateOptions
+  options: CogCreateOptions,
 ): string => {
   const { effect, name } = cogAbility;
   const variableCost = options.variableAbilityCost[name];
@@ -224,7 +224,7 @@ const solveEffectTemplates = (
 
 const cogAbilityUses = (
   cogAbility: CogAbility,
-  options: CogCreateOptions
+  options: CogCreateOptions,
 ): UsesMap | undefined => {
   const { uses: originalUses, name } = cogAbility;
   // need to make a deep copy so we can modify values without effecting base abilities
@@ -238,7 +238,7 @@ const cogAbilityUses = (
       if (typeof value === "string") {
         uses.adjust!.attr![attr as EntityAttribute] = value.replaceAll(
           /\bX\b/gm,
-          variableCost.toString()
+          variableCost.toString(),
         );
       }
     });

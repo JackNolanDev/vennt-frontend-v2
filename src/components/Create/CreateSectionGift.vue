@@ -39,7 +39,7 @@ const chooseGift = (gift: CharacterGift) => {
   ATTR_FILTERS_ON_GIFT_SELECTION.forEach((attrSelection) => {
     characterCreateStore.options.attributeSelections[attrSelection] =
       characterCreateStore.options.attributeSelections[attrSelection].filter(
-        (attr) => !giftMatchesAttr(gift, attr)
+        (attr) => !giftMatchesAttr(gift, attr),
       );
   });
   ATTR_RESET_ON_GIFT_SELECTION.forEach((attrSelection) => {

@@ -44,18 +44,18 @@
 import { useEntityStore } from "@/stores/entity";
 import {
   adjustAttrsAPI,
-  attrFullName,
   generateDefaultAdjustMsg,
   isCustomAttr,
-  MIN_ZEROS,
 } from "@/utils/attributeUtils";
 import {
   ATTRIBUTES_SET,
   ATTRIBUTE_MAX,
   ATTRIBUTE_MIN,
   CHANGELOG_MAX,
+  MIN_ZEROS,
   type EntityAttribute,
   type PartialEntityAttributes,
+  attrFullName,
 } from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
@@ -74,7 +74,7 @@ const entityStore = useEntityStore();
 
 const attrDisplayName = computed(() => attrFullName(props.attr));
 const adjustReasonID = computed(
-  () => `${props.loc}-${props.attr}-adjustReason`
+  () => `${props.loc}-${props.attr}-adjustReason`,
 );
 const adjustFieldID = computed(() => `${props.loc}-${props.attr}-adjust`);
 const adjustVal = computed(() => {
@@ -103,10 +103,10 @@ const adjustError = computed(() => {
 });
 const adjustButtonDisabled = computed(() => adjustError.value !== false);
 const showError = computed(
-  () => adjustButtonDisabled.value && state.adjust !== ""
+  () => adjustButtonDisabled.value && state.adjust !== "",
 );
 const inputAdjustFieldClass = computed(() =>
-  showError.value ? "invalid" : ""
+  showError.value ? "invalid" : "",
 );
 const baseInTitle = computed(() => {
   if (isCustomAttr(props.attr)) {
@@ -132,9 +132,9 @@ const adjustAttrFromAdjustField = async () => {
     state.reason = "";
     await adjustAttrsAPI(
       entityStore.entity,
-      entityStore.entityAttributes,
+      entityStore.computedAttributes,
       attrs,
-      { msg: reason }
+      { msg: reason },
     );
     emit("updateComplete");
   }

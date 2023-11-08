@@ -81,7 +81,7 @@ const bulkCapacity = computed(() => {
     return 0;
   }
   let baseCapacity = 0;
-  const carryingCapacity = entityStore.entityAttributes.carrying_capacity;
+  const carryingCapacity = entityStore.computedAttributes.carrying_capacity;
   if (carryingCapacity) {
     baseCapacity += carryingCapacity.val;
   }
@@ -102,7 +102,7 @@ const bulkSum = computed(() => {
       (item) =>
         item.type !== "container" &&
         !item.active &&
-        !item.custom_fields?.in_storage
+        !item.custom_fields?.in_storage,
     )
     .reduce((sum, item) => sum + item.bulk, 0);
 });
@@ -132,6 +132,6 @@ const storedItems = computed(() => itemLists.value.stored);
 const activeConsumables = computed(() => itemLists.value.activeConsumables);
 
 const showEditSection = computed(
-  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER"
+  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER",
 );
 </script>

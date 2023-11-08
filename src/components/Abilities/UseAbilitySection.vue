@@ -25,8 +25,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility } from "vennt-library";
-import { defaultDice } from "@/utils/diceUtils";
+import { defaultDice, type FullEntityAbility } from "vennt-library";
 import { computed } from "vue";
 import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
 import UseAbilityButton from "./UseAbilityButton.vue";
@@ -42,17 +41,18 @@ const castingDice = computed(() => {
     return false;
   }
   return defaultDice(
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     "casting",
     diceStore.defaultDiceSettings,
     entityStore.diceToggles,
-    diceComment.value
+    diceComment.value,
   );
 });
 const showUseButton = computed(
   () =>
-    (props.ability.custom_fields?.cost &&
+    ((props.ability.custom_fields?.cost &&
       !props.ability.custom_fields.cost.passive) ||
-    props.ability.uses?.heal
+      props.ability.uses?.heal) &&
+    !props.ability.uses?.hide_default_use_button,
 );
 </script>

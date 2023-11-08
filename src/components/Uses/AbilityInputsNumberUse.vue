@@ -20,10 +20,13 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import type { FullEntityAbility, UseNumberInput } from "vennt-library";
+import {
+  solveEquation,
+  type FullEntityAbility,
+  type UseNumberInput,
+} from "vennt-library";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
-import { solveEquation } from "@/utils/attributeUtils";
 
 const props = defineProps<{
   ability: FullEntityAbility;
@@ -47,7 +50,7 @@ const saveButtonDisabled = computed(() => defaultState.value === state.input);
 
 const solveVal = (val?: string | number) => {
   return typeof val === "string"
-    ? solveEquation(val, entityStore.entityAttributes)
+    ? solveEquation(val, entityStore.computedAttributes)
     : val;
 };
 

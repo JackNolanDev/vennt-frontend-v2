@@ -28,8 +28,7 @@
 
 <script setup lang="ts">
 import { useCogCreateStore } from "@/stores/cogCreate";
-import { solveEquation } from "@/utils/attributeUtils";
-import type { HTMLString } from "vennt-library";
+import { solveEquation, type HTMLString } from "vennt-library";
 import {
   cogAbilityMap,
   type CogAbilityCategory,
@@ -53,12 +52,12 @@ const options = computed(() => {
       acc[ability.name] = markdown;
       return acc;
     },
-    {}
+    {},
   );
 });
 
 const selected = computed(
-  () => cogCreateStore.options.abilitySelection[props.category.name] ?? ""
+  () => cogCreateStore.options.abilitySelection[props.category.name] ?? "",
 );
 const selectedCogAbility = computed(() => {
   return cogAbilityMap[selected.value];
@@ -67,7 +66,7 @@ const showVariableCostInput = computed(() => {
   return selectedCogAbility.value?.cost?.toString().includes("X");
 });
 const variableCostInputId = computed(
-  () => `${stringToLinkID(props.category.name)}-cost-input`
+  () => `${stringToLinkID(props.category.name)}-cost-input`,
 );
 const selectedMaxCost = computed(() => {
   const maxCost = selectedCogAbility.value?.maxCost ?? 100;
@@ -91,7 +90,7 @@ const disabledOptions = computed(() => {
   return abilities
     .filter(
       (ability) =>
-        cogAbilityCost(ability, cogCreateStore.options) > unselectedAP
+        cogAbilityCost(ability, cogCreateStore.options) > unselectedAP,
     )
     .map((ability) => ability.name);
 });

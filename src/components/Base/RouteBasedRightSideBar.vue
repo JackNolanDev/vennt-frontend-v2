@@ -19,12 +19,12 @@ const props = defineProps<{ routeKey?: string; queryParams?: string[] }>();
 const query = computed(
   () =>
     props.queryParams &&
-    props.queryParams.some((key) => router.currentRoute.value.query[key])
+    props.queryParams.some((key) => router.currentRoute.value.query[key]),
 );
 const exitRoute = computed(() => {
   if (query.value) {
     const removeKey = Object.keys(router.currentRoute.value.query).find(
-      (key) => props.queryParams && props.queryParams.includes(key)
+      (key) => props.queryParams && props.queryParams.includes(key),
     );
     if (removeKey) {
       const query = { ...router.currentRoute.value.query };

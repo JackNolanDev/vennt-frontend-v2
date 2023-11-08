@@ -12,10 +12,10 @@ const props = withDefaults(
   defineProps<{ dice: string; text?: string; commandPrefix?: boolean }>(),
   {
     text: "Roll command",
-  }
+  },
 );
 
 const command = computed(
-  () => `${props.commandPrefix ? "/roll" : ""} ${props.dice}`
+  () => `${props.commandPrefix ? "/roll" : ""} ${props.dice}`,
 );
 </script>

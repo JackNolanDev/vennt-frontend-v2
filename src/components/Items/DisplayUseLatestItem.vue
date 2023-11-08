@@ -22,7 +22,7 @@ const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
 
 const itemNewVersion = computed(() =>
-  findNewItemVersion(props.item, jsonStorage.shopItems)
+  findNewItemVersion(props.item, jsonStorage.shopItems),
 );
 
 const updateItems = () => {

@@ -39,7 +39,7 @@
         ><template #title
           ><p class="mt-8 mb-8 ml-8 mr-8">
             <strong>Roll to decrease Recovery Shock</strong><br />(Current
-            value: {{ entityStore.entityAttributes.recovery_shock?.val }})
+            value: {{ entityStore.computedAttributes.recovery_shock?.val }})
           </p></template
         ></RollDiceInput
       >
@@ -109,18 +109,18 @@ import { computed, reactive } from "vue";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { handleEndTimePeriod } from "@/utils/combatUtils";
 import BaseCheckBox from "../Base/BaseCheckBox.vue";
-import { buildDice } from "vennt-library";
+import {
+  ATTRIBUTE_DAMAGES,
+  attrShortName,
+  buildDice,
+  getMaxAttr,
+} from "vennt-library";
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import RollDiceInput from "../Dice/RollDiceInput.vue";
 import type { EntityAttribute, PartialEntityAttributes } from "vennt-library";
 import { numberFieldVal } from "@/utils/inputType";
-import {
-  ATTRIBUTE_DAMAGES,
-  getMaxAttr,
-  attrShortName,
-  adjustAttrsAPI,
-} from "@/utils/attributeUtils";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
 
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
@@ -135,17 +135,17 @@ const state = reactive(defaultState());
 
 const showPayUsingHeroPointToggle = computed(
   () =>
-    state.isRecoveryRest && (entityStore.entityAttributes.hero?.val ?? 0) > 0
+    state.isRecoveryRest && (entityStore.computedAttributes.hero?.val ?? 0) > 0,
 );
 const showRecoveryShockDiceSection = computed(
-  () => (entityStore.entityAttributes.recovery_shock?.val ?? 0) > 0
+  () => (entityStore.computedAttributes.recovery_shock?.val ?? 0) > 0,
 );
 const showRecoveryDiceSection = computed(() => state.isRecoveryRest);
 const recoveryShockDice = computed(() =>
-  buildDice(1, 6, 0, diceStore.defaultDiceSettings)
+  buildDice(1, 6, 0, diceStore.defaultDiceSettings),
 );
 const recoveryDice = computed(() => {
-  const num = Math.max(entityStore.entityAttributes.str?.val ?? 1, 1);
+  const num = Math.max(entityStore.computedAttributes.str?.val ?? 1, 1);
   return buildDice(num, 6, 0, diceStore.defaultDiceSettings);
 });
 const adjustAttrs = computed(() => {
@@ -155,7 +155,7 @@ const adjustAttrs = computed(() => {
   if (showRecoveryShockDiceSection.value) {
     const recoveryShockResult = Math.min(
       numberFieldVal(state.recoveryShockRoll),
-      entityStore.entityAttributes.recovery_shock?.val ?? 0
+      entityStore.computedAttributes.recovery_shock?.val ?? 0,
     );
     if (recoveryShockResult > 0) {
       attrs.recovery_shock = -recoveryShockResult;
@@ -182,8 +182,8 @@ const adjustAttrs = computed(() => {
     const applyToAttrs = (attr: "vim" | "mp" | "hp", val: number) => {
       const heal = Math.min(
         val,
-        (entityStore.entityAttributes[getMaxAttr(attr)!]?.val ?? 0) -
-          (entityStore.entityAttributes[attr]?.val ?? 0)
+        (entityStore.computedAttributes[getMaxAttr(attr)!]?.val ?? 0) -
+          (entityStore.computedAttributes[attr]?.val ?? 0),
       );
       if (heal > 0) {
         attrs[attr] = heal;
@@ -197,7 +197,7 @@ const adjustAttrs = computed(() => {
 
   // 3. Attribute Damage
   ATTRIBUTE_DAMAGES.forEach((attr) => {
-    const damageVal = entityStore.entityAttributes[attr]?.val;
+    const damageVal = entityStore.computedAttributes[attr]?.val;
     if (damageVal && damageVal > 0) {
       attrs[attr] = -1;
     }
@@ -218,14 +218,14 @@ const restButton = () => {
     state.isRecoveryRest && state.useHeroPoint && state.restingDuringRespite;
   adjustAttrsAPI(
     entityStore.entity,
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     adjustAttrs.value,
     {
       msg: `${state.isRecoveryRest ? "Recovery " : ""}Rest${
         restingDuringRespite ? " (during Respite)" : ""
       }`,
       enforceMaximums: true,
-    }
+    },
   );
   let period: "rest" | "encounter" = "rest";
   if (restingDuringRespite) {

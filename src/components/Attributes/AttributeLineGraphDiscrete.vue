@@ -4,9 +4,8 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import { attrShortName, getMaxAttr } from "@/utils/attributeUtils";
 import { entityColor } from "@/utils/entityUtils";
-import type { EntityAttribute } from "vennt-library";
+import { type EntityAttribute, attrShortName, getMaxAttr } from "vennt-library";
 import {
   Filler,
   type ChartData,
@@ -34,7 +33,7 @@ Chart.register(
   LineElement,
   CategoryScale,
   LinearScale,
-  Filler
+  Filler,
 );
 
 const props = defineProps<{
@@ -47,7 +46,7 @@ const data = computed((): ChartData<"line", (number | Point | null)[]> => {
   const changelog = entityStore.changelogs[props.attr]?.changelog ?? [];
   const changelogValues = changelog
     .map((el) => el.prev ?? null)
-    .concat([entityStore.entityAttributes[props.attr]?.base ?? null]);
+    .concat([entityStore.computedAttributes[props.attr]?.base ?? null]);
   const color = entityColor(entityStore.entity?.entity);
   const datasets: ChartDataset<"line", (number | Point | null)[]>[] = [
     {
@@ -62,7 +61,7 @@ const data = computed((): ChartData<"line", (number | Point | null)[]> => {
   ];
 
   if (maxAttr.value) {
-    const val = entityStore.entityAttributes[maxAttr.value]?.val;
+    const val = entityStore.computedAttributes[maxAttr.value]?.val;
     if (val) {
       const maxData = Array(changelogValues.length).fill(null);
       maxData[0] = val;
@@ -80,7 +79,7 @@ const data = computed((): ChartData<"line", (number | Point | null)[]> => {
 
   return {
     labels: changelogValues.map(
-      (_val, idx) => idx - changelogValues.length + 1
+      (_val, idx) => idx - changelogValues.length + 1,
     ),
     datasets,
   };

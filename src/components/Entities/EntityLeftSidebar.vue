@@ -4,7 +4,7 @@
       <CombatStats
         v-if="entityStore.entity"
         :entity="entityStore.entity"
-        :entity-attrs="entityStore.entityAttributes"
+        :entity-attrs="entityStore.computedAttributes"
         :use-copyable-dice="true"
         :show-items="showItems"
       ></CombatStats>

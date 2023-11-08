@@ -113,13 +113,13 @@ watch(
         console.log(`Couldn't find element: ${hash}`);
       }
     }, 50);
-  }
+  },
 );
 
 const pathAndAbilities = computed(() => {
   const path = jsonStorage.abilities.paths.find(
     (path) =>
-      stringToLinkID(path.name) === router.currentRoute.value.params.path
+      stringToLinkID(path.name) === router.currentRoute.value.params.path,
   );
 
   if (!path) {
@@ -128,13 +128,13 @@ const pathAndAbilities = computed(() => {
 
   let abilities: Array<EntityAbility & { entityAbility?: FullEntityAbility }> =
     jsonStorage.abilities.abilities.filter(
-      (ability) => ability.custom_fields?.path === path.name
+      (ability) => ability.custom_fields?.path === path.name,
     );
 
   if (entityStore.entity) {
     abilities = abilities.map((ability) => {
       const found = entityStore.entity?.abilities.find(
-        (owned) => owned.name === ability.name
+        (owned) => owned.name === ability.name,
       );
       if (found) {
         ability.entityAbility = found;
@@ -148,7 +148,7 @@ const pathAndAbilities = computed(() => {
 
 const copyLink = (ability: EntityAbility) =>
   `${window.location.origin}${router.currentRoute.value.path}#${stringToLinkID(
-    ability.name
+    ability.name,
   )}`;
 </script>
 

@@ -13,14 +13,14 @@
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import { computed, reactive } from "vue";
-import { titleText } from "@/utils/textUtils";
+import { titleText } from "vennt-library";
 import BaseStealthTextEditor from "../Base/BaseStealthTextEditor.vue";
 
 const entityStore = useEntityStore();
 const state = reactive({ desc: entityStore.description });
 
 const placeholder = computed(
-  () => `${titleText(entityStore.entity?.entity.type ?? "")} Description`
+  () => `${titleText(entityStore.entity?.entity.type ?? "")} Description`,
 );
 
 const save = () => {

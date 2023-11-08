@@ -28,6 +28,7 @@
 import {
   ATTRIBUTES,
   type BaseEntityAttribute,
+  type ComputedAttributes,
   type UpdatedEntityAttributes,
 } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
@@ -36,7 +37,7 @@ interface AttributeSelectionProps {
   selected: BaseEntityAttribute[];
   maxChoices: number;
   disabledChoices?: BaseEntityAttribute[];
-  attrs?: UpdatedEntityAttributes;
+  attrs?: UpdatedEntityAttributes | ComputedAttributes;
 }
 
 const props = defineProps<AttributeSelectionProps>();

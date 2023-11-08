@@ -64,11 +64,11 @@ jsonStorage.fetchWeaponTypes();
 
 const showItemUses = computed(() => !props.item.custom_fields?.in_storage);
 const shopItem = computed(() =>
-  findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes)
+  findShopItem(props.item, jsonStorage.shopItems, jsonStorage.weaponTypes),
 );
 const shopValue = computed(() => shopItem.value && shopItem.value.sp);
 const sellValue = computed(
-  () => shopValue.value && Math.floor(shopValue.value / 2)
+  () => shopValue.value && Math.floor(shopValue.value / 2),
 );
 
 const deleteItem = () => {
@@ -80,9 +80,9 @@ const sellItem = () => {
   }
   adjustAttrsAPI(
     entityStore.entity,
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     { sp: sellValue.value },
-    { msg: prefixName(props.item.name, "Sold", false) }
+    { msg: prefixName(props.item.name, "Sold", false) },
   );
   entityStore.deleteItem(props.item, true);
 };

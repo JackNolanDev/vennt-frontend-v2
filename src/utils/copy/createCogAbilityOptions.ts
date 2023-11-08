@@ -1397,7 +1397,7 @@ export const cogAbilityList = cogAbilityOptions.reduce<CogAbility[]>(
     }, []);
     return acc.concat(abilities);
   },
-  []
+  [],
 );
 
 export const cogAbilityMap = cogAbilityList.reduce<Record<string, CogAbility>>(
@@ -1405,5 +1405,5 @@ export const cogAbilityMap = cogAbilityList.reduce<Record<string, CogAbility>>(
     acc[ability.name] = ability;
     return acc;
   },
-  {}
+  {},
 );

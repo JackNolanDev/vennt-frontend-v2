@@ -32,7 +32,7 @@ export const useCampaignStore = defineStore("campaign", {
       const { accountInfo } = useAccountInfoStore();
       if (accountInfo) {
         const campaignMember = this.details?.members.find(
-          (member) => member.account_id === accountInfo.id
+          (member) => member.account_id === accountInfo.id,
         );
         if (campaignMember) {
           return campaignMember.role;
@@ -70,7 +70,7 @@ export const useCampaignStore = defineStore("campaign", {
       }
       const addedEntity = await addCampaignEntityApi(
         this.details.campaign.id,
-        request
+        request,
       );
       this.details.entities.push(addedEntity);
     },
@@ -79,7 +79,7 @@ export const useCampaignStore = defineStore("campaign", {
         return;
       }
       this.details.entities = this.details.entities.filter(
-        (entity) => entity.entity_id !== entityId
+        (entity) => entity.entity_id !== entityId,
       );
       await removeCampaignEntityApi(this.details.campaign.id, entityId);
     },
@@ -96,7 +96,7 @@ export const useCampaignStore = defineStore("campaign", {
     async adminDeleteInvite(inviteId: string) {
       if (this.details?.invites) {
         this.details.invites = this.details.invites.filter(
-          (invite) => invite.id !== inviteId
+          (invite) => invite.id !== inviteId,
         );
       }
       await declineCampaignInviteApi(inviteId);

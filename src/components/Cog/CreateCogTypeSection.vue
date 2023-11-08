@@ -32,12 +32,11 @@
 
 <script setup lang="ts">
 import { useCogCreateStore } from "@/stores/cogCreate";
-import { COG_ATTRIBUTE_LEVELS } from "vennt-library";
+import { COG_ATTRIBUTE_LEVELS, attrShortName } from "vennt-library";
 import { cogTypeOptions } from "@/utils/copy/createCogTypeOptions";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
 import { ATTRIBUTES, type BaseEntityAttribute } from "vennt-library";
-import { attrShortName } from "@/utils/attributeUtils";
 
 const cogCreateStore = useCogCreateStore();
 

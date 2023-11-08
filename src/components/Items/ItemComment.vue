@@ -23,7 +23,7 @@ watch(
   () => props.item.id,
   () => {
     state.comment = props.item.comment ?? "";
-  }
+  },
 );
 
 const save = () => {

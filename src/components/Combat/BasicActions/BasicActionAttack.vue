@@ -33,8 +33,8 @@ const useableWeapons = computed(() =>
       (item) =>
         !item.custom_fields?.in_storage &&
         item.type === "weapon" &&
-        (item.active || item.custom_fields?.category === "Grenade")
+        (item.active || item.custom_fields?.category === "Grenade"),
     )
-    .concat(jsonStorage.defaultWeapons)
+    .concat(jsonStorage.defaultWeapons),
 );
 </script>

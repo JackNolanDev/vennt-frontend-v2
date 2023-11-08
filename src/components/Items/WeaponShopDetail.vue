@@ -23,11 +23,11 @@
     ></BaseInlineTextEditor>
     <BaseButton
       v-if="
-        typeof entityStore.entityAttributes.sp?.val === 'number' &&
+        typeof entityStore.computedAttributes.sp?.val === 'number' &&
         typeof item.sp === 'number'
       "
       :disabled="
-        buttonsDisabled || entityStore.entityAttributes.sp.val < item.sp
+        buttonsDisabled || entityStore.computedAttributes.sp.val < item.sp
       "
       @click="buyItem"
       class="primary wide mb-8"
@@ -46,11 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  itemValidator,
-  type EntityItem,
-  type ShopItem,
-} from "vennt-library";
+import { itemValidator, type EntityItem, type ShopItem } from "vennt-library";
 import DisplayShopItem from "./DisplayShopItem.vue";
 import { prefixName } from "@/utils/textUtils";
 import { computed, reactive } from "vue";
@@ -69,14 +65,14 @@ const newItem = computed(
   (): EntityItem => ({
     ...shopItemToEntityItem(
       props.item,
-      shopItemActive(props.item, entityStore.entity)
+      shopItemActive(props.item, entityStore.entity),
     ),
     name: state.weaponName,
     desc: state.weaponDesc || props.item.desc,
-  })
+  }),
 );
 const buttonsDisabled = computed(
-  () => !itemValidator.safeParse(newItem.value).success
+  () => !itemValidator.safeParse(newItem.value).success,
 );
 
 const addItem = () => {
@@ -88,9 +84,9 @@ const buyItem = () => {
   if (entityStore.entity && props.item.sp) {
     adjustAttrsAPI(
       entityStore.entity,
-      entityStore.entityAttributes,
+      entityStore.computedAttributes,
       { sp: -props.item.sp },
-      { msg: `Purchased "${state.weaponName}"` }
+      { msg: `Purchased "${state.weaponName}"` },
     );
   }
   addItem();

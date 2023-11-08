@@ -64,7 +64,7 @@ const toggleHeroicCreativityBonus = () => {
     diceStore.defaultDiceSettings.heroic_creativity_bonus = 0;
   } else {
     diceStore.defaultDiceSettings.heroic_creativity_bonus =
-      entityStore.entityAttributes.heroic_creativity_bonus?.val ?? 3;
+      entityStore.computedAttributes.heroic_creativity_bonus?.val ?? 3;
   }
 };
 </script>

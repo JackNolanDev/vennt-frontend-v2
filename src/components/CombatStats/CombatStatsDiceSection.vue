@@ -47,13 +47,14 @@
 <script setup lang="ts">
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { useDiceStore } from "@/stores/dice";
-import { attrFullName, attrShortName } from "@/utils/attributeUtils";
 import {
   ATTRIBUTES_SET,
+  defaultDice,
+  type ComputedAttributes,
   type EntityAttribute,
-  type UpdatedEntityAttributes,
+  attrFullName,
+  attrShortName,
 } from "vennt-library";
-import { defaultDice } from "@/utils/diceUtils";
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import DiceRender from "../Dice/DiceRender.vue";
@@ -61,7 +62,7 @@ import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable
 import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{
-  attrs: UpdatedEntityAttributes;
+  attrs: ComputedAttributes;
   attr: EntityAttribute;
   useCopyableDice: boolean;
 }>();
@@ -73,7 +74,7 @@ const isBaseAttribute = computed(() => {
 });
 const attrLink = computed(() => {
   return `https://vennt.fandom.com/wiki/${attrFullName(
-    props.attr
+    props.attr,
   )}_(${props.attr.toUpperCase()})`;
 });
 const attrDisplayVal = computed(() => {
@@ -89,7 +90,7 @@ const computedDice = computed(() => {
     props.attr,
     diceStore.defaultDiceSettings,
     entityStore.diceToggles,
-    `${attrShortName(props.attr)} check`
+    `${attrShortName(props.attr)} check`,
   );
 });
 

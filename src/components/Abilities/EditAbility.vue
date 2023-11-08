@@ -5,6 +5,7 @@
     <label for="new-ability-name" class="labelText">Name:</label>
     <input
       type="text"
+      autocomplete="off"
       v-model="state.name"
       placeholder="Magic Boom"
       title="Enter the name of your ability"
@@ -320,7 +321,7 @@ const newAbility = computed((): UncompleteEntityAbility => {
   return ability;
 });
 const buttonDisabled = computed(
-  () => !abilityValidator.safeParse(newAbility.value).success
+  () => !abilityValidator.safeParse(newAbility.value).success,
 );
 const addAbilityButton = () => {
   if (props.givenAbility) {

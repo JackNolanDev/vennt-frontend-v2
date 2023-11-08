@@ -68,7 +68,7 @@ export const ATTR_RESET_ON_GIFT_SELECTION: (keyof AttributeSelections)[] = [
 
 export const giftMatchesAttr = (
   gift: CharacterGift | undefined,
-  attr: BaseEntityAttribute
+  attr: BaseEntityAttribute,
 ): boolean => {
   return !gift ? false : GIFT_TO_ATTR_MAP[gift] === attr;
 };
@@ -78,7 +78,7 @@ export type AttributeSelectionOptionsDetails = {
     max: number | ((options: CharacterCreateOptions) => number);
     filterLists?: (keyof AttributeSelections)[];
     disabledGenerator?: (
-      options: CharacterCreateOptions
+      options: CharacterCreateOptions,
     ) => BaseEntityAttribute[];
     diff?: number; // defaults to 1
   };
@@ -209,7 +209,7 @@ const guildRankAbilityMap: Record<string, UncompleteEntityAbility> = {
 
 export const calculateAttribute = (
   options: CharacterCreateOptions,
-  attr: BaseEntityAttribute
+  attr: BaseEntityAttribute,
 ): number => {
   let sum = 0;
   if (giftMatchesAttr(options.gift, attr)) {
@@ -224,7 +224,7 @@ export const calculateAttribute = (
         }
         sum += diff;
       }
-    }
+    },
   );
   return sum;
 };
@@ -246,7 +246,7 @@ export const DEFAULT_HERO = 3;
 export const DEFAULT_HERO_MAX = 9;
 
 export const calculateItems = (
-  options: CharacterCreateOptions
+  options: CharacterCreateOptions,
 ): UncompleteEntityItem[] => {
   const jsonStore = useJsonStore();
   if (jsonStore.shopItems === undefined) {
@@ -270,7 +270,7 @@ export const calculateItems = (
         "Tasty Water",
         "Tasty Water",
         "Frying Pan",
-        "Cooking Kit"
+        "Cooking Kit",
       );
       break;
     case "dungeoneer":
@@ -281,7 +281,7 @@ export const calculateItems = (
         "Rope",
         "Sounding Stones",
         "Lux Ward",
-        "Lantern"
+        "Lantern",
       );
       break;
     case "merchant":
@@ -293,7 +293,7 @@ export const calculateItems = (
         // TODO: let user choose between coffee and alcohol
         "Coffee",
         "Coffee",
-        "Coffee"
+        "Coffee",
       );
       break;
     case "medic":
@@ -305,7 +305,7 @@ export const calculateItems = (
         "Healing Salve",
         "Godfire",
         "Sour Blessing",
-        "Elixir of Life*"
+        "Elixir of Life*",
       );
       break;
     case "scientist":
@@ -314,7 +314,7 @@ export const calculateItems = (
         "Elixir of Focus*",
         "Compass",
         "Writing Kit",
-        "Lantern, Bullseye"
+        "Lantern, Bullseye",
       );
       break;
     case "traveler":
@@ -327,7 +327,7 @@ export const calculateItems = (
         "Rations",
         "Rations",
         "Rations",
-        "Rations"
+        "Rations",
       );
       break;
   }
@@ -342,7 +342,7 @@ export const calculateItems = (
 };
 
 export const calculateAbilities = (
-  options: CharacterCreateOptions
+  options: CharacterCreateOptions,
 ): UncompleteEntityAbility[] => {
   const abilities: UncompleteEntityAbility[] = [];
 

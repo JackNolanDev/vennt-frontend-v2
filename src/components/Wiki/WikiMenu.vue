@@ -44,6 +44,6 @@ const props = defineProps<{ path: string }>();
 const jsonStorage = useJsonStore();
 
 const children = computed(() =>
-  sortWikiPaths(jsonStorage.pathGraph.adjacent(props.path))
+  sortWikiPaths(jsonStorage.pathGraph.adjacent(props.path)),
 );
 </script>

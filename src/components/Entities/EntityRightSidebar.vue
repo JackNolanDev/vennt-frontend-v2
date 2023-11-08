@@ -10,7 +10,7 @@
   <AbilityDetails
     v-else-if="entityAbility"
     :ability="entityAbility"
-    :attrs="entityStore.entityAttributes"
+    :attrs="entityStore.computedAttributes"
   ></AbilityDetails>
   <AbilitySearchDetails
     v-else-if="searchAbility"
@@ -47,66 +47,66 @@ const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();
 
 const isUUID = computed(
-  () => idValidator.safeParse(router.currentRoute.value.params.detail).success
+  () => idValidator.safeParse(router.currentRoute.value.params.detail).success,
 );
 
 const showNewItem = computed(
-  () => router.currentRoute.value.query.new === "item"
+  () => router.currentRoute.value.query.new === "item",
 );
 const showNewAbility = computed(
-  () => router.currentRoute.value.query.new === "ability"
+  () => router.currentRoute.value.query.new === "ability",
 );
 const damageCalculator = computed(
-  () => router.currentRoute.value.params.detail === "damage"
+  () => router.currentRoute.value.params.detail === "damage",
 );
 const assistCombat = computed(
-  () => router.currentRoute.value.params.detail === "assist"
+  () => router.currentRoute.value.params.detail === "assist",
 );
 const attackCombat = computed(
-  () => router.currentRoute.value.params.detail === "attack"
+  () => router.currentRoute.value.params.detail === "attack",
 );
 const delayCombat = computed(
-  () => router.currentRoute.value.params.detail === "delay"
+  () => router.currentRoute.value.params.detail === "delay",
 );
 const moveCombat = computed(
-  () => router.currentRoute.value.params.detail === "move"
+  () => router.currentRoute.value.params.detail === "move",
 );
 const entityItem = computed(() =>
   isUUID.value
     ? entityStore.consolidatedItems.find(
-        (item) => item.id === router.currentRoute.value.params.detail
+        (item) => item.id === router.currentRoute.value.params.detail,
       )
     : jsonStorage.defaultWeapons.find(
-        (weapon) => weapon.id === router.currentRoute.value.params.detail
-      )
+        (weapon) => weapon.id === router.currentRoute.value.params.detail,
+      ),
 );
 const shopItem = computed(
   () =>
     !isUUID.value &&
     router.currentRoute.value.name === ENTITY_ITEM_SHOP_ROUTE &&
     jsonStorage.shopItems.find(
-      (item) => item.name === router.currentRoute.value.params.detail
-    )
+      (item) => item.name === router.currentRoute.value.params.detail,
+    ),
 );
 const weaponType = computed(
   () =>
     !isUUID.value &&
     jsonStorage.weaponTypes.find(
-      (item) => item.category === router.currentRoute.value.params.detail
-    )
+      (item) => item.category === router.currentRoute.value.params.detail,
+    ),
 );
 const entityAbility = computed(
   () =>
     isUUID.value &&
     entityStore.entity?.abilities.find(
-      (ability) => ability.id === router.currentRoute.value.params.detail
-    )
+      (ability) => ability.id === router.currentRoute.value.params.detail,
+    ),
 );
 const searchAbility = computed(
   () =>
     !isUUID.value &&
     jsonStorage.abilities.abilities.find(
-      (ability) => ability.name === router.currentRoute.value.params.detail
-    )
+      (ability) => ability.name === router.currentRoute.value.params.detail,
+    ),
 );
 </script>

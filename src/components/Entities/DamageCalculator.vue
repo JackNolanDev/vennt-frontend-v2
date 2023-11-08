@@ -78,10 +78,11 @@
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
-import { adjustAttrsAPI, attrShortName } from "@/utils/attributeUtils";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import {
   DamageType,
   NORMAL_DAMAGES,
+  attrShortName,
   type AttackDetails,
   type AttackResponse,
 } from "vennt-library";
@@ -120,48 +121,48 @@ const defaultState = (): CalculatorState => ({
 const state = reactive<CalculatorState>(defaultState());
 const entityStore = useEntityStore();
 
-const alerts = computed(() => entityStore.entityAttributes.alerts?.val);
+const alerts = computed(() => entityStore.computedAttributes.alerts?.val);
 const hasDodge = computed(() => entityStore.abilityNames.includes("Dodge"));
 const canDodge = computed(
   () =>
-    entityStore.entityAttributes.vim &&
-    entityStore.entityAttributes.vim.val * 10 >=
+    entityStore.computedAttributes.vim &&
+    entityStore.computedAttributes.vim.val * 10 >=
       (typeof state.attack.accuracy === "number"
         ? state.attack.accuracy
         : parseInt(state.attack.accuracy)) &&
     (!entityStore.inCombat ||
-      (entityStore.entityAttributes.reactions?.val ?? 0) > 0)
+      (entityStore.computedAttributes.reactions?.val ?? 0) > 0),
 );
 const hasBlock = computed(() => entityStore.abilityNames.includes("Block"));
 const canBlock = computed(
   () =>
     !(canDodge.value && state.useDodge) &&
     state.attack.damages.some((detail) =>
-      NORMAL_DAMAGES.includes(detail.type)
+      NORMAL_DAMAGES.includes(detail.type),
     ) &&
     (!entityStore.inCombat ||
-      (entityStore.entityAttributes.reactions?.val ?? 0) > 0)
+      (entityStore.computedAttributes.reactions?.val ?? 0) > 0),
 );
 const hasShieldBlock = computed(() =>
-  entityStore.abilityNames.includes("Shield Block")
+  entityStore.abilityNames.includes("Shield Block"),
 );
 const hasImprovedShieldBlock = computed(() =>
-  entityStore.abilityNames.includes("Improved Shield Block")
+  entityStore.abilityNames.includes("Improved Shield Block"),
 );
 const hasEnhancedBlock = computed(() =>
-  entityStore.abilityNames.includes("Enhanced Block")
+  entityStore.abilityNames.includes("Enhanced Block"),
 );
 const hasShieldMastery = computed(() =>
-  entityStore.abilityNames.includes("Shield Mastery")
+  entityStore.abilityNames.includes("Shield Mastery"),
 );
 const hasDiamondBlock = computed(() =>
-  entityStore.abilityNames.includes("Diamond Block")
+  entityStore.abilityNames.includes("Diamond Block"),
 );
 const hasNotAScratch = computed(() =>
-  entityStore.abilityNames.includes("Not A Scratch")
+  entityStore.abilityNames.includes("Not A Scratch"),
 );
 const canUseAlerts = computed(() =>
-  state.attack.damages.some((detail) => NORMAL_DAMAGES.includes(detail.type))
+  state.attack.damages.some((detail) => NORMAL_DAMAGES.includes(detail.type)),
 );
 const calculatorResult = computed(() => {
   const attackResponse: AttackResponse = {
@@ -180,13 +181,13 @@ const calculatorResult = computed(() => {
   return handleDamageCalculator(
     state.attack,
     attackResponse,
-    entityStore.entityAttributes
+    entityStore.computedAttributes,
   );
 });
 const hpDamage = computed(() =>
   calculatorResult.value.adjustAttrs.hp
     ? -calculatorResult.value.adjustAttrs.hp
-    : 0
+    : 0,
 );
 
 const applyResult = () => {
@@ -201,11 +202,11 @@ const applyResult = () => {
   }
   adjustAttrsAPI(
     entityStore.entity,
-    entityStore.entityAttributes,
+    entityStore.computedAttributes,
     calculatorResult.value.adjustAttrs,
     {
       msg: `${mainAction} ${state.attack.damages[0].type} attack for ${state.attack.damages[0].damage} damage`,
-    }
+    },
   );
 
   const attacksNumber = numberFieldVal(state.attack.numberOfAttacks ?? 0);

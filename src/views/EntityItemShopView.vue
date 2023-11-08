@@ -107,7 +107,7 @@ const sectionsMap = computed(() => {
           item.desc
             .toLowerCase()
             .includes(state.itemSearchField.toLowerCase())) &&
-        (state.checked.size === 0 || state.checked.has(item.type))
+        (state.checked.size === 0 || state.checked.has(item.type)),
     )
     .forEach((item) => {
       if (item.section === undefined) {

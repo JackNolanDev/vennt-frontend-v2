@@ -147,7 +147,7 @@ cogCreateStore.loadFromEntityId(id);
 const createCog = () => {
   const cog = entityCreationFullyHealed(
     cogCreateStore.collectedCog,
-    cogCreateStore.cogAttrs
+    cogCreateStore.cogAttrs,
   );
   entityStore.addCollectedEntity(cog, {
     redirectName: ENTITY_ROUTE,

@@ -88,7 +88,7 @@ onBeforeMount(() => {
 
 const entitiesForAccount = (accountId: string): CampaignEntity[] =>
   campaignStore.details?.entities.filter(
-    (entity) => entity.owner === accountId
+    (entity) => entity.owner === accountId,
   ) ?? [];
 const saveCampaignDesc = () => {
   campaignStore.putCampaignDesc({ desc: state.desc });

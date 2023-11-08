@@ -1,9 +1,9 @@
-import { entityAttributesMap } from "@/utils/attributeUtils";
-import type {
-  UncompleteCollectedEntityWithChangelog,
-  UncompleteEntityFlux,
-  UncompleteEntityText,
-  UpdatedEntityAttributes,
+import {
+  computeAttributes,
+  type ComputedAttributes,
+  type UncompleteCollectedEntityWithChangelog,
+  type UncompleteEntityFlux,
+  type UncompleteEntityText,
 } from "vennt-library";
 import {
   calculateAttribute,
@@ -137,8 +137,8 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
         flux,
       };
     },
-    characterAttrs(): UpdatedEntityAttributes {
-      return entityAttributesMap(this.collectedCharacter);
+    characterAttrs(): ComputedAttributes {
+      return computeAttributes(this.collectedCharacter);
     },
   },
   actions: {
@@ -156,7 +156,7 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     saveToLocalStorage() {
       localStorage.setItem(
         CREATE_CHARACTER_LOCAL_STORAGE,
-        JSON.stringify(this.options)
+        JSON.stringify(this.options),
       );
     },
     clearCharacter() {

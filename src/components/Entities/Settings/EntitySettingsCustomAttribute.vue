@@ -47,9 +47,12 @@
 
 <script setup lang="ts">
 import ConfirmationModal from "@/components/Base/ConfirmationModal.vue";
-import { attributeNameValidator, attributeValValidator } from "vennt-library";
+import {
+  attributeNameValidator,
+  attributeValValidator,
+  attrFullName,
+} from "vennt-library";
 import { fieldValidator } from "@/utils/inputType";
-import { attrFullName } from "@/utils/attributeUtils";
 import { computed, reactive } from "vue";
 import { useEntityStore } from "@/stores/entity";
 
@@ -72,8 +75,8 @@ const creationDisabled = computed(() =>
     attrInvalid.value ||
       state.attr === "" ||
       valInvalid.value ||
-      typeof state.val === "string"
-  )
+      typeof state.val === "string",
+  ),
 );
 
 const saveAttr = async () => {

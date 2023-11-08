@@ -42,13 +42,13 @@ const relevantToggles = computed(() => {
       ) {
         const toggled = Boolean(
           (diceStore.defaultDiceSettings.otherToggles ?? {})[key]?.toggled ||
-            toggle.default
+            toggle.default,
         );
         acc.push({ ...toggle, name: key, toggled });
       }
       return acc;
     },
-    []
+    [],
   );
 });
 

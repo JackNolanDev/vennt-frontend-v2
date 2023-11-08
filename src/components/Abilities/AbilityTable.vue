@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
-import type { FullEntityAbility, UpdatedEntityAttributes } from "vennt-library";
+import type { ComputedAttributes, FullEntityAbility } from "vennt-library";
 import { stringToLinkID } from "@/utils/textUtils";
 import type { RouteLocationRaw } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
@@ -74,7 +74,7 @@ import { computed, reactive } from "vue";
 
 const props = defineProps<{
   abilities: FullEntityAbility[];
-  attrs?: UpdatedEntityAttributes;
+  attrs?: ComputedAttributes;
   searchId?: string;
 }>();
 
@@ -86,7 +86,7 @@ const filteredAbilities = computed(() => {
   }
   const searchStr = state.search.toLowerCase();
   return props.abilities.filter((ability) =>
-    ability.name.toLowerCase().includes(searchStr)
+    ability.name.toLowerCase().includes(searchStr),
   );
 });
 

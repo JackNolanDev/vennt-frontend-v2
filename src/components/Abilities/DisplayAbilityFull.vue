@@ -28,7 +28,7 @@
 import router, { WIKI_PATHS_ROUTE, WIKI_PATHS_SPECIFIC_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
-import type { EntityAbility, UpdatedEntityAttributes } from "vennt-library";
+import type { ComputedAttributes, EntityAbility } from "vennt-library";
 import { stringToLinkID } from "@/utils/textUtils";
 import { computed } from "vue";
 import type { RouteLocationRaw } from "vue-router";
@@ -37,7 +37,7 @@ import DisplayAbilityUseCost from "./DisplayAbilityUseCost.vue";
 
 const props = defineProps<{
   ability: EntityAbility;
-  attrs?: UpdatedEntityAttributes;
+  attrs?: ComputedAttributes;
   hiddenFields?: {
     path?: boolean;
     effect?: boolean;
@@ -50,13 +50,13 @@ const pathIsLink = computed(() => {
   return (
     props.ability.custom_fields?.path &&
     jsonStorage.abilities.paths.some(
-      (path) => path.name === props.ability.custom_fields?.path
+      (path) => path.name === props.ability.custom_fields?.path,
     )
   );
 });
 const pathLink = computed((): RouteLocationRaw => {
   const pathAbility = jsonStorage.abilities.abilities.find(
-    (pathAbility) => pathAbility.name === props.ability.name
+    (pathAbility) => pathAbility.name === props.ability.name,
   );
   const campaign = router.currentRoute.value.query.campaign;
   const query = entityStore.entity

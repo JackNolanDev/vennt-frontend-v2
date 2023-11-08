@@ -7,16 +7,17 @@
   >
     <template #title>Edit {{ attrFullName(attr) }}</template>
     <div class="alignRow split wrap mb-16">
+      <!-- TODO: Fix this using improved reason, probably could do better UI then just seeing this on hover -->
       <div
         class="alignRow labelText"
-        :title="entityStore.entityAttributes[attr]?.reason?.join('\n')"
+        :title="entityStore.computedAttributes[attr]?.reason?.join('\n')"
       >
         Base {{ shortName }}:
         <span v-if="attr in entityStore.entity.entity.attributes" class="ml-8">
           <BaseFraction
-            v-if="maxAttr && maxAttr in entityStore.entityAttributes"
+            v-if="maxAttr && maxAttr in entityStore.computedAttributes"
             :top="entityStore.entity.entity.attributes[attr]"
-            :bottom="entityStore.entityAttributes[maxAttr]?.val"
+            :bottom="entityStore.computedAttributes[maxAttr]?.val"
           ></BaseFraction>
           <span v-else class="number">{{
             entityStore.entity.entity.attributes[attr]
@@ -25,13 +26,13 @@
         <span v-else class="ml-8">Not defined yet</span>
         <span
           v-if="
-            entityStore.entityAttributes[attr]?.val !==
+            entityStore.computedAttributes[attr]?.val !==
             entityStore.entity.entity.attributes[attr]
           "
           class="mutedText ml-8"
           >(Current Value:
           <span class="number">{{
-            entityStore.entityAttributes[attr]?.val
+            entityStore.computedAttributes[attr]?.val
           }}</span
           >)</span
         >
@@ -107,12 +108,13 @@
 import router, { ENTITY_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import {
+  validAttributes,
+  type EntityAttribute,
   attrFullName,
   attrShortName,
   getBaseAttr,
   getMaxAttr,
-} from "@/utils/attributeUtils";
-import { validAttributes, type EntityAttribute } from "vennt-library";
+} from "vennt-library";
 import { computed, onBeforeMount } from "vue";
 import BaseFraction from "../Base/BaseFraction.vue";
 import BaseModal from "../Base/BaseModal.vue";
@@ -154,18 +156,18 @@ const showResetButton = computed(
   () =>
     entityStore.entity &&
     maxAttr.value !== undefined &&
-    entityStore.entityAttributes[maxAttr.value]?.val !==
-      entityStore.entityAttributes[props.attr]?.val &&
-    props.attr !== "hero"
+    entityStore.computedAttributes[maxAttr.value]?.val !==
+      entityStore.computedAttributes[props.attr]?.val &&
+    props.attr !== "hero",
 );
 const showClearHistoryButton = computed(
-  () => changelog.value && changelog.value.length > 0
+  () => changelog.value && changelog.value.length > 0,
 );
 const isRemovableCustomAttr = computed(
   () =>
     !validAttributes.includes(props.attr) &&
     !showClearHistoryButton.value &&
-    typeof entityStore.entity?.entity.attributes[props.attr] === "number"
+    typeof entityStore.entity?.entity.attributes[props.attr] === "number",
 );
 
 const closeModal = () => {
@@ -179,7 +181,7 @@ const closeModal = () => {
 };
 const resetButton = () => {
   if (entityStore.entity && maxAttr.value) {
-    const newValue = entityStore.entityAttributes[maxAttr.value]?.val;
+    const newValue = entityStore.computedAttributes[maxAttr.value]?.val;
     if (newValue !== undefined) {
       entityStore.updateEntityAttributes(entityStore.entity.entity.id, {
         attributes: {

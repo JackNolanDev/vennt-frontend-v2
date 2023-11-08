@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ConsolidatedItem } from "vennt-library";
+import { type ConsolidatedItem, solvePendingEquations } from "vennt-library";
 import BaseButton from "../Base/BaseButton.vue";
-import { adjustAttrsAPI, solvePendingEquations } from "@/utils/attributeUtils";
+import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import { useEntityStore } from "@/stores/entity";
 import { prefixName } from "@/utils/textUtils";
 
@@ -26,16 +26,16 @@ const useItem = () => {
   if (entityStore.entity && props.item.uses?.heal) {
     adjustAttrsAPI(
       entityStore.entity,
-      entityStore.entityAttributes,
+      entityStore.computedAttributes,
       solvePendingEquations(
         props.item.uses.heal.attr,
-        entityStore.entityAttributes
+        entityStore.computedAttributes,
       ),
       {
         msg: prefixName(props.item.name, "consumed", false),
         enforceMaximums: true,
         src: props.item.name,
-      }
+      },
     );
     entityStore.deleteItem(props.item, true);
   }

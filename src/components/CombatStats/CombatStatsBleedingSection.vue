@@ -1,6 +1,6 @@
 <template>
   <BaseButton @click="applyBleeding" icon="water_drop" class="wide"
-    >Apply {{ entityStore.entityAttributes.bleeding?.val }} Bleeding
+    >Apply {{ entityStore.computedAttributes.bleeding?.val }} Bleeding
     Damage</BaseButton
   >
 </template>
@@ -16,13 +16,13 @@ const applyBleeding = () => {
   if (!entityStore.entity) {
     return;
   }
-  const bleeding = entityStore.entityAttributes.bleeding?.val;
+  const bleeding = entityStore.computedAttributes.bleeding?.val;
   if (bleeding && bleeding > 0) {
     adjustAttrsAPI(
       entityStore.entity,
-      entityStore.entityAttributes,
+      entityStore.computedAttributes,
       { hp: -bleeding },
-      { msg: `Took ${bleeding} bleeding damage` }
+      { msg: `Took ${bleeding} bleeding damage` },
     );
   }
 };

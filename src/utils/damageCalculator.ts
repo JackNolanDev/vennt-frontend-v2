@@ -3,14 +3,14 @@ import {
   PHYSICAL_SUB_DAMAGES,
   type AttackDetails,
   type EntityAttribute,
-  type UpdatedEntityAttributes,
   type AttackResponse,
+  type ComputedAttributes,
 } from "vennt-library";
 
 export const handleDamageCalculator = (
   attack: AttackDetails,
   response: AttackResponse,
-  attrs: UpdatedEntityAttributes
+  attrs: ComputedAttributes,
 ): {
   adjustAttrs: Record<EntityAttribute, number>;
   reasons: string[];
@@ -75,7 +75,7 @@ export const handleDamageCalculator = (
     ) {
       damage = 0;
       reasons.push(
-        `Immune to ${detail.type} damage while Blocking due to Diamond Block`
+        `Immune to ${detail.type} damage while Blocking due to Diamond Block`,
       );
       continue;
     }
@@ -95,12 +95,12 @@ export const handleDamageCalculator = (
         reasons.push(
           `${detail.type} damage increased by ${damage / 2} due to ${
             detail.type
-          } vulnerability`
+          } vulnerability`,
         );
         damage = damage + damage / 2;
       } else if (resistanceVal <= 1) {
         reasons.push(
-          `${detail.type} damage decreased by ${damage / 2} due to resistance`
+          `${detail.type} damage decreased by ${damage / 2} due to resistance`,
         );
         damage = damage / 2;
       } else {
@@ -128,7 +128,7 @@ export const handleDamageCalculator = (
     if (alerts > 0 && damage > 0) {
       damage = damage >> alerts;
       reasons.push(
-        `used ${alerts} alerts to 1/${1 << alerts} ${detail.type} damage`
+        `used ${alerts} alerts to 1/${1 << alerts} ${detail.type} damage`,
       );
     }
 
@@ -177,7 +177,7 @@ export const handleDamageCalculator = (
       armor = Math.min(armor, damage);
       damage -= armor;
       reasons.push(
-        `armor reduced ${detail.type} damage by ${armor}${additionalReason}`
+        `armor reduced ${detail.type} damage by ${armor}${additionalReason}`,
       );
     }
 

@@ -1,10 +1,10 @@
-import { entityAttributesMap } from "@/utils/attributeUtils";
 import {
   cogCreateOptionsValidator,
   type UncompleteCollectedEntityWithChangelog,
   type UncompleteEntityText,
-  type UpdatedEntityAttributes,
   type CogCreateOptions,
+  computeAttributes,
+  type ComputedAttributes,
 } from "vennt-library";
 import {
   cogBaseAttribute,
@@ -102,8 +102,8 @@ export const useCogCreateStore = defineStore("cogCreate", {
         changelog: [],
       };
     },
-    cogAttrs(): UpdatedEntityAttributes {
-      return entityAttributesMap(this.collectedCog);
+    cogAttrs(): ComputedAttributes {
+      return computeAttributes(this.collectedCog);
     },
     cogStatBlock(): string {
       return getCopyableCogText(this.collectedCog, this.cogAttrs);
@@ -157,7 +157,7 @@ export const useCogCreateStore = defineStore("cogCreate", {
     saveToLocalStorage() {
       localStorage.setItem(
         CREATE_COG_LOCAL_STORAGE,
-        JSON.stringify(this.options)
+        JSON.stringify(this.options),
       );
     },
     clearCog() {

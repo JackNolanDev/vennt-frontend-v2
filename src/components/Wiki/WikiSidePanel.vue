@@ -59,7 +59,7 @@ const basePaths = computed(() =>
   sortWikiPaths(
     jsonStorage.pathGraph
       .nodes()
-      .filter((node) => jsonStorage.pathGraph.indegree(node) === 0)
-  )
+      .filter((node) => jsonStorage.pathGraph.indegree(node) === 0),
+  ),
 );
 </script>

@@ -199,17 +199,15 @@ import {
   type CollectedEntity,
   type EntityAttribute,
   type FullEntity,
-  type UpdatedEntityAttributes,
+  type ComputedAttributes,
+  computeAttributes,
+  attrShortName,
+  getMaxAttr,
+  ATTRIBUTE_DAMAGES,
 } from "vennt-library";
 import { computed, reactive } from "vue";
 import BulletPointVue from "../Base/BulletPoint.vue";
-import {
-  attrShortName,
-  entityAttributesMap,
-  getMaxAttr,
-  additionalCombatStatsAttrs,
-  ATTRIBUTE_DAMAGES,
-} from "@/utils/attributeUtils";
+import { additionalCombatStatsAttrs } from "@/utils/attributeUtils";
 import { cogTypeName } from "@/utils/copy/createCogTypeOptions";
 import BaseFraction from "../Base/BaseFraction.vue";
 import AttributeHelp from "../Attributes/AttributeHelp.vue";
@@ -226,7 +224,7 @@ import DamageCalculatorLink from "../Entities/DamageCalculatorLink.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;
-  entityAttrs?: UpdatedEntityAttributes;
+  entityAttrs?: ComputedAttributes;
   useCopyableDice: boolean;
   showItems?: boolean;
   showAbilities?: boolean;
@@ -243,7 +241,7 @@ const attrs = computed(() => {
   if (props.entityAttrs) {
     return props.entityAttrs;
   }
-  return entityAttributesMap(props.entity);
+  return computeAttributes(props.entity);
 });
 
 const combatStatsRows = computed((): EntityAttribute[][] => {
@@ -322,7 +320,7 @@ const BASE_SINGLE_ROW_ATTRIBUTES: EntityAttribute[] = [
 ];
 
 const customAttrs = computed(() =>
-  Object.keys(attrs.value).filter((attr) => !validAttributes.includes(attr))
+  Object.keys(attrs.value).filter((attr) => !validAttributes.includes(attr)),
 );
 
 const singleRowAttrs = computed(() =>
@@ -330,10 +328,10 @@ const singleRowAttrs = computed(() =>
   Array.from(
     new Set(
       BASE_SINGLE_ROW_ATTRIBUTES.concat(
-        additionalCombatStatsAttrs(props.entity)
-      ).concat(customAttrs.value)
-    )
-  )
+        additionalCombatStatsAttrs(props.entity),
+      ).concat(customAttrs.value),
+    ),
+  ),
 );
 
 const showUpdateDropdown = computed(() => {

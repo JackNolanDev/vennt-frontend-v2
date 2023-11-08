@@ -34,7 +34,7 @@ const state = reactive({ editItem: false });
 const entityStore = useEntityStore();
 
 const showInteractionSection = computed(
-  () => !isDefaultWeapon(props.item) && entityStore.canEdit
+  () => !isDefaultWeapon(props.item) && entityStore.canEdit,
 );
 
 const toggleEditItem = () => {

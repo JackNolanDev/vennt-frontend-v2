@@ -19,15 +19,15 @@
         <DisplayAbilityUseCost :ability="ability"></DisplayAbilityUseCost>
         <DisplayAbilityEffect
           :ability="ability"
-          :attrs="entityStore.entityAttributes"
+          :attrs="entityStore.computedAttributes"
         ></DisplayAbilityEffect>
         <AbilityUses
           v-if="showUses && (ability as FullEntityAbility).id"
-          :ability="(ability as FullEntityAbility)"
+          :ability="ability as FullEntityAbility"
         ></AbilityUses>
         <UseAbilitySection
           v-if="showUses && (ability as FullEntityAbility).id"
-          :ability="(ability as FullEntityAbility)"
+          :ability="ability as FullEntityAbility"
         ></UseAbilitySection>
       </p>
     </div>
