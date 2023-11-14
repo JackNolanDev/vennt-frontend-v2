@@ -31,7 +31,7 @@
 import { useCampaignStore } from "@/stores/campaign";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { computed, reactive } from "vue";
-import type { HTMLString } from "vennt-library";
+import { type HTMLString, titleText } from "vennt-library";
 import { xp2Level } from "@/utils/attributeUtils";
 import BaseRadioButtons from "../Base/BaseRadioButtons.vue";
 import { useHomeStore } from "@/stores/home";
@@ -51,14 +51,14 @@ const fetchEntityList = async () => {
 const entityOptions = computed(() =>
   homeState.entities
     .filter(
-      (entity) => campaignStore.role !== "GM" && entity.type === "CHARACTER",
+      (entity) => campaignStore.role === "GM" || entity.type === "CHARACTER",
     )
     .reduce<Record<string, HTMLString>>((acc, entity) => {
       acc[entity.id] = `${entity.name} - Level: ${
         entity.type === "COG"
           ? entity.attributes.L
           : xp2Level(entity.attributes.xp)
-      }`;
+      } ${campaignStore.role === "GM" ? `(${titleText(entity.type)})` : ""}`;
       return acc;
     }, {}),
 );
