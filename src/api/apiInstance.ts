@@ -1,13 +1,8 @@
 import axios from "axios";
-
-const url =
-  import.meta.env.VITE_API_URL ??
-  (process.env.NODE_ENV === "development"
-    ? "http://localhost:5001" // local server
-    : "https://vennt.up.railway.app"); // railway deployment of backend
+import { BASE_HTTP_URL } from "./utils";
 
 const instance = axios.create({
-  baseURL: url,
+  baseURL: BASE_HTTP_URL,
 });
 
 instance.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";

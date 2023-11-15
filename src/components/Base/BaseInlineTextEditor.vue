@@ -50,6 +50,7 @@ import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
 import BaseButton from "./BaseButton.vue";
+import { watch } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -65,9 +66,6 @@ const props = withDefaults(
   },
 );
 const emits = defineEmits<{ (e: "update:modelValue", state: string): void }>();
-
-// TODO: MAY NEED TO WATCH `modelValue` for changes
-// https://tiptap.dev/installation/vue3#5-use-v-model
 
 const editorProps: { attributes?: { [name: string]: string } } = {};
 if (props.editorId) {
@@ -99,4 +97,14 @@ const editor = useEditor({
     }
   },
 });
+
+watch(
+  () => props.modelValue,
+  () => {
+    if (editor.value?.getHTML() === props.modelValue) {
+      return;
+    }
+    editor.value?.commands.setContent(props.modelValue, false);
+  },
+);
 </script>

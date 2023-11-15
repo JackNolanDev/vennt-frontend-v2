@@ -19,7 +19,7 @@ export const authConfig = (config?: AxiosRequestConfig): AxiosRequestConfig => {
 
 export const wrapAPI = async <T extends z.ZodTypeAny>(
   api: () => Promise<AxiosResponse>,
-  validator?: T
+  validator?: T,
 ): Promise<z.infer<T>> => {
   try {
     const response = await api();
@@ -49,3 +49,23 @@ export const wrapAPI = async <T extends z.ZodTypeAny>(
     throw err;
   }
 };
+
+const BASE_URL =
+  import.meta.env.VITE_API_URL ??
+  (process.env.NODE_ENV === "development"
+    ? "localhost:5001" // local server
+    : "vennt.up.railway.app"); // railway deployment of backend
+
+const PROTOCOL_SEPARATOR = "://";
+
+const BASE_HTTP_PROTOCOL =
+  import.meta.env.VITE_API_URL || process.env.NODE_ENV !== "development"
+    ? "https"
+    : "http";
+const BASE_WS_PROTOCOL =
+  import.meta.env.VITE_API_URL || process.env.NODE_ENV !== "development"
+    ? "wss"
+    : "ws";
+
+export const BASE_HTTP_URL = BASE_HTTP_PROTOCOL + PROTOCOL_SEPARATOR + BASE_URL;
+export const BASE_WS_URL = BASE_WS_PROTOCOL + PROTOCOL_SEPARATOR + BASE_URL;

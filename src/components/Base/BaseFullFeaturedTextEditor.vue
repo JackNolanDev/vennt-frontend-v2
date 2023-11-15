@@ -81,9 +81,6 @@ const emits = defineEmits<{
   (e: "update:modelValue", state: string): void;
 }>();
 
-// TODO: MAY NEED TO WATCH `modelValue` for changes
-// https://tiptap.dev/installation/vue3#5-use-v-model
-
 const editorProps: { attributes?: { [name: string]: string } } = {};
 if (props.editorId) {
   editorProps.attributes = { id: props.editorId };

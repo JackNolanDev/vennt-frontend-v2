@@ -9,6 +9,7 @@ import router, { CAMPAIGN_ROUTE } from "@/router";
 import type {
   CampaignDesc,
   CampaignRole,
+  ChatMessage,
   FullCampaignDetails,
   PostCampaign,
   PostCampaignEntity,
@@ -20,13 +21,22 @@ import {
   addCampaignInviteApi,
   declineCampaignInviteApi,
 } from "@/api/apiCampaignInvites";
+import { CampaignWebSocket } from "@/utils/campaignWebSocket";
 
 interface CampaignState {
-  details: FullCampaignDetails | undefined;
+  details: FullCampaignDetails | null;
+  ws: CampaignWebSocket | null;
+  chat: ChatMessage[] | null;
+  chatCursor: string | null;
 }
 
 export const useCampaignStore = defineStore("campaign", {
-  state: (): CampaignState => ({ details: undefined }),
+  state: (): CampaignState => ({
+    details: null,
+    ws: null,
+    chat: null,
+    chatCursor: null,
+  }),
   getters: {
     role(): CampaignRole {
       const { accountInfo } = useAccountInfoStore();
@@ -101,8 +111,22 @@ export const useCampaignStore = defineStore("campaign", {
       }
       await declineCampaignInviteApi(inviteId);
     },
+    connectToWebsocket(campaignId: string) {
+      this.ws = new CampaignWebSocket(campaignId);
+    },
+    disconnectWebsocket() {
+      this.ws?.close();
+      this.ws = null;
+      this.chat = null;
+      this.chatCursor = null;
+    },
+    sendChatMessage(msg: string) {
+      this.ws?.sendChatMessage(msg);
+    },
     reset() {
-      this.details = undefined;
+      this.details = null;
+      this.chat = null;
+      this.chatCursor = null;
     },
   },
 });

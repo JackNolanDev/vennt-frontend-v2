@@ -162,8 +162,8 @@ dependencies:
     specifier: ^9.0.0
     version: 9.0.0
   vennt-library:
-    specifier: https://github.com/JackNolanDev/vennt-library#d6815ffe353605b774642ac0dd9f575e44c7d6a0
-    version: github.com/JackNolanDev/vennt-library/d6815ffe353605b774642ac0dd9f575e44c7d6a0(typescript@5.2.2)
+    specifier: https://github.com/JackNolanDev/vennt-library#962afb7c644b96a066b90a1bc05af36b020114d5
+    version: github.com/JackNolanDev/vennt-library/962afb7c644b96a066b90a1bc05af36b020114d5(typescript@5.2.2)
   vue:
     specifier: ^3.3.8
     version: 3.3.8(typescript@5.2.2)
@@ -4114,9 +4114,9 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/JackNolanDev/vennt-library/d6815ffe353605b774642ac0dd9f575e44c7d6a0(typescript@5.2.2):
-    resolution: {tarball: https://codeload.github.com/JackNolanDev/vennt-library/tar.gz/d6815ffe353605b774642ac0dd9f575e44c7d6a0}
-    id: github.com/JackNolanDev/vennt-library/d6815ffe353605b774642ac0dd9f575e44c7d6a0
+  github.com/JackNolanDev/vennt-library/962afb7c644b96a066b90a1bc05af36b020114d5(typescript@5.2.2):
+    resolution: {tarball: https://codeload.github.com/JackNolanDev/vennt-library/tar.gz/962afb7c644b96a066b90a1bc05af36b020114d5}
+    id: github.com/JackNolanDev/vennt-library/962afb7c644b96a066b90a1bc05af36b020114d5
     name: vennt-library
     version: 1.0.0
     peerDependencies:

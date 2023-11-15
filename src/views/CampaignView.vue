@@ -1,7 +1,13 @@
 <template>
-  <BaseLayout class="nav" :class="{ sidebar: campaignStore.role === 'GM' }">
+  <BaseLayout
+    class="nav sidebar-right"
+    :class="{ sidebar: campaignStore.role === 'GM' }"
+  >
     <template #nav><BaseNav></BaseNav></template>
     <template #sidebar><CampaignGMSettings></CampaignGMSettings></template>
+    <template #sidebar-right
+      ><CampaignRightSidebar></CampaignRightSidebar
+    ></template>
     <PageLayout>
       <div v-if="campaignStore.details">
         <CampaignLandingPage></CampaignLandingPage>
@@ -23,9 +29,10 @@ import PageLayout from "@/components/Base/PageLayout.vue";
 import router, { HOME_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
 import { idValidator } from "vennt-library";
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onBeforeUnmount } from "vue";
 import CampaignGMSettings from "@/components/Campaign/CampaignGMSettings.vue";
 import CampaignLandingPage from "@/components/Campaign/CampaignLandingPage.vue";
+import CampaignRightSidebar from "@/components/Campaign/CampaignRightSidebar.vue";
 
 const campaignStore = useCampaignStore();
 
@@ -35,9 +42,13 @@ onBeforeMount(() => {
     router.push({ name: HOME_ROUTE });
     return;
   }
-  if (!campaignStore.details || campaignStore.details.campaign.id !== id.data) {
-    campaignStore.fetchCampaign(id.data);
-  }
+  campaignStore.fetchCampaign(id.data, true);
+  campaignStore.connectToWebsocket(id.data);
+});
+
+onBeforeUnmount(() => {
+  // leave websocket
+  campaignStore.disconnectWebsocket();
 });
 
 const debug = process.env.NODE_ENV === "development";
