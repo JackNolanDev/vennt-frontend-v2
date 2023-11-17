@@ -1,5 +1,10 @@
 <template>
-  <BaseButton @click="openDialog" :icon="triggerIcon" :class="triggerClass">
+  <BaseButton
+    @click="openDialog"
+    :icon="triggerIcon"
+    :class="triggerClass"
+    :id="triggerButtonId"
+  >
     <slot name="triggerButton"></slot>
   </BaseButton>
   <BasicDialogModal
@@ -37,6 +42,7 @@ const props = defineProps<{
   noMainButton?: boolean;
   mainButtonDisabled?: boolean;
   isLarge?: boolean;
+  triggerButtonId?: string;
 }>();
 const emit = defineEmits<{
   (e: "mainButton"): void;
@@ -44,7 +50,8 @@ const emit = defineEmits<{
   (e: "exitModal"): void;
 }>();
 
-const openDialog = () => {
+const openDialog = (e: MouseEvent) => {
+  e.stopPropagation();
   const dialog = document.getElementById(props.id) as HTMLDialogElement | null;
   dialog?.showModal();
   emit("openModal");

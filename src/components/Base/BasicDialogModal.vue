@@ -3,7 +3,7 @@
     <div class="dialogue-content">
       <div class="alignRow split dialogue-title">
         <h2 class="mt-16 mb-16"><slot name="title"></slot></h2>
-        <BaseButton @click="closeModal" icon="close"></BaseButton>
+        <BaseButton @click="closeModal" icon="close" autofocus></BaseButton>
       </div>
       <div class="separator thin"></div>
       <div class="dialogue-details-wrapper">

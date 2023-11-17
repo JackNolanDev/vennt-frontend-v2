@@ -1,7 +1,7 @@
 <template>
-  <div class="panel ml-16 mr-16 mb-64">
-    <CampaignChat v-if="campaignStore.chat"></CampaignChat>
-    <div v-else>Campaign loading</div>
+  <CampaignChat v-if="campaignStore.chat"></CampaignChat>
+  <div v-else class="panel ml-16 mr-16">
+    <div>Campaign loading</div>
   </div>
 </template>
 

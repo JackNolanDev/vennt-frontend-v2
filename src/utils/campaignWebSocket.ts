@@ -59,19 +59,17 @@ export class CampaignWebSocket {
     };
   }
 
-  sendChatMessage(msg: string) {
-    const chat: SendChatMessage = {
-      type: SEND_CHAT_TYPE,
-      message: msg,
-    };
-    this.send(JSON.stringify(chat));
+  sendChatMessage(message: string) {
+    const chat: SendChatMessage = { type: SEND_CHAT_TYPE, message };
+    this.send(chat);
   }
 
-  send(msg: string) {
+  send(msg: Record<string, unknown>) {
+    const stringified = JSON.stringify(msg);
     if (this.authenticated) {
-      this.ws.send(msg);
+      this.ws.send(stringified);
     } else {
-      this.preAuthQueue.push(msg);
+      this.preAuthQueue.push(stringified);
     }
   }
 
@@ -85,14 +83,12 @@ const handleChatMessage = (msg: ChatMessage) => {
   if (campaignStore.chat === null) {
     campaignStore.chat = [msg];
   } else {
-    campaignStore.chat.push(msg);
+    campaignStore.chat.unshift(msg);
   }
 };
 
 const handleOldChatMessage = (msg: OldChatMessages) => {
   const campaignStore = useCampaignStore();
-  // reverse the messages since they are sorted by descending time by default
-  msg.message.reverse();
   if (campaignStore.chat === null) {
     campaignStore.chat = msg.message;
   } else {

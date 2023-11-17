@@ -25,4 +25,11 @@ defineProps<{ icon?: string }>();
 .basicBtnContents:has(> .text-contents:empty) > .space {
   margin-right: 0px;
 }
+
+.small-icon .material-symbols-outlined {
+  font-size: 24px;
+}
+.tiny-icon .material-symbols-outlined {
+  font-size: 20px;
+}
 </style>

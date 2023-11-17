@@ -5,13 +5,18 @@
     @keyup.esc="entityNotesStore.toggleNotes"
   >
     <div @mousedown="headerDragStart" class="alignRow split notesHeader">
-      <label for="character-notes-field" class="labelText ml-8">Notes</label>
+      <label class="labelText ml-8">Notes</label>
       <div class="alignRow">
         <SaveStateIcon
           :state="entityNotesStore.saveState"
           subject="Notes"
           class="mr-8"
         ></SaveStateIcon>
+        <BaseButton
+          v-if="pipEnabled"
+          @click="enablePip"
+          icon="pip"
+        ></BaseButton>
         <BaseButton
           @click="entityNotesStore.toggleNotes"
           icon="close"
@@ -20,6 +25,7 @@
     </div>
     <EntityNotesTextEditor
       :editorFocus="state.editorFocus"
+      id="entity-notes-editor"
     ></EntityNotesTextEditor>
   </div>
 </template>
@@ -67,6 +73,7 @@ onMounted(() => {
 
 const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
+const pipEnabled = document.pictureInPictureEnabled;
 
 const localStorageId = computed(() => entityStore.entity?.entity.id + "-nh");
 
@@ -91,6 +98,20 @@ const endDrag = () => {
   document.onmouseup = null;
   document.onmousemove = null;
   localStorage.setItem(localStorageId.value, state.boxHeight.toString());
+};
+
+const enablePip = async () => {
+  const editor = document.getElementById("entity-notes-editor");
+  if (editor) {
+    // @ts-ignore documentPictureInPicture test
+    const res = await window.documentPictureInPicture.requestWindow({
+      initialAspectRatio: 1,
+      lockAspectRatio: false,
+      copyStyleSheets: true,
+    });
+    console.log(res);
+    res.document.body.append(editor);
+  }
 };
 </script>
 

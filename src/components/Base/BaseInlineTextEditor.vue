@@ -1,33 +1,6 @@
 <template>
-  <div>
-    <BubbleMenu :editor="editor" v-if="editor">
-      <div class="alignRow card border">
-        <BaseButton
-          icon="format_bold"
-          @click="editor?.chain().focus().toggleBold().run()"
-          title="Format Bold"
-          :class="{ selected: editor.isActive('bold') }"
-        ></BaseButton>
-        <BaseButton
-          icon="format_italic"
-          @click="editor?.chain().focus().toggleItalic().run()"
-          title="Format Italic"
-          :class="{ selected: editor.isActive('italic') }"
-        ></BaseButton>
-        <BaseButton
-          icon="strikethrough_s"
-          @click="editor?.chain().focus().toggleStrike().run()"
-          title="Format Strikethrough"
-          :class="{ selected: editor.isActive('strike') }"
-        ></BaseButton>
-        <BaseButton
-          icon="format_underlined"
-          @click="editor?.chain().focus().toggleUnderline().run()"
-          title="Format Underline"
-          :class="{ selected: editor.isActive('underline') }"
-        ></BaseButton>
-      </div>
-    </BubbleMenu>
+  <div v-if="editor">
+    <BaseBubbleMenu :editor="editor"></BaseBubbleMenu>
     <EditorContent
       :editor="editor"
       class="editor-wrapper"
@@ -37,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/vue-3";
+import { useEditor, EditorContent } from "@tiptap/vue-3";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
 import Text from "@tiptap/extension-text";
@@ -49,7 +22,7 @@ import Code from "@tiptap/extension-code";
 import Italic from "@tiptap/extension-italic";
 import Strike from "@tiptap/extension-strike";
 import Underline from "@tiptap/extension-underline";
-import BaseButton from "./BaseButton.vue";
+import BaseBubbleMenu from "./TextEditors/BaseBubbleMenu.vue";
 import { watch } from "vue";
 
 const props = withDefaults(
