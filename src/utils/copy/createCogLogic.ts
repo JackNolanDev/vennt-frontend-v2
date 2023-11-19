@@ -38,7 +38,7 @@ const LStatForAttr = (
       baseLStat += levelAdjust;
     } else {
       const equationResult = solveEquation(levelAdjust, {
-        L: { val: baseLStat },
+        l: { val: baseLStat },
       });
       if (equationResult) {
         baseLStat = equationResult;
@@ -169,10 +169,10 @@ export const cogAbilityCost = (
   if (typeof ability.cost === "number") {
     return ability.cost;
   }
-  const attrMap: ComputedAttributes = { L: { val: LStat(options.level) } };
+  const attrMap: ComputedAttributes = { l: { val: LStat(options.level) } };
   const variableCost = options.variableAbilityCost[ability.name];
   if (typeof variableCost === "number") {
-    attrMap.X = { val: variableCost };
+    attrMap.x = { val: variableCost };
   }
   return solveEquation(ability.cost, attrMap) ?? 0;
 };
@@ -212,7 +212,7 @@ const solveEffectTemplates = (
   const { effect, name } = cogAbility;
   const variableCost = options.variableAbilityCost[name];
   if (variableCost && typeof variableCost === "number") {
-    const costMap = { X: { val: variableCost } };
+    const costMap = { x: { val: variableCost } };
     const templateRegex = /\[\[[^\]]+\]\]/gm;
     return effect.replaceAll(templateRegex, (match) => {
       const equation = match.substring(2, match.length - 2);

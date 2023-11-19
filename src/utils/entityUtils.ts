@@ -99,7 +99,7 @@ export const getCopyableCogText = (
   );
   const statBlock = [
     entity.entity.name,
-    `Level ${attrs.L?.val} ${cogTypeName(entity.entity.other_fields.cog_type)}`,
+    `Level ${attrs.l?.val} ${cogTypeName(entity.entity.other_fields.cog_type)}`,
     ...descLine,
     basicAttrs,
     ...attrStr("init"),
