@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { useCampaignStore } from "@/stores/campaign";
-import CampaignChat from "./CampaignChat.vue";
+import CampaignChat from "./Chat/CampaignChat.vue";
 
 const campaignStore = useCampaignStore();
 </script>

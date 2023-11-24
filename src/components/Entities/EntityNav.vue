@@ -152,7 +152,7 @@
         v-if="campaignStore.details"
         :to="{
           name: CAMPAIGN_ROUTE,
-          params: { id: campaignStore.details.campaign.id },
+          params: { campaignId: campaignStore.details.campaign.id },
         }"
         icon="group"
         class="skinny bold wide"

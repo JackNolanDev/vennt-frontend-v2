@@ -5,13 +5,13 @@
       class="chat-messages"
       id="campaign-chat-messages"
     >
-      <CampaignChatMessage
+      <CampaignStoredMessage
         v-for="(msg, idx) in campaignStore.chat"
         :key="msg.id"
         :msg="msg"
         :hide-header="hideChatHeader(idx)"
         class="mb-16"
-      ></CampaignChatMessage>
+      ></CampaignStoredMessage>
       <div
         v-if="campaignStore.chatCursor"
         class="chat-loading"
@@ -30,9 +30,10 @@
 <script setup lang="ts">
 import { useCampaignStore } from "@/stores/campaign";
 import { onMounted, onUnmounted, watch } from "vue";
-import BaseSpinner from "../Base/BaseSpinner.vue";
-import CampaignChatMessage from "./CampaignChatMessage.vue";
+import BaseSpinner from "../../Base/BaseSpinner.vue";
 import NewCampaignChatForm from "./NewCampaignChatForm.vue";
+import CampaignStoredMessage from "./CampaignStoredMessage.vue";
+import { CHAT_TYPE } from "vennt-library";
 
 const campaignStore = useCampaignStore();
 
@@ -89,8 +90,8 @@ const hideChatHeader = (idx: number) => {
     current.sender === previous.sender &&
     new Date(current.time).getTime() - new Date(previous.time).getTime() <=
       FIVE_MINS &&
-    !current.for &&
-    !previous.for &&
+    (current.type !== CHAT_TYPE || !current.for) &&
+    (previous.type !== CHAT_TYPE || !previous.for) &&
     !current.updated
   );
 };

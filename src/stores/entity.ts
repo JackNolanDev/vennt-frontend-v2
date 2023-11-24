@@ -176,7 +176,9 @@ export const useEntityStore = defineStore("entity", {
     },
     async fetchCollectedEntity(id: string, campaignId?: string) {
       if (campaignId) {
-        useCampaignStore().fetchCampaign(campaignId, true);
+        const campaignStore = useCampaignStore();
+        campaignStore.fetchCampaign(campaignId, true);
+        campaignStore.connectToWebsocket(campaignId);
       }
       this.entity = await fetchCollectedEntityApi(id, campaignId);
       setInitialNotes(this.entity);

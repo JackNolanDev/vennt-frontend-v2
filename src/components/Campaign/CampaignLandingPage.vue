@@ -55,14 +55,10 @@
 </template>
 
 <script setup lang="ts">
-import router, { ENTITY_ROUTE, HOME_ROUTE } from "@/router";
+import { ENTITY_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
-import {
-  idValidator,
-  type CampaignEntity,
-  CAMPAIGN_ROLE_GM,
-} from "vennt-library";
-import { onBeforeMount, reactive } from "vue";
+import { type CampaignEntity, CAMPAIGN_ROLE_GM } from "vennt-library";
+import { reactive } from "vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import AddEntityToCampaignButton from "@/components/Campaign/AddEntityToCampaignButton.vue";
 import BulletPoint from "@/components/Base/BulletPoint.vue";
@@ -74,17 +70,6 @@ const accountInfoStore = useAccountInfoStore();
 const campaignStore = useCampaignStore();
 const defaultState = { desc: campaignStore.details?.campaign.desc ?? "" };
 const state = reactive({ ...defaultState });
-
-onBeforeMount(() => {
-  const id = idValidator.safeParse(router.currentRoute.value.params.id);
-  if (!id.success) {
-    router.push({ name: HOME_ROUTE });
-    return;
-  }
-  if (!campaignStore.details || campaignStore.details.campaign.id !== id.data) {
-    campaignStore.fetchCampaign(id.data);
-  }
-});
 
 const entitiesForAccount = (accountId: string): CampaignEntity[] =>
   campaignStore.details?.entities.filter(

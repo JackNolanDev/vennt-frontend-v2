@@ -19,7 +19,7 @@
     <BaseButton
       v-for="campaign in homeState.campaigns"
       :key="campaign.id"
-      :to="{ name: CAMPAIGN_ROUTE, params: { id: campaign.id } }"
+      :to="{ name: CAMPAIGN_ROUTE, params: { campaignId: campaign.id } }"
     >
       <template #customIcon><BulletPoint></BulletPoint></template>
       {{ campaign.name }} ({{ campaign.role }})

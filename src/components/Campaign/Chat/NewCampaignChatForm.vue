@@ -19,9 +19,9 @@
 
 <script setup lang="ts">
 import { useCampaignStore } from "@/stores/campaign";
-import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
+import BaseInlineTextEditor from "../../Base/BaseInlineTextEditor.vue";
 import { reactive } from "vue";
-import BaseButton from "../Base/BaseButton.vue";
+import BaseButton from "../../Base/BaseButton.vue";
 import { editorEmpty } from "@/utils/textUtils";
 
 const campaignStore = useCampaignStore();

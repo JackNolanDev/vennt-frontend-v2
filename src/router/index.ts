@@ -1,3 +1,4 @@
+import { useCampaignStore } from "@/stores/campaign";
 import HomeView from "@/views/HomeView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
@@ -79,6 +80,7 @@ const router = createRouter({
     {
       path: "/entity/:id",
       component: () => import("../views/EntityView.vue"),
+      meta: { ws: true },
       children: [
         {
           path: "",
@@ -135,6 +137,7 @@ const router = createRouter({
     {
       path: "/wiki/paths",
       component: () => import("../views/WikiPathsContainerView.vue"),
+      meta: { ws: true },
       children: [
         {
           path: "",
@@ -149,18 +152,21 @@ const router = createRouter({
       ],
     },
     {
-      path: "/campaign/:id",
+      path: "/campaign/:campaignId",
       name: CAMPAIGN_ROUTE,
+      meta: { loggedInOnly: true, ws: true },
       component: () => import("../views/CampaignView.vue"),
     },
     {
       path: "/campaign/create",
       name: CAMPAIGN_CREATE_ROUTE,
+      meta: { loggedInOnly: true },
       component: () => import("../views/CampaignCreateView.vue"),
     },
     {
       path: "/campaign/test",
       name: CAMPAIGN_TEST_ROUTE,
+      meta: { loggedInOnly: true },
       component: () => import("../views/CampaignTestView.vue"),
     },
     {
@@ -185,14 +191,17 @@ const router = createRouter({
       component: () => import("../views/NotFoundView.vue"),
     },
   ],
-  scrollBehavior(to, _from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
+    if (from.meta.ws && !to.meta.ws) {
+      useCampaignStore().disconnectWebsocket();
+    }
     if (savedPosition) {
       return savedPosition; // default behavior when using forward & backward buttons
     }
     if (to.hash) {
       setTimeout(() => {
-        const id = to.hash.substring(1);
-        const el = document.getElementById(id);
+        const elId = to.hash.substring(1);
+        const el = document.getElementById(elId);
         if (el) {
           el.scrollIntoView({ behavior: "smooth" });
         }

@@ -26,7 +26,7 @@
   </div>
   <div v-if="!useCopyableDice" class="diceSection">
     <div v-if="latestRoll">
-      <DiceRender :roll="latestRoll"></DiceRender>
+      <DiceRender :roll="latestRoll" class="mb-8"></DiceRender>
       <div>
         Dice Rolled:
         <span class="number">{{ latestRoll.notation }}</span>
@@ -37,11 +37,11 @@
       </div>
     </div>
   </div>
-  <ToggleableDiceSectionCopyable
+  <ToggleableDiceSection
     v-else
     :dice="computedDice"
     :attr="attr"
-  ></ToggleableDiceSectionCopyable>
+  ></ToggleableDiceSection>
 </template>
 
 <script setup lang="ts">
@@ -58,7 +58,7 @@ import {
 import { computed } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import DiceRender from "../Dice/DiceRender.vue";
-import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
+import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { useEntityStore } from "@/stores/entity";
 
 const props = defineProps<{
@@ -95,7 +95,8 @@ const computedDice = computed(() => {
 });
 
 const rollButton = () => {
-  diceStore.updateLatestRoll(props.attr, new DiceRoll(computedDice.value.web));
+  const roll = new DiceRoll(computedDice.value.web);
+  diceStore.updateLatestRoll(props.attr, roll);
 };
 </script>
 

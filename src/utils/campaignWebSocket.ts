@@ -9,19 +9,24 @@ import {
   OLD_CHAT_TYPE,
   UPDATE_CHAT_TYPE,
   DELETE_CHAT_TYPE,
-  type ChatMessage,
   type OldChatMessages,
   type UpdatedChatMessage,
   type DeleteChatMessage,
+  type DiceRollResult,
+  type StoredMessage,
+  DICE_ROLL_RESULT_TYPE,
 } from "vennt-library";
 import { useCampaignStore } from "@/stores/campaign";
+import { useDiceStore } from "@/stores/dice";
 
 export class CampaignWebSocket {
+  campaignId: string;
   ws: WebSocket;
   authenticated = false;
   preAuthQueue: string[] = [];
 
   constructor(campaignId: string) {
+    this.campaignId = campaignId;
     const authToken = localStorage.getItem(TOKEN_LOCAL_STORAGE);
     if (!authToken) {
       throw new Error("Not logged in");
@@ -44,6 +49,9 @@ export class CampaignWebSocket {
         switch (msg.type) {
           case CHAT_TYPE:
             handleChatMessage(msg);
+            break;
+          case DICE_ROLL_RESULT_TYPE:
+            handleDiceRollResultMessage(msg);
             break;
           case OLD_CHAT_TYPE:
             handleOldChatMessage(msg);
@@ -78,13 +86,23 @@ export class CampaignWebSocket {
   }
 }
 
-const handleChatMessage = (msg: ChatMessage) => {
+const handleChatMessage = (msg: StoredMessage) => {
   const campaignStore = useCampaignStore();
   if (campaignStore.chat === null) {
     campaignStore.chat = [msg];
   } else {
     campaignStore.chat.unshift(msg);
   }
+};
+
+const handleDiceRollResultMessage = (msg: DiceRollResult) => {
+  const diceStore = useDiceStore();
+  if (msg.request_id && diceStore.pendingRolls[msg.request_id]) {
+    const result = JSON.parse(msg.result);
+    diceStore.rolls[diceStore.pendingRolls[msg.request_id]] = result;
+    delete diceStore.pendingRolls[msg.request_id];
+  }
+  handleChatMessage(msg);
 };
 
 const handleOldChatMessage = (msg: OldChatMessages) => {

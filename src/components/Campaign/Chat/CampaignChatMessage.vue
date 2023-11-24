@@ -61,10 +61,10 @@ import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useCampaignStore } from "@/stores/campaign";
 import type { ChatMessage } from "vennt-library";
 import { computed, reactive } from "vue";
-import BaseButton from "../Base/BaseButton.vue";
-import ConfirmationModal from "../Base/ConfirmationModal.vue";
+import BaseButton from "../../Base/BaseButton.vue";
+import ConfirmationModal from "../../Base/ConfirmationModal.vue";
 import CampaignChatMessageText from "./CampaignChatMessageText.vue";
-import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
+import BaseInlineTextEditor from "../../Base/BaseInlineTextEditor.vue";
 
 const state = reactive({
   optionsVisible: false,

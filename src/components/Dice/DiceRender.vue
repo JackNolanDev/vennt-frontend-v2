@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:title="title" class="alignRow wrap mb-8">
+  <div v-bind:title="title" class="alignRow wrap">
     <div
       v-for="(diceElement, idx) in elementsToRender"
       v-bind:key="idx"
@@ -65,10 +65,10 @@ export default {
             el.crit = "fail";
           }
         }
-        if (dieResult.modifiers.has("drop")) {
+        if (dieResult.modifiers.includes("drop")) {
           el.dropped = true;
         }
-        if (dieResult.modifiers.has("explode")) {
+        if (dieResult.modifiers.includes("explode")) {
           el.exploded = true;
         }
         elements.push(el);
@@ -79,7 +79,6 @@ export default {
       this.roll.rolls.forEach((rollElement) => {
         if (
           typeof rollElement === "object" &&
-          rollElement.length > 0 &&
           typeof rollElement.value === "number" &&
           rollElement.rolls.length > 0
         ) {

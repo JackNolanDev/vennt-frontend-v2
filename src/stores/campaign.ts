@@ -10,7 +10,6 @@ import {
   REQUEST_CHAT_TYPE,
   type CampaignDesc,
   type CampaignRole,
-  type ChatMessage,
   type FullCampaignDetails,
   type PostCampaign,
   type PostCampaignEntity,
@@ -20,6 +19,7 @@ import {
   REQUEST_UPDATE_CHAT_TYPE,
   type DeleteChatMessage,
   DELETE_CHAT_TYPE,
+  type StoredMessage,
 } from "vennt-library";
 import { defineStore } from "pinia";
 import { useAccountInfoStore } from "./accountInfo";
@@ -32,8 +32,9 @@ import { CampaignWebSocket } from "@/utils/campaignWebSocket";
 interface CampaignState {
   details: FullCampaignDetails | null;
   ws: CampaignWebSocket | null;
-  chat: ChatMessage[] | null;
+  chat: StoredMessage[] | null;
   chatCursor: string | null;
+  outStandingWSRequests: string[];
 }
 
 export const useCampaignStore = defineStore("campaign", {
@@ -42,6 +43,7 @@ export const useCampaignStore = defineStore("campaign", {
     ws: null,
     chat: null,
     chatCursor: null,
+    outStandingWSRequests: [],
   }),
   getters: {
     role(): CampaignRole {
@@ -63,7 +65,7 @@ export const useCampaignStore = defineStore("campaign", {
       if (redirectToCampaign) {
         router.push({
           name: CAMPAIGN_ROUTE,
-          params: { id: this.details.campaign.id },
+          params: { campaignId: this.details.campaign.id },
         });
       }
     },
@@ -110,6 +112,11 @@ export const useCampaignStore = defineStore("campaign", {
       await declineCampaignInviteApi(inviteId);
     },
     connectToWebsocket(campaignId: string) {
+      if (this.ws) {
+        if (this.ws.campaignId === campaignId) return;
+        this.disconnectWebsocket();
+      }
+
       this.ws = new CampaignWebSocket(campaignId);
     },
     disconnectWebsocket() {
@@ -117,10 +124,12 @@ export const useCampaignStore = defineStore("campaign", {
       this.ws = null;
       this.chat = null;
       this.chatCursor = null;
+      this.outStandingWSRequests = [];
     },
     sendChatMessage(msg: string) {
       this.ws?.sendChatMessage(msg);
     },
+    requestDiceRoll() {},
     requestOlderMessages() {
       if (!this.ws || !this.chatCursor) return;
       const request: RequestOldChatMessages = {
@@ -153,6 +162,7 @@ export const useCampaignStore = defineStore("campaign", {
       this.details = null;
       this.chat = null;
       this.chatCursor = null;
+      this.outStandingWSRequests = [];
     },
   },
 });

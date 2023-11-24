@@ -2,8 +2,15 @@
   <BaseButton @click="rollButton" icon="casino" class="wide selected">
     Roll {{ dice.web }}
   </BaseButton>
-  <DiceRender v-if="showDice" :roll="state.roll"></DiceRender>
-  <DiceToggles :attr="attr" :skip-key="skipKey"></DiceToggles>
+  <DiceRender
+    v-if="showDice"
+    :roll="diceStore.rolls[rollKey]"
+    class="mb-8"
+  ></DiceRender>
+  <DiceToggles
+    :attrs="attrs ?? (attr ? [attr] : undefined)"
+    :skip-key="skipKey"
+  ></DiceToggles>
   <BaseDropDown
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
@@ -33,41 +40,49 @@ import {
   attrFullName,
   attrShortName,
 } from "vennt-library";
-import { computed, reactive } from "vue";
+import { computed, watch } from "vue";
 import HeroPointButton from "../Attributes/HeroPointButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import CommonDiceSettings from "./CommonDiceSettings.vue";
 import BaseButton from "../Base/BaseButton.vue";
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import DiceRender from "./DiceRender.vue";
 import { useEntityStore } from "@/stores/entity";
 import DiceToggles from "./DiceToggles.vue";
+import { v4 } from "uuid";
+
+const baseId = v4();
 
 const props = defineProps<{
   dice: DiceCommands;
   attr?: EntityAttribute;
+  attrs?: EntityAttribute[];
   comment?: string;
   skipKey?: string;
 }>();
-const state = reactive<{ roll?: DiceRoll }>({ roll: undefined });
 const emit = defineEmits<{ (e: "rollValue", state: number): void }>();
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
+const rollKey = computed(() => props.attr ?? baseId);
 const heroDiceReason = computed(() =>
   props.attr
     ? `Boosted ${attrFullName(props.attr)} dice roll`
     : "Boosted dice roll",
 );
+const baseComment = computed(() => {
+  if (props.comment) {
+    return props.comment;
+  }
+  if (props.attr) {
+    return `${attrShortName(props.attr)} check`;
+  }
+  return "dice check";
+});
+const heroPointComment = computed(
+  () => `${baseComment.value} - Hero Point Boost`,
+);
 const heroPointDice = computed(() => {
   if (props.dice.settings.count && props.dice.settings.sides) {
-    let baseComment = "dice check";
-    if (props.attr) {
-      baseComment = `${attrShortName(props.attr)} check`;
-    }
-    if (props.comment) {
-      baseComment = props.comment;
-    }
     return buildDice(
       props.dice.settings.count,
       props.dice.settings.sides,
@@ -77,7 +92,7 @@ const heroPointDice = computed(() => {
         { drop: 1, end: "+9" },
         entityStore.computedAttributes,
       ),
-      `${baseComment} - Hero Point Boost`,
+      heroPointComment.value,
     );
   }
   return false;
@@ -85,19 +100,32 @@ const heroPointDice = computed(() => {
 
 const showDice = computed(
   () =>
-    state.roll &&
+    diceStore.rolls[rollKey.value] &&
     heroPointDice.value &&
-    [props.dice.web, heroPointDice.value.web].includes(state.roll.notation),
+    [props.dice.web, heroPointDice.value.web].includes(
+      diceStore.rolls[rollKey.value].notation,
+    ),
+);
+
+watch(
+  () => [diceStore.rolls[rollKey.value]],
+  () => {
+    if (diceStore.rolls[rollKey.value]) {
+      emit("rollValue", diceStore.rolls[rollKey.value].total);
+    }
+  },
 );
 
 const rollButton = () => {
-  state.roll = new DiceRoll(props.dice.web);
-  emit("rollValue", state.roll.total);
+  diceStore.rollDice(props.dice, rollKey.value, baseComment.value);
 };
 const rollHeroButton = () => {
   if (heroPointDice.value) {
-    state.roll = new DiceRoll(heroPointDice.value.web);
-    emit("rollValue", state.roll.total);
+    diceStore.rollDice(
+      heroPointDice.value,
+      rollKey.value,
+      heroPointComment.value,
+    );
   }
 };
 </script>
