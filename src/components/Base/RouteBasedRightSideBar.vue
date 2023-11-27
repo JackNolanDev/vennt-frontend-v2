@@ -1,57 +1,66 @@
 <template>
-  <div>
-    <BaseButton icon="close" :to="exitRoute">Close</BaseButton>
-    <div class="panel ml-16 mr-16 mb-64">
-      <slot></slot>
-    </div>
-  </div>
+  <BaseButton icon="close" :to="exitRoute">Close</BaseButton>
+  <slot></slot>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import BaseButton from "./BaseButton.vue";
-import router, { ENTITY_ROUTE } from "@/router";
+import { ENTITY_ROUTE } from "@/router";
+import { useRoute } from "vue-router";
 
 const DEFAULT_ROUTE_KEY = "detail";
 
-const props = defineProps<{ routeKey?: string; queryParams?: string[] }>();
+const props = defineProps<{
+  routeKey?: string;
+  queryParams?: string[];
+  importantQueryParams?: string[];
+}>();
+const route = useRoute();
 
-const query = computed(
-  () =>
-    props.queryParams &&
-    props.queryParams.some((key) => router.currentRoute.value.query[key]),
-);
 const exitRoute = computed(() => {
-  if (query.value) {
-    const removeKey = Object.keys(router.currentRoute.value.query).find(
-      (key) => props.queryParams && props.queryParams.includes(key),
+  const query = props.queryParams?.some((key) => route.query[key]);
+  if (query) {
+    const removeKey = Object.keys(route.query).find(
+      (key) => props.queryParams?.includes(key),
     );
     if (removeKey) {
-      const query = { ...router.currentRoute.value.query };
+      const query = { ...route.query };
       delete query[removeKey];
       return {
-        name: router.currentRoute.value.name ?? ENTITY_ROUTE,
-        params: router.currentRoute.value.params,
+        name: route.name ?? ENTITY_ROUTE,
+        params: route.params,
         query,
       };
     }
   }
-  const params = { ...router.currentRoute.value.params };
-  delete params[props.routeKey ?? DEFAULT_ROUTE_KEY];
-  return {
-    name: router.currentRoute.value.name ?? ENTITY_ROUTE,
-    params,
-    query: router.currentRoute.value.query,
-  };
+  const routeKey = props.routeKey ?? DEFAULT_ROUTE_KEY;
+  if (route.params[routeKey]) {
+    const params = { ...route.params };
+    delete params[routeKey];
+    return {
+      name: route.name ?? ENTITY_ROUTE,
+      params,
+      query: route.query,
+    };
+  }
+  const importantQuery = props.importantQueryParams?.some(
+    (key) => route.query[key],
+  );
+  if (importantQuery) {
+    const removeKey = Object.keys(route.query).find(
+      (key) => props.importantQueryParams?.includes(key),
+    );
+    if (removeKey) {
+      const query = { ...route.query };
+      delete query[removeKey];
+      return {
+        name: route.name ?? ENTITY_ROUTE,
+        params: route.params,
+        query,
+      };
+    }
+  }
+  return {};
 });
 </script>
-
-<style scoped>
-/* Mobile Styles */
-@media screen and (max-width: 396px) {
-  .panel {
-    margin-left: 0px;
-    margin-right: 0px;
-  }
-}
-</style>

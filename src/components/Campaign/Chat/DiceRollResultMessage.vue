@@ -5,7 +5,7 @@
       :hide-header="hideHeader"
       :class="{ 'mb-4': msg.message }"
     ></CampaignChatMessageText>
-    <DiceRender :roll="JSON.parse(msg.result)"></DiceRender>
+    <DiceRender :roll-result="JSON.parse(msg.result)"></DiceRender>
   </div>
 </template>
 

@@ -11,6 +11,7 @@
     :skip-key="skipKey"
   ></DiceToggles>
   <BaseDropDown
+    v-if="!hideOtherOptions"
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
     title="Other Dice Options"
@@ -52,6 +53,7 @@ const props = defineProps<{
   comment?: string;
   skipKey?: string;
   useDiceAsHeader?: boolean;
+  hideOtherOptions?: boolean;
 }>();
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();

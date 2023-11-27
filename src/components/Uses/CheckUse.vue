@@ -1,12 +1,12 @@
 <template>
   <div class="card column padded thin mt-16">
-    <ToggleableDiceSectionCopyable
+    <ToggleableDiceSection
       :attr="use.attr"
       :dice="dice"
       :header="true"
       :comment="diceComment"
       :skip-key="name"
-    ></ToggleableDiceSectionCopyable>
+    ></ToggleableDiceSection>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ import {
   attrShortName,
 } from "vennt-library";
 import { computed } from "vue";
-import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
+import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 
 const props = defineProps<{ use: UsesCheck; name: string }>();
 const entityStore = useEntityStore();

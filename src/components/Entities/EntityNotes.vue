@@ -35,7 +35,6 @@ import { useEntityStore } from "@/stores/entity";
 import { computed, onBeforeMount, onMounted, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import SaveStateIcon from "../Base/SaveStateIcon.vue";
-import type { SaveState } from "vennt-library";
 import EntityNotesTextEditor from "./EntityNotesTextEditor.vue";
 import { useEntityNotesStore } from "@/stores/entityNotes";
 
@@ -44,7 +43,6 @@ interface EntityNotesState {
   startMouseY: number;
   startBoxHeight: number;
   editorFocus: number;
-  saveState: SaveState;
 }
 
 const state = reactive<EntityNotesState>({
@@ -52,7 +50,6 @@ const state = reactive<EntityNotesState>({
   startMouseY: 0,
   startBoxHeight: 0,
   editorFocus: 0,
-  saveState: "SAVED",
 });
 
 onBeforeMount(() => {

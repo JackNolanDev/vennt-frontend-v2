@@ -14,7 +14,8 @@
         >
         {{ sender }}</strong
       >
-      <span class="pt-10 muted-text ellipsis no-wrap">{{
+      <span v-if="msg.updated" class="pt-10 muted-text">Edited</span>
+      <span v-else class="pt-10 muted-text ellipsis no-wrap">{{
         new Date(msg.time).toLocaleTimeString()
       }}</span>
     </div>

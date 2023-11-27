@@ -20,6 +20,7 @@ export const ENTITY_ITEM_SHOP_ROUTE = "entityItemShop";
 export const ENTITY_ITEMS_ROUTE = "entityItems";
 export const ENTITY_STATS_ROUTE = "entityStats";
 export const ENTITY_NOTES_ROUTE = "entityNotes";
+export const ENTITY_CAMPAIGN_CHAT_ROUTE = "entityCampaignChat";
 export const ENTITY_WEAPON_SHOP_ROUTE = "entityWeaponShop";
 export const ENTITY_SETTINGS_ROUTE = "entitySettings";
 export const WIKI_ROUTE = "wiki";
@@ -116,6 +117,11 @@ const router = createRouter({
           path: "notes",
           name: ENTITY_NOTES_ROUTE,
           component: () => import("../views/EntityNotesView.vue"),
+        },
+        {
+          path: "chat",
+          name: ENTITY_CAMPAIGN_CHAT_ROUTE,
+          component: () => import("../views/EntityCampaignChatView.vue"),
         },
         {
           path: "weaponry/:detail?",

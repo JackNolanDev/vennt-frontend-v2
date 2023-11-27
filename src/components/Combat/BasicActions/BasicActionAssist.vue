@@ -46,13 +46,13 @@
       {{ state.useVim ? "MP" : "Vim" }})</BaseCheckBox
     >
     <div class="card mt-8 padded thin column">
-      <ToggleableDiceSectionCopyable
+      <ToggleableDiceSection
         :attr="state.attr"
         :dice="dice"
         :comment="comment"
         :header="true"
         :use-dice-as-header="true"
-      ></ToggleableDiceSectionCopyable>
+      ></ToggleableDiceSection>
     </div>
     <BaseButton @click="spendAssistResources" class="primary center wide mt-8"
       >Spend
@@ -71,7 +71,7 @@
 <script setup lang="ts">
 import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseCheckBox from "@/components/Base/BaseCheckBox.vue";
-import ToggleableDiceSectionCopyable from "@/components/Dice/ToggleableDiceSectionCopyable.vue";
+import ToggleableDiceSection from "@/components/Dice/ToggleableDiceSection.vue";
 import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";

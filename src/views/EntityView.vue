@@ -11,7 +11,10 @@
       <EntityLeftSidebar></EntityLeftSidebar>
     </template>
     <template #sidebar-right>
-      <RouteBasedRightSideBar :query-params="['new']">
+      <RouteBasedRightSideBar
+        :query-params="BASE_QUERY_PARAMS"
+        :important-query-params="IMPORTANT_QUERY_PARAMS"
+      >
         <EntityRightSidebar></EntityRightSidebar>
       </RouteBasedRightSideBar>
     </template>
@@ -52,6 +55,10 @@ const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
 const campaignStore = useCampaignStore();
 const route = useRoute();
+
+const BASE_QUERY_PARAMS = ["new"];
+const IMPORTANT_QUERY_PARAMS = ["chat"];
+const QUERY_PARAMS = BASE_QUERY_PARAMS.concat(IMPORTANT_QUERY_PARAMS);
 
 let overrideCmdF = true;
 
@@ -142,8 +149,7 @@ const showRightSidebar = computed(() => {
   if (params) {
     return true;
   }
-  const queryParams = ["new"];
-  return queryParams.some((key) => router.currentRoute.value.query[key]);
+  return QUERY_PARAMS.some((key) => router.currentRoute.value.query[key]);
 });
 
 const jumpToPage = (name: string) => {

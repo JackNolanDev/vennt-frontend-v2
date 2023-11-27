@@ -1,11 +1,11 @@
 <template>
   <div v-if="castingDice" class="card mt-8 padded thin column">
-    <ToggleableDiceSectionCopyable
+    <ToggleableDiceSection
       :dice="castingDice"
       :attr="'casting'"
       :header="true"
       :comment="diceComment"
-    ></ToggleableDiceSectionCopyable>
+    ></ToggleableDiceSection>
   </div>
   <div v-if="ability.custom_fields?.mp_cost">
     <UseAbilityButton :ability="ability" :spell-idx="0"></UseAbilityButton>
@@ -27,7 +27,7 @@ import { useDiceStore } from "@/stores/dice";
 import { useEntityStore } from "@/stores/entity";
 import { defaultDice, type FullEntityAbility } from "vennt-library";
 import { computed } from "vue";
-import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
+import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import UseAbilityButton from "./UseAbilityButton.vue";
 import AbilityTinkerItem from "./AbilityTinkerItem.vue";
 

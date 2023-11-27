@@ -13,39 +13,17 @@
       <span class="number">{{ attrDisplayVal }}</span>
       )
     </div>
-    <BaseButton
-      v-if="!useCopyableDice"
-      @click="rollButton"
-      :title="computedDice.web"
-      icon="casino"
-      class="selected"
-    >
-      Roll {{ attrShortName(attr) }}
-    </BaseButton>
-    <div v-else class="muted-text">{{ computedDice.roll20 }}</div>
-  </div>
-  <div v-if="!useCopyableDice" class="diceSection">
-    <div v-if="latestRoll">
-      <DiceRender :roll="latestRoll" class="mb-8"></DiceRender>
-      <div>
-        Dice Rolled:
-        <span class="number">{{ latestRoll.notation }}</span>
-      </div>
-      <div>
-        Average Roll:
-        <span class="number">{{ latestRoll.averageTotal }}</span>
-      </div>
-    </div>
+    <div class="muted-text">{{ computedDice.roll20 }}</div>
   </div>
   <ToggleableDiceSection
-    v-else
     :dice="computedDice"
     :attr="attr"
+    :only-show="useCopyableDice ? undefined : 'roll'"
+    :hide-other-options="!useCopyableDice"
   ></ToggleableDiceSection>
 </template>
 
 <script setup lang="ts">
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { useDiceStore } from "@/stores/dice";
 import {
   ATTRIBUTES_SET,
@@ -56,8 +34,6 @@ import {
   attrShortName,
 } from "vennt-library";
 import { computed } from "vue";
-import BaseButton from "../Base/BaseButton.vue";
-import DiceRender from "../Dice/DiceRender.vue";
 import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { useEntityStore } from "@/stores/entity";
 
@@ -81,9 +57,6 @@ const attrDisplayVal = computed(() => {
   const map = props.attrs[props.attr];
   return map === undefined ? undefined : map.val;
 });
-const latestRoll = computed(() => {
-  return diceStore.latestRoll[props.attr];
-});
 const computedDice = computed(() => {
   return defaultDice(
     props.attrs,
@@ -93,11 +66,6 @@ const computedDice = computed(() => {
     `${attrShortName(props.attr)} check`,
   );
 });
-
-const rollButton = () => {
-  const roll = new DiceRoll(computedDice.value.web);
-  diceStore.updateLatestRoll(props.attr, roll);
-};
 </script>
 
 <style scoped>

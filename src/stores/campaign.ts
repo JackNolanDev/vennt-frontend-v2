@@ -20,6 +20,8 @@ import {
   type DeleteChatMessage,
   DELETE_CHAT_TYPE,
   type StoredMessage,
+  SEND_CHAT_TYPE,
+  type SendChatMessage,
 } from "vennt-library";
 import { defineStore } from "pinia";
 import { useAccountInfoStore } from "./accountInfo";
@@ -126,8 +128,16 @@ export const useCampaignStore = defineStore("campaign", {
       this.chatCursor = null;
       this.outStandingWSRequests = [];
     },
-    sendChatMessage(msg: string) {
-      this.ws?.sendChatMessage(msg);
+    sendChatMessage(msg: string, entityId?: string, recipient?: string) {
+      if (!this.ws) return;
+      const request: SendChatMessage = {
+        type: SEND_CHAT_TYPE,
+        message: msg,
+        entity: entityId,
+        for: recipient,
+      };
+      console.log(request);
+      this.ws.send(request);
     },
     requestDiceRoll() {},
     requestOlderMessages() {

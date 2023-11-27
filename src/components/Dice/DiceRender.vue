@@ -1,203 +1,134 @@
 <template>
-  <div v-bind:title="title" class="alignRow wrap">
+  <div :title="title" class="alignRow baseline wrap number syntax-container">
     <div
-      v-for="(diceElement, idx) in elementsToRender"
-      v-bind:key="idx"
-      v-bind:class="diceRenderClass(diceElement)"
-      class="alignRow wrap"
+      v-for="(syntax, idx) in syntaxList"
+      :key="syntax.type + idx"
+      :class="syntaxClass(syntax)"
     >
-      <div v-if="diceElement.type === 'math'" class="diceElement math">
-        <div class="shiftDown">{{ diceElement.val }}</div>
-      </div>
-      <div
-        v-else-if="diceElement.type === 'die'"
-        v-bind:class="diceClass(diceElement)"
-        class="diceElement dice"
-      >
-        <div class="shiftDown">
-          {{ diceElement.val }}<span v-if="diceElement.exploded">!</span>
-        </div>
-      </div>
-      <div
-        v-else-if="diceElement.type === 'const'"
-        class="diceElement constantContainer"
-      >
-        <div class="diceElement constant">{{ diceElement.val }}</div>
-      </div>
-    </div>
-    <div class="alignRow mathRender">
-      <div class="diceElement math shiftDown">=</div>
-      <div class="total shiftDown">{{ roll.total }}</div>
+      {{ syntax.value }}
     </div>
   </div>
 </template>
 
-<script>
-// NOTE: this could probably be converted to TS some day, but for now is just vanilla JS
-export default {
-  name: "diceRender",
-  props: {
-    roll: { type: Object, required: true },
-  },
-  computed: {
-    elementsToRender() {
-      const matches = this.roll.notation.match(/\d+d\d+/gm) || [];
-      const sidesList = matches.map((match) => {
-        const dIdx = match.indexOf("d");
-        const num = parseInt(match.substring(dIdx + 1));
-        if (isNaN(num)) {
-          return 0;
+<script setup lang="ts">
+import type { RollResult } from "@/stores/dice";
+import { computed } from "vue";
+
+const props = defineProps<{ rollResult: RollResult }>();
+
+type MathResult = {
+  type: "math";
+  value: string;
+  numeric?: boolean;
+};
+type DieResult = {
+  type: "die";
+  value: string;
+  crit?: "success" | "fail";
+  dropped?: boolean;
+  exploded?: boolean;
+};
+
+const syntaxList = computed(() => {
+  const matches = props.rollResult.notation.match(/\d+d\d+/gm) || [];
+  const sidesList = matches.map((match) => {
+    const dIdx = match.indexOf("d");
+    const num = parseInt(match.substring(dIdx + 1));
+    if (isNaN(num)) {
+      return 0;
+    }
+    return num;
+  });
+
+  let diceGroupsSeen = 0;
+  const result: Array<MathResult | DieResult> = [];
+  props.rollResult.rolls.forEach((val) => {
+    if (typeof val === "string") {
+      result.push({ type: "math", value: val });
+    } else if (typeof val === "number") {
+      result.push({ type: "math", value: val.toString(), numeric: true });
+    } else if (typeof val === "object") {
+      result.push({ type: "math", value: "(" });
+      val.rolls.forEach((dieResult, idx) => {
+        if (idx !== 0) {
+          result.push({ type: "math", value: "+" });
         }
-        return num;
-      });
-      let diceGroupsSeen = 0;
-      const elements = [];
-      const addMath = (math) => {
-        elements.push({ type: "math", val: math });
-      };
-      const addDice = (dieResult, diceGroup) => {
-        const el = { type: "die", val: dieResult.value };
-        if (diceGroup < sidesList.length) {
-          const maxVal = sidesList[diceGroup];
+        let crit: "success" | "fail" | null = null;
+        if (diceGroupsSeen < sidesList.length) {
+          const maxVal = sidesList[diceGroupsSeen];
           if (maxVal > 0 && dieResult.value === maxVal) {
-            el.crit = "success";
+            crit = "success";
           } else if (dieResult.value === 1) {
-            el.crit = "fail";
+            crit = "fail";
           }
         }
-        if (dieResult.modifiers.includes("drop")) {
-          el.dropped = true;
-        }
-        if (dieResult.modifiers.includes("explode")) {
-          el.exploded = true;
-        }
-        elements.push(el);
-      };
-      const addConstant = (constant) => {
-        elements.push({ type: "const", val: constant });
-      };
-      this.roll.rolls.forEach((rollElement) => {
-        if (
-          typeof rollElement === "object" &&
-          typeof rollElement.value === "number" &&
-          rollElement.rolls.length > 0
-        ) {
-          addMath("(");
-          rollElement.rolls.forEach((dieResult, idx) => {
-            if (idx !== 0) {
-              addMath("+");
-            }
-            addDice(dieResult, diceGroupsSeen);
-          });
-          addMath(")");
-          diceGroupsSeen++;
-        } else if (typeof rollElement === "string") {
-          addMath(rollElement);
-        } else if (typeof rollElement === "number") {
-          addConstant(rollElement);
-        }
+        result.push({
+          type: "die",
+          value: dieResult.value.toString(),
+          ...(crit && { crit }),
+          ...(dieResult.modifiers.includes("drop") && { dropped: true }),
+          ...(dieResult.modifiers.includes("explode") && { exploded: true }),
+        });
       });
-      return elements;
-    },
-    title() {
-      return (
-        `Average value: ${this.roll.averageTotal}\n` +
-        `Minimum Roll: ${this.roll.minTotal}\n` +
-        `Maximum Roll: ${this.roll.maxTotal}`
-      );
-    },
-  },
-  methods: {
-    diceRenderClass(diceElement) {
-      return {
-        mathRender: diceElement.type === "math",
-      };
-    },
-    diceClass(dice) {
-      return {
-        dropped: dice.dropped,
-        "crit-success": dice.crit === "success",
-        "crit-fail": dice.crit === "fail",
-      };
-    },
-  },
-};
+      result.push({ type: "math", value: ")" });
+      diceGroupsSeen++;
+    }
+  });
+  result.push(
+    { type: "math", value: "=" },
+    { type: "math", value: props.rollResult.total.toString(), numeric: true },
+  );
+  return result;
+});
+
+const title = computed(
+  () =>
+    `Notation: ${props.rollResult.notation}\n` +
+    `Average Roll: ${props.rollResult.averageTotal}\n` +
+    `Minimum Roll: ${props.rollResult.minTotal}\n` +
+    `Maximum Roll: ${props.rollResult.maxTotal}`,
+);
+
+const syntaxClass = (syntax: MathResult | DieResult) => ({
+  math: syntax.type === "math",
+  numeric: syntax.type === "math" && syntax.numeric,
+  die: syntax.type === "die",
+  dropped: syntax.type === "die" && syntax.dropped,
+  exploded: syntax.type === "die" && syntax.exploded,
+  "crit-success": syntax.type === "die" && syntax.crit === "success",
+  "crit-fail": syntax.type === "die" && syntax.crit === "fail",
+});
 </script>
 
 <style scoped>
-.diceSum {
-  margin-bottom: 8px;
+.syntax-container {
+  font-size: 28px;
+  column-gap: 2px;
 }
-
-.diceRow {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.diceElement {
-  font-family: var(--number-font);
+.math.numeric {
   font-weight: 500;
-  font-size: 22pt;
-  width: 40px;
-  height: 40px;
+}
+.die {
+  font-weight: 500;
+  background-color: var(--blue-500);
+  border-radius: var(--border-radius);
+  padding: 2px;
+  min-width: 33px;
   text-align: center;
-  border-radius: 5px;
 }
-
-.dice {
-  background-color: var(--main-button);
-  color: white;
-}
-.dice.crit-success {
+.die.crit-success {
   background-color: var(--green-500);
 }
-.dice.crit-fail {
+.die.crit-fail {
   background-color: var(--red-700);
 }
-.dice.dropped {
+.die.dropped {
   background-color: var(--gray-700);
-}
-/* sudo class which crosses out the dropped die */
-.dice.dropped::after {
-  content: "/";
-  font-family: var(--app-font);
-  color: black;
-  font-size: 72px;
-  position: relative;
-  top: -58px;
-  left: -3px;
+  text-decoration: line-through;
+  text-decoration-color: var(--red-700);
 }
 
-.math {
-  font-weight: 400;
-  width: 30px;
-}
-
-/* Pile constant and border on top of each other, so the border doesn't affect the height for the number */
-.constantContainer {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  border: 3px solid var(--logo-color);
-}
-.constant {
-  margin-left: -3px; /* margin left instead of top because of 3px border in container */
-}
-
-.total {
-  font-family: var(--number-font);
-  font-weight: 500;
-  font-size: 22pt;
-  height: 40px;
-  text-align: center;
-  border-radius: 5px;
-}
-
-.shiftDown {
-  margin-top: 3px;
-}
-
-.mathRender + .mathRender {
-  margin-left: -10px; /* Gets the spacing down a bit better */
+.die.exploded::after {
+  content: "!";
 }
 </style>

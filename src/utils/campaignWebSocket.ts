@@ -2,9 +2,7 @@ import { BASE_WS_URL } from "@/api/utils";
 import { TOKEN_LOCAL_STORAGE } from "./constants";
 import {
   CONNECTION_AUTHORIZED_MSG,
-  SEND_CHAT_TYPE,
   campaignWSMessageValidator,
-  type SendChatMessage,
   CHAT_TYPE,
   OLD_CHAT_TYPE,
   UPDATE_CHAT_TYPE,
@@ -65,11 +63,6 @@ export class CampaignWebSocket {
         }
       }
     };
-  }
-
-  sendChatMessage(message: string) {
-    const chat: SendChatMessage = { type: SEND_CHAT_TYPE, message };
-    this.send(chat);
   }
 
   send(msg: Record<string, unknown>) {

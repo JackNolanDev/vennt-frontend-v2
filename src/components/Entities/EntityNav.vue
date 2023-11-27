@@ -59,6 +59,13 @@
         class="skinny desktop-only"
       ></BaseButton>
       <BaseButton
+        v-if="campaignStore.details && campaignStore.role !== 'SPECTATOR'"
+        :to="campaignChatLink"
+        title="Show Campaign Chat"
+        icon="chat"
+        class="skinny desktop-only"
+      ></BaseButton>
+      <BaseButton
         @click="toggleDropdown"
         icon="menu"
         class="skinny"
@@ -106,6 +113,13 @@
           icon="edit_note"
           class="skinny bold wide mobile-only"
           >Notes</BaseButton
+        >
+        <BaseButton
+          v-if="campaignStore.details && campaignStore.role !== 'SPECTATOR'"
+          :to="{ name: ENTITY_CAMPAIGN_CHAT_ROUTE, query }"
+          icon="chat"
+          class="skinny bold wide mobile-only"
+          >Campaign Chat</BaseButton
         >
         <BaseButton
           v-if="entityStore.canEdit"
@@ -164,7 +178,7 @@
 </template>
 
 <script setup lang="ts">
-import router, {
+import {
   ENTITY_ABILITIES_ROUTE,
   ENTITY_COMBAT_ROUTE,
   ENTITY_ITEMS_ROUTE,
@@ -176,6 +190,7 @@ import router, {
   ENTITY_DESCRIPTION_ROUTE,
   ENTITY_NOTES_ROUTE,
   CAMPAIGN_ROUTE,
+  ENTITY_CAMPAIGN_CHAT_ROUTE,
 } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { useEntityStore } from "@/stores/entity";
@@ -183,18 +198,28 @@ import { useEntityNotesStore } from "@/stores/entityNotes";
 import { computed, reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { useCampaignStore } from "@/stores/campaign";
+import { useRoute } from "vue-router";
 
 const state = reactive({ dropdownOpen: false });
 const accountInfoStore = useAccountInfoStore();
 const campaignStore = useCampaignStore();
 const entityStore = useEntityStore();
 const entityNotesStore = useEntityNotesStore();
+const route = useRoute();
 
-const query = computed(() => router.currentRoute.value.query);
+const query = computed(() => route.query);
 
 const toggleDropdown = () => {
   state.dropdownOpen = !state.dropdownOpen;
 };
+
+const campaignChatLink = computed(() => {
+  const { chat, ...query } = route.query;
+  if (chat) {
+    return { query };
+  }
+  return { query: { ...query, chat: "visible" } };
+});
 </script>
 
 <style scoped>

@@ -1,5 +1,10 @@
 <template>
-  <div v-if="campaignStore.chat" class="chat-wrapper">
+  <div
+    v-if="campaignStore.chat"
+    class="chat-wrapper"
+    :class="{ 'allow-for-button': inRouteBasedSidebar }"
+    :style="heightOverride ? { height: heightOverride + 'px' } : undefined"
+  >
     <div
       v-if="campaignStore.chat.length > 0"
       class="chat-messages"
@@ -23,6 +28,8 @@
     <div class="mt-16 chat-messages" v-else>No chat messages sent yet...</div>
     <NewCampaignChatForm
       v-if="campaignStore.role !== 'SPECTATOR'"
+      :entity-id="entityId"
+      class="chat-form"
     ></NewCampaignChatForm>
   </div>
 </template>
@@ -35,6 +42,11 @@ import NewCampaignChatForm from "./NewCampaignChatForm.vue";
 import CampaignStoredMessage from "./CampaignStoredMessage.vue";
 import { CHAT_TYPE } from "vennt-library";
 
+defineProps<{
+  entityId?: string;
+  inRouteBasedSidebar?: boolean;
+  heightOverride?: number;
+}>();
 const campaignStore = useCampaignStore();
 
 let observer: IntersectionObserver | null = null;
@@ -107,6 +119,11 @@ onUnmounted(() => {
   flex-direction: column;
   padding: 16px;
   height: calc(100% - 32px);
+  max-height: 100lvh;
+}
+.chat-wrapper.allow-for-button {
+  height: calc(100% - 32px - 46px);
+  padding-top: 0px;
 }
 .chat-messages {
   flex-grow: 1;
@@ -120,5 +137,26 @@ onUnmounted(() => {
   display: grid;
   justify-items: center;
   align-items: center;
+}
+
+.chat-form {
+  padding-top: 8px;
+  border-top: 2px solid var(--border);
+}
+
+@media screen and (max-width: 760px) {
+  .chat-wrapper {
+    flex-direction: column-reverse;
+  }
+  .chat-messages {
+    flex-direction: column;
+  }
+
+  .chat-form {
+    padding-top: 0px;
+    border-top: 0px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
 }
 </style>

@@ -99,7 +99,7 @@ const handleRecoveryShock = () => {
   if (!checkSuccess.value && entityStore.recoveryShockSrc) {
     const recoveryShockDisabledAction = {
       icon: "sick",
-      msg: "You are immune to the benefits of this ability due to organ failure!",
+      msg: `You are immune to "${entityStore.recoveryShockSrc[0]}" due to organ failure!`,
     };
     const srcArray =
       (entityStore.entity?.entity.other_fields.disabled_actions ?? {})[

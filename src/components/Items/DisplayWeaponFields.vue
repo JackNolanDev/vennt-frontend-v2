@@ -22,12 +22,12 @@
     >Use 2 Actions</BaseButton
   >
   <div v-if="damageDice && showDamageDice" class="card mt-8 padded thin column">
-    <ToggleableDiceSectionCopyable
+    <ToggleableDiceSection
       :dice="damageDice"
       :header="true"
       :comment="diceReason"
       :attrs="relatedDmgAttrs"
-    ></ToggleableDiceSectionCopyable>
+    ></ToggleableDiceSection>
   </div>
   <SimpleAbilityTable
     v-if="onAttackAbilities.length > 0 && showDamageDice"
@@ -58,7 +58,7 @@ import {
 } from "@/utils/weaponUtils";
 import { computed } from "vue";
 import SimpleAbilityTable from "../Abilities/SimpleAbilityTable.vue";
-import ToggleableDiceSectionCopyable from "../Dice/ToggleableDiceSectionCopyable.vue";
+import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import SimpleItemTable from "./SimpleItemTable.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import WeaponIcon from "./WeaponIcon.vue";

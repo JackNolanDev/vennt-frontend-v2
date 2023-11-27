@@ -12,27 +12,35 @@ import { useCampaignStore } from "./campaign";
 import router from "@/router";
 import { v4 } from "uuid";
 
-type DiceRollResult = {
+export type SingleDiceRollResultValue = {
+  type: "result";
+  calculationValue: number;
+  modifierFlags: string;
+  modifiers: string[];
+  initialValue: number;
+  useInTotal: boolean;
+  value: number;
+};
+export type DiceRollResultValue = {
+  type: "roll-results";
+  total: number;
+  rolls: SingleDiceRollResultValue[];
+};
+
+export type RollResult = {
+  type: "dice-roll";
   output: string;
   total: number;
   minTotal: number;
   maxTotal: number;
+  averageTotal: number;
   notation: string;
-  rolls: Array<{
-    calculationValue: number;
-    modifierFlags: string;
-    modifiers: string[];
-    type: string;
-    initialValue: number;
-    useInTotal: boolean;
-    value: number;
-  }>;
-  type: string;
+  rolls: Array<DiceRollResultValue | string | number>;
 };
 
 type DiceStore = {
   latestRoll: Record<string, DiceRoll>;
-  rolls: Record<string, DiceRollResult>;
+  rolls: Record<string, RollResult>;
   pendingRolls: Record<string, string>;
   defaultDiceSettings: DiceSettings;
   diceDropDown: boolean;
@@ -91,7 +99,7 @@ export const useDiceStore = defineStore("dice", {
         }
       }
       const rollResult = new DiceRoll(dice.web).toJSON();
-      this.rolls[key] = rollResult as unknown as DiceRollResult;
+      this.rolls[key] = JSON.parse(JSON.stringify(rollResult));
     },
   },
 });

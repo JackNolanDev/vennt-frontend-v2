@@ -2,16 +2,18 @@
   <BaseButton @click="rollButton" icon="casino" class="wide selected">
     Roll {{ dice.web }}
   </BaseButton>
-  <DiceRender
-    v-if="showDice"
-    :roll="diceStore.rolls[rollKey]"
-    class="mb-8"
-  ></DiceRender>
+  <div class="dice-placeholder">
+    <DiceRender
+      v-if="showDice"
+      :roll-result="diceStore.rolls[rollKey]"
+    ></DiceRender>
+  </div>
   <DiceToggles
     :attrs="attrs ?? (attr ? [attr] : undefined)"
     :skip-key="skipKey"
   ></DiceToggles>
   <BaseDropDown
+    v-if="!hideOtherOptions"
     :use-given-state="true"
     :givenClosed="!diceStore.diceDropDown"
     @change="diceStore.toggleDiceDropDown()"
@@ -58,6 +60,7 @@ const props = defineProps<{
   attrs?: EntityAttribute[];
   comment?: string;
   skipKey?: string;
+  hideOtherOptions?: boolean;
 }>();
 const emit = defineEmits<{ (e: "rollValue", state: number): void }>();
 const entityStore = useEntityStore();
@@ -129,3 +132,8 @@ const rollHeroButton = () => {
   }
 };
 </script>
+<style scoped>
+.dice-placeholder {
+  min-height: 40px;
+}
+</style>

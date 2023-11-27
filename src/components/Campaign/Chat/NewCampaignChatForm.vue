@@ -1,6 +1,5 @@
 <template>
   <form>
-    <div class="separator mb-16"></div>
     <BaseInlineTextEditor
       v-model="state.newMessage"
       placeholder="Chat"
@@ -24,11 +23,12 @@ import { reactive } from "vue";
 import BaseButton from "../../Base/BaseButton.vue";
 import { editorEmpty } from "@/utils/textUtils";
 
+const props = defineProps<{ entityId?: string }>();
 const campaignStore = useCampaignStore();
 const state = reactive({ newMessage: "" });
 
 const sendNewMessage = () => {
-  campaignStore.sendChatMessage(state.newMessage);
+  campaignStore.sendChatMessage(state.newMessage, props.entityId);
   state.newMessage = "";
 };
 </script>

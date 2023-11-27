@@ -1,27 +1,37 @@
 <template>
-  <BaseCheckBox
-    :checked="diceStore.useBuiltinDice"
-    :use-toggle="true"
-    @click="diceStore.toggleUseBuiltinDice"
-    class="wide"
-  >
-    {{ diceStore.useBuiltinDice ? "Show Copy Buttons" : "Show Built-in Dice" }}
-  </BaseCheckBox>
-  <div class="separator thin"></div>
+  <div v-if="!onlyShow">
+    <BaseCheckBox
+      :checked="diceStore.useBuiltinDice"
+      :use-toggle="true"
+      @click="diceStore.toggleUseBuiltinDice"
+      class="wide"
+    >
+      {{
+        diceStore.useBuiltinDice ? "Show Copy Buttons" : "Show Built-in Dice"
+      }}
+    </BaseCheckBox>
+    <div class="separator thin"></div>
+  </div>
   <ToggleableDiceSectionRollable
-    v-if="diceStore.useBuiltinDice"
+    v-if="onlyShow === 'roll' || diceStore.useBuiltinDice"
     :dice="dice"
     :attr="attr"
+    :attrs="attrs"
     :comment="comment"
     :skip-key="skipKey"
+    :hide-other-options="hideOtherOptions"
     @roll-value="rollValue"
   ></ToggleableDiceSectionRollable>
   <ToggleableDiceSectionCopyable
     v-else
     :dice="dice"
     :attr="attr"
+    :attrs="attrs"
     :comment="comment"
+    :header="header"
+    :use-dice-as-header="useDiceAsHeader"
     :skip-key="skipKey"
+    :hide-other-options="hideOtherOptions"
   ></ToggleableDiceSectionCopyable>
 </template>
 
@@ -35,8 +45,13 @@ import BaseCheckBox from "../Base/BaseCheckBox.vue";
 defineProps<{
   dice: DiceCommands;
   attr?: EntityAttribute;
+  attrs?: EntityAttribute[];
+  header?: boolean;
+  useDiceAsHeader?: boolean;
   comment?: string;
   skipKey?: string;
+  onlyShow?: "roll" | "copy";
+  hideOtherOptions?: boolean;
 }>();
 const emit = defineEmits<{ (e: "rollValue", state: number): void }>();
 const diceStore = useDiceStore();

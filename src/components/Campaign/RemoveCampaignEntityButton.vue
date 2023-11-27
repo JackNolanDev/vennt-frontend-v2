@@ -3,15 +3,16 @@
     trigger-icon="delete"
     :id="`campaign-rm-${entity.entity_id}`"
     @main-button="removeCampaignEntity"
-    ><template #title>Remove Entity from Campaign</template
+    ><template #title
+      >Remove {{ titleText(entity.type) }} from Campaign</template
     ><template #mainButton>Remove</template>Are you sure you want to remove
-    {{ entity.name }} from this campaign? Once removed, can you add this entity
+    {{ entity.name }} from this campaign? Once removed, you can add this entity
     back.
   </ConfirmationModal>
 </template>
 
 <script setup lang="ts">
-import type { CampaignEntity } from "vennt-library";
+import { titleText, type CampaignEntity } from "vennt-library";
 import ConfirmationModal from "../Base/ConfirmationModal.vue";
 import { useCampaignStore } from "@/stores/campaign";
 
