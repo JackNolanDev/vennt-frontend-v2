@@ -1,5 +1,7 @@
 <template>
-  <CampaignChat :entity-id="entityStore.entity?.entity.id"></CampaignChat>
+  <CampaignChat
+    :entity-id="entityStore.canEdit ? entityStore.entity?.entity.id : undefined"
+  ></CampaignChat>
 </template>
 
 <script setup lang="ts">

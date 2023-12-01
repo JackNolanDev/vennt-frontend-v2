@@ -76,7 +76,7 @@ export const useDiceStore = defineStore("dice", {
     async rollDice(dice: DiceCommands, key: string, comment?: string) {
       const entityStore = useEntityStore();
       const campaignStore = useCampaignStore();
-      if (campaignStore.ws) {
+      if (campaignStore.ws && entityStore.canEdit) {
         const campaignId =
           router.currentRoute.value.params.campaignId ??
           router.currentRoute.value.query.campaign;

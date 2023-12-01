@@ -178,7 +178,6 @@ export const useCampaignStore = defineStore("campaign", {
         entity: entityId,
         for: recipient,
       };
-      console.log(request);
       this.ws.send(request);
     },
     requestDiceRoll() {},

@@ -4,6 +4,7 @@
     <PageLayout>
       <h1>Campaign Settings</h1>
       <CampaignSettingsInvites></CampaignSettingsInvites>
+      <CampaignSettingsDangerous></CampaignSettingsDangerous>
     </PageLayout>
   </BaseLayout>
 </template>
@@ -18,6 +19,7 @@ import { useRoute } from "vue-router";
 import { idValidator } from "vennt-library";
 import CampaignSettingsNav from "@/components/Campaign/CampaignSettingsNav.vue";
 import CampaignSettingsInvites from "@/components/Campaign/Settings/CampaignSettingsInvites.vue";
+import CampaignSettingsDangerous from "@/components/Campaign/Settings/CampaignSettingsDangerous.vue";
 
 const campaignStore = useCampaignStore();
 const route = useRoute();

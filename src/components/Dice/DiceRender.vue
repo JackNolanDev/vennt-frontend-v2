@@ -44,7 +44,12 @@ const syntaxList = computed(() => {
   const result: Array<MathResult | DieResult> = [];
   props.rollResult.rolls.forEach((val) => {
     if (typeof val === "string") {
-      result.push({ type: "math", value: val });
+      if (val === "*") {
+        // special case for multiplication
+        result.push({ type: "math", value: "×" });
+      } else {
+        result.push({ type: "math", value: val });
+      }
     } else if (typeof val === "number") {
       result.push({ type: "math", value: val.toString(), numeric: true });
     } else if (typeof val === "object") {
