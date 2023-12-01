@@ -14,6 +14,15 @@
           >Join Campaign?</BaseButton
         >
       </div>
+      <div v-else-if="state.fetchFailed">
+        <p class="label-text stronger">This link has expired or is invalid!</p>
+        <BaseButton
+          :to="{ name: HOME_ROUTE }"
+          icon="home"
+          class="primary wide bolder"
+          >Head home</BaseButton
+        >
+      </div>
       <div v-else-if="accountInfoStore.isLoggedIn" class="alignRow center">
         <BaseSpinner class="mt-64"></BaseSpinner>
       </div>
@@ -41,15 +50,18 @@ import {
 import { renderMarkdown } from "@/utils/textUtils";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseSpinner from "@/components/Base/BaseSpinner.vue";
+import { useCampaignStore } from "@/stores/campaign";
 
 const accountInfoStore = useAccountInfoStore();
+const campaignStore = useCampaignStore();
 const route = useRoute();
 
 const state = reactive<{
   campaign: Campaign | null;
   disableJoinButton: boolean;
   hash: string;
-}>({ campaign: null, disableJoinButton: false, hash: "" });
+  fetchFailed: boolean;
+}>({ campaign: null, disableJoinButton: false, hash: "", fetchFailed: false });
 
 onBeforeMount(async () => {
   const hash = campaignInviteLinkHashValidator.safeParse(route.params.hash);
@@ -59,7 +71,22 @@ onBeforeMount(async () => {
   }
   state.hash = hash.data;
   if (accountInfoStore.isLoggedIn) {
-    state.campaign = await fetchCampaignByCampaignInviteLinkApi(state.hash);
+    try {
+      state.campaign = await fetchCampaignByCampaignInviteLinkApi(state.hash);
+    } catch (err) {
+      state.fetchFailed = true;
+      return;
+    }
+
+    try {
+      await campaignStore.fetchCampaign(state.campaign.id, true);
+      router.push({
+        name: CAMPAIGN_ROUTE,
+        params: { campaignId: state.campaign.id },
+      });
+    } catch (err) {
+      // do nothing
+    }
   }
 });
 
