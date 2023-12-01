@@ -16,84 +16,84 @@ import api from "./apiInstance";
 import { z } from "zod";
 
 export const addCampaignApi = (
-  request: PostCampaign
+  request: PostCampaign,
 ): Promise<FullCampaignDetails> => {
   return wrapAPI(
     () => api.post("/campaign", request, authConfig()),
-    fullCampaignDetailsValidator
+    fullCampaignDetailsValidator,
   );
 };
 
 export const listUsersCampaignsApi = (): Promise<CampaignWithRole[]> => {
   return wrapAPI(
     () => api.get("/campaign", authConfig()),
-    campaignWithRoleValidator.array()
+    campaignWithRoleValidator.array(),
   );
 };
 
 export const fetchCampaignDetailsApi = (
-  campaignId: string
+  campaignId: string,
 ): Promise<FullCampaignDetails> => {
   return wrapAPI(
     () => api.get(`/campaign/${campaignId}`, authConfig()),
-    fullCampaignDetailsValidator
+    fullCampaignDetailsValidator,
   );
 };
 
 export const putCampaignDescApi = (
   campaignId: string,
-  request: CampaignDesc
+  request: CampaignDesc,
 ): Promise<boolean> => {
   return wrapAPI(
     () => api.put(`/campaign/${campaignId}/desc`, request, authConfig()),
-    z.boolean()
+    z.boolean(),
   );
 };
 
 export const addCampaignEntityApi = (
   campaignId: string,
-  request: PostCampaignEntity
+  request: PostCampaignEntity,
 ): Promise<CampaignEntity> => {
   return wrapAPI(
     () => api.post(`/campaign/${campaignId}/entity`, request, authConfig()),
-    campaignEntityValidator
+    campaignEntityValidator,
   );
 };
 
 export const removeCampaignEntityApi = (
   campaignId: string,
-  entityId: string
+  entityId: string,
 ): Promise<boolean> => {
   return wrapAPI(
     () =>
       api.delete(`/campaign/${campaignId}/entity/${entityId}`, authConfig()),
-    z.boolean()
+    z.boolean(),
   );
 };
 
 export const updateCampaignMemberRoleApi = (
   campaignId: string,
   memberId: string,
-  role: CampaignRole
+  role: CampaignRole,
 ): Promise<CampaignRole> => {
   return wrapAPI(
     () =>
       api.put(
-        `/campaign/${campaignId}/entity/${memberId}/role`,
-        role,
-        authConfig()
+        `/campaign/${campaignId}/member/${memberId}/role`,
+        { role },
+        authConfig(),
       ),
-    campaignRoleValidator
+    campaignRoleValidator,
   );
 };
 
 export const removeCampaignMemberApi = (
   campaignId: string,
-  memberId: string
+  memberId: string,
 ): Promise<boolean> => {
   return wrapAPI(
     () =>
       api.delete(`/campaign/${campaignId}/member/${memberId}`, authConfig()),
-    z.boolean()
+    z.boolean(),
   );
 };

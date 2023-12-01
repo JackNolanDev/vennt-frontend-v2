@@ -29,8 +29,7 @@
       v-if="entityStore.entity?.entity.id"
       :to="{
         name: ENTITY_ITEMS_ROUTE,
-        params: router.currentRoute.value.params,
-        query: { ...router.currentRoute.value.query, new: 'item' },
+        query: { ...$route.query, new: 'item' },
       }"
       icon="add"
       class="wide"
@@ -41,7 +40,7 @@
       v-if="entityStore.entity?.entity.id"
       :to="{
         name: ENTITY_ITEM_SHOP_ROUTE,
-        params: { id: entityStore.entity.entity.id },
+        query: { ...$route.query },
       }"
       icon="store"
       class="wide"
@@ -51,7 +50,7 @@
       v-if="entityStore.entity?.entity.id"
       :to="{
         name: ENTITY_WEAPON_SHOP_ROUTE,
-        params: { id: entityStore.entity?.entity.id },
+        query: { ...$route.query },
       }"
       icon="swords"
       class="wide"
@@ -66,7 +65,7 @@ import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseFraction from "@/components/Base/BaseFraction.vue";
 import ItemTable from "@/components/Items/ItemTable.vue";
 import { useEntityStore } from "@/stores/entity";
-import router, {
+import {
   ENTITY_ITEMS_ROUTE,
   ENTITY_ITEM_SHOP_ROUTE,
   ENTITY_WEAPON_SHOP_ROUTE,

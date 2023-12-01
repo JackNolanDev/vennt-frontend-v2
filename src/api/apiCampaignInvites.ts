@@ -10,11 +10,11 @@ import api from "./apiInstance";
 import { z } from "zod";
 
 export const addCampaignInviteApi = (
-  request: PostCampaignInvite
+  request: PostCampaignInvite,
 ): Promise<CampaignInvite> => {
   return wrapAPI(
     () => api.post("/campaign_invite", request, authConfig()),
-    campaignInviteValidator
+    campaignInviteValidator,
   );
 };
 
@@ -23,22 +23,22 @@ export const listUsersCampaignInvitesApi = (): Promise<
 > => {
   return wrapAPI(
     () => api.get("/campaign_invite", authConfig()),
-    campaignInviteWithDetailsValidator.array()
+    campaignInviteWithDetailsValidator.array(),
   );
 };
 
 export const acceptCampaignInviteApi = (inviteId: string): Promise<boolean> => {
   return wrapAPI(
     () => api.post(`/campaign_invite/${inviteId}`, undefined, authConfig()),
-    z.boolean()
+    z.boolean(),
   );
 };
 
 export const declineCampaignInviteApi = (
-  inviteId: string
+  inviteId: string,
 ): Promise<boolean> => {
   return wrapAPI(
     () => api.delete(`/campaign_invite/${inviteId}`, authConfig()),
-    z.boolean()
+    z.boolean(),
   );
 };

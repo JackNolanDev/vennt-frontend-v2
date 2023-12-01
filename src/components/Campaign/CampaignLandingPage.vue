@@ -9,7 +9,20 @@
     @cancel="cancelCampaignDesc"
   ></BaseStealthTextEditor>
   <div class="separator"></div>
-  <h2>Members</h2>
+  <div class="alignRow split">
+    <h2>Members</h2>
+    <BaseButton
+      v-if="campaignStore.role !== 'SPECTATOR'"
+      :to="{ name: CAMPAIGN_SETTINGS_ROUTE }"
+      icon="settings"
+      ><span
+        ><span v-if="campaignStore.role === 'GM'" class="remove-when-small"
+          >Send Invitations /</span
+        >
+        Settings</span
+      ></BaseButton
+    >
+  </div>
   <table>
     <tr>
       <th>Members</th>
@@ -17,7 +30,14 @@
     </tr>
     <tr v-for="member in campaignStore.details?.members" :key="member.id">
       <td>
-        <strong>{{ member.username }}</strong> ({{ member.role }})
+        <div class="alignRow gap">
+          <strong>{{ member.username }}</strong>
+          <UpdateMemberRoleModal
+            v-if="campaignStore.role === 'GM'"
+            :member="member"
+          ></UpdateMemberRoleModal>
+          <span v-else class="muted-text">({{ member.role }})</span>
+        </div>
       </td>
       <td v-if="entitiesForAccount(member.account_id).length > 0">
         <div
@@ -55,7 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { ENTITY_ROUTE } from "@/router";
+import { CAMPAIGN_SETTINGS_ROUTE, ENTITY_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
 import { type CampaignEntity, CAMPAIGN_ROLE_GM } from "vennt-library";
 import { reactive } from "vue";
@@ -65,6 +85,7 @@ import BulletPoint from "@/components/Base/BulletPoint.vue";
 import BaseStealthTextEditor from "@/components/Base/BaseStealthTextEditor.vue";
 import RemoveCampaignEntityButton from "./RemoveCampaignEntityButton.vue";
 import { useAccountInfoStore } from "@/stores/accountInfo";
+import UpdateMemberRoleModal from "./UpdateMemberRoleModal.vue";
 
 const accountInfoStore = useAccountInfoStore();
 const campaignStore = useCampaignStore();
@@ -82,3 +103,11 @@ const cancelCampaignDesc = () => {
   state.desc = campaignStore.details?.campaign.desc ?? "";
 };
 </script>
+
+<style scoped>
+@container page (max-width: 400px) {
+  .remove-when-small {
+    display: none;
+  }
+}
+</style>

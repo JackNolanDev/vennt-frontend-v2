@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { useCampaignStore } from "@/stores/campaign";
-import ConfirmationModal from "../Base/ConfirmationModal.vue";
+import ConfirmationModal from "../../Base/ConfirmationModal.vue";
 import { computed, reactive } from "vue";
 import { type CampaignRole, CAMPAIGN_ROLES } from "vennt-library";
 

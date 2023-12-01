@@ -709,6 +709,9 @@ pre > code {
 .alignRow.end {
   justify-content: end;
 }
+.alignRow.center {
+  justify-content: center;
+}
 .alignRow.wrap {
   flex-wrap: wrap;
   row-gap: 4px;

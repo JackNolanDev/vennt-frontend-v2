@@ -27,8 +27,10 @@ export const WIKI_ROUTE = "wiki";
 export const WIKI_PATHS_ROUTE = "wikiPaths";
 export const WIKI_PATHS_SPECIFIC_ROUTE = "wikiPathsSpecific";
 export const CAMPAIGN_ROUTE = "campaign";
+export const CAMPAIGN_SETTINGS_ROUTE = "campaignSettings";
 export const CAMPAIGN_CREATE_ROUTE = "campaignCreate";
 export const CAMPAIGN_TEST_ROUTE = "campaignTest";
+export const INVITE_ROUTE = "invite";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -158,12 +160,6 @@ const router = createRouter({
       ],
     },
     {
-      path: "/campaign/:campaignId",
-      name: CAMPAIGN_ROUTE,
-      meta: { loggedInOnly: true, ws: true },
-      component: () => import("../views/CampaignView.vue"),
-    },
-    {
       path: "/campaign/create",
       name: CAMPAIGN_CREATE_ROUTE,
       meta: { loggedInOnly: true },
@@ -174,6 +170,24 @@ const router = createRouter({
       name: CAMPAIGN_TEST_ROUTE,
       meta: { loggedInOnly: true },
       component: () => import("../views/CampaignTestView.vue"),
+    },
+    {
+      path: "/campaign/:campaignId",
+      name: CAMPAIGN_ROUTE,
+      meta: { loggedInOnly: true, ws: true },
+      component: () => import("../views/CampaignView.vue"),
+    },
+    {
+      path: "/campaign/:campaignId/settings",
+      name: CAMPAIGN_SETTINGS_ROUTE,
+      meta: { loggedInOnly: true, ws: true },
+      component: () => import("../views/CampaignSettingsView.vue"),
+    },
+    {
+      path: "/invite/:hash",
+      name: INVITE_ROUTE,
+      meta: { loggedInOnly: true },
+      component: () => import("../views/InviteLinkView.vue"),
     },
     {
       path: "/credits",

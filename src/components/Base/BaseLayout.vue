@@ -10,6 +10,7 @@
 
 <style scoped>
 /* prefers-sidebar class causes the left sidebar to stay after the main content folds on small screens */
+/* prefers-main class causes the main content to stay after the sidebars fold on small screens */
 .page-layout {
   display: grid;
   grid-template-columns: min(var(--sidebar-width), 50vw) auto min(
@@ -114,11 +115,19 @@
     display: none;
   }
   /* Collapse main, maintain right sidebar */
-  .page-layout.sidebar-right:not(.sidebar) > .sidebar-right-body {
+  .page-layout.sidebar-right:not(.sidebar):not(.prefers-main)
+    > .sidebar-right-body {
     grid-column-start: 1;
   }
-  .page-layout.sidebar-right:not(.sidebar) > .main-body {
+  .page-layout.sidebar-right:not(.sidebar):not(.prefers-main) > .main-body {
     display: none;
+  }
+  /* Collapse right sidebar, maintain main when .prefers-main */
+  .page-layout.prefers-main.sidebar-right:not(.sidebar) > .sidebar-right-body {
+    display: none;
+  }
+  .page-layout.prefers-main.sidebar-right:not(.sidebar) > .main-body {
+    grid-column-start: 1;
   }
 
   /* FIX: DO NOT USE GRID ON MOBILE (causes weird double scrollbars) */

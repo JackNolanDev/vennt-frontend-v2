@@ -29,11 +29,19 @@
   <div v-if="state.dropdownOpen" class="nav-dropdown">
     <div class="separator"></div>
     <nav class="mt-8 mb-8 ml-8 mr-8">
-      <BaseButton :to="{ name: LOGIN_ROUTE }" class="skinny bold">
-        LOG IN
+      <BaseButton
+        :to="{ name: LOGIN_ROUTE }"
+        icon="login"
+        class="skinny bold wide"
+      >
+        Log in
       </BaseButton>
-      <BaseButton :to="{ name: SIGNUP_ROUTE }" class="skinny bold">
-        SIGN UP
+      <BaseButton
+        :to="{ name: SIGNUP_ROUTE }"
+        icon="person_add"
+        class="skinny bold wide"
+      >
+        Sign up
       </BaseButton>
     </nav>
   </div>

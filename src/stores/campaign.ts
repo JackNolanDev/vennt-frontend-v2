@@ -4,6 +4,7 @@ import {
   fetchCampaignDetailsApi,
   putCampaignDescApi,
   removeCampaignEntityApi,
+  updateCampaignMemberRoleApi,
 } from "@/api/apiCampaigns";
 import router, { CAMPAIGN_ROUTE } from "@/router";
 import {
@@ -22,6 +23,7 @@ import {
   type StoredMessage,
   SEND_CHAT_TYPE,
   type SendChatMessage,
+  type PostCampaignInviteLink,
 } from "vennt-library";
 import { defineStore } from "pinia";
 import { useAccountInfoStore } from "./accountInfo";
@@ -30,6 +32,10 @@ import {
   declineCampaignInviteApi,
 } from "@/api/apiCampaignInvites";
 import { CampaignWebSocket } from "@/utils/campaignWebSocket";
+import {
+  addCampaignInviteLinkApi,
+  deleteCampaignInviteLinkApi,
+} from "@/api/apiCampaignInviteLinks";
 
 interface CampaignState {
   details: FullCampaignDetails | null;
@@ -97,6 +103,20 @@ export const useCampaignStore = defineStore("campaign", {
       );
       await removeCampaignEntityApi(this.details.campaign.id, entityId);
     },
+    async adminUpdateCampaignMemberRole(memberId: string, role: CampaignRole) {
+      if (!this.details) return;
+      const updatedRole = await updateCampaignMemberRoleApi(
+        this.details.campaign.id,
+        memberId,
+        role,
+      );
+      const foundMember = this.details.members.find(
+        (member) => member.account_id === memberId,
+      );
+      if (foundMember) {
+        foundMember.role = updatedRole;
+      }
+    },
     async adminSendInvite(request: Omit<PostCampaignInvite, "campaign_id">) {
       if (!this.details) return;
       const sentInvite = await addCampaignInviteApi({
@@ -113,6 +133,28 @@ export const useCampaignStore = defineStore("campaign", {
       }
       await declineCampaignInviteApi(inviteId);
     },
+    async adminCreateInviteLink(minsToExpire: number) {
+      if (!this.details) return;
+      const request: PostCampaignInviteLink = {
+        campaign_id: this.details.campaign.id,
+        hash: Math.random().toString(36).substring(2, 12),
+        minutes_to_expire: minsToExpire,
+      };
+      const response = await addCampaignInviteLinkApi(request);
+      if (this.details.invite_links) {
+        this.details.invite_links.push(response);
+      } else {
+        this.details.invite_links = [response];
+      }
+    },
+    async adminDeleteInviteLink(id: string) {
+      if (!this.details) return;
+      await deleteCampaignInviteLinkApi(this.details.campaign.id, id);
+      this.details.invite_links = this.details.invite_links?.filter(
+        (link) => link.id !== id,
+      );
+    },
+    // ---------------- Websocket actions ----------------
     connectToWebsocket(campaignId: string) {
       if (this.ws) {
         if (this.ws.campaignId === campaignId) return;
@@ -168,6 +210,7 @@ export const useCampaignStore = defineStore("campaign", {
       };
       this.ws.send(request);
     },
+    // ---------------- cleanup actions ----------------
     reset() {
       this.details = null;
       this.chat = null;

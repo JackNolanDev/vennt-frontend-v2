@@ -4,6 +4,7 @@
     :icon="triggerIcon"
     :class="triggerClass"
     :id="triggerButtonId"
+    :title="triggerTitle"
   >
     <slot name="triggerButton"></slot>
   </BaseButton>
@@ -39,6 +40,7 @@ const props = defineProps<{
   id: string;
   triggerClass?: string;
   triggerIcon?: string;
+  triggerTitle?: string;
   noMainButton?: boolean;
   mainButtonDisabled?: boolean;
   isLarge?: boolean;

@@ -1,10 +1,6 @@
 <template>
-  <BaseLayout
-    class="nav sidebar-right"
-    :class="{ sidebar: campaignStore.role === 'GM' }"
-  >
+  <BaseLayout class="nav sidebar-right prefers-main">
     <template #nav><BaseNav></BaseNav></template>
-    <template #sidebar><CampaignGMSettings></CampaignGMSettings></template>
     <template #sidebar-right
       ><CampaignRightSidebar></CampaignRightSidebar
     ></template>
@@ -30,7 +26,6 @@ import router, { HOME_ROUTE } from "@/router";
 import { useCampaignStore } from "@/stores/campaign";
 import { idValidator } from "vennt-library";
 import { onBeforeMount } from "vue";
-import CampaignGMSettings from "@/components/Campaign/CampaignGMSettings.vue";
 import CampaignLandingPage from "@/components/Campaign/CampaignLandingPage.vue";
 import CampaignRightSidebar from "@/components/Campaign/CampaignRightSidebar.vue";
 
