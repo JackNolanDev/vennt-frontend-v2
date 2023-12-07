@@ -48,6 +48,7 @@ Button styles:
 * "left" moves text and icon to the left side
 * "bold" makes text larger and bold
 * "bolder" makes text larger and more bold
+* "small-text" makes the text match the default text size of the rest of the app
 * "wide" makes button wide
 * "primary" makes button primary
 * "secondary" makes button a different color
@@ -70,6 +71,9 @@ Button styles:
 .bolder > .basicBtnContents {
   font-weight: 700;
   font-size: 18pt;
+}
+.small-text > .basicBtnContents {
+  font-size: 12pt;
 }
 .left {
   justify-content: flex-end;

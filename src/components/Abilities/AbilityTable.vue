@@ -85,8 +85,11 @@ const filteredAbilities = computed(() => {
     return props.abilities;
   }
   const searchStr = state.search.toLowerCase();
-  return props.abilities.filter((ability) =>
-    ability.name.toLowerCase().includes(searchStr),
+  return props.abilities.filter(
+    (ability) =>
+      ability.name.toLowerCase().includes(searchStr) ||
+      ability.effect.toLowerCase().includes(searchStr) ||
+      ability.custom_fields?.path?.toLowerCase().includes(searchStr),
   );
 });
 

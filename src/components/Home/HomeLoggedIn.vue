@@ -40,7 +40,10 @@
       <template #customIcon>
         <BulletPoint :entity="cog"></BulletPoint>
       </template>
-      {{ cog.name }} - Level: {{ cog.attributes.L }}
+      {{ cog.name }} - Level:
+      {{
+        cog.computed_attributes?.l.val ?? cog.attributes.l ?? cog.attributes.L
+      }}
     </BaseButton>
     <BaseButton :to="{ name: CREATE_COG_ROUTE }">
       <template #customIcon><BulletPoint></BulletPoint></template>
