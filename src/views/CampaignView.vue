@@ -11,9 +11,6 @@
       <div v-else>
         <p>Campaign Loading</p>
       </div>
-      <div v-if="debug" class="mt-64">
-        <pre><code>{{ campaignStore.details }}</code></pre>
-      </div>
     </PageLayout>
   </BaseLayout>
 </template>
@@ -40,6 +37,4 @@ onBeforeMount(() => {
   campaignStore.fetchCampaign(id.data, true);
   campaignStore.connectToWebsocket(id.data);
 });
-
-const debug = process.env.NODE_ENV === "development";
 </script>

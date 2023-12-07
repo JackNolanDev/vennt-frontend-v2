@@ -1,6 +1,9 @@
 <template>
   <BaseLayout class="nav sidebar">
-    <template #nav><BaseNav></BaseNav></template>
+    <template #nav
+      ><CampaignSettingsNav v-if="campaignStore.details"></CampaignSettingsNav>
+      <BaseNav v-else></BaseNav
+    ></template>
     <template #sidebar>
       <CombatStats
         :entity="characterCreateStore.collectedCharacter"
@@ -12,7 +15,10 @@
       ></CombatStats>
     </template>
     <PageLayout>
-      <h1 class="centeredText">CHARACTER CREATION</h1>
+      <h1 class="center-text">CHARACTER CREATION</h1>
+      <p v-if="campaignStore.details" class="label-text mb-8">
+        <strong>For "{{ campaignStore.details.campaign.name }}"</strong>
+      </p>
       <p class="textBlock">
         Current version: v0.14,
         <a
@@ -70,6 +76,11 @@
             Are you sure you are done editing this character? Most fields will
             still be editable once you save this character to the server.
           </p>
+          <p v-if="campaignStore.details" class="mb-0">
+            This character will automatically be added to the campaign "<strong
+              >{{ campaignStore.details.campaign.name }}</strong
+            >".
+          </p>
         </ConfirmationModal>
         <ConfirmationModal
           trigger-class="clear"
@@ -111,28 +122,52 @@ import router, { CREATE_ROUTE, ENTITY_ROUTE } from "@/router";
 import { useEntityStore } from "@/stores/entity";
 import { useJsonStore } from "@/stores/jsonStorage";
 import { entityCreationFullyHealed } from "@/utils/entityUtils";
+import { useCampaignStore } from "@/stores/campaign";
+import { onBeforeMount } from "vue";
+import { optionalIdValidator } from "vennt-library";
+import { useRoute } from "vue-router";
+import CampaignSettingsNav from "@/components/Campaign/CampaignSettingsNav.vue";
 
 const characterCreateStore = useCharacterCreateStore();
 const entityStore = useEntityStore();
+const campaignStore = useCampaignStore();
 const jsonStore = useJsonStore();
+const route = useRoute();
 
 characterCreateStore.loadFromLocalStorage();
 jsonStore.fetchShopItems();
+
+onBeforeMount(() => {
+  const campaignIdCheck = optionalIdValidator.safeParse(route.query.campaign);
+  if (campaignIdCheck.success && campaignIdCheck.data) {
+    campaignStore.fetchCampaign(campaignIdCheck.data, true);
+  } else {
+    campaignStore.reset();
+  }
+});
 
 const createCharacter = () => {
   const character = entityCreationFullyHealed(
     characterCreateStore.collectedCharacter,
     characterCreateStore.characterAttrs,
   );
+  const redirectQuery = campaignStore.details
+    ? { campaign: campaignStore.details.campaign.id }
+    : undefined;
   entityStore.addCollectedEntity(character, {
     redirectName: ENTITY_ROUTE,
+    redirectQuery: redirectQuery,
     clearCharacterCreation: true,
+    campaignId: campaignStore.details?.campaign.id,
   });
 };
 
 const clearCharacter = () => {
   characterCreateStore.clearCharacter();
-  router.push({ name: CREATE_ROUTE });
+  router.push({
+    name: CREATE_ROUTE,
+    query: { campaign: campaignStore.details?.campaign.id },
+  });
 };
 </script>
 

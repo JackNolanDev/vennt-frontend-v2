@@ -89,7 +89,7 @@
           SIGN UP
         </BaseButton>
       </form>
-      <p v-else class="text-center">You are already signed in. Log out?</p>
+      <p v-else class="center-text">You are already signed in. Log out?</p>
     </PageLayout>
   </BaseLayout>
 </template>

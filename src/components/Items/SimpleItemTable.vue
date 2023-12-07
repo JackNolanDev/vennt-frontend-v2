@@ -1,7 +1,7 @@
 <template>
   <div class="card column">
     <div v-if="title" class="tableItems noHeader padded">
-      <h3 class="mt-0 mb-0 text-center">{{ title }}</h3>
+      <h3 class="mt-0 mb-0 center-text">{{ title }}</h3>
     </div>
     <div
       v-for="(item, index) in items"

@@ -1,6 +1,9 @@
 <template>
   <BaseLayout class="nav sidebar">
-    <template #nav><BaseNav></BaseNav></template>
+    <template #nav
+      ><CampaignSettingsNav v-if="campaignStore.details"></CampaignSettingsNav>
+      <BaseNav v-else></BaseNav
+    ></template>
     <template #sidebar>
       <CombatStats
         :entity="cogCreateStore.collectedCog"
@@ -11,6 +14,9 @@
     </template>
     <PageLayout>
       <h1 class="centeredText">COG CREATION</h1>
+      <p v-if="campaignStore.details" class="label-text mb-8">
+        <strong>For "{{ campaignStore.details.campaign.name }}"</strong>
+      </p>
       <form>
         <p class="textBlock">
           Current version:
@@ -61,6 +67,33 @@
           Cog can purchase <b>twice its Level in AP</b>. Each ability can be
           purchased only once unless otherwise noted.
         </p>
+        <div v-if="campaignStore.details && campaignSumPlayerLevel">
+          <p>
+            For "{{ campaignStore.details.campaign.name }}", the Sum of Players’
+            Level (SPL) is: {{ campaignSumPlayerLevel }}.
+          </p>
+          <div class="cols-3 gap mb-16 encounter-difficulty-buttons">
+            <BaseButton
+              class="primary"
+              @click="setL(campaignSumPlayerLevel * 0.75)"
+              >Easy Encounter ({{
+                Math.floor(campaignSumPlayerLevel * 0.75)
+              }}
+              AP)</BaseButton
+            >
+            <BaseButton class="primary" @click="setL(campaignSumPlayerLevel)"
+              >Medium Encounter ({{ campaignSumPlayerLevel }} AP)</BaseButton
+            >
+            <BaseButton
+              class="primary"
+              @click="setL(campaignSumPlayerLevel * 1.25)"
+              >Hard Encounter ({{
+                Math.floor(campaignSumPlayerLevel * 1.25)
+              }}
+              AP)</BaseButton
+            >
+          </div>
+        </div>
         <div class="alignRow gap">
           <label for="cog-level" class="labelText nowrap">Cog Level:</label>
           <input
@@ -91,6 +124,13 @@
               Most fields are still editable after they have been saved. If you
               need to edit this again in the cog creator, you can on the
               "settings" page.
+            </p>
+            <p v-if="campaignStore.details" class="mb-0">
+              This cog will automatically be added to the campaign "<strong>{{
+                campaignStore.details.campaign.name
+              }}</strong
+              >". It will be <strong>Hidden</strong> to all players in your
+              campaign until manually revealed!
             </p>
           </ConfirmationModal>
           <ConfirmationModal
@@ -131,9 +171,26 @@ import router, { CREATE_COG_ROUTE, ENTITY_ROUTE } from "@/router";
 import { idValidator } from "vennt-library";
 import BaseCopyableCode from "@/components/Base/BaseCopyableCode.vue";
 import { entityCreationFullyHealed } from "@/utils/entityUtils";
+import { optionalIdValidator } from "vennt-library";
+import { useCampaignStore } from "@/stores/campaign";
+import { computed, onBeforeMount } from "vue";
+import { useRoute } from "vue-router";
+import CampaignSettingsNav from "@/components/Campaign/CampaignSettingsNav.vue";
+import BaseButton from "@/components/Base/BaseButton.vue";
 
 const cogCreateStore = useCogCreateStore();
 const entityStore = useEntityStore();
+const campaignStore = useCampaignStore();
+const route = useRoute();
+
+onBeforeMount(() => {
+  const campaignIdCheck = optionalIdValidator.safeParse(route.query.campaign);
+  if (campaignIdCheck.success && campaignIdCheck.data) {
+    campaignStore.fetchCampaign(campaignIdCheck.data, true);
+  } else {
+    campaignStore.reset();
+  }
+});
 
 let id: string | undefined = undefined;
 if (router.currentRoute.value.query.edit) {
@@ -144,19 +201,42 @@ if (router.currentRoute.value.query.edit) {
 }
 cogCreateStore.loadFromEntityId(id);
 
+const campaignSumPlayerLevel = computed(
+  () =>
+    campaignStore.details?.entities
+      .filter((entity) => entity.type === "CHARACTER")
+      .reduce(
+        (sum, character) =>
+          sum + Math.floor((character.computed_attributes?.xp.val ?? 0) / 1000),
+        0,
+      ),
+);
+
+const setL = (level: number) => {
+  cogCreateStore.options.level = Math.floor(level);
+};
+
 const createCog = () => {
   const cog = entityCreationFullyHealed(
     cogCreateStore.collectedCog,
     cogCreateStore.cogAttrs,
   );
+  const redirectQuery = campaignStore.details
+    ? { campaign: campaignStore.details.campaign.id }
+    : undefined;
   entityStore.addCollectedEntity(cog, {
     redirectName: ENTITY_ROUTE,
+    redirectQuery: redirectQuery,
     clearCogCreation: true,
+    campaignId: campaignStore.details?.campaign.id,
   });
 };
 const clearCog = () => {
   cogCreateStore.clearCog();
-  router.push({ name: CREATE_COG_ROUTE });
+  router.push({
+    name: CREATE_COG_ROUTE,
+    query: { campaign: campaignStore.details?.campaign.id },
+  });
 };
 </script>
 
@@ -166,5 +246,11 @@ h2.step {
 }
 .step::before {
   content: "Step " counter(step-counter) ": ";
+}
+
+@container page (max-width: 600px) {
+  .encounter-difficulty-buttons {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

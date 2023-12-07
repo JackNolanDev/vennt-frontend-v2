@@ -54,6 +54,7 @@ import {
 import { useEntityNotesStore } from "./entityNotes";
 import { useCogCreateStore } from "./cogCreate";
 import { useCampaignStore } from "./campaign";
+import type { LocationQuery } from "vue-router";
 
 const setInitialNotes = (entity: FullCollectedEntity) => {
   const foundNotes = getEntityText("NOTES", entity);
@@ -75,6 +76,8 @@ interface EntityState {
 
 interface AddCollectedEntityOptions {
   redirectName: string;
+  campaignId: string;
+  redirectQuery: LocationQuery;
   clearCharacterCreation: boolean;
   clearCogCreation: boolean;
 }
@@ -159,11 +162,12 @@ export const useEntityStore = defineStore("entity", {
       request: UncompleteCollectedEntityWithChangelog,
       options?: Partial<AddCollectedEntityOptions>,
     ) {
-      this.entity = await addCollectedEntityApi(request);
+      this.entity = await addCollectedEntityApi(request, options?.campaignId);
       if (options?.redirectName) {
         router.push({
           name: options.redirectName,
           params: { id: this.entity.entity.id },
+          query: options.redirectQuery,
         });
       }
       if (options?.clearCharacterCreation) {

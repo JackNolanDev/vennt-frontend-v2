@@ -2,7 +2,7 @@
   <BaseLayout class="nav">
     <template #nav><BaseNav></BaseNav></template>
     <PageLayout class="medium">
-      <h1 class="text-center">NOT FOUND</h1>
+      <h1 class="center-text">NOT FOUND</h1>
       <BaseButton :to="{ name: HOME_ROUTE }" class="primary wide center bolder"
         >Go Home</BaseButton
       >

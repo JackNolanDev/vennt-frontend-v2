@@ -1,6 +1,6 @@
 <template>
   <ConfirmationModal
-    trigger-icon="delete"
+    trigger-icon="person_remove"
     :id="`campaign-rm-${entity.entity_id}`"
     @main-button="removeCampaignEntity"
     ><template #title

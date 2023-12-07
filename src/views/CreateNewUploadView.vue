@@ -52,7 +52,10 @@ import {
   computeAttributes,
 } from "vennt-library";
 import { getCopyableCogText } from "@/utils/entityUtils";
-import { computed, reactive } from "vue";
+import { computed, onBeforeMount, reactive } from "vue";
+import { useRoute } from "vue-router";
+import { useCampaignStore } from "@/stores/campaign";
+import { optionalIdValidator } from "vennt-library";
 
 const state = reactive<{
   entity?: FullCollectedEntityWithChangelog;
@@ -60,6 +63,17 @@ const state = reactive<{
 }>({});
 
 const entityStore = useEntityStore();
+const campaignStore = useCampaignStore();
+const route = useRoute();
+
+onBeforeMount(() => {
+  const campaignIdCheck = optionalIdValidator.safeParse(route.query.campaign);
+  if (campaignIdCheck.success && campaignIdCheck.data) {
+    campaignStore.fetchCampaign(campaignIdCheck.data, true);
+  } else {
+    campaignStore.reset();
+  }
+});
 
 const reader = new FileReader();
 
@@ -112,6 +126,13 @@ const uploadEntity = () => {
   if (!state.entity) {
     return;
   }
-  entityStore.addCollectedEntity(state.entity, { redirectName: ENTITY_ROUTE });
+  const redirectQuery = campaignStore.details
+    ? { campaign: campaignStore.details.campaign.id }
+    : undefined;
+  entityStore.addCollectedEntity(state.entity, {
+    redirectName: ENTITY_ROUTE,
+    redirectQuery: redirectQuery,
+    campaignId: campaignStore.details?.campaign.id,
+  });
 };
 </script>

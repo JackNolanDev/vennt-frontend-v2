@@ -33,9 +33,10 @@ import { z } from "zod";
 
 export const addCollectedEntityApi = (
   request: UncompleteCollectedEntityWithChangelog,
+  campaign_id?: string,
 ): Promise<FullCollectedEntity> => {
   return wrapAPI(
-    () => api.post("/entity", request, authConfig()),
+    () => api.post("/entity", request, authConfig({ params: { campaign_id } })),
     fullCollectedEntityValidator,
   );
 };

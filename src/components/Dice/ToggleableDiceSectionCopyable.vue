@@ -1,5 +1,5 @@
 <template>
-  <p v-if="header" class="mt-0 mb-0 labelText text-center">
+  <p v-if="header" class="mt-0 mb-0 labelText center-text">
     <b>{{ defaultText && !useDiceAsHeader ? defaultText : dice.roll20 }}</b>
   </p>
   <DiceCopy

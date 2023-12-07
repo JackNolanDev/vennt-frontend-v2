@@ -1,7 +1,12 @@
 <template>
   <nav class="nav alignRow split">
     <div>
-      <BaseButton :to="{ name: CAMPAIGN_ROUTE }" icon="arrow_back"
+      <BaseButton
+        :to="{
+          name: CAMPAIGN_ROUTE,
+          params: { campaignId: campaignStore.details?.campaign.id },
+        }"
+        icon="arrow_back"
         >Back to Campaign</BaseButton
       >
     </div>
@@ -33,9 +38,11 @@ import { CAMPAIGN_ROUTE, HOME_ROUTE } from "@/router";
 import { useAccountInfoStore } from "@/stores/accountInfo";
 import { reactive } from "vue";
 import BaseButton from "../Base/BaseButton.vue";
+import { useCampaignStore } from "@/stores/campaign";
 
 const state = reactive({ dropdownOpen: false });
 const accountInfoStore = useAccountInfoStore();
+const campaignStore = useCampaignStore();
 
 const openDropdown = () => {
   if (state.dropdownOpen) return;

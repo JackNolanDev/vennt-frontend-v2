@@ -8,13 +8,13 @@
         have already created.
       </p>
       <BaseButton
-        :to="{ name: CREATE_NEW_ROUTE }"
+        :to="{ name: CREATE_NEW_ROUTE, query: $route.query }"
         class="primary bold center mb-8"
       >
         Make a new character!
       </BaseButton>
       <BaseButton
-        :to="{ name: CREATE_UPLOAD_ROUTE }"
+        :to="{ name: CREATE_UPLOAD_ROUTE, query: $route.query }"
         class="primary bold center mb-8"
       >
         Upload an entity

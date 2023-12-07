@@ -4,7 +4,7 @@
     <PageLayout class="medium">
       <h1 class="centeredText">COG CREATION</h1>
       <BaseButton
-        :to="{ name: CREATE_NEW_COG_ROUTE }"
+        :to="{ name: CREATE_NEW_COG_ROUTE, query: $route.query }"
         class="primary bold center mb-8"
       >
         Make a new cog!

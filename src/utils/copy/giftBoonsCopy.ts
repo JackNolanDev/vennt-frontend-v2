@@ -34,9 +34,7 @@ export const giftBoonCopy: GiftBoonCopy = {
       uses: {
         adjust: {
           time: "permanent",
-          attr: {
-            acc: 20,
-          },
+          attr: { acc: 20 },
         },
       },
     },

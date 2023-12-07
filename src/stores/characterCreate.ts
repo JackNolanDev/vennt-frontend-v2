@@ -48,7 +48,7 @@ const DEFAULT_OPTIONS: CharacterCreateOptions = {
 export const useCharacterCreateStore = defineStore("characterCreate", {
   state: (): CharacterCreateStore => {
     return {
-      options: DEFAULT_OPTIONS,
+      options: structuredClone(DEFAULT_OPTIONS),
     };
   },
   getters: {
@@ -161,7 +161,7 @@ export const useCharacterCreateStore = defineStore("characterCreate", {
     },
     clearCharacter() {
       localStorage.removeItem(CREATE_CHARACTER_LOCAL_STORAGE);
-      this.options = DEFAULT_OPTIONS;
+      this.options = structuredClone(DEFAULT_OPTIONS);
     },
   },
 });

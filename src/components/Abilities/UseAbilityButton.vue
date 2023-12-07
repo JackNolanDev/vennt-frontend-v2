@@ -4,7 +4,7 @@
     :title="useButtonTitle"
     @click="useButton"
     class="primary center wide mt-8"
-    ><div class="wrap text-center">{{ useButtonText }}</div></BaseButton
+    ><div class="wrap center-text">{{ useButtonText }}</div></BaseButton
   >
 </template>
 

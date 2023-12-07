@@ -2,7 +2,7 @@
   <BaseLayout class="nav">
     <template #nav><WikiNav></WikiNav></template>
     <PageLayout>
-      <h1 class="text-center">Wiki</h1>
+      <h1 class="center-text">Wiki</h1>
       <BaseButton :to="{ name: WIKI_PATHS_ROUTE }" class="primary center"
         >Abilities Wiki</BaseButton
       >
