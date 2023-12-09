@@ -1,5 +1,5 @@
 <template>
-  <div class="message">
+  <div class="message" :class="{ sender: userIsSender }">
     <form v-if="state.editMessage" class="card column padded thin">
       <label class="label-text">Update Message</label>
       <BaseInlineTextEditor
@@ -112,12 +112,15 @@ const deleteMessage = () => {
 .message {
   position: relative;
 }
+.message.sender:hover {
+  background-color: rgba(75, 74, 103, 0.2);
+}
 .show-on-hover {
   display: none;
   position: absolute;
   z-index: 2;
   right: 0;
-  top: -16px;
+  top: -10px;
 }
 .message:hover > .show-on-hover,
 .show-on-hover:focus {

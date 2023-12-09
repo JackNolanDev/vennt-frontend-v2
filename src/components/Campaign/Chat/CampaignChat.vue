@@ -15,7 +15,7 @@
         :key="msg.id"
         :msg="msg"
         :hide-header="hideChatHeader(idx)"
-        class="mb-16"
+        class="message-padding"
       ></CampaignStoredMessage>
       <div
         v-if="campaignStore.chatCursor"
@@ -158,5 +158,10 @@ onUnmounted(() => {
     padding-bottom: 8px;
     border-bottom: 2px solid var(--border);
   }
+}
+
+.message-padding {
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 </style>

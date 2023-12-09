@@ -63,7 +63,7 @@ const props = defineProps<{
 const fetchAbilitiesAndItemsForAttr = (attr: EntityAttribute) => {
   const abilityIds: string[] = [];
   const itemIds: string[] = [];
-  props.attrs[attr].reason?.forEach((reason) => {
+  props.attrs[attr]?.reason?.forEach((reason) => {
     if (reason.abilityId) {
       abilityIds.push(reason.abilityId);
     }

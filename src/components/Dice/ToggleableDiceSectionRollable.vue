@@ -20,7 +20,7 @@
   >
     <template #closedTitle>Show Other Dice Options</template>
     <template #openTitle>Hide Other Dice Options</template>
-    <div v-if="heroPointDice">
+    <div v-if="heroPointsUsable && heroPointDice">
       <div class="labelText mt-8 ml-8">Hero Point boost:</div>
       <div class="alignRow split">
         <BaseButton @click="rollHeroButton" icon="casino" class="wide selected">
@@ -28,8 +28,8 @@
         </BaseButton>
         <HeroPointButton :reason="heroDiceReason"></HeroPointButton>
       </div>
-      <CommonDiceSettings></CommonDiceSettings>
     </div>
+    <CommonDiceSettings></CommonDiceSettings>
   </BaseDropDown>
 </template>
 
@@ -81,6 +81,10 @@ const baseComment = computed(() => {
   }
   return "dice check";
 });
+
+const heroPointsUsable = computed(
+  () => entityStore.entity?.entity.type === "CHARACTER",
+);
 const heroPointComment = computed(
   () => `${baseComment.value} - Hero Point Boost`,
 );

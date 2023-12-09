@@ -1,6 +1,6 @@
 <template>
   <BaseButton
-    v-if="entityStore.canEdit"
+    v-if="featureEnabled"
     @click="heroButton"
     :disabled="!enabled"
     clicked-note="Used a Hero Point"
@@ -26,6 +26,10 @@ const props = defineProps<{
   additionalAdjust?: PartialEntityAttributes;
 }>();
 const entityStore = useEntityStore();
+
+const featureEnabled = computed(
+  () => entityStore.canEdit && entityStore.entity?.entity.type === "CHARACTER",
+);
 
 const enabled = computed(
   () =>

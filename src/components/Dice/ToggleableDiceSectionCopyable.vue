@@ -17,14 +17,14 @@
     title="Other Dice Options"
     @change="diceStore.toggleDiceDropDown()"
   >
-    <div v-if="heroPointDice">
+    <div v-if="heroPointsUsable && heroPointDice">
       <div class="labelText mt-8 ml-8">Hero Point boost:</div>
       <div class="alignRow split">
         <DiceCopy :dice="heroPointDice"></DiceCopy>
         <HeroPointButton :reason="heroDiceReason"></HeroPointButton>
       </div>
-      <CommonDiceSettings></CommonDiceSettings>
     </div>
+    <CommonDiceSettings></CommonDiceSettings>
   </BaseDropDown>
 </template>
 
@@ -62,6 +62,9 @@ const defaultText = computed(
   () => props.attr && `${attrShortName(props.attr)} Check Dice`,
 );
 
+const heroPointsUsable = computed(
+  () => entityStore.entity?.entity.type === "CHARACTER",
+);
 const heroDiceReason = computed(() =>
   props.attr
     ? `Boosted ${attrFullName(props.attr)} dice roll`

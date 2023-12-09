@@ -170,7 +170,7 @@ const isRemovableCustomAttr = computed(
 );
 const reasonTitle = computed(
   () =>
-    entityStore.computedAttributes[props.attr].reason
+    entityStore.computedAttributes[props.attr]?.reason
       ?.map((reason) => `${reason.val} = ${reason.src}`)
       .join("\n"),
 );
