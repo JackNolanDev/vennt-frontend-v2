@@ -2,7 +2,6 @@
   <div v-if="dice" class="card column">
     <ToggleableDiceSection
       :dice="dice"
-      :comment="diceComment"
       @roll-value="(value) => (state.rollValue = value.toString())"
     ></ToggleableDiceSection>
     <div class="separator thin mt-8"></div>
@@ -51,14 +50,13 @@ const state = reactive({ rollValue: "" });
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
-const diceComment = computed(() => `Used ${props.ability.name}`);
 const dice = computed(
   () =>
     props.ability.uses?.roll &&
     diceParseFromString(
       props.ability.uses.roll.dice,
       diceStore.defaultDiceSettings,
-      diceComment.value,
+      `Used ${props.ability.name}`,
     ),
 );
 const adjust = computed(() => {

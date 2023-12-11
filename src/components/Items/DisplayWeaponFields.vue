@@ -25,7 +25,6 @@
     <ToggleableDiceSection
       :dice="damageDice"
       :header="true"
-      :comment="diceReason"
       :attrs="relatedDmgAttrs"
     ></ToggleableDiceSection>
   </div>
@@ -87,12 +86,7 @@ const damageString = computed(
       entityStore.computedAttributes,
     ),
 );
-const diceReason = computed(
-  () =>
-    `${props.item.name} attack dmg${
-      acc.value ? `, Accuracy: ${acc.value.result}` : ""
-    }`,
-);
+
 const relatedDmgAttrs = computed(() =>
   relatedAttrsForWeapon(props.item, "dmg"),
 );
@@ -102,7 +96,9 @@ const damageDice = computed(
     diceParseFromString(
       damageDiceString.value,
       diceStore.defaultDiceSettings,
-      diceReason.value,
+      `${props.item.name} attack dmg${
+        acc.value ? `, Accuracy: ${acc.value.result}` : ""
+      }`,
       entityStore.diceToggles,
       entityStore.computedAttributes,
       relatedDmgAttrs.value,

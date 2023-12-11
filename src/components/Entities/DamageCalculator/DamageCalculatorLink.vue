@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from "../Base/BaseButton.vue";
+import BaseButton from "../../Base/BaseButton.vue";
 import { ENTITY_COMBAT_ROUTE } from "@/router";
 import { fallbackEntitySidebarPage } from "@/utils/routerUtils";
 </script>

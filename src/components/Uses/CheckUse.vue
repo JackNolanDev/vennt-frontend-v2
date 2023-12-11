@@ -4,7 +4,6 @@
       :attr="use.attr"
       :dice="dice"
       :header="true"
-      :comment="diceComment"
       :skip-key="name"
     ></ToggleableDiceSection>
   </div>
@@ -26,9 +25,6 @@ const props = defineProps<{ use: UsesCheck; name: string }>();
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
-const diceComment = computed(
-  () => `${attrShortName(props.use.attr)} check using ${props.name}`,
-);
 const dice = computed(() =>
   defaultDice(
     entityStore.computedAttributes,
@@ -39,7 +35,7 @@ const dice = computed(() =>
       entityStore.computedAttributes,
     ),
     entityStore.diceToggles,
-    diceComment.value,
+    `${attrShortName(props.use.attr)} check using ${props.name}`,
     props.name,
   ),
 );

@@ -220,7 +220,7 @@ import CombatStatsAbilitiesSection from "./CombatStatsAbilitiesSection.vue";
 import CogTypeDescription from "../Cog/CogTypeDescription.vue";
 import CombatStatsSingleRowAttributes from "./CombatStatsSingleRowAttributes.vue";
 import { useEntityStore } from "@/stores/entity";
-import DamageCalculatorLink from "../Entities/DamageCalculatorLink.vue";
+import DamageCalculatorLink from "../Entities/DamageCalculator/DamageCalculatorLink.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;

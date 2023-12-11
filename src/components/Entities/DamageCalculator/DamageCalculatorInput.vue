@@ -92,8 +92,8 @@ import {
 } from "vennt-library";
 import { numberFieldVal } from "@/utils/inputType";
 import DamageCalculatorSingleInput from "./DamageCalculatorSingleInput.vue";
-import BaseDropDown from "../Base/BaseDropDown.vue";
-import BaseButton from "../Base/BaseButton.vue";
+import BaseDropDown from "../../Base/BaseDropDown.vue";
+import BaseButton from "../../Base/BaseButton.vue";
 
 const props = defineProps<{ modelValue: AttackDetails }>();
 const emits = defineEmits<{

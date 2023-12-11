@@ -8,5 +8,5 @@
 </template>
 
 <script setup lang="ts">
-import HeroPointButton from "../Attributes/HeroPointButton.vue";
+import HeroPointButton from "../../Attributes/HeroPointButton.vue";
 </script>

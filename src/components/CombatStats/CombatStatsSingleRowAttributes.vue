@@ -37,6 +37,7 @@
       <div v-if="attr === selectedAttr" class="card diceDropDown left right">
         <div class="combat-stats-margin">
           <div v-if="showUpdateDropdown">
+            <!-- PRIMARY ACTIONS -->
             <AdjustAttributeVal
               v-if="ADJUST_SINGLE.has(attr) || customAttrs.includes(attr)"
               :attr="attr"
@@ -62,6 +63,7 @@
               v-else-if="attr === 'recovery_shock'"
             ></CombatStatsRecoveryShockSection>
             <AttributeHelp v-else :attr="attr"></AttributeHelp>
+            <!-- ADDITIONAL ACTIONS -->
             <CombatStatsActionsSection
               v-if="attr === 'actions'"
             ></CombatStatsActionsSection>
@@ -71,6 +73,9 @@
             <CombatStatsXPSection
               v-else-if="attr === 'xp'"
             ></CombatStatsXPSection>
+            <CombatStatsInitiativeSection
+              v-else-if="attr === 'init'"
+            ></CombatStatsInitiativeSection>
             <div class="separator mt-8 mb-8"></div>
             <AdjustAttributeLink
               :attr="attr"
@@ -103,9 +108,10 @@ import CombatStatsArmorSection from "./CombatStatsArmorSection.vue";
 import CombatStatsBleedingSection from "./CombatStatsBleedingSection.vue";
 import CombatStatsBurningSection from "./CombatStatsBurningSection.vue";
 import CombatStatsRecoveryShockSection from "./CombatStatsRecoveryShockSection.vue";
-import CombatStatsXPSection from "./CombatStatsXPSection.vue";
-import CombatStatsActionsSection from "./CombatStatsActionsSection.vue";
-import CombatStatsReactionsSection from "./CombatStatsReactionsSection.vue";
+import CombatStatsXPSection from "./CombatStatsActions/CombatStatsXPSection.vue";
+import CombatStatsActionsSection from "./CombatStatsActions/CombatStatsActionsSection.vue";
+import CombatStatsReactionsSection from "./CombatStatsActions/CombatStatsReactionsSection.vue";
+import CombatStatsInitiativeSection from "./CombatStatsActions/CombatStatsInitiativeSection.vue";
 
 const props = defineProps<{
   entity: CollectedEntity;

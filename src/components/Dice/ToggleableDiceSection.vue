@@ -17,7 +17,6 @@
     :dice="dice"
     :attr="attr"
     :attrs="attrs"
-    :comment="comment"
     :skip-key="skipKey"
     :hide-other-options="hideOtherOptions"
     @roll-value="rollValue"
@@ -27,7 +26,6 @@
     :dice="dice"
     :attr="attr"
     :attrs="attrs"
-    :comment="comment"
     :header="header"
     :use-dice-as-header="useDiceAsHeader"
     :skip-key="skipKey"
@@ -48,7 +46,6 @@ defineProps<{
   attrs?: EntityAttribute[];
   header?: boolean;
   useDiceAsHeader?: boolean;
-  comment?: string;
   skipKey?: string;
   onlyShow?: "roll" | "copy";
   hideOtherOptions?: boolean;

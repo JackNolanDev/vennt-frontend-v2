@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import type { EntityAbility } from "vennt-library";
-import DamageCalculatorLink from "../Entities/DamageCalculatorLink.vue";
+import DamageCalculatorLink from "../Entities/DamageCalculator/DamageCalculatorLink.vue";
 
 defineProps<{ ability: EntityAbility }>();
 

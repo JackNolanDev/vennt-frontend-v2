@@ -49,7 +49,6 @@
       <ToggleableDiceSection
         :attr="state.attr"
         :dice="dice"
-        :comment="comment"
         :header="true"
         :use-dice-as-header="true"
       ></ToggleableDiceSection>

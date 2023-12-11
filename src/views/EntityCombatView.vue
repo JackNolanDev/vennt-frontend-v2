@@ -27,7 +27,7 @@ import { useJsonStore } from "@/stores/jsonStorage";
 import { canUseAbility } from "@/utils/abilityUtils";
 import { computed } from "vue";
 import BasicActionsTable from "@/components/Combat/BasicActions/BasicActionsTable.vue";
-import DamageCalculatorLink from "@/components/Entities/DamageCalculatorLink.vue";
+import DamageCalculatorLink from "@/components/Entities/DamageCalculator/DamageCalculatorLink.vue";
 
 const entityStore = useEntityStore();
 const jsonStorage = useJsonStore();

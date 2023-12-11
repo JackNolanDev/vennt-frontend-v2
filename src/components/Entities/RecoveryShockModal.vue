@@ -20,7 +20,6 @@
       </p>
       <ToggleableDiceSection
         :dice="dice"
-        :comment="diceComment"
         @roll-value="rollValue"
       ></ToggleableDiceSection>
       <div class="separator thin mt-8"></div>
@@ -66,19 +65,15 @@ const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 const state = reactive({ rollValue: "" });
 
-const diceComment = computed(
-  () =>
-    `STR check for handling recovery shock from ${
-      entityStore.recoveryShockSrc && entityStore.recoveryShockSrc[0]
-    }`,
-);
 const dice = computed(() =>
   defaultDice(
     entityStore.computedAttributes,
     "str",
     diceStore.defaultDiceSettings,
     entityStore.diceToggles,
-    diceComment.value,
+    `STR check for handling recovery shock from ${
+      entityStore.recoveryShockSrc && entityStore.recoveryShockSrc[0]
+    }`,
   ),
 );
 const checkSuccess = computed(() => {

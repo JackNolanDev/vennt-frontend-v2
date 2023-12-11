@@ -36,12 +36,7 @@
 <script setup lang="ts">
 import { useDiceStore } from "@/stores/dice";
 import type { DiceCommands, EntityAttribute } from "vennt-library";
-import {
-  buildDice,
-  combineDiceSettings,
-  attrFullName,
-  attrShortName,
-} from "vennt-library";
+import { buildDice, combineDiceSettings, attrFullName } from "vennt-library";
 import { computed, watch } from "vue";
 import HeroPointButton from "../Attributes/HeroPointButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
@@ -58,7 +53,6 @@ const props = defineProps<{
   dice: DiceCommands;
   attr?: EntityAttribute;
   attrs?: EntityAttribute[];
-  comment?: string;
   skipKey?: string;
   hideOtherOptions?: boolean;
 }>();
@@ -72,21 +66,9 @@ const heroDiceReason = computed(() =>
     ? `Boosted ${attrFullName(props.attr)} dice roll`
     : "Boosted dice roll",
 );
-const baseComment = computed(() => {
-  if (props.comment) {
-    return props.comment;
-  }
-  if (props.attr) {
-    return `${attrShortName(props.attr)} check`;
-  }
-  return "dice check";
-});
 
 const heroPointsUsable = computed(
   () => entityStore.entity?.entity.type === "CHARACTER",
-);
-const heroPointComment = computed(
-  () => `${baseComment.value} - Hero Point Boost`,
 );
 const heroPointDice = computed(() => {
   if (props.dice.settings.count && props.dice.settings.sides) {
@@ -99,7 +81,7 @@ const heroPointDice = computed(() => {
         { drop: 1, end: "+9" },
         entityStore.computedAttributes,
       ),
-      heroPointComment.value,
+      `${props.dice.comment} - Hero Point boosted`,
     );
   }
   return false;
@@ -124,15 +106,11 @@ watch(
 );
 
 const rollButton = () => {
-  diceStore.rollDice(props.dice, rollKey.value, baseComment.value);
+  diceStore.rollDice(props.dice, rollKey.value);
 };
 const rollHeroButton = () => {
   if (heroPointDice.value) {
-    diceStore.rollDice(
-      heroPointDice.value,
-      rollKey.value,
-      heroPointComment.value,
-    );
+    diceStore.rollDice(heroPointDice.value, rollKey.value);
   }
 };
 </script>

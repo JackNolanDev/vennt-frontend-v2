@@ -87,8 +87,8 @@ import {
   type AttackResponse,
 } from "vennt-library";
 import { computed, reactive } from "vue";
-import BaseButton from "../Base/BaseButton.vue";
-import BaseCheckBox from "../Base/BaseCheckBox.vue";
+import BaseButton from "../../Base/BaseButton.vue";
+import BaseCheckBox from "../../Base/BaseCheckBox.vue";
 import { numberFieldVal } from "@/utils/inputType";
 import DamageCalculatorInput from "./DamageCalculatorInput.vue";
 import { handleDamageCalculator } from "@/utils/damageCalculator";

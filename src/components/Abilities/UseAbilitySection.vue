@@ -4,7 +4,6 @@
       :dice="castingDice"
       :attr="'casting'"
       :header="true"
-      :comment="diceComment"
     ></ToggleableDiceSection>
   </div>
   <div v-if="ability.custom_fields?.mp_cost">
@@ -35,7 +34,6 @@ const props = defineProps<{ ability: FullEntityAbility }>();
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
 
-const diceComment = computed(() => `Casting ${props.ability.name}`);
 const castingDice = computed(() => {
   if (!props.ability.custom_fields?.cast_dl) {
     return false;
@@ -45,7 +43,7 @@ const castingDice = computed(() => {
     "casting",
     diceStore.defaultDiceSettings,
     entityStore.diceToggles,
-    diceComment.value,
+    `Casting ${props.ability.name}`,
   );
 });
 const showUseButton = computed(

@@ -1,4 +1,5 @@
 <template>
+  <StartTurnButton class="mt-8"></StartTurnButton>
   <HeroPointButton
     reason="Spent 1 Hero Point for 1 Action"
     :additional-adjust="{ actions: 1 }"
@@ -8,5 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import HeroPointButton from "../Attributes/HeroPointButton.vue";
+import StartTurnButton from "@/components/Combat/StartTurnButton.vue";
+import HeroPointButton from "../../Attributes/HeroPointButton.vue";
 </script>

@@ -142,11 +142,23 @@ const showRecoveryShockDiceSection = computed(
 );
 const showRecoveryDiceSection = computed(() => state.isRecoveryRest);
 const recoveryShockDice = computed(() =>
-  buildDice(1, 6, 0, diceStore.defaultDiceSettings),
+  buildDice(
+    1,
+    6,
+    0,
+    diceStore.defaultDiceSettings,
+    "Resting Recovery Shock reduction dice check",
+  ),
 );
 const recoveryDice = computed(() => {
   const num = Math.max(entityStore.computedAttributes.str?.val ?? 1, 1);
-  return buildDice(num, 6, 0, diceStore.defaultDiceSettings);
+  return buildDice(
+    num,
+    6,
+    0,
+    diceStore.defaultDiceSettings,
+    "Resting recovery dice check",
+  );
 });
 const adjustAttrs = computed(() => {
   const attrs: PartialEntityAttributes = {};

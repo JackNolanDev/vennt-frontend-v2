@@ -50,7 +50,6 @@ const props = defineProps<{
   attr?: EntityAttribute;
   attrs?: EntityAttribute[];
   header?: boolean;
-  comment?: string;
   skipKey?: string;
   useDiceAsHeader?: boolean;
   hideOtherOptions?: boolean;
@@ -72,13 +71,6 @@ const heroDiceReason = computed(() =>
 );
 const heroPointDice = computed(() => {
   if (props.dice.settings.count && props.dice.settings.sides) {
-    let baseComment = "dice check";
-    if (props.attr) {
-      baseComment = `${attrShortName(props.attr)} check`;
-    }
-    if (props.comment) {
-      baseComment = props.comment;
-    }
     return buildDice(
       props.dice.settings.count,
       props.dice.settings.sides,
@@ -88,7 +80,7 @@ const heroPointDice = computed(() => {
         { drop: 1, end: "+9" },
         entityStore.computedAttributes,
       ),
-      `${baseComment} - Hero Point Boost`,
+      `${props.dice.comment} - Hero Point boosted`,
     );
   }
   return false;

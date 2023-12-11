@@ -52,7 +52,7 @@ import { idValidator } from "vennt-library";
 import AbilityDetails from "../Abilities/AbilityDetails.vue";
 import AbilitySearchDetails from "../Abilities/AbilitySearchDetails.vue";
 import EditAbility from "../Abilities/EditAbility.vue";
-import DamageCalculator from "./DamageCalculator.vue";
+import DamageCalculator from "./DamageCalculator/DamageCalculator.vue";
 import BasicActionAssist from "../Combat/BasicActions/BasicActionAssist.vue";
 import BasicActionAttack from "../Combat/BasicActions/BasicActionAttack.vue";
 import BasicActionDelay from "../Combat/BasicActions/BasicActionDelay.vue";

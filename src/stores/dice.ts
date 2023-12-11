@@ -73,7 +73,7 @@ export const useDiceStore = defineStore("dice", {
     toggleUseBuiltinDice() {
       this.useBuiltinDice = !this.useBuiltinDice;
     },
-    async rollDice(dice: DiceCommands, key: string, comment?: string) {
+    async rollDice(dice: DiceCommands, key: string) {
       const entityStore = useEntityStore();
       const campaignStore = useCampaignStore();
       if (campaignStore.ws && entityStore.canEdit) {
@@ -84,7 +84,7 @@ export const useDiceStore = defineStore("dice", {
           const requestId = v4();
           const diceMsg: RequestDiceRoll = {
             type: REQUEST_DICE_ROLL_TYPE,
-            message: comment,
+            message: dice.comment,
             dice: dice.web,
             entity: entityStore.entity?.entity.id,
             request_id: requestId,
