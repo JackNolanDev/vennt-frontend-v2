@@ -34,6 +34,7 @@
     "@tiptap/extension-typography": "^2.0.4",
     "@tiptap/extension-underline": "^2.0.4",
     "@tiptap/pm": "^2.0.4",
+    "@tiptap/suggestion": "^2.1.13",
     "@tiptap/vue-3": "^2.0.4",
     "axios": "^1.4.0",
     "chart.js": "^4.3.3",

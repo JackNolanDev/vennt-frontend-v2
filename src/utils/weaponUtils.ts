@@ -5,11 +5,23 @@ import {
   type EntityAttribute,
   type EntityItem,
   replaceVariablesInEquation,
+  type ComputedAttribute,
 } from "vennt-library";
 
 export type ResultReason<T> = {
   reason: string;
   result: T;
+};
+
+const adjustReason = (attr: ComputedAttribute): string => {
+  const reasonSrc = attr.reason
+    ?.map((reason) => {
+      const match = reason.src.match(/\(From (.*)\)/u);
+      return match && match[1];
+    })
+    .filter(Boolean)
+    .join(", ");
+  return `${attr.val}${reasonSrc ? ` (From ${reasonSrc})` : ""}}`;
 };
 
 const weaponCategoryAdjust = (
@@ -21,10 +33,10 @@ const weaponCategoryAdjust = (
     return undefined;
   }
   const accKey = `${weapon.custom_fields.category.toLowerCase()}_${type}`;
-  const accAdjust = attrs[accKey as EntityAttribute];
+  const accAdjust = attrs[accKey];
   if (accAdjust) {
     return {
-      reason: accAdjust.reason?.join(", ") ?? "",
+      reason: adjustReason(accAdjust),
       result: accAdjust.val,
     };
   }
@@ -56,9 +68,7 @@ export const weaponAccuracy = (
   const baseAdjust = attrs.acc;
   if (baseAdjust) {
     acc += baseAdjust.val;
-    reason += ` + ${
-      baseAdjust.reason?.map((reason) => reason.src).join(", ") ?? ""
-    }`;
+    reason += ` + ${adjustReason(baseAdjust)}`;
   }
   if (acc < 0) {
     acc = 0;
