@@ -10,15 +10,15 @@
       placeholder="Magic Boom"
       title="Enter the name of your ability"
       id="new-ability-name"
-      class="input wide mt-4 mb-16"
+      class="input wide mt-2 mb-8"
     />
-    <label class="labelText">Description:</label>
+    <p class="mt-0 mb-0 labelText">Description:</p>
     <BaseInlineTextEditor
       v-model="state.effect"
       placeholder="Big magical blast"
-      class="mt-4 mb-16"
+      class="mt-2 mb-8"
     ></BaseInlineTextEditor>
-    <BaseDropDown title="Usage Cost" class="mb-16">
+    <BaseDropDown title="Usage Cost" class="mb-8">
       <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
         <div class="cols-2 center-items">
           <label for="ability-cost-passive" class="labelText nowrap">
@@ -33,118 +33,121 @@
             <option :value="true">Passive</option>
           </select>
         </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-mp" class="labelText">MP</label>
-          <input
-            type="number"
-            inputmode="numeric"
-            placeholder="0"
-            min="0"
-            v-model.number="state.cost_mp"
-            title="Amount of MP it costs to use ability"
-            id="ability-cost-mp"
-            class="input"
-          />
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-vim" class="labelText">Vim</label>
-          <input
-            type="number"
-            inputmode="numeric"
-            placeholder="0"
-            min="0"
-            v-model.number="state.cost_vim"
-            title="Amount of vim it costs to use ability"
-            id="ability-cost-vim"
-            class="input"
-          />
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-hp" class="labelText">HP</label>
-          <input
-            type="number"
-            inputmode="numeric"
-            placeholder="0"
-            min="0"
-            v-model.number="state.cost_hp"
-            title="Amount of HP it costs to use ability"
-            id="ability-cost-hp"
-            class="input"
-          />
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-hero" class="labelText nowrap"
-            >Hero Points</label
-          >
-          <input
-            type="number"
-            inputmode="numeric"
-            placeholder="0"
-            min="0"
-            v-model.number="state.cost_hero"
-            title="Amount of hero points it costs to use ability"
-            id="ability-cost-hero"
-            class="input"
-          />
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-actions" class="labelText">Actions</label>
-          <input
-            type="number"
-            inputmode="numeric"
-            placeholder="0"
-            min="0"
-            v-model.number="state.cost_actions"
-            title="Amount of Actions it costs to use ability"
-            id="ability-cost-actions"
-            class="input"
-          />
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-reactions" class="labelText"
-            >Reactions</label
-          >
-          <input
-            type="number"
-            inputmode="numeric"
-            placeholder="0"
-            min="0"
-            v-model.number="state.cost_reactions"
-            title="Amount of Reactions it costs to use ability"
-            id="ability-cost-reactions"
-            class="input"
-          />
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-passive" class="labelText nowrap">
-            On Attack
-          </label>
-          <select
-            v-model="state.cost_attack"
-            id="ability-cost-passive"
-            class="input"
-          >
-            <option :value="false">None</option>
-            <option :value="true">Activate</option>
-          </select>
-        </div>
-        <div class="cols-2 center-items">
-          <label for="ability-cost-downtime" class="labelText nowrap">
-            Downtime Cost
-          </label>
-          <select
-            v-model="state.cost_downtime"
-            id="ability-cost-downtime"
-            class="input"
-          >
-            <option value="">None</option>
-            <option value="Respite">Respite</option>
-            <option value="Intermission">Intermission</option>
-          </select>
+        <div v-if="!state.cost_passive" class="cost-section">
+          <div class="cols-2 center-items">
+            <label for="ability-cost-actions" class="labelText">Actions</label>
+            <input
+              type="number"
+              inputmode="numeric"
+              placeholder="0"
+              min="0"
+              v-model.number="state.cost_actions"
+              title="Amount of Actions it costs to use ability"
+              id="ability-cost-actions"
+              class="input"
+            />
+          </div>
+          <div class="cols-2 center-items">
+            <label for="ability-cost-reactions" class="labelText"
+              >Reactions</label
+            >
+            <input
+              type="number"
+              inputmode="numeric"
+              placeholder="0"
+              min="0"
+              v-model.number="state.cost_reactions"
+              title="Amount of Reactions it costs to use ability"
+              id="ability-cost-reactions"
+              class="input"
+            />
+          </div>
+          <div class="cols-2 center-items">
+            <label for="ability-cost-mp" class="labelText">MP</label>
+            <input
+              type="number"
+              inputmode="numeric"
+              placeholder="0"
+              min="0"
+              v-model.number="state.cost_mp"
+              title="Amount of MP it costs to use ability"
+              id="ability-cost-mp"
+              class="input"
+            />
+          </div>
+          <div class="cols-2 center-items">
+            <label for="ability-cost-vim" class="labelText">Vim</label>
+            <input
+              type="number"
+              inputmode="numeric"
+              placeholder="0"
+              min="0"
+              v-model.number="state.cost_vim"
+              title="Amount of vim it costs to use ability"
+              id="ability-cost-vim"
+              class="input"
+            />
+          </div>
+          <div class="cols-2 center-items">
+            <label for="ability-cost-hp" class="labelText">HP</label>
+            <input
+              type="number"
+              inputmode="numeric"
+              placeholder="0"
+              min="0"
+              v-model.number="state.cost_hp"
+              title="Amount of HP it costs to use ability"
+              id="ability-cost-hp"
+              class="input"
+            />
+          </div>
+          <div class="cols-2 center-items">
+            <label for="ability-cost-hero" class="labelText nowrap"
+              >Hero Points</label
+            >
+            <input
+              type="number"
+              inputmode="numeric"
+              placeholder="0"
+              min="0"
+              v-model.number="state.cost_hero"
+              title="Amount of hero points it costs to use ability"
+              id="ability-cost-hero"
+              class="input"
+            />
+          </div>
+          <div class="cols-2 center-items">
+            <label for="ability-cost-on-attack" class="labelText nowrap">
+              On Attack
+            </label>
+            <select
+              v-model="state.cost_attack"
+              id="ability-cost-on-attack"
+              class="input"
+            >
+              <option :value="false">None</option>
+              <option :value="true">Activate</option>
+            </select>
+          </div>
+          <div class="cols-2 center-items" v-if="showDowntimeCost">
+            <label for="ability-cost-downtime" class="labelText nowrap">
+              Downtime Cost
+            </label>
+            <select
+              v-model="state.cost_downtime"
+              id="ability-cost-downtime"
+              class="input"
+            >
+              <option value="">None</option>
+              <option value="Respite">Respite</option>
+              <option value="Rest">Rest</option>
+              <option value="Intermission">Intermission</option>
+            </select>
+          </div>
         </div>
       </div>
     </BaseDropDown>
-    <BaseDropDown title="Additional Details" class="mb-16">
+    <BaseDropDown title="Additional Details" class="mb-8">
       <div class="mt-8 mb-8 ml-8 mr-8">
         <label for="new-ability-flavor" class="labelText"><i>Flavor:</i></label>
         <input
@@ -153,7 +156,7 @@
           placeholder="Wow! That was loud!"
           title="Enter some flavor for this ability"
           id="new-ability-flavor"
-          class="input wide mt-4 mb-16"
+          class="input wide mt-2 mb-8"
         />
         <label for="new-ability-range" class="labelText">Range:</label>
         <input
@@ -162,7 +165,7 @@
           placeholder="12m"
           title="Enter the range of this ability"
           id="new-ability-range"
-          class="input wide mt-4 mb-16"
+          class="input wide mt-2 mb-8"
         />
         <label for="new-ability-purchase" class="labelText"
           >Purchase Cost</label
@@ -173,7 +176,7 @@
           placeholder="100 xp"
           title="Enter the purchase cost of the ability. Generally, abilities cost XP"
           id="new-ability-purchase"
-          class="input wide mt-4 mb-16"
+          class="input wide mt-2 mb-8"
         />
         <label for="new-ability-expedited" class="labelText"
           >Expedited for</label
@@ -184,14 +187,30 @@
           placeholder="Alertness, Magic"
           title="Gifts which the cost of this ability is expedited for"
           id="new-ability-expedited"
-          class="input wide mt-4 mb-16"
+          class="input wide mt-2 mb-8"
         />
-        <label class="labelText">Comment:</label>
-        <BaseInlineTextEditor
-          v-model="state.comment"
-          placeholder="notes about ability"
-          class="mt-4 mb-16"
-        ></BaseInlineTextEditor>
+      </div>
+    </BaseDropDown>
+    <BaseDropDown title="Ability Functionality" class="mb-8">
+      <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
+        <BaseDropDown title="Heal resources using dice roll">
+          <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
+            <p class="mt-0 mb-0">
+              Use this section when this Ability should heal some resources
+              based on the result of a dice roll. E.g., heal 2d6+SPI Vim.
+            </p>
+          </div>
+        </BaseDropDown>
+        <BaseDropDown title="Heals / uses resources">
+          <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
+            <p class="mt-0 mb-0">
+              Use this section when this Ability should effect a base
+              attribute's value permanently on use. For example, if this ability
+              heals HP, or uses SP, or effects any custom attributes
+            </p>
+          </div>
+        </BaseDropDown>
+        <pre><code>{{ newAbility.uses }}</code></pre>
       </div>
     </BaseDropDown>
     <BaseButton
@@ -201,12 +220,31 @@
     >
       {{ givenAbility ? "Edit" : "Add" }} ability
     </BaseButton>
+    <BaseButton
+      v-if="givenAbility"
+      @click="() => emit('submitted')"
+      class="clear center wide mt-8"
+    >
+      Cancel Update
+    </BaseButton>
     <div v-if="showPreview">
       <div class="separator mt-16 mb-16"></div>
       <h2>Ability Preview:</h2>
       <div class="card column padded thin">
-        <h2>{{ newAbility.name }}</h2>
-        <DisplayAbilityFull :ability="newAbility"></DisplayAbilityFull>
+        <h2>
+          <AbilityName
+            :ability="newAbility"
+            :show-highlight="true"
+          ></AbilityName>
+        </h2>
+        <DisplayAbilityFull
+          :ability="newAbility"
+          no-wiki-links
+        ></DisplayAbilityFull>
+        <AbilityAdditionalDetailDropdown
+          :ability="newAbility"
+          no-wiki-links
+        ></AbilityAdditionalDetailDropdown>
       </div>
     </div>
   </form>
@@ -220,6 +258,7 @@ import {
   type AbilityCostMap,
   type FullEntityAbility,
   type UncompleteEntityAbility,
+  type UsesMap,
 } from "vennt-library";
 import { editorEmpty } from "@/utils/textUtils";
 import { computed, reactive } from "vue";
@@ -227,6 +266,8 @@ import BaseButton from "../Base/BaseButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
+import AbilityName from "./AbilityName.vue";
+import AbilityAdditionalDetailDropdown from "./AbilityAdditionalDetailDropdown.vue";
 
 const props = defineProps<{ givenAbility?: FullEntityAbility }>();
 const emit = defineEmits<{ (e: "submitted"): void }>();
@@ -243,13 +284,13 @@ interface NewAbilityState {
   cost_actions: string | number;
   cost_reactions: string | number;
   cost_attack: boolean;
-  cost_downtime: "" | "Respite" | "Intermission";
+  cost_downtime: "" | "Respite" | "Rest" | "Intermission";
   flavor: string;
   range: string;
   purchase: string;
   expedited: string;
   path: string;
-  comment: string;
+  uses: UsesMap;
 }
 
 const initialState = (): NewAbilityState => ({
@@ -273,19 +314,29 @@ const initialState = (): NewAbilityState => ({
   purchase: props.givenAbility?.custom_fields?.purchase ?? "",
   expedited: props.givenAbility?.custom_fields?.expedited ?? "",
   path: props.givenAbility?.custom_fields?.path ?? "",
-  comment: props.givenAbility?.comment ?? "",
+  uses: props.givenAbility?.uses ?? {},
 });
 
 const state = reactive(initialState());
 
 const showPreview = computed(() => !editorEmpty(state.name));
+const showDowntimeCost = computed(
+  () =>
+    !(typeof state.cost_actions === "number" && state.cost_actions > 0) &&
+    !(typeof state.cost_reactions === "number" && state.cost_reactions > 0),
+);
 
 const newAbility = computed((): UncompleteEntityAbility => {
-  const cost: AbilityCostMap = {
+  let cost: AbilityCostMap | undefined = {
     ...(state.cost_passive && { passive: state.cost_passive }),
-    ...(state.cost_attack && { attack: state.cost_attack }),
-    ...(state.cost_downtime === "Respite" && { respite: true }),
-    ...(state.cost_downtime === "Intermission" && { intermission: true }),
+    ...(state.cost_attack &&
+      !state.cost_passive && { attack: state.cost_attack }),
+    ...(showDowntimeCost.value &&
+      state.cost_downtime === "Respite" && { respite: true }),
+    ...(showDowntimeCost.value &&
+      state.cost_downtime === "Rest" && { rest: true }),
+    ...(showDowntimeCost.value &&
+      state.cost_downtime === "Intermission" && { intermission: true }),
     ...(typeof state.cost_mp === "number" &&
       state.cost_mp > 0 && { mp: state.cost_mp }),
     ...(typeof state.cost_vim === "number" &&
@@ -300,11 +351,14 @@ const newAbility = computed((): UncompleteEntityAbility => {
       state.cost_reactions > 0 && { reactions: state.cost_reactions }),
   };
   const activation = generateAbilityActivation(cost);
+  if (Object.keys(cost).length === 0) {
+    cost = undefined;
+  }
   const ability: UncompleteEntityAbility = {
     name: state.name,
     effect: state.effect,
     active: props.givenAbility?.active ?? false,
-    comment: state.comment,
+    comment: props.givenAbility?.comment,
     custom_fields: {
       ...props.givenAbility?.custom_fields,
       cost,
@@ -316,7 +370,7 @@ const newAbility = computed((): UncompleteEntityAbility => {
       ...(state.path && { path: state.path }),
     },
     // TODO: Make USES editable
-    uses: props.givenAbility?.uses,
+    uses: Object.keys(state.uses).length > 0 ? state.uses : undefined,
   };
   return ability;
 });
@@ -339,6 +393,6 @@ const addAbilityButton = () => {
 
 <style scoped>
 .cost-section > div:not(:last-child) {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 </style>

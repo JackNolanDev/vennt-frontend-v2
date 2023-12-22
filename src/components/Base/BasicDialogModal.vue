@@ -11,11 +11,12 @@
           <slot></slot>
         </div>
       </div>
-
-      <div class="separator thin"></div>
-      <div class="alignRow end gap wrap dialogue-details">
-        <slot name="buttons"></slot>
-        <BaseButton @click="closeModal" class="clear">Cancel</BaseButton>
+      <div v-if="!hideButtons">
+        <div class="separator thin"></div>
+        <div class="alignRow end gap wrap dialogue-details">
+          <slot name="buttons"></slot>
+          <BaseButton @click="closeModal" class="clear">Cancel</BaseButton>
+        </div>
       </div>
     </div>
   </dialog>
@@ -24,7 +25,11 @@
 <script setup lang="ts">
 import BaseButton from "./BaseButton.vue";
 
-const props = defineProps<{ id: string; isLarge?: boolean }>();
+const props = defineProps<{
+  id: string;
+  isLarge?: boolean;
+  hideButtons?: boolean;
+}>();
 const emit = defineEmits<{ (e: "closeModal"): void }>();
 
 const closeModal = () => {

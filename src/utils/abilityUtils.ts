@@ -5,7 +5,6 @@ import {
   solveEquation,
   titleText,
   type AbilityCostMap,
-  type AbilityCostMapNumber,
   type CharacterGift,
   type CollectedEntity,
   type EntityAbility,
@@ -15,6 +14,7 @@ import {
   type PathsAndAbilities,
   type ComputedAttributes,
 } from "vennt-library";
+import { defaultAbilitySort } from "./abilitySortUtils";
 
 const freeAbilities = new Set(["Alchemist's Training"]); // Alchemist's Training is free with Tinker's Training
 
@@ -107,6 +107,14 @@ export const actualXPCost = (
 };
 
 export const abilityUsedStats = ["hp", "mp", "vim", "hero"] as const;
+export const abilityUsedStatsWithActions = [
+  "hp",
+  "mp",
+  "vim",
+  "hero",
+  "actions",
+  "reactions",
+] as const;
 
 export const abilityUseAdjustments = (
   ability: EntityAbility,
@@ -195,24 +203,15 @@ export const abilityUsable = (ability: EntityAbility): boolean => {
 export const canUseAbility = (
   ability: EntityAbility,
   attrs: ComputedAttributes,
-  additionalCost?: Record<EntityAttribute, number>,
+  includeActions?: boolean,
 ): boolean => {
   if (!abilityUsable(ability)) {
     return false;
   }
   const costMap: AbilityCostMap = { ...ability.custom_fields?.cost };
-  if (additionalCost) {
-    Object.entries(additionalCost).forEach(([attrIn, cost]) => {
-      const attr = attrIn as keyof AbilityCostMapNumber;
-      const currentCost = costMap[attr];
-      if (currentCost) {
-        costMap[attr] = cost + currentCost;
-      } else {
-        costMap[attr] = cost;
-      }
-    });
-  }
-  return abilityUsedStats.every((attr) => {
+  return (
+    includeActions ? abilityUsedStatsWithActions : abilityUsedStats
+  ).every((attr) => {
     const statCurrent = attrs[attr];
     if (statCurrent) {
       const statCost = costMap[attr];
@@ -229,68 +228,7 @@ export function sortAbilities(
   const abilitiesCopy = abilities.filter(
     (ability) => ability !== undefined && ability.name,
   );
-  return abilitiesCopy.sort((a1, a2) => {
-    // 0. put abilities with stars at the top of the list
-    const a1Stars = a1.custom_fields?.stars ?? 0;
-    const a2Stars = a2.custom_fields?.stars ?? 0;
-    if ((a1Stars > 0 || a2Stars > 0) && a1Stars !== a2Stars) {
-      return a2Stars - a1Stars;
-    }
-    // 1. put Passive abilities at the end of the list
-    const a1Passive =
-      a1.custom_fields?.cost?.passive ||
-      a1.custom_fields?.activation?.toLowerCase() === "passive";
-    const a2Passive =
-      a2.custom_fields?.cost?.passive ||
-      a2.custom_fields?.activation?.toLowerCase() === "passive";
-    if (!a1Passive && a2Passive) {
-      return -1;
-    } else if (a1Passive && !a2Passive) {
-      return 1;
-    }
-    // 2. put abilities which use SP instead of XP at the end of the list when passive
-    if (
-      a1Passive &&
-      a1.custom_fields?.purchase &&
-      a2Passive &&
-      a2.custom_fields?.purchase
-    ) {
-      const a1SP = a1.custom_fields.purchase.includes("sp");
-      const a2SP = a2.custom_fields.purchase.includes("sp");
-      if (!a1SP && a2SP) {
-        return -1;
-      } else if (a1SP && !a2SP) {
-        return 1;
-      }
-    }
-    // 3. sort by path gathering
-    if (
-      a1.custom_fields?.path &&
-      a2.custom_fields?.path &&
-      a1.custom_fields.path !== a2.custom_fields.path
-    ) {
-      const pathIdx = (given: string) =>
-        paths.findIndex((path) => path === given);
-      return pathIdx(a1.custom_fields.path) - pathIdx(a2.custom_fields.path);
-    }
-    // 4. sort by XP price otherwise (for now at least)
-    const costInt = (purchase: string | undefined) => {
-      if (purchase === undefined) {
-        return 0;
-      }
-      const cost = parseInt(purchase);
-      if (isNaN(cost)) {
-        return 0;
-      }
-      return cost;
-    };
-    const diff =
-      costInt(a1.custom_fields?.purchase) - costInt(a2.custom_fields?.purchase);
-    if (diff !== 0) {
-      return diff;
-    }
-    return a1.name.localeCompare(a2.name);
-  });
+  return abilitiesCopy.sort(defaultAbilitySort(paths));
 }
 
 // returns a list of paths from the given abilities sorted by paths which contain the least expensive abilities
@@ -376,10 +314,13 @@ export const findNewAbilityVersion = (
   return undefined;
 };
 
+const abilityCostDisplay = (costType: string): string =>
+  costType.length <= 2 ? costType.toUpperCase() : titleText(costType);
+
 export const generateAbilityActivation = (cost: AbilityCostMap): string => {
   let activation = "";
   Object.entries(cost).forEach(([costType, amount]) => {
-    const titleCostType = titleText(costType);
+    const titleCostType = abilityCostDisplay(costType);
     const costExtension =
       typeof amount === "boolean"
         ? titleCostType

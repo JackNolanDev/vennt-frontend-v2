@@ -32,4 +32,8 @@ defineProps<{ icon?: string }>();
 .tiny-icon .material-symbols-outlined {
   font-size: 20px;
 }
+
+.wrap .nowrap {
+  white-space: inherit;
+}
 </style>

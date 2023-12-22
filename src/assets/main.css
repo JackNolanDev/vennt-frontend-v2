@@ -23,7 +23,7 @@
 }
 
 :root {
-  --app-font: "Raleway", sans-serif;
+  --app-font: "Raleway", system-ui, sans-serif;
   --logo-font: Copperplate, "Raleway", sans-serif;
   --number-font: "roboto", monospace;
   --code-font: "Roboto Mono", monospace;
@@ -45,6 +45,10 @@
 
   --border-radius: 5px;
   --button-border-width: 2px;
+
+  --page-layout-large: 1050px;
+  --page-layout-medium: 500px;
+  --page-layout-small: 300px;
 
   /* COLORS */
   /* Originally came from https://coolors.co/7e8987-4b4a67-fadf63-e6af2e-ef6f6c */
@@ -737,7 +741,14 @@ pre > code {
 .alignRow.baseline {
   align-items: baseline;
 }
+.alignRow.stretch {
+  align-items: stretch;
+}
 
+.cols-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+}
 .cols-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -969,10 +980,16 @@ tr:nth-child(even) > td.highlight.dark_gray {
 tr:nth-child(odd) > td.highlight.dark_gray {
   background-color: var(--gray-950);
 }
-tr:not(:first-child) > td.highlight {
+tr:not(:first-child) > td.highlight:not(:first-child) {
+  border-top-left-radius: var(--border-radius);
+}
+tr:not(:last-child) > td.highlight:not(:first-child) {
+  border-bottom-left-radius: var(--border-radius);
+}
+tr:not(:first-child) > td.highlight:not(:last-child) {
   border-top-right-radius: var(--border-radius);
 }
-tr:not(:last-child) > td.highlight {
+tr:not(:last-child) > td.highlight:not(:last-child) {
   border-bottom-right-radius: var(--border-radius);
 }
 

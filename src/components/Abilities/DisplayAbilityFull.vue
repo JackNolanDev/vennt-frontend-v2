@@ -38,6 +38,7 @@ import DisplayAbilityUseCost from "./DisplayAbilityUseCost.vue";
 const props = defineProps<{
   ability: EntityAbility;
   attrs?: ComputedAttributes;
+  noWikiLinks?: boolean;
   hiddenFields?: {
     path?: boolean;
     effect?: boolean;
@@ -49,6 +50,7 @@ const jsonStorage = useJsonStore();
 const pathIsLink = computed(() => {
   return (
     props.ability.custom_fields?.path &&
+    !props.noWikiLinks &&
     jsonStorage.abilities.paths.some(
       (path) => path.name === props.ability.custom_fields?.path,
     )

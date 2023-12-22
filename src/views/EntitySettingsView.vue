@@ -1,10 +1,12 @@
 <template>
-  <h1>Settings</h1>
-  <EntitySettingsCogs class="mb-8"></EntitySettingsCogs>
-  <EntitySettingsGeneralDropdown class="mb-8"></EntitySettingsGeneralDropdown>
-  <EntitySettingsPermissions class="mb-8"></EntitySettingsPermissions>
-  <EntitySettingsDangerous class="mb-8"></EntitySettingsDangerous>
-  <EntityDownload></EntityDownload>
+  <PageLayout>
+    <h1>Settings</h1>
+    <EntitySettingsCogs class="mb-8"></EntitySettingsCogs>
+    <EntitySettingsGeneralDropdown class="mb-8"></EntitySettingsGeneralDropdown>
+    <EntitySettingsPermissions class="mb-8"></EntitySettingsPermissions>
+    <EntitySettingsDangerous class="mb-8"></EntitySettingsDangerous>
+    <EntityDownload></EntityDownload>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
@@ -13,4 +15,5 @@ import EntitySettingsCogs from "@/components/Entities/Settings/EntitySettingsCog
 import EntitySettingsDangerous from "@/components/Entities/Settings/EntitySettingsDangerous.vue";
 import EntitySettingsGeneralDropdown from "@/components/Entities/Settings/EntitySettingsGeneralDropdown.vue";
 import EntitySettingsPermissions from "@/components/Entities/Settings/EntitySettingsPermissions.vue";
+import PageLayout from "@/components/Base/PageLayout.vue";
 </script>

@@ -12,6 +12,7 @@
     @close-modal="emit('exitModal')"
     :id="id"
     :is-large="isLarge"
+    :hide-buttons="hideButtons"
   >
     <template #title>
       <slot name="title"></slot>
@@ -45,6 +46,7 @@ const props = defineProps<{
   mainButtonDisabled?: boolean;
   isLarge?: boolean;
   triggerButtonId?: string;
+  hideButtons?: boolean;
 }>();
 const emit = defineEmits<{
   (e: "mainButton"): void;

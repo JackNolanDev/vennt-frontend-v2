@@ -4,13 +4,6 @@
       :given-ability="ability"
       @submitted="toggleEditAbility"
     ></EditAbility>
-    <BaseButton
-      @click="toggleEditAbility"
-      icon="highlight_off"
-      class="wide mt-24"
-    >
-      Cancel editing ability
-    </BaseButton>
   </div>
   <div v-else>
     <h2>
@@ -40,7 +33,6 @@ import { useEntityStore } from "@/stores/entity";
 import AbilityDetailsInteractive from "./AbilityDetailsInteractive.vue";
 import { reactive } from "vue";
 import EditAbility from "./EditAbility.vue";
-import BaseButton from "../Base/BaseButton.vue";
 import AbilityName from "./AbilityName.vue";
 
 defineProps<{ ability: FullEntityAbility; attrs?: ComputedAttributes }>();

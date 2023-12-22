@@ -1,36 +1,39 @@
 <template>
-  <h1>Weapon shop</h1>
-  <h2>List of Weapon Categories</h2>
-  <p class="textBlock">
-    The weapons listed below are not specific weapons, but rather categories.
-    For example, if you want to wield a battleaxe, you might pick your weapon to
-    be Brutal. You would then have a battleaxe that has all the properties of
-    Brutal weapons. Even though there are examples listed of the common weapons
-    of that category, your weapon can be anything. For example, you can have a
-    Great frying pan, or a shortbow that you treat as a Shotgun because your
-    character tweaked it to use gunpowder to fire the arrows, so it isn’t very
-    much like a Bow at all. Some weapons may be Two-Handed.
-  </p>
-  <div class="cardGroup mb-128">
-    <router-link
-      v-for="weaponType in purchasable"
-      :key="weaponType.category"
-      :to="weaponLink(weaponType)"
-      class="btn card column padded selectable"
-      :class="{ selected: weaponOpenned(weaponType) }"
-    >
-      <div class="alignRow gap">
-        <WeaponIcon :item="weaponType"></WeaponIcon>
-        <h3 class="mt-0 mb-0">{{ weaponType.category }}</h3>
-      </div>
+  <PageLayout>
+    <h1>Weapon shop</h1>
+    <h2>List of Weapon Categories</h2>
+    <p class="textBlock">
+      The weapons listed below are not specific weapons, but rather categories.
+      For example, if you want to wield a battleaxe, you might pick your weapon
+      to be Brutal. You would then have a battleaxe that has all the properties
+      of Brutal weapons. Even though there are examples listed of the common
+      weapons of that category, your weapon can be anything. For example, you
+      can have a Great frying pan, or a shortbow that you treat as a Shotgun
+      because your character tweaked it to use gunpowder to fire the arrows, so
+      it isn’t very much like a Bow at all. Some weapons may be Two-Handed.
+    </p>
+    <div class="cardGroup mb-128">
+      <router-link
+        v-for="weaponType in purchasable"
+        :key="weaponType.category"
+        :to="weaponLink(weaponType)"
+        class="btn card column padded selectable"
+        :class="{ selected: weaponOpened(weaponType) }"
+      >
+        <div class="alignRow gap">
+          <WeaponIcon :item="weaponType"></WeaponIcon>
+          <h3 class="mt-0 mb-0">{{ weaponType.category }}</h3>
+        </div>
 
-      <DisplayShopItem :item="weaponType"></DisplayShopItem>
-    </router-link>
-  </div>
+        <DisplayShopItem :item="weaponType"></DisplayShopItem>
+      </router-link>
+    </div>
+  </PageLayout>
 </template>
 
 <script setup lang="ts">
 import DisplayShopItem from "@/components/Items/DisplayShopItem.vue";
+import PageLayout from "@/components/Base/PageLayout.vue";
 import WeaponIcon from "@/components/Items/WeaponIcon.vue";
 import router, { ENTITY_WEAPON_SHOP_ROUTE } from "@/router";
 import { useJsonStore } from "@/stores/jsonStorage";
@@ -44,10 +47,10 @@ jsonStorage.fetchWeaponTypes();
 const purchasable = computed(() =>
   jsonStorage.weaponTypes.filter((weapon) => weapon.sp),
 );
-const weaponOpenned = (weapon: ShopItem): boolean =>
+const weaponOpened = (weapon: ShopItem): boolean =>
   router.currentRoute.value.params.detail == weapon.category;
 const weaponLink = (weapon: ShopItem): RouteLocationRaw => {
-  if (weaponOpenned(weapon)) {
+  if (weaponOpened(weapon)) {
     const params = { ...router.currentRoute.value.params };
     delete params.detail;
     return {

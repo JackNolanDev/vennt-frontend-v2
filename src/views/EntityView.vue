@@ -18,16 +18,13 @@
         <EntityRightSidebar></EntityRightSidebar>
       </RouteBasedRightSideBar>
     </template>
-    <PageLayout>
-      <RouterView></RouterView>
-    </PageLayout>
+    <RouterView></RouterView>
   </BaseLayout>
   <EntityModals></EntityModals>
 </template>
 
 <script setup lang="ts">
 import BaseLayout from "@/components/Base/BaseLayout.vue";
-import PageLayout from "@/components/Base/PageLayout.vue";
 import { useEntityStore } from "@/stores/entity";
 import { computed, onBeforeMount, onUnmounted } from "vue";
 import { RouterView, useRoute } from "vue-router";

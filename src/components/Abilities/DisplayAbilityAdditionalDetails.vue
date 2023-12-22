@@ -13,19 +13,25 @@
   </p>
   <p v-if="ability.custom_fields?.unlocks" class="mt-16 mb-0">
     <b class="mr-8">Unlocks:</b>
+    <span v-if="noWikiLinks">{{ ability.custom_fields.unlocks }}</span>
     <WikiLinksSingleLine
+      v-else
       :line="ability.custom_fields.unlocks"
     ></WikiLinksSingleLine>
   </p>
   <p v-if="ability.custom_fields?.partial_unlocks" class="mt-16 mb-0">
     <b class="mr-8">Partially Unlocked:</b>
+    <span v-if="noWikiLinks">{{ ability.custom_fields.partial_unlocks }}</span>
     <WikiLinksSingleLine
+      v-else
       :line="ability.custom_fields.partial_unlocks"
     ></WikiLinksSingleLine>
   </p>
   <p v-if="ability.custom_fields?.prereq" class="mt-16 mb-0">
     <b class="mr-8">Prerequisites:</b>
+    <span v-if="noWikiLinks">{{ ability.custom_fields.prereq }}</span>
     <WikiLinksSingleLine
+      v-else
       :line="ability.custom_fields.prereq"
     ></WikiLinksSingleLine>
   </p>
@@ -41,7 +47,7 @@ import type { EntityAbility } from "vennt-library";
 import { computed } from "vue";
 import WikiLinksSingleLine from "../Wiki/WikiLinksSingleLine.vue";
 
-const props = defineProps<{ ability: EntityAbility }>();
+const props = defineProps<{ ability: EntityAbility; noWikiLinks?: boolean }>();
 const entityStore = useEntityStore();
 
 const actualCost = computed(() => {

@@ -3,6 +3,7 @@
     <div class="ml-8 mr-8 mb-16">
       <DisplayAbilityAdditionalDetails
         :ability="ability"
+        :no-wiki-links="noWikiLinks"
       ></DisplayAbilityAdditionalDetails>
     </div>
   </BaseDropDown>
@@ -14,7 +15,7 @@ import BaseDropDown from "../Base/BaseDropDown.vue";
 import DisplayAbilityAdditionalDetails from "./DisplayAbilityAdditionalDetails.vue";
 import { computed } from "vue";
 
-const props = defineProps<{ ability: EntityAbility }>();
+const props = defineProps<{ ability: EntityAbility; noWikiLinks?: boolean }>();
 
 const additionalDetailsKeys: EntityAbilityFields[] = [
   "purchase",

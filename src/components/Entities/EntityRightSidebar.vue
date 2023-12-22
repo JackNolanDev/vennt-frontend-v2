@@ -153,8 +153,8 @@ const anyButCampaignChat = computed(
 }
 @media screen and (max-width: 396px) {
   .panel {
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 4px;
+    margin-right: 4px;
   }
 }
 </style>
