@@ -14,7 +14,7 @@
   </nav>
   <div v-if="state.dropdownOpen" class="nav-dropdown">
     <div class="separator"></div>
-    <nav class="mt-8 mb-8 ml-8 mr-8">
+    <nav class="m-8">
       <BaseButton
         :to="{ name: HOME_ROUTE }"
         icon="home"

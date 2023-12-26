@@ -21,10 +21,10 @@
         <p class="textBlock">
           Current version:
           <a
-            href="https://vennt.fandom.com/wiki/Cogs?oldid=5671"
+            href="https://vennt.fandom.com/wiki/Cogs?oldid=6587"
             target="_blank"
           >
-            Revision as of 19:05, 20 March 2023
+            Revision as of 19:10, 16 December 2023
           </a>
         </p>
         <h2 class="step">Choose a name</h2>

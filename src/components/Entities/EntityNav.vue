@@ -74,7 +74,7 @@
   </nav>
   <div v-if="state.dropdownOpen" class="nav-dropdown" @click="toggleDropdown">
     <div class="separator"></div>
-    <nav class="mt-8 mb-8 ml-8 mr-8">
+    <nav class="m-8">
       <div>
         <BaseButton
           :to="{ name: ENTITY_STATS_ROUTE, query }"

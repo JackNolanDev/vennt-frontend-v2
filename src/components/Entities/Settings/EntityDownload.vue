@@ -4,7 +4,7 @@
     @change="downloadEntity"
     title="Save full entity"
   >
-    <div class="mt-8 mb-8 ml-8 mr-8">
+    <div class="m-8">
       <div v-if="state.entity">
         <a :download="`${state.entity.entity.name}.json`" :href="downloadHref"
           >Download entity</a

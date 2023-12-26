@@ -11,32 +11,21 @@
     <template #title
       >Recovery Shock from {{ entityStore.recoveryShockSrc[0] }}</template
     >
-    <div class="card column padded thin">
-      <p class="mt-0 mb-8">
-        Roll a Strength check! If the result is less than your Recovery Shock
-        ({{ entityStore.computedAttributes.recovery_shock?.val ?? 0 }}), you
-        become permanently immune to the benefits of the spell or potion which
-        just affected you!
-      </p>
-      <ToggleableDiceSection
-        :dice="dice"
-        @roll-value="rollValue"
-      ></ToggleableDiceSection>
-      <div class="separator thin mt-8"></div>
-      <div class="mt-8 mb-8 ml-8 mr-8">
-        <div class="alignRow gap">
-          <label for="item-roll-value" class="labelText nowrap">
-            Roll value:
-          </label>
-          <input
-            type="number"
-            placeholder="Roll Result"
-            v-model="state.rollValue"
-            id="item-roll-value"
-            class="input nameInput"
-          />
-        </div>
-        <BaseButton
+    <RollDiceInput
+      v-model="state.rollValue"
+      :dice="dice"
+      input-placeholder="Roll Result"
+    >
+      <template #title
+        ><p class="m-8">
+          Roll a Strength check! If the result is less than your Recovery Shock
+          ({{ entityStore.computedAttributes.recovery_shock?.val ?? 0 }}), you
+          become permanently immune to the benefits of the spell or potion which
+          just affected you!
+        </p></template
+      >
+      <template #innerForm
+        ><BaseButton
           @click="handleRecoveryShock"
           :disabled="buttonDisabled"
           class="primary wide mt-8"
@@ -46,20 +35,21 @@
               ? "Whew! STR check succeeded!"
               : "Ouch! STR check failed!"
           }}
-        </BaseButton>
-      </div>
-    </div>
+        </BaseButton></template
+      >
+    </RollDiceInput>
   </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { useEntityStore } from "@/stores/entity";
 import BaseModal from "../Base/BaseModal.vue";
-import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";
 import { type DisabledActions, defaultDice } from "vennt-library";
+import RollDiceInput from "../Dice/RollDiceInput.vue";
+import { numberFieldVal } from "@/utils/inputType";
 
 const entityStore = useEntityStore();
 const diceStore = useDiceStore();
@@ -77,15 +67,11 @@ const dice = computed(() =>
   ),
 );
 const checkSuccess = computed(() => {
-  const parsedValue = parseInt(state.rollValue);
-  const roll = isNaN(parsedValue) ? 0 : parsedValue;
+  const roll = numberFieldVal(state.rollValue);
   return roll >= (entityStore.computedAttributes.recovery_shock?.val ?? 0);
 });
 const buttonDisabled = computed(() => !state.rollValue);
 
-const rollValue = (value: number) => {
-  state.rollValue = value.toString();
-};
 const closeModal = () => {
   state.rollValue = "";
   entityStore.recoveryShockSrc = entityStore.recoveryShockSrc?.slice(1);

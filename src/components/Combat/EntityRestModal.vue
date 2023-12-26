@@ -37,7 +37,7 @@
         input-placeholder="Recovery Shock roll result"
         class="border"
         ><template #title
-          ><p class="mt-8 mb-8 ml-8 mr-8">
+          ><p class="m-8">
             <strong>Roll to decrease Recovery Shock</strong><br />(Current
             value: {{ entityStore.computedAttributes.recovery_shock?.val }})
           </p></template
@@ -50,7 +50,7 @@
         input-placeholder="Recovery Rest roll result"
         class="border"
         ><template #title
-          ><p class="mt-8 mb-8 ml-8 mr-8">
+          ><p class="m-8">
             <strong>Roll for Recovery Rest</strong>
           </p></template
         ></RollDiceInput
@@ -59,7 +59,7 @@
         v-if="Object.keys(adjustAttrs).length > 0"
         class="card column border"
       >
-        <p class="mt-8 mb-8 ml-8 mr-8">
+        <p class="m-8">
           <strong>Resting Results</strong>
         </p>
         <table class="no-border">
@@ -81,7 +81,7 @@
         v-if="showPayUsingHeroPointToggle && state.useHeroPoint"
         class="card column border"
       >
-        <p class="mt-8 mb-8 ml-8 mr-8">
+        <p class="m-8">
           <strong>Paying with a Hero Point</strong>
         </p>
         <p class="mt-0 mb-0 ml-8 mr-8 text-block">

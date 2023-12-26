@@ -19,7 +19,7 @@
       class="mt-2 mb-8"
     ></BaseInlineTextEditor>
     <BaseDropDown title="Usage Cost" class="mb-8">
-      <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
+      <div class="m-8 cost-section">
         <div class="cols-2 center-items">
           <label for="ability-cost-passive" class="labelText nowrap">
             Is Passive
@@ -148,7 +148,7 @@
       </div>
     </BaseDropDown>
     <BaseDropDown title="Additional Details" class="mb-8">
-      <div class="mt-8 mb-8 ml-8 mr-8">
+      <div class="m-8">
         <label for="new-ability-flavor" class="labelText"><i>Flavor:</i></label>
         <input
           type="text"
@@ -192,17 +192,17 @@
       </div>
     </BaseDropDown>
     <BaseDropDown title="Ability Functionality" class="mb-8">
-      <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
-        <BaseDropDown title="Heal resources using dice roll">
-          <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
-            <p class="mt-0 mb-0">
+      <div class="m-8 cost-section">
+        <EditRollUse v-model="state.uses_roll" :name="newAbility.name"
+          ><template #desc
+            ><p class="mt-0 mb-8">
               Use this section when this Ability should heal some resources
               based on the result of a dice roll. E.g., heal 2d6+SPI Vim.
-            </p>
-          </div>
-        </BaseDropDown>
+            </p></template
+          ></EditRollUse
+        >
         <BaseDropDown title="Heals / uses resources">
-          <div class="mt-8 mb-8 ml-8 mr-8 cost-section">
+          <div class="m-8 cost-section">
             <p class="mt-0 mb-0">
               Use this section when this Ability should effect a base
               attribute's value permanently on use. For example, if this ability
@@ -210,7 +210,6 @@
             </p>
           </div>
         </BaseDropDown>
-        <pre><code>{{ newAbility.uses }}</code></pre>
       </div>
     </BaseDropDown>
     <BaseButton
@@ -268,6 +267,8 @@ import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import AbilityName from "./AbilityName.vue";
 import AbilityAdditionalDetailDropdown from "./AbilityAdditionalDetailDropdown.vue";
+import type { EditRollUses } from "@/utils/usesUtils";
+import EditRollUse from "../Uses/EditRollUse.vue";
 
 const props = defineProps<{ givenAbility?: FullEntityAbility }>();
 const emit = defineEmits<{ (e: "submitted"): void }>();
@@ -290,7 +291,7 @@ interface NewAbilityState {
   purchase: string;
   expedited: string;
   path: string;
-  uses: UsesMap;
+  uses_roll: EditRollUses;
 }
 
 const initialState = (): NewAbilityState => ({
@@ -314,7 +315,17 @@ const initialState = (): NewAbilityState => ({
   purchase: props.givenAbility?.custom_fields?.purchase ?? "",
   expedited: props.givenAbility?.custom_fields?.expedited ?? "",
   path: props.givenAbility?.custom_fields?.path ?? "",
-  uses: props.givenAbility?.uses ?? {},
+  uses_roll: {
+    attr: props.givenAbility?.uses?.roll?.attr ?? "",
+    dice: props.givenAbility?.uses?.roll?.dice ?? "",
+    adjusts: Object.entries(props.givenAbility?.uses?.roll?.heal ?? {}).map(
+      ([attr, adjust]) => ({
+        attr,
+        type: typeof adjust === "number" ? "number" : "equation",
+        adjust,
+      }),
+    ),
+  },
 });
 
 const state = reactive(initialState());
@@ -354,6 +365,7 @@ const newAbility = computed((): UncompleteEntityAbility => {
   if (Object.keys(cost).length === 0) {
     cost = undefined;
   }
+  const uses: UsesMap = { ...props.givenAbility?.uses };
   const ability: UncompleteEntityAbility = {
     name: state.name,
     effect: state.effect,
@@ -370,7 +382,7 @@ const newAbility = computed((): UncompleteEntityAbility => {
       ...(state.path && { path: state.path }),
     },
     // TODO: Make USES editable
-    uses: Object.keys(state.uses).length > 0 ? state.uses : undefined,
+    uses: Object.keys(uses).length > 0 ? uses : undefined,
   };
   return ability;
 });

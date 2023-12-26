@@ -3,7 +3,7 @@
     v-if="entityStore.entity && entityStore.isOwner"
     title="Dangerous Settings"
   >
-    <div class="mt-8 mb-8 ml-8 mr-8">
+    <div class="m-8">
       <p class="mt-0"><b>WARNING: These settings are dangerous!</b></p>
       <BaseButton @click="updateEntityAbilities" class="primary wide mb-8"
         >Use latest version of all abilities</BaseButton

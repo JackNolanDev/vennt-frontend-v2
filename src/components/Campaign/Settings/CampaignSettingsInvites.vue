@@ -1,6 +1,6 @@
 <template>
   <BaseDropDown v-if="campaignStore.role === 'GM'" title="Campaign Invitations">
-    <div class="mt-8 mb-8 ml-8 mr-8 cols-2 gap table-split">
+    <div class="m-8 cols-2 gap table-split">
       <CampaignSettingsLinkInvites
         class="link-invites-side"
       ></CampaignSettingsLinkInvites>

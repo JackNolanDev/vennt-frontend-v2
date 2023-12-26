@@ -8,7 +8,7 @@
     :title="label"
     @change="switchDropDown(idx)"
   >
-    <div class="mt-8 mb-8 ml-8 mr-8">
+    <div class="m-8">
       <DisplayWeaponFields :item="item"></DisplayWeaponFields>
     </div>
   </BaseDropDown>

@@ -1,6 +1,6 @@
 <template>
   <BaseDropDown title="Attribute Settings">
-    <div class="mt-8 mb-8 ml-8 mr-8 alignRow column top">
+    <div class="m-8 alignRow column top">
       <EntitySettingsAttributes></EntitySettingsAttributes>
       <EntitySettingsCustomAttribute></EntitySettingsCustomAttribute>
       <EntitySettingsName></EntitySettingsName>

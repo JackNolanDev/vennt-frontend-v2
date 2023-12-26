@@ -3,7 +3,7 @@
     v-if="entityStore.entity?.entity.type === 'COG'"
     title="Cog Settings"
   >
-    <div class="mt-8 mb-8 ml-8 mr-8">
+    <div class="m-8">
       <BaseButton
         v-if="entityStore.entity.entity.other_fields.cog_creation_options"
         :to="{

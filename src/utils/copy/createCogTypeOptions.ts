@@ -19,7 +19,7 @@ export const cogTypeOptionsInfo: Record<
     attrs: {},
   },
   automata: {
-    text: `**Automata**: a robotic or technological construction`,
+    text: `**Automata**: a robotic or technological construction; automata don't need to eat, breathe, or sleep`,
     name: "Automata",
     attrs: {
       cha: "weak",
@@ -42,7 +42,9 @@ export const cogTypeOptionsInfo: Record<
     },
   },
   humanoid: {
-    text: `**Humanoid**: a sentient, human or human-like creature such as elves and orcs`,
+    text:
+      `**Humanoid**: a sentient, human or human-like creature such as elves and orcs; ` +
+      `humanoids tend to be tactically unpredictable and use clever strategies against their opponents`,
     name: "Humanoid",
     attrs: {},
   },
@@ -57,7 +59,7 @@ export const cogTypeOptionsInfo: Record<
     },
   },
   undead: {
-    text: `**Undead**: creatures raised from the dead, often by dark magicks or curses`,
+    text: `**Undead**: creatures raised from the dead, often by dark magicks or curses; undead don't need to eat, breathe, or sleep`,
     name: "Undead",
     attrs: {
       cha: "weak",

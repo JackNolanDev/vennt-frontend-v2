@@ -1,6 +1,6 @@
 <template>
   <BaseDropDown title="Dangerous Settings">
-    <div class="mt-8 mb-8 ml-8 mr-8">
+    <div class="m-8">
       <ConfirmationModal
         id="leave-campaign-modal"
         trigger-icon="person_remove"

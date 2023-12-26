@@ -7,7 +7,7 @@
       "@/*": ["./src/*"]
     },
     "types": ["node"],
-    "lib": ["ES2021", "dom"],
+    "lib": ["ESNext", "dom"],
     "allowJs": true,
     "ignoreDeprecations": "5.0"
   },

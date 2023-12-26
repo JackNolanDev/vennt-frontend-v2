@@ -1,36 +1,26 @@
 <template>
-  <div v-if="dice" class="card column">
-    <ToggleableDiceSection
-      :dice="dice"
-      @roll-value="(value) => (state.rollValue = value.toString())"
-    ></ToggleableDiceSection>
-    <div class="separator thin mt-8"></div>
-    <div class="mt-8 mb-8 ml-8 mr-8">
-      <div class="alignRow gap">
-        <label for="ability-roll-value" class="labelText nowrap">
-          Roll value:
-        </label>
-        <input
-          type="number"
-          placeholder="Roll Result"
-          v-model="state.rollValue"
-          id="ability-roll-value"
-          class="input nameInput"
-        />
-      </div>
-      <BaseButton
+  <RollDiceInput
+    v-if="dice"
+    v-model="state.rollValue"
+    :dice="dice"
+    input-placeholder="Roll Result"
+  >
+    <template #innerForm
+      ><BaseButton
         @click="useAbility"
         :disabled="buttonDisabled"
-        title="Uses the ability. Takes the cost of the ability but gives you the result of your dice roll."
+        title="Uses the ability. Consumes the cost of the ability but gives you the result of your dice roll."
         class="primary wide mt-8"
       >
         Use ability
-      </BaseButton>
-    </div>
-  </div>
+      </BaseButton></template
+    >
+  </RollDiceInput>
 </template>
 
 <script setup lang="ts">
+import BaseButton from "../Base/BaseButton.vue";
+import RollDiceInput from "../Dice/RollDiceInput.vue";
 import { useEntityStore } from "@/stores/entity";
 import {
   type FullEntityAbility,
@@ -38,12 +28,11 @@ import {
   diceParseFromString,
   solvePendingEquations,
 } from "vennt-library";
-import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";
-import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import { abilityUsedStats } from "@/utils/abilityUtils";
+import { numberFieldVal } from "@/utils/inputType";
 
 const props = defineProps<{ ability: FullEntityAbility }>();
 const state = reactive({ rollValue: "" });
@@ -59,10 +48,7 @@ const dice = computed(
       `Used ${props.ability.name}`,
     ),
 );
-const adjust = computed(() => {
-  const parsedValue = parseInt(state.rollValue);
-  return isNaN(parsedValue) ? 0 : parsedValue;
-});
+const adjust = computed(() => numberFieldVal(state.rollValue));
 const buttonDisabled = computed(
   () =>
     adjust.value === 0 ||

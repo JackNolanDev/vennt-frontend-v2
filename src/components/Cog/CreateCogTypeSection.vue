@@ -5,7 +5,7 @@
     @selected-updated="updateType"
   ></BaseRadioButtons>
   <BaseDropDown title="Attribute Level Overrides" class="mt-8">
-    <div class="attrOverrideGrid gap mt-8 mb-8 ml-8 mr-8">
+    <div class="attrOverrideGrid gap m-8">
       <div v-for="attr in ATTRIBUTES" :key="attr" class="alignRow gap">
         <label :for="overrideDropDownId(attr)" class="labelText attrLabel">
           {{ attrShortName(attr) }}:

@@ -6,7 +6,7 @@
       @roll-value="(value) => emits('update:modelValue', value.toString())"
     ></ToggleableDiceSection>
     <div class="separator thin mt-8"></div>
-    <div class="mt-8 mb-8 ml-8 mr-8">
+    <div class="m-8">
       <div class="alignRow gap">
         <label :for="`roll-value-${unique}`" class="labelText nowrap">
           Roll value:

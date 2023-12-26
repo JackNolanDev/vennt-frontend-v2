@@ -1,36 +1,26 @@
 <template>
-  <div v-if="dice" class="card column">
-    <ToggleableDiceSection
-      :dice="dice"
-      @roll-value="rollValue"
-    ></ToggleableDiceSection>
-    <div class="separator thin mt-8"></div>
-    <div class="mt-8 mb-8 ml-8 mr-8">
-      <div class="alignRow gap">
-        <label for="item-roll-value" class="labelText nowrap">
-          Roll value:
-        </label>
-        <input
-          type="number"
-          placeholder="Roll Result"
-          v-model="state.rollValue"
-          id="item-roll-value"
-          class="input nameInput"
-        />
-      </div>
-      <BaseButton
+  <RollDiceInput
+    v-if="dice"
+    v-model="state.rollValue"
+    :dice="dice"
+    input-placeholder="Roll Result"
+  >
+    <template #innerForm
+      ><BaseButton
         @click="consumeItem"
         :disabled="buttonDisabled"
         title="Removes the item from your inventory and heals you by the given amount"
         class="primary wide mt-8"
       >
         Consume Item
-      </BaseButton>
-    </div>
-  </div>
+      </BaseButton></template
+    >
+  </RollDiceInput>
 </template>
 
 <script setup lang="ts">
+import BaseButton from "../Base/BaseButton.vue";
+import RollDiceInput from "../Dice/RollDiceInput.vue";
 import { useEntityStore } from "@/stores/entity";
 import {
   type ConsolidatedItem,
@@ -38,12 +28,11 @@ import {
   diceParseFromString,
   solvePendingEquations,
 } from "vennt-library";
-import ToggleableDiceSection from "../Dice/ToggleableDiceSection.vue";
 import { computed, reactive } from "vue";
 import { useDiceStore } from "@/stores/dice";
-import BaseButton from "../Base/BaseButton.vue";
 import { adjustAttrsAPI } from "@/utils/attributeUtils";
 import { prefixName } from "@/utils/textUtils";
+import { numberFieldVal } from "@/utils/inputType";
 
 const props = defineProps<{ item: ConsolidatedItem }>();
 const state = reactive({ rollValue: "" });
@@ -59,10 +48,7 @@ const dice = computed(
       prefixName(props.item.name, "Used", false),
     ),
 );
-const adjust = computed(() => {
-  const parsedValue = parseInt(state.rollValue);
-  return isNaN(parsedValue) ? 0 : parsedValue;
-});
+const adjust = computed(() => numberFieldVal(state.rollValue));
 const buttonDisabled = computed(
   () =>
     adjust.value === 0 ||
@@ -71,9 +57,6 @@ const buttonDisabled = computed(
     ]?.length ?? 0) > 0,
 );
 
-const rollValue = (value: number) => {
-  state.rollValue = value.toString();
-};
 const consumeItem = () => {
   if (!entityStore.entity || !props.item.uses?.roll?.attr) {
     return;

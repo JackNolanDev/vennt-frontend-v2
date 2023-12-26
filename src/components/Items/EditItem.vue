@@ -153,7 +153,7 @@
     <BaseDropDown class="mb-16">
       <template #closedTitle>Show additional options</template>
       <template #openTitle>Hide additional options</template>
-      <div class="mt-8 mb-8 ml-8 mr-8">
+      <div class="m-8">
         <label for="new-item-courses" class="labelText">Courses:</label>
         <textarea
           v-model="state.courses"

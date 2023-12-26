@@ -145,6 +145,16 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             },
           },
           {
+            name: "Full Melee",
+            cost: "L/2",
+            effect:
+              "This Cog can spend 3 Actions to make three melee basic attacks that deals Ld6 damage.",
+            useCost: { actions: 3 },
+            uses: {
+              weapons: [{ dmg: "(L)d6", weapon_type: "Melee", range: "1m" }],
+            },
+          },
+          {
             name: "Powerful Ranged",
             cost: "L/2",
             effect:
@@ -233,6 +243,8 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             cost: "L",
             effect:
               "This Cog is considered {{L/2}} Levels lower for STR, HP, damage, and Speed but {{L/2}} levels higher for Vim, DEX, and AGI. They can move through hexes with hostile creatures and they gain {{L/3}} Alerts at the start of each turn.",
+            useCost: { actions: 0 },
+            uses: { heal: { attr: { alerts: "L/3" } } },
             creationEffect: {
               attrLevelAdjust: {
                 str: "L - (L/2)",
@@ -336,6 +348,20 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             useCost: { reactions: 0 },
           },
           {
+            name: "Aggressive",
+            cost: "3*X",
+            maxCost: "L/3",
+            effect:
+              "This Cog gains [[X]]d6 damage to the first attack they make each Round.",
+            uses: {
+              check: {
+                attr: "dmg",
+                bonus: "+(X)d6",
+                label: "First attack in round",
+              },
+            },
+          },
+          {
             name: "Dodger",
             cost: "L/2",
             effect:
@@ -356,8 +382,20 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Harsh Opener",
             cost: "3*X",
+            maxCost: 6,
             effect:
               "For the first [[X]] Rounds of an Encounter, this Cog gains 1 extra Action on each of its turns.",
+            useCost: { actions: 0 },
+            uses: { heal: { attr: { actions: 1 } } },
+          },
+          {
+            name: "Ruthless Opener",
+            cost: "6*X",
+            maxCost: 3,
+            effect:
+              "For the first [[X]] Rounds of an Encounter, this Cog gains 2 extra Actions on each of its turns.",
+            useCost: { actions: 0 },
+            uses: { heal: { attr: { actions: 2 } } },
           },
           {
             name: "Frenzy",
@@ -448,7 +486,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
           {
             name: "Piercing",
             cost: "X",
-            effect: "This Cog's attacks ignore [[2*X]] Armor.",
+            effect: "All damage from this Cog ignores [[2*X]] Armor.",
             useCost: { attack: true },
           },
           {
@@ -521,7 +559,7 @@ export const cogAbilityOptions: CogAbilitySection[] = [
             name: "Tenacious",
             cost: 2,
             effect:
-              "This Cog is cannot be knocked prone. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
+              "This Cog cannot be knocked prone. When this Cog is forcibly moved, halve the distance of the effect (this ability stacks with similar effects).",
           },
           {
             name: "Thorns",

@@ -314,17 +314,33 @@ export const findNewAbilityVersion = (
   return undefined;
 };
 
-const abilityCostDisplay = (costType: string): string =>
-  costType.length <= 2 ? costType.toUpperCase() : titleText(costType);
+const abilityCostDisplay = (
+  costType: string,
+  amount: number | boolean,
+): string => {
+  if (typeof amount === "number") {
+    if (costType === "actions") {
+      return amount > 1 ? "Actions" : "Action";
+    }
+    if (costType === "reactions") {
+      return amount > 1 ? "Reactions" : "Reaction";
+    }
+  }
+  return costType.length <= 2 ? costType.toUpperCase() : titleText(costType);
+};
 
 export const generateAbilityActivation = (cost: AbilityCostMap): string => {
   let activation = "";
   Object.entries(cost).forEach(([costType, amount]) => {
-    const titleCostType = abilityCostDisplay(costType);
+    const titleCostType = abilityCostDisplay(costType, amount);
+    let convertedAmount: number | boolean | string = amount;
+    if (convertedAmount === 0 && ["actions", "reactions"].includes(costType)) {
+      convertedAmount = "Free";
+    }
     const costExtension =
-      typeof amount === "boolean"
+      typeof convertedAmount === "boolean"
         ? titleCostType
-        : `${amount} ${titleCostType}`;
+        : `${convertedAmount} ${titleCostType}`;
     activation = activation ? `${activation}, ${costExtension}` : costExtension;
   });
   return activation;

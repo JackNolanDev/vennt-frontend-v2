@@ -227,21 +227,30 @@ const cogAbilityUses = (
   options: CogCreateOptions,
 ): UsesMap | undefined => {
   const { uses: originalUses, name } = cogAbility;
+  if (!originalUses?.adjust && !originalUses?.check) {
+    return originalUses;
+  }
   // need to make a deep copy so we can modify values without effecting base abilities
   const uses: UsesMap | undefined = structuredClone(originalUses);
-  if (!uses?.adjust) {
-    return uses;
-  }
   const variableCost = options.variableAbilityCost[name];
-  if (variableCost && typeof variableCost === "number" && uses.adjust.attr) {
-    Object.entries(uses.adjust.attr).forEach(([attr, value]) => {
-      if (typeof value === "string") {
-        uses.adjust!.attr![attr as EntityAttribute] = value.replaceAll(
-          /\bX\b/gm,
-          variableCost.toString(),
-        );
-      }
-    });
+  if (variableCost && typeof variableCost === "number") {
+    if (uses.adjust?.attr) {
+      Object.entries(uses.adjust.attr).forEach(([attr, value]) => {
+        if (typeof value === "string") {
+          uses.adjust!.attr![attr as EntityAttribute] = value.replaceAll(
+            /\bX\b/gm,
+            variableCost.toString(),
+          );
+        }
+      });
+    }
+
+    if (uses.check?.bonus) {
+      uses.check.bonus = uses.check.bonus.replaceAll(
+        /\bX\b/gm,
+        variableCost.toString(),
+      );
+    }
   }
   return uses;
 };

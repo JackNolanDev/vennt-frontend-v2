@@ -1,5 +1,5 @@
 <template>
-  <div v-html="desc" class="mt-8 mb-8 ml-8 mr-8 condense-child-text"></div>
+  <div v-html="desc" class="m-8 condense-child-text"></div>
 </template>
 
 <script setup lang="ts">

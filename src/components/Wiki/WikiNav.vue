@@ -19,7 +19,7 @@
           v-if="state.searchResultsOpen && !state.dropdownOpen"
         >
           <div class="separator"></div>
-          <div class="mt-8 mb-8 ml-8 mr-8">
+          <div class="m-8">
             <p class="muted-text pt-12 mt-0 mb-0">Search suggestions:</p>
             <div>
               <BaseButton
@@ -61,7 +61,7 @@
   </nav>
   <div v-if="state.dropdownOpen" class="nav-dropdown">
     <div class="separator"></div>
-    <nav class="mt-8 mb-8 ml-8 mr-8">
+    <nav class="m-8">
       <BaseButton :to="{ name: HOME_ROUTE }" icon="home" class="skinny bold">
         HOME
       </BaseButton>
