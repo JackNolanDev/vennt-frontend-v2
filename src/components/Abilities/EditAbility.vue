@@ -2,7 +2,7 @@
   <form>
     <h2 v-if="givenAbility">Edit {{ givenAbility.name }}</h2>
     <h2 v-else>New Ability</h2>
-    <label for="new-ability-name" class="labelText">Name:</label>
+    <label for="new-ability-name" class="label-text">Name:</label>
     <input
       type="text"
       autocomplete="off"
@@ -12,7 +12,7 @@
       id="new-ability-name"
       class="input wide mt-2 mb-8"
     />
-    <p class="mt-0 mb-0 labelText">Description:</p>
+    <p class="mt-0 mb-0 label-text">Description:</p>
     <BaseInlineTextEditor
       v-model="state.effect"
       placeholder="Big magical blast"
@@ -21,7 +21,7 @@
     <BaseDropDown title="Usage Cost" class="mb-8">
       <div class="m-8 cost-section">
         <div class="cols-2 center-items">
-          <label for="ability-cost-passive" class="labelText nowrap">
+          <label for="ability-cost-passive" class="label-text nowrap">
             Is Passive
           </label>
           <select
@@ -35,7 +35,7 @@
         </div>
         <div v-if="!state.cost_passive" class="cost-section">
           <div class="cols-2 center-items">
-            <label for="ability-cost-actions" class="labelText">Actions</label>
+            <label for="ability-cost-actions" class="label-text">Actions</label>
             <input
               type="number"
               inputmode="numeric"
@@ -48,7 +48,7 @@
             />
           </div>
           <div class="cols-2 center-items">
-            <label for="ability-cost-reactions" class="labelText"
+            <label for="ability-cost-reactions" class="label-text"
               >Reactions</label
             >
             <input
@@ -63,7 +63,7 @@
             />
           </div>
           <div class="cols-2 center-items">
-            <label for="ability-cost-mp" class="labelText">MP</label>
+            <label for="ability-cost-mp" class="label-text">MP</label>
             <input
               type="number"
               inputmode="numeric"
@@ -76,7 +76,7 @@
             />
           </div>
           <div class="cols-2 center-items">
-            <label for="ability-cost-vim" class="labelText">Vim</label>
+            <label for="ability-cost-vim" class="label-text">Vim</label>
             <input
               type="number"
               inputmode="numeric"
@@ -89,7 +89,7 @@
             />
           </div>
           <div class="cols-2 center-items">
-            <label for="ability-cost-hp" class="labelText">HP</label>
+            <label for="ability-cost-hp" class="label-text">HP</label>
             <input
               type="number"
               inputmode="numeric"
@@ -102,7 +102,7 @@
             />
           </div>
           <div class="cols-2 center-items">
-            <label for="ability-cost-hero" class="labelText nowrap"
+            <label for="ability-cost-hero" class="label-text nowrap"
               >Hero Points</label
             >
             <input
@@ -117,7 +117,7 @@
             />
           </div>
           <div class="cols-2 center-items">
-            <label for="ability-cost-on-attack" class="labelText nowrap">
+            <label for="ability-cost-on-attack" class="label-text nowrap">
               On Attack
             </label>
             <select
@@ -130,7 +130,7 @@
             </select>
           </div>
           <div class="cols-2 center-items" v-if="showDowntimeCost">
-            <label for="ability-cost-downtime" class="labelText nowrap">
+            <label for="ability-cost-downtime" class="label-text nowrap">
               Downtime Cost
             </label>
             <select
@@ -149,7 +149,9 @@
     </BaseDropDown>
     <BaseDropDown title="Additional Details" class="mb-8">
       <div class="m-8">
-        <label for="new-ability-flavor" class="labelText"><i>Flavor:</i></label>
+        <label for="new-ability-flavor" class="label-text"
+          ><i>Flavor:</i></label
+        >
         <input
           type="text"
           v-model="state.flavor"
@@ -158,7 +160,7 @@
           id="new-ability-flavor"
           class="input wide mt-2 mb-8"
         />
-        <label for="new-ability-range" class="labelText">Range:</label>
+        <label for="new-ability-range" class="label-text">Range:</label>
         <input
           type="text"
           v-model="state.range"
@@ -167,7 +169,7 @@
           id="new-ability-range"
           class="input wide mt-2 mb-8"
         />
-        <label for="new-ability-purchase" class="labelText"
+        <label for="new-ability-purchase" class="label-text"
           >Purchase Cost</label
         >
         <input
@@ -178,7 +180,7 @@
           id="new-ability-purchase"
           class="input wide mt-2 mb-8"
         />
-        <label for="new-ability-expedited" class="labelText"
+        <label for="new-ability-expedited" class="label-text"
           >Expedited for</label
         >
         <input
@@ -201,13 +203,36 @@
             </p></template
           ></EditRollUse
         >
-        <BaseDropDown title="Heals / uses resources">
-          <div class="m-8 cost-section">
-            <p class="mt-0 mb-0">
+        <EditHealUses
+          v-model="state.uses_heal"
+          drop-down-title="Heals / uses resources"
+        >
+          <template #desc
+            ><p class="mt-0 mb-8">
               Use this section when this Ability should effect a base
               attribute's value permanently on use. For example, if this ability
               heals HP, or uses SP, or effects any custom attributes
+            </p></template
+          >
+        </EditHealUses>
+        <BaseDropDown title="Edit in JSON">
+          <div class="m-8">
+            <p class="mt-0 mb-8">
+              This section is for manually editing this Ability's functionality
+              using JSON.
             </p>
+            <label class="label-text mb-4">Uses Override</label>
+            <textarea
+              v-model="state.uses_override"
+              placeholder="{}"
+              spellcheck="false"
+              class="input code-input"
+              :class="{ invalid: parseUsesOverride === false }"
+            ></textarea>
+            <BaseCopyableCode
+              v-if="newAbility.uses"
+              :text="JSON.stringify(newAbility.uses, null, 2)"
+            ></BaseCopyableCode>
           </div>
         </BaseDropDown>
       </div>
@@ -254,21 +279,31 @@ import { useEntityStore } from "@/stores/entity";
 import { generateAbilityActivation } from "@/utils/abilityUtils";
 import {
   abilityValidator,
+  usesValidator,
   type AbilityCostMap,
   type FullEntityAbility,
   type UncompleteEntityAbility,
-  type UsesMap,
 } from "vennt-library";
 import { editorEmpty } from "@/utils/textUtils";
 import { computed, reactive } from "vue";
+import isEqual from "lodash.isequal";
 import BaseButton from "../Base/BaseButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import AbilityName from "./AbilityName.vue";
 import AbilityAdditionalDetailDropdown from "./AbilityAdditionalDetailDropdown.vue";
-import type { EditRollUses } from "@/utils/usesUtils";
+import {
+  attrMapToEditUsesAdjustments,
+  buildUses,
+  type EditAdjustUses,
+  type EditCheckUses,
+  type EditRollUses,
+  type EditUsesAdjustment,
+} from "@/utils/usesUtils";
 import EditRollUse from "../Uses/EditRollUse.vue";
+import BaseCopyableCode from "../Base/BaseCopyableCode.vue";
+import EditHealUses from "../Uses/EditHealUses.vue";
 
 const props = defineProps<{ givenAbility?: FullEntityAbility }>();
 const emit = defineEmits<{ (e: "submitted"): void }>();
@@ -291,7 +326,11 @@ interface NewAbilityState {
   purchase: string;
   expedited: string;
   path: string;
+  uses_override: string;
   uses_roll: EditRollUses;
+  uses_heal: EditUsesAdjustment[];
+  uses_adjust: EditAdjustUses;
+  uses_check: EditCheckUses;
 }
 
 const initialState = (): NewAbilityState => ({
@@ -315,16 +354,27 @@ const initialState = (): NewAbilityState => ({
   purchase: props.givenAbility?.custom_fields?.purchase ?? "",
   expedited: props.givenAbility?.custom_fields?.expedited ?? "",
   path: props.givenAbility?.custom_fields?.path ?? "",
+  uses_override: "",
   uses_roll: {
     attr: props.givenAbility?.uses?.roll?.attr ?? "",
     dice: props.givenAbility?.uses?.roll?.dice ?? "",
-    adjusts: Object.entries(props.givenAbility?.uses?.roll?.heal ?? {}).map(
-      ([attr, adjust]) => ({
-        attr,
-        type: typeof adjust === "number" ? "number" : "equation",
-        adjust,
-      }),
+    adjusts: attrMapToEditUsesAdjustments(
+      props.givenAbility?.uses?.roll?.heal ?? {},
     ),
+  },
+  uses_heal: attrMapToEditUsesAdjustments(
+    props.givenAbility?.uses?.heal?.attr ?? {},
+  ),
+  uses_adjust: {
+    time: props.givenAbility?.uses?.adjust?.time ?? "",
+    adjusts: attrMapToEditUsesAdjustments(
+      props.givenAbility?.uses?.adjust?.attr ?? {},
+    ),
+  },
+  uses_check: {
+    attr: props.givenAbility?.uses?.check?.attr ?? "",
+    label: props.givenAbility?.uses?.check?.label ?? "",
+    diceSetting: props.givenAbility?.uses?.check?.dice_settings ?? {},
   },
 });
 
@@ -336,6 +386,15 @@ const showDowntimeCost = computed(
     !(typeof state.cost_actions === "number" && state.cost_actions > 0) &&
     !(typeof state.cost_reactions === "number" && state.cost_reactions > 0),
 );
+
+const parseUsesOverride = computed(() => {
+  try {
+    const jsonObject = JSON.parse(state.uses_override);
+    return usesValidator.parse(jsonObject);
+  } catch (err) {
+    return false;
+  }
+});
 
 const newAbility = computed((): UncompleteEntityAbility => {
   let cost: AbilityCostMap | undefined = {
@@ -365,7 +424,23 @@ const newAbility = computed((): UncompleteEntityAbility => {
   if (Object.keys(cost).length === 0) {
     cost = undefined;
   }
-  const uses: UsesMap = { ...props.givenAbility?.uses };
+  const initial = initialState();
+  const falseOnUnchanged = <T extends keyof NewAbilityState>(
+    key: T,
+  ): NewAbilityState[T] | false => {
+    if (isEqual(state[key], initial[key])) {
+      return false;
+    }
+    return state[key];
+  };
+  const uses = buildUses({
+    defaultUses: props.givenAbility?.uses,
+    usesOverride: parseUsesOverride.value,
+    rollUses: falseOnUnchanged("uses_roll"),
+    healUses: falseOnUnchanged("uses_heal"),
+    adjustUses: falseOnUnchanged("uses_adjust"),
+    checkUses: falseOnUnchanged("uses_check"),
+  });
   const ability: UncompleteEntityAbility = {
     name: state.name,
     effect: state.effect,
@@ -381,8 +456,7 @@ const newAbility = computed((): UncompleteEntityAbility => {
       ...(state.expedited && { expedited: state.expedited }),
       ...(state.path && { path: state.path }),
     },
-    // TODO: Make USES editable
-    uses: Object.keys(uses).length > 0 ? uses : undefined,
+    uses,
   };
   return ability;
 });
@@ -406,5 +480,9 @@ const addAbilityButton = () => {
 <style scoped>
 .cost-section > div:not(:last-child) {
   margin-bottom: 4px;
+}
+
+.code-input {
+  font-family: var(--code-font);
 }
 </style>

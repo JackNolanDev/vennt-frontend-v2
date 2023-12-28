@@ -9,8 +9,12 @@ defineProps<{ text: string }>();
 </script>
 
 <style scoped>
+code {
+  position: relative;
+}
 .copy-button {
   position: absolute;
+  top: 0;
   right: 0;
 }
 </style>

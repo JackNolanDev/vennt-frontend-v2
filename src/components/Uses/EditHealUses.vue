@@ -1,5 +1,5 @@
 <template>
-  <BaseDropDown title="Additional Adjustments on roll">
+  <BaseDropDown :title="dropDownTitle">
     <div class="m-8">
       <slot name="desc"></slot>
       <div
@@ -65,6 +65,7 @@
             title="Amount to heal"
             :id="`edit-ability-dice-roll-heal-${idx}`"
             class="input"
+            :class="{ invalid: val.adjust === 0 }"
           />
           <input
             v-else
@@ -147,7 +148,10 @@ import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import SelectHealAttributeInput from "./SelectHealAttributeInput.vue";
 
-const props = defineProps<{ modelValue: EditUsesAdjustment[] }>();
+const props = defineProps<{
+  modelValue: EditUsesAdjustment[];
+  dropDownTitle: string;
+}>();
 const emit = defineEmits<{
   (e: "update:modelValue", state: EditUsesAdjustment[]): void;
 }>();

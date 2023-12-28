@@ -35,6 +35,7 @@
         />
       </div>
       <EditHealUses
+        drop-down-title="Additional Adjustments on roll"
         :model-value="modelValue.adjusts"
         @update:model-value="
           (adjusts) => emit('update:modelValue', { ...modelValue, adjusts })
