@@ -193,50 +193,14 @@
         />
       </div>
     </BaseDropDown>
-    <BaseDropDown title="Ability Functionality" class="mb-8">
-      <div class="m-8 cost-section">
-        <EditRollUse v-model="state.uses_roll" :name="newAbility.name"
-          ><template #desc
-            ><p class="mt-0 mb-8">
-              Use this section when this Ability should heal some resources
-              based on the result of a dice roll. E.g., heal 2d6+SPI Vim.
-            </p></template
-          ></EditRollUse
-        >
-        <EditHealUses
-          v-model="state.uses_heal"
-          drop-down-title="Heals / uses resources"
-        >
-          <template #desc
-            ><p class="mt-0 mb-8">
-              Use this section when this Ability should effect a base
-              attribute's value permanently on use. For example, if this ability
-              heals HP, or uses SP, or effects any custom attributes
-            </p></template
-          >
-        </EditHealUses>
-        <BaseDropDown title="Edit in JSON">
-          <div class="m-8">
-            <p class="mt-0 mb-8">
-              This section is for manually editing this Ability's functionality
-              using JSON.
-            </p>
-            <label class="label-text mb-4">Uses Override</label>
-            <textarea
-              v-model="state.uses_override"
-              placeholder="{}"
-              spellcheck="false"
-              class="input code-input"
-              :class="{ invalid: parseUsesOverride === false }"
-            ></textarea>
-            <BaseCopyableCode
-              v-if="newAbility.uses"
-              :text="JSON.stringify(newAbility.uses, null, 2)"
-            ></BaseCopyableCode>
-          </div>
-        </BaseDropDown>
-      </div>
-    </BaseDropDown>
+    <EditUses
+      v-model="state.uses"
+      type="ability"
+      :name="newAbility.name"
+      :override-invalid="newAbilityUses.overrideInvalid ?? false"
+      :new-uses="newAbilityUses.uses"
+      class="mb-8"
+    ></EditUses>
     <BaseButton
       :disabled="buttonDisabled"
       @click="addAbilityButton"
@@ -279,31 +243,24 @@ import { useEntityStore } from "@/stores/entity";
 import { generateAbilityActivation } from "@/utils/abilityUtils";
 import {
   abilityValidator,
-  usesValidator,
   type AbilityCostMap,
   type FullEntityAbility,
   type UncompleteEntityAbility,
 } from "vennt-library";
 import { editorEmpty } from "@/utils/textUtils";
 import { computed, reactive } from "vue";
-import isEqual from "lodash.isequal";
 import BaseButton from "../Base/BaseButton.vue";
 import BaseDropDown from "../Base/BaseDropDown.vue";
 import BaseInlineTextEditor from "../Base/BaseInlineTextEditor.vue";
 import DisplayAbilityFull from "./DisplayAbilityFull.vue";
 import AbilityName from "./AbilityName.vue";
 import AbilityAdditionalDetailDropdown from "./AbilityAdditionalDetailDropdown.vue";
+import EditUses from "../Uses/EditUses.vue";
 import {
-  attrMapToEditUsesAdjustments,
-  buildUses,
-  type EditAdjustUses,
-  type EditCheckUses,
-  type EditRollUses,
-  type EditUsesAdjustment,
+  usesToState,
+  type EditUsesState,
+  stateToUses,
 } from "@/utils/usesUtils";
-import EditRollUse from "../Uses/EditRollUse.vue";
-import BaseCopyableCode from "../Base/BaseCopyableCode.vue";
-import EditHealUses from "../Uses/EditHealUses.vue";
 
 const props = defineProps<{ givenAbility?: FullEntityAbility }>();
 const emit = defineEmits<{ (e: "submitted"): void }>();
@@ -326,11 +283,7 @@ interface NewAbilityState {
   purchase: string;
   expedited: string;
   path: string;
-  uses_override: string;
-  uses_roll: EditRollUses;
-  uses_heal: EditUsesAdjustment[];
-  uses_adjust: EditAdjustUses;
-  uses_check: EditCheckUses;
+  uses: EditUsesState;
 }
 
 const initialState = (): NewAbilityState => ({
@@ -354,28 +307,7 @@ const initialState = (): NewAbilityState => ({
   purchase: props.givenAbility?.custom_fields?.purchase ?? "",
   expedited: props.givenAbility?.custom_fields?.expedited ?? "",
   path: props.givenAbility?.custom_fields?.path ?? "",
-  uses_override: "",
-  uses_roll: {
-    attr: props.givenAbility?.uses?.roll?.attr ?? "",
-    dice: props.givenAbility?.uses?.roll?.dice ?? "",
-    adjusts: attrMapToEditUsesAdjustments(
-      props.givenAbility?.uses?.roll?.heal ?? {},
-    ),
-  },
-  uses_heal: attrMapToEditUsesAdjustments(
-    props.givenAbility?.uses?.heal?.attr ?? {},
-  ),
-  uses_adjust: {
-    time: props.givenAbility?.uses?.adjust?.time ?? "",
-    adjusts: attrMapToEditUsesAdjustments(
-      props.givenAbility?.uses?.adjust?.attr ?? {},
-    ),
-  },
-  uses_check: {
-    attr: props.givenAbility?.uses?.check?.attr ?? "",
-    label: props.givenAbility?.uses?.check?.label ?? "",
-    diceSetting: props.givenAbility?.uses?.check?.dice_settings ?? {},
-  },
+  uses: usesToState(props.givenAbility?.uses),
 });
 
 const state = reactive(initialState());
@@ -387,14 +319,9 @@ const showDowntimeCost = computed(
     !(typeof state.cost_reactions === "number" && state.cost_reactions > 0),
 );
 
-const parseUsesOverride = computed(() => {
-  try {
-    const jsonObject = JSON.parse(state.uses_override);
-    return usesValidator.parse(jsonObject);
-  } catch (err) {
-    return false;
-  }
-});
+const newAbilityUses = computed(() =>
+  stateToUses(state.uses, props.givenAbility?.uses),
+);
 
 const newAbility = computed((): UncompleteEntityAbility => {
   let cost: AbilityCostMap | undefined = {
@@ -424,23 +351,6 @@ const newAbility = computed((): UncompleteEntityAbility => {
   if (Object.keys(cost).length === 0) {
     cost = undefined;
   }
-  const initial = initialState();
-  const falseOnUnchanged = <T extends keyof NewAbilityState>(
-    key: T,
-  ): NewAbilityState[T] | false => {
-    if (isEqual(state[key], initial[key])) {
-      return false;
-    }
-    return state[key];
-  };
-  const uses = buildUses({
-    defaultUses: props.givenAbility?.uses,
-    usesOverride: parseUsesOverride.value,
-    rollUses: falseOnUnchanged("uses_roll"),
-    healUses: falseOnUnchanged("uses_heal"),
-    adjustUses: falseOnUnchanged("uses_adjust"),
-    checkUses: falseOnUnchanged("uses_check"),
-  });
   const ability: UncompleteEntityAbility = {
     name: state.name,
     effect: state.effect,
@@ -456,7 +366,7 @@ const newAbility = computed((): UncompleteEntityAbility => {
       ...(state.expedited && { expedited: state.expedited }),
       ...(state.path && { path: state.path }),
     },
-    uses,
+    uses: newAbilityUses.value.uses,
   };
   return ability;
 });
@@ -480,9 +390,5 @@ const addAbilityButton = () => {
 <style scoped>
 .cost-section > div:not(:last-child) {
   margin-bottom: 4px;
-}
-
-.code-input {
-  font-family: var(--code-font);
 }
 </style>

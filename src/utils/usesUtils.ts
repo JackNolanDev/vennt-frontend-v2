@@ -6,6 +6,7 @@ import {
   type UsesMap,
   type UsesAdjust,
   type DiceSettings,
+  usesValidator,
 } from "vennt-library";
 
 export interface EditRollUses {
@@ -31,35 +32,53 @@ export interface EditCheckUses {
   diceSetting: DiceSettings;
 }
 
+export interface EditUsesState {
+  override: string;
+  heal: EditUsesAdjustment[];
+  roll: EditRollUses;
+  adjust: EditAdjustUses;
+  check: EditCheckUses;
+}
+
+export const BASE_HEAL_ATTRIBUTES = [
+  "hp",
+  "vim",
+  "mp",
+  "hero",
+  "alerts",
+  "actions",
+  "reactions",
+  "recovery_shock",
+  "burning",
+  "bleeding",
+  "paralysis",
+  "stun",
+  "agi_dmg",
+  "cha_dmg",
+  "dex_dmg",
+  "int_dmg",
+  "per_dmg",
+  "spi_dmg",
+  "str_dmg",
+  "tek_dmg",
+  "wis_dmg",
+];
+
+export const customAttributes = (
+  attrs: ComputedAttributes,
+): EntityAttribute[] =>
+  Object.keys(attrs).filter((attr) => !validAttributes.includes(attr));
+
 export const healableAttributes = (
   attrs: ComputedAttributes,
+): EntityAttribute[] => [...customAttributes(attrs), ...BASE_HEAL_ATTRIBUTES];
+
+export const adjustableAttributes = (
+  attrs: ComputedAttributes,
 ): EntityAttribute[] => {
-  const customAttributes = Object.keys(attrs).filter(
-    (attr) => !validAttributes.includes(attr),
-  );
   return [
-    "hp",
-    "vim",
-    "mp",
-    "hero",
-    "alerts",
-    "actions",
-    "reactions",
-    "recovery_shock",
-    ...customAttributes,
-    "burning",
-    "bleeding",
-    "paralysis",
-    "stun",
-    "agi_dmg",
-    "cha_dmg",
-    "dex_dmg",
-    "int_dmg",
-    "per_dmg",
-    "spi_dmg",
-    "str_dmg",
-    "tek_dmg",
-    "wis_dmg",
+    ...customAttributes(attrs),
+    ...validAttributes.filter((attr) => !BASE_HEAL_ATTRIBUTES.includes(attr)),
   ];
 };
 
@@ -80,55 +99,92 @@ export const editUsesAdjustmentsToAttrMap = (
     return map;
   }, {});
 
-export const buildUses = ({
-  defaultUses,
-  usesOverride,
-  rollUses,
-  healUses,
-  adjustUses,
-  checkUses,
-}: {
-  defaultUses?: UsesMap | null;
-  usesOverride?: UsesMap | false;
-  rollUses: EditRollUses | false;
-  healUses: EditUsesAdjustment[] | false;
-  adjustUses: EditAdjustUses | false;
-  checkUses: EditCheckUses | false;
-}): UsesMap | null => {
-  if (usesOverride) {
-    return usesOverride;
+export const usesToState = (
+  uses: UsesMap | null | undefined,
+): EditUsesState => ({
+  override: "",
+  roll: {
+    attr: uses?.roll?.attr ?? "",
+    dice: uses?.roll?.dice ?? "",
+    adjusts: attrMapToEditUsesAdjustments(uses?.roll?.heal ?? {}),
+  },
+  heal: attrMapToEditUsesAdjustments(uses?.heal?.attr ?? {}),
+  adjust: {
+    time: uses?.adjust?.time ?? "",
+    adjusts: attrMapToEditUsesAdjustments(uses?.adjust?.attr ?? {}),
+  },
+  check: {
+    attr: uses?.check?.attr ?? "",
+    label: uses?.check?.label ?? "",
+    diceSetting: {
+      ...uses?.check?.dice_settings,
+      ...(uses?.check?.bonus && { end: uses.check.bonus }),
+    },
+  },
+});
+
+const parseUsesOverride = (override: string): UsesMap | false => {
+  try {
+    const jsonObject = JSON.parse(override);
+    return usesValidator.parse(jsonObject);
+  } catch (err) {
+    return false;
+  }
+};
+
+export const stateToUses = (
+  state: EditUsesState,
+  defaultUses: UsesMap | null | undefined,
+): { uses: UsesMap | null; overrideInvalid?: boolean } => {
+  const { override, roll, heal, adjust, check } = state;
+  if (override) {
+    const uses = parseUsesOverride(override);
+    if (uses) {
+      return { uses, overrideInvalid: true };
+    }
   }
 
-  const newUses = { ...defaultUses };
-  if (rollUses && rollUses.attr && rollUses.dice) {
+  const uses = { ...defaultUses };
+
+  if (roll.attr && roll.dice) {
     let heal: UseAttrMap | undefined = undefined;
-    if (rollUses.adjusts.length > 0) {
-      heal = editUsesAdjustmentsToAttrMap(rollUses.adjusts);
+    if (roll.adjusts.length > 0) {
+      heal = editUsesAdjustmentsToAttrMap(roll.adjusts);
     }
-    newUses.roll = { attr: rollUses.attr, dice: rollUses.dice, heal };
+    uses.roll = { ...uses.roll, attr: roll.attr, dice: roll.dice, heal };
+  } else if (uses.roll) {
+    uses.roll = undefined;
   }
-  if (healUses && healUses.length > 0) {
-    newUses.heal = { attr: editUsesAdjustmentsToAttrMap(healUses) };
+
+  if (heal.length > 0) {
+    uses.heal = { ...uses.heal, attr: editUsesAdjustmentsToAttrMap(heal) };
+  } else if (uses.heal) {
+    uses.heal = undefined;
   }
-  if (adjustUses && adjustUses.time && adjustUses.adjusts.length > 0) {
-    newUses.adjust = {
-      time: adjustUses.time,
-      attr: editUsesAdjustmentsToAttrMap(adjustUses.adjusts),
+
+  if (adjust.time && adjust.adjusts.length > 0) {
+    uses.adjust = {
+      ...uses.adjust,
+      time: adjust.time,
+      attr: editUsesAdjustmentsToAttrMap(adjust.adjusts),
     };
+  } else if (uses.adjust) {
+    uses.adjust = undefined;
   }
-  if (
-    checkUses &&
-    checkUses.attr &&
-    Object.keys(checkUses.diceSetting).length > 0
-  ) {
-    newUses.check = {
-      attr: checkUses.attr,
-      label: checkUses.label,
-      dice_settings: checkUses.diceSetting,
+
+  if (check.attr && check.diceSetting) {
+    uses.check = {
+      ...uses.check,
+      attr: check.attr,
+      dice_settings: check.diceSetting,
+      label: check.label,
     };
+  } else if (uses.check) {
+    uses.check = undefined;
   }
-  if (Object.keys(newUses).length > 0) {
-    return newUses;
+
+  if (Object.keys(uses).length > 0) {
+    return { uses };
   }
-  return null;
+  return { uses: null };
 };

@@ -1,5 +1,5 @@
 <template>
-  <BaseDropDown title="Heal resources using dice roll">
+  <BaseDropDown title="Heal resource using dice roll">
     <div class="m-8">
       <slot name="desc"></slot>
       <div class="cols-2 center-items gap">
