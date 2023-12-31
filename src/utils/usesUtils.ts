@@ -8,6 +8,7 @@ import {
   type DiceSettings,
   usesValidator,
 } from "vennt-library";
+import { numberFieldVal } from "./inputType";
 
 export interface EditRollUses {
   attr: EntityAttribute;
@@ -94,8 +95,17 @@ export const attrMapToEditUsesAdjustments = (
 export const editUsesAdjustmentsToAttrMap = (
   adjustments: EditUsesAdjustment[],
 ): UseAttrMap =>
-  adjustments.reduce<UseAttrMap>((map, { attr, adjust }) => {
-    map[attr] = adjust;
+  adjustments.reduce<UseAttrMap>((map, { attr, type, adjust }) => {
+    if (attr) {
+      if (type === "number") {
+        const convertedAdjust = numberFieldVal(adjust, true);
+        if (!isNaN(convertedAdjust)) {
+          map[attr] = convertedAdjust;
+        }
+      } else if (typeof adjust === "string" && adjust.length > 0) {
+        map[attr] = adjust;
+      }
+    }
     return map;
   }, {});
 

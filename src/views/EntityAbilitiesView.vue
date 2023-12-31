@@ -43,6 +43,7 @@
     <div class="mb-128"></div>
   </PageLayout>
 </template>
+
 <script setup lang="ts">
 import AbilitySearch from "@/components/Abilities/AbilitySearch.vue";
 import AbilityTable from "@/components/Abilities/AbilityTable.vue";

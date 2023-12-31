@@ -26,12 +26,34 @@
       >
         <template #desc
           ><p class="mt-0 mb-8">
-            Use this section when this {{ displayEditType }} should effect a
-            base attribute's value permanently on use. For example, if this
-            ability heals HP, or uses SP, or effects any custom attributes
+            Use this section when this {{ displayEditType }} should effect an
+            attribute's value on use. For example, if this ability heals HP, or
+            uses SP, or effects any custom attributes
           </p></template
         >
       </EditHealUses>
+      <EditAdjustUses
+        :model-value="modelValue.adjust"
+        @update:model-value="
+          (adjust) => emit('update:modelValue', { ...modelValue, adjust })
+        "
+        class="mb-4"
+      >
+        <template #desc
+          ><p class="mt-0 mb-8">
+            Use this section when this {{ displayEditType }} should effect a
+            base attribute's value on use, either permanently or for a set
+            period of time. For example, if this {{ displayEditType }} effects
+            this character's maximum HP, STR, or Armor.
+          </p>
+          <p class="mt-0 mb-8">
+            NOTE: This will not technically effect the base value of an
+            attribute, but will effect the way it is computed as long as the
+            effect is active. If you want to permanently effect a value, you
+            should use one of the heal functionality options.
+          </p></template
+        ></EditAdjustUses
+      >
       <BaseDropDown title="Edit in JSON">
         <div class="m-8">
           <p class="mt-0 mb-8">
@@ -72,6 +94,7 @@ import EditHealUses from "./EditHealUses.vue";
 import BaseCopyableCode from "../Base/BaseCopyableCode.vue";
 import { computed } from "vue";
 import type { UsesMap } from "vennt-library";
+import EditAdjustUses from "./EditAdjustUses.vue";
 
 const props = defineProps<{
   modelValue: EditUsesState;
