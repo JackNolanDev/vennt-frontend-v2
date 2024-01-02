@@ -15,7 +15,7 @@ export const ADMIN_ROUTE = "admin";
 export const ENTITY_ROUTE = "entity";
 export const ENTITY_ABILITIES_ROUTE = "entityAbilities";
 export const ENTITY_COMBAT_ROUTE = "entityCombat";
-export const ENTITY_DESCRIPTION_ROUTE = ENTITY_ROUTE;
+export const ENTITY_DESCRIPTION_ROUTE = "entityDescription";
 export const ENTITY_ITEM_SHOP_ROUTE = "entityItemShop";
 export const ENTITY_ITEMS_ROUTE = "entityItems";
 export const ENTITY_STATS_ROUTE = "entityStats";
@@ -88,6 +88,12 @@ const router = createRouter({
         {
           path: "",
           name: ENTITY_ROUTE,
+          meta: { replaceName: ENTITY_DESCRIPTION_ROUTE },
+          component: () => import("../views/EntityDescriptionView.vue"),
+        },
+        {
+          path: "flux/:detail?",
+          name: ENTITY_DESCRIPTION_ROUTE,
           component: () => import("../views/EntityDescriptionView.vue"),
         },
         {

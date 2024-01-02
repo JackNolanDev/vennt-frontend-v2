@@ -213,10 +213,10 @@
 </template>
 
 <script setup lang="ts">
-import router, { ENTITY_ABILITIES_ROUTE } from "@/router";
+import { ENTITY_ABILITIES_ROUTE } from "@/router";
 import type { ComputedAttributes, FullEntityAbility } from "vennt-library";
 import { stringToLinkID } from "@/utils/textUtils";
-import type { RouteLocationRaw } from "vue-router";
+import { useRoute, type RouteLocationRaw } from "vue-router";
 import DisplayAbilityEffect from "./DisplayAbilityEffect.vue";
 import BaseButton from "../Base/BaseButton.vue";
 import AbilityName from "./AbilityName.vue";
@@ -234,6 +234,7 @@ import {
 import { useJsonStore } from "@/stores/jsonStorage";
 import { sortPaths, canUseAbility } from "@/utils/abilityUtils";
 
+const route = useRoute();
 const jsonStorage = useJsonStore();
 
 const props = defineProps<{
@@ -243,6 +244,7 @@ const props = defineProps<{
   showTableOptions?: boolean;
   stickyHeader?: boolean;
   inCombat?: boolean;
+  hideActivation?: boolean;
 }>();
 
 const SORT_OPTIONS = {
@@ -422,21 +424,25 @@ const abilityPath = (ability: FullEntityAbility) =>
     ? ability.custom_fields?.path.substring(12)
     : ability.custom_fields?.path;
 const abilityOpened = (ability: FullEntityAbility): boolean =>
-  router.currentRoute.value.params.detail === ability.id;
+  route.params.detail === ability.id;
 const abilityLink = (ability: FullEntityAbility): RouteLocationRaw => {
+  const name =
+    (route.meta.replaceName as string | undefined) ??
+    route.name ??
+    ENTITY_ABILITIES_ROUTE;
   if (abilityOpened(ability)) {
-    const params = { ...router.currentRoute.value.params };
+    const params = { ...route.params };
     delete params.detail;
     return {
-      name: router.currentRoute.value.name ?? ENTITY_ABILITIES_ROUTE,
+      name,
       params,
-      query: router.currentRoute.value.query,
+      query: route.query,
     };
   }
   return {
-    name: router.currentRoute.value.name ?? ENTITY_ABILITIES_ROUTE,
-    params: { ...router.currentRoute.value.params, detail: ability.id },
-    query: router.currentRoute.value.query,
+    name,
+    params: { ...route.params, detail: ability.id },
+    query: route.query,
   };
 };
 const tooExpensive = (ability: FullEntityAbility) =>
