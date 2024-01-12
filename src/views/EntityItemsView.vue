@@ -87,6 +87,7 @@ const bulkCapacity = computed(() => {
   if (carryingCapacity) {
     baseCapacity += carryingCapacity.val;
   }
+  // TODO: Delete this old not counting containers -> just rely on carrying_capacity from computedAttributes
   return (
     baseCapacity +
     entityStore.entity.items
@@ -102,6 +103,7 @@ const bulkSum = computed(() => {
   return entityStore.entity.items
     .filter(
       (item) =>
+        // TODO: Delete this old not counting containers, they will be caught by being active
         item.type !== "container" &&
         !item.active &&
         !item.custom_fields?.in_storage,

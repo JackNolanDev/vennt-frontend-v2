@@ -216,6 +216,7 @@ export const isDefaultWeapon = (item: EntityItem): boolean =>
 
 const equippableItemTypes = new Set<EntityItemType>([
   ITEM_TYPE_ARMOR,
+  ITEM_TYPE_CONTAINER,
   ITEM_TYPE_SHIELD,
   ITEM_TYPE_WEAPON,
 ]);

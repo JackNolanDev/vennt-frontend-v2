@@ -12,9 +12,7 @@
       id="new-item-name"
       class="input wide mt-4 mb-16"
     />
-    <label for="new-item-bulk" class="labelText">
-      {{ state.type === ITEM_TYPE_CONTAINER ? "Storage Capacity" : "Bulk" }}:
-    </label>
+    <label for="new-item-bulk" class="labelText">Bulk:</label>
     <input
       type="number"
       inputmode="numeric"
@@ -89,6 +87,24 @@
         placeholder="1"
         title="Burden caused by using this item"
         id="new-item-shield-burden"
+        class="input wide mt-4 mb-16"
+      />
+    </div>
+    <div
+      v-if="state.type === ITEM_TYPE_CONTAINER"
+      class="card column padded thin mb-16"
+    >
+      <h3 class="mt-0 mb-16">Container Options</h3>
+      <label for="new-item-container-capacity" class="labelText"
+        >Carrying Capacity:</label
+      >
+      <input
+        type="number"
+        inputmode="numeric"
+        v-model="state.containerCapacity"
+        placeholder="1"
+        title="Carrying capacity of this container"
+        id="new-item-container-capacity"
         class="input wide mt-4 mb-16"
       />
     </div>
@@ -190,7 +206,7 @@
         :useToggle="true"
         :highlight="true"
         @click="state.defineActive = !state.defineActive"
-        >Ignore default behavior</BaseCheckBox
+        >Ignore default "Active" behavior</BaseCheckBox
       >
       <BaseCheckBox
         :checked="itemActive"
@@ -253,6 +269,7 @@ interface NewItemState {
   armorBurden: string;
   shieldShield: string;
   shieldBurden: string;
+  containerCapacity: string;
   weaponAttr: string;
   weaponDmg: string;
   weaponRange: string;
@@ -276,6 +293,10 @@ const initialState = (): NewItemState => ({
   armorBurden: props.givenItem?.uses?.adjust?.attr?.burden?.toString() ?? "",
   shieldShield: props.givenItem?.uses?.adjust?.attr?.shield?.toString() ?? "",
   shieldBurden: props.givenItem?.uses?.adjust?.attr?.burden?.toString() ?? "",
+  containerCapacity:
+    props.givenItem?.uses?.adjust?.attr?.carrying_capacity?.toString() ??
+    props.givenItem?.bulk.toString() ??
+    "",
   weaponAttr: props.givenItem?.custom_fields?.attr ?? "",
   weaponDmg: props.givenItem?.custom_fields?.dmg ?? "",
   weaponRange: props.givenItem?.custom_fields?.range ?? "",
@@ -351,6 +372,15 @@ const baseUses = computed((): UsesMap => {
         attr: {
           shield: parseInt(state.shieldShield),
           burden: parseInt(state.shieldShield),
+        },
+      },
+    };
+  } else if (state.type === ITEM_TYPE_CONTAINER) {
+    return {
+      adjust: {
+        time: "permanent",
+        attr: {
+          carrying_capacity: parseInt(state.containerCapacity),
         },
       },
     };
